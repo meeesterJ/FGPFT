@@ -2,9 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useGameStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { Check, X, Pause, Play, RotateCcw } from "lucide-react";
+import { Check, X, Pause, Play, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Confetti from "react-confetti";
 
 export default function Game() {
   const [, setLocation] = useLocation();
@@ -12,9 +11,13 @@ export default function Game() {
   
   const [timeLeft, setTimeLeft] = useState(store.roundDuration);
   const [isPaused, setIsPaused] = useState(false);
+  const [tiltFeedback, setTiltFeedback] = useState<"correct" | "pass" | null>(null);
+  const [hasDeviceOrientation, setHasDeviceOrientation] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const tiltThresholdRef = useRef(35); // Degrees of tilt to trigger
+  const lastTiltTimeRef = useRef(0);
 
-  // Initialize round
+  // Initialize round and device orientation
   useEffect(() => {
     // Only start round if we aren't already playing and haven't just finished
     if (!store.isPlaying && !store.isRoundOver && !store.isGameFinished) {
@@ -23,7 +26,56 @@ export default function Game() {
     
     // Reset timer
     setTimeLeft(store.roundDuration);
+
+    // Request permission for device orientation (iOS 13+)
+    if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
+      (DeviceOrientationEvent as any).requestPermission()
+        .then((perm: string) => {
+          if (perm === "granted") {
+            setHasDeviceOrientation(true);
+          }
+        })
+        .catch(() => {
+          // Permission denied or not available
+        });
+    } else if (typeof DeviceOrientationEvent !== "undefined") {
+      // Non-iOS or older iOS
+      setHasDeviceOrientation(true);
+    }
   }, []); // Only on mount
+
+  // Device orientation listener
+  useEffect(() => {
+    if (!hasDeviceOrientation || !store.isPlaying || isPaused) return;
+
+    const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
+      const beta = event.beta; // -180 to 180, forward/backward tilt
+      if (beta === null) return;
+
+      const now = Date.now();
+      // Debounce: only allow one gesture per 1 second
+      if (now - lastTiltTimeRef.current < 1000) return;
+
+      if (beta > tiltThresholdRef.current) {
+        // Device tilted forward significantly = CORRECT
+        lastTiltTimeRef.current = now;
+        setTiltFeedback("correct");
+        setTimeout(() => setTiltFeedback(null), 300);
+        store.nextWord(true);
+      } else if (beta < -tiltThresholdRef.current) {
+        // Device tilted backward significantly = PASS
+        lastTiltTimeRef.current = now;
+        setTiltFeedback("pass");
+        setTimeout(() => setTiltFeedback(null), 300);
+        store.nextWord(false);
+      }
+    };
+
+    window.addEventListener("deviceorientation", handleDeviceOrientation);
+    return () => {
+      window.removeEventListener("deviceorientation", handleDeviceOrientation);
+    };
+  }, [store.isPlaying, isPaused, store]);
 
   // Timer logic
   useEffect(() => {
@@ -102,6 +154,24 @@ export default function Game() {
           }}>
             End Round Early
           </Button>
+        </div>
+      )}
+
+      {/* Tilt Feedback Animation */}
+      {tiltFeedback && (
+        <div className={cn(
+          "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 text-6xl font-black animate-bounce-in",
+          tiltFeedback === "correct" ? "text-success" : "text-destructive"
+        )}>
+          {tiltFeedback === "correct" ? <Check className="w-32 h-32" /> : <X className="w-32 h-32" />}
+        </div>
+      )}
+
+      {/* Gesture Hint - shown if device orientation not available */}
+      {!hasDeviceOrientation && (
+        <div className="absolute top-4 right-4 bg-accent/80 text-accent-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 z-20">
+          <Smartphone className="w-4 h-4" />
+          Tilt gestures not available on this device
         </div>
       )}
 
