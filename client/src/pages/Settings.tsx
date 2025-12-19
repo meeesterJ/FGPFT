@@ -104,17 +104,32 @@ export default function Settings() {
       return;
     }
 
-    const updatedList: WordList = {
-      id: editingListId!,
-      name: editListName,
-      words: filteredWords,
-      isCustom: true
-    };
+    const isBuiltIn = DEFAULT_WORD_LISTS.some(l => l.id === editingListId);
 
-    store.updateCustomList(editingListId!, updatedList);
+    if (isBuiltIn) {
+      // When editing a built-in list, create a new custom list instead
+      const newCustomList: WordList = {
+        id: `custom-${Date.now()}`,
+        name: editListName,
+        words: filteredWords,
+        isCustom: true
+      };
+      store.addCustomList(newCustomList);
+      toast({ title: "Success", description: `Created custom list "${editListName}" from built-in list!` });
+    } else {
+      // Update existing custom list
+      const updatedList: WordList = {
+        id: editingListId!,
+        name: editListName,
+        words: filteredWords,
+        isCustom: true
+      };
+      store.updateCustomList(editingListId!, updatedList);
+      toast({ title: "Success", description: "List updated!" });
+    }
+
     setEditingListId(null);
     setIsEditDialogOpen(false);
-    toast({ title: "Success", description: "List updated!" });
   };
 
   // Combine and normalize lists for display
@@ -284,32 +299,35 @@ export default function Settings() {
                         <p className="text-xs text-muted-foreground">{list.words.length} words {list.isCustom && '(Custom)'}</p>
                       </div>
                     </div>
-                    {list.isCustom && (
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="text-primary hover:text-primary hover:bg-primary/10"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleStartEdit(list);
-                          }}
-                        >
-                          <Edit2 className="w-5 h-5" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                          onClick={(e) => {
-                            e.stopPropagation();
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-primary hover:text-primary hover:bg-primary/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleStartEdit(list);
+                        }}
+                      >
+                        <Edit2 className="w-5 h-5" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (list.isCustom) {
                             store.removeCustomList(list.id);
-                          }}
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    )}
+                          } else {
+                            // Remove built-in list from selected
+                            store.toggleListSelection(list.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+                    </div>
                   </div>
                 );
               })}
