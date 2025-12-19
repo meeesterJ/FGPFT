@@ -1,0 +1,62 @@
+import { Link, useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
+import { useGameStore } from "@/lib/store";
+import { Play, Settings as SettingsIcon, Trophy } from "lucide-react";
+
+export default function Home() {
+  const [, setLocation] = useLocation();
+  const startGame = useGameStore(state => state.startGame);
+
+  const handleStart = () => {
+    startGame();
+    setLocation("/game");
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-background to-card overflow-hidden relative">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
+         <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full blur-3xl animate-pulse"></div>
+         <div className="absolute bottom-10 right-10 w-40 h-40 bg-secondary rounded-full blur-3xl animate-pulse delay-700"></div>
+         <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-accent rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+
+      <div className="z-10 flex flex-col items-center space-y-12 max-w-md w-full text-center">
+        <div className="space-y-4 animate-bounce-in">
+          <h1 className="text-7xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent text-stroke drop-shadow-xl tracking-wider transform -rotate-3">
+            GUESS<br/>PARTY!
+          </h1>
+          <p className="text-muted-foreground text-xl font-medium tracking-wide">
+            The Ultimate Party Game
+          </p>
+        </div>
+
+        <div className="grid gap-4 w-full animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <Button 
+            size="lg" 
+            className="w-full h-20 text-2xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-transform bg-primary hover:bg-primary/90 text-white border-b-4 border-primary-foreground/20 active:border-b-0 active:translate-y-1"
+            onClick={handleStart}
+          >
+            <Play className="mr-3 w-8 h-8 fill-current" />
+            Play Now
+          </Button>
+
+          <Link href="/settings">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform border-2 border-border bg-card hover:bg-accent hover:text-accent-foreground"
+            >
+              <SettingsIcon className="mr-3 w-6 h-6" />
+              Settings
+            </Button>
+          </Link>
+        </div>
+        
+        <div className="text-sm text-muted-foreground opacity-50 animate-pulse">
+          Tap "Play Now" to start the fun!
+        </div>
+      </div>
+    </div>
+  );
+}
