@@ -34,6 +34,7 @@ interface GameState {
   toggleListSelection: (id: string) => void;
   addCustomList: (list: WordList) => void;
   removeCustomList: (id: string) => void;
+  updateCustomList: (id: string, updatedList: WordList) => void;
   
   startGame: () => void;
   startRound: () => void;
@@ -83,6 +84,10 @@ export const useGameStore = create<GameState>()(
       removeCustomList: (id) => set((state) => ({
         customLists: state.customLists.filter(l => l.id !== id),
         selectedListIds: state.selectedListIds.filter(lid => lid !== id)
+      })),
+
+      updateCustomList: (id, updatedList) => set((state) => ({
+        customLists: state.customLists.map(l => l.id === id ? updatedList : l)
       })),
 
       startGame: () => {

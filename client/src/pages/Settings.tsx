@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useGameStore, WordList } from "@/lib/store";
 import { DEFAULT_WORD_LISTS } from "@/lib/words";
-import { ArrowLeft, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Edit2, X } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,10 @@ export default function Settings() {
   const [newListName, setNewListName] = useState("");
   const [newListWords, setNewListWords] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingListId, setEditingListId] = useState<string | null>(null);
+  const [editListName, setEditListName] = useState("");
+  const [editListWords, setEditListWords] = useState<string[]>([]);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -65,6 +69,52 @@ export default function Settings() {
     setNewListWords("");
     setIsDialogOpen(false);
     toast({ title: "Success", description: "New list created!" });
+  };
+
+  const handleStartEdit = (list: WordList) => {
+    setEditingListId(list.id);
+    setEditListName(list.name);
+    setEditListWords([...list.words]);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleAddWord = () => {
+    setEditListWords([...editListWords, ""]);
+  };
+
+  const handleRemoveWord = (index: number) => {
+    setEditListWords(editListWords.filter((_, i) => i !== index));
+  };
+
+  const handleUpdateWord = (index: number, value: string) => {
+    const newWords = [...editListWords];
+    newWords[index] = value;
+    setEditListWords(newWords);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editListName || editListWords.length < 5) {
+      toast({ title: "Error", description: "List must have at least 5 words.", variant: "destructive" });
+      return;
+    }
+
+    const filteredWords = editListWords.filter(w => w.trim().length > 0);
+    if (filteredWords.length < 5) {
+      toast({ title: "Error", description: "List must have at least 5 non-empty words.", variant: "destructive" });
+      return;
+    }
+
+    const updatedList: WordList = {
+      id: editingListId!,
+      name: editListName,
+      words: filteredWords,
+      isCustom: true
+    };
+
+    store.updateCustomList(editingListId!, updatedList);
+    setEditingListId(null);
+    setIsEditDialogOpen(false);
+    toast({ title: "Success", description: "List updated!" });
   };
 
   // Combine and normalize lists for display
@@ -163,6 +213,53 @@ export default function Settings() {
                   </div>
                 </DialogContent>
               </Dialog>
+
+              <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                <DialogContent className="max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Edit List: {editListName}</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label>List Name</Label>
+                      <Input 
+                        value={editListName}
+                        onChange={e => setEditListName(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Words ({editListWords.filter(w => w.trim()).length})</Label>
+                      <div className="space-y-2 max-h-80 overflow-y-auto">
+                        {editListWords.map((word, index) => (
+                          <div key={index} className="flex gap-2">
+                            <Input 
+                              value={word}
+                              onChange={e => handleUpdateWord(index, e.target.value)}
+                              placeholder={`Word ${index + 1}`}
+                            />
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              className="text-destructive hover:bg-destructive/10"
+                              onClick={() => handleRemoveWord(index)}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={handleAddWord}
+                    >
+                      <Plus className="w-4 h-4 mr-2" /> Add Word
+                    </Button>
+                    <Button className="w-full" onClick={handleSaveEdit}>Save Changes</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             <div className="grid gap-3">
@@ -188,17 +285,30 @@ export default function Settings() {
                       </div>
                     </div>
                     {list.isCustom && (
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          store.removeCustomList(list.id);
-                        }}
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-primary hover:text-primary hover:bg-primary/10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleStartEdit(list);
+                          }}
+                        >
+                          <Edit2 className="w-5 h-5" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            store.removeCustomList(list.id);
+                          }}
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </Button>
+                      </div>
                     )}
                   </div>
                 );
