@@ -319,9 +319,11 @@ export default function Settings() {
                           e.stopPropagation();
                           if (list.isCustom) {
                             store.removeCustomList(list.id);
+                            toast({ title: "Deleted", description: `"${list.name}" has been removed.` });
                           } else {
                             // Remove built-in list from selected
                             store.toggleListSelection(list.id);
+                            toast({ title: "Removed", description: `"${list.name}" is no longer in your game.` });
                           }
                         }}
                       >
