@@ -21,14 +21,14 @@ export default function Home() {
          <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-accent rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      <div className="z-10 flex flex-col items-center space-y-12 max-w-md w-full text-center">
-        <div className="space-y-4 animate-bounce-in">
-          <h1 className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent text-stroke drop-shadow-xl tracking-wider transform -rotate-3">
-            Family Guess<br/>Party Fun Time
+      <div className="z-10 flex flex-col items-center justify-between min-h-[80vh] max-w-md w-full text-center py-8">
+        <div className="space-y-4 animate-bounce-in flex-1 flex items-center">
+          <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent text-stroke drop-shadow-xl tracking-wider transform -rotate-2 leading-tight">
+            Family<br/>Guess<br/>Party<br/>Fun<br/>Time
           </h1>
         </div>
 
-        <div className="grid gap-4 w-full animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="grid gap-4 w-full animate-slide-up mt-auto" style={{ animationDelay: '0.2s' }}>
           <Button 
             size="lg" 
             className="w-full h-20 text-2xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-transform bg-primary hover:bg-primary/90 text-white border-b-4 border-primary-foreground/20 active:border-b-0 active:translate-y-1"
