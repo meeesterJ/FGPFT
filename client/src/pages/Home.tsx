@@ -7,7 +7,22 @@ export default function Home() {
   const [, setLocation] = useLocation();
   const startGame = useGameStore(state => state.startGame);
 
-  const handleStart = () => {
+  const handleStart = async () => {
+    // Request fullscreen for immersive experience
+    try {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        await elem.requestFullscreen();
+      } else if ((elem as any).webkitRequestFullscreen) {
+        await (elem as any).webkitRequestFullscreen();
+      } else if ((elem as any).msRequestFullscreen) {
+        await (elem as any).msRequestFullscreen();
+      }
+    } catch (err) {
+      // Fullscreen not supported or denied, continue anyway
+      console.log("Fullscreen not available:", err);
+    }
+    
     startGame();
     setLocation("/game");
   };
