@@ -19,8 +19,9 @@ export default function Game() {
   const [countdown, setCountdown] = useState<number | "Go!" | null>(null); // Countdown state
   const [isCountingDown, setIsCountingDown] = useState(true); // Start counting down immediately
   const [waitingForPermission, setWaitingForPermission] = useState(false); // Wait for iOS permission before countdown
+  const [calibrationTrigger, setCalibrationTrigger] = useState(0); // Increment to force recalibration
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const tiltThresholdRef = useRef(35); // Degrees of tilt to trigger
+  const tiltThresholdRef = useRef(25); // Degrees of tilt delta to trigger (lowered for better sensitivity)
   const lastTiltTimeRef = useRef(0);
   const orientationAngleRef = useRef(0); // Track screen orientation angle
   const hasStartedRound = useRef(false); // Prevent multiple startRound calls
@@ -29,6 +30,9 @@ export default function Game() {
   const isCountdownActiveRef = useRef(false); // Guard against overlapping countdowns
   const hasShownInitialCountdownRef = useRef(false); // Track if initial countdown shown
   const permissionGrantedTimeRef = useRef(0); // Track when permission was granted for delay
+  const baselineBetaRef = useRef<number | null>(null); // Baseline beta for calibrated tilt detection
+  const calibrationSamplesRef = useRef<number[]>([]); // Samples for averaging baseline
+  const isCalibrating = useRef(false); // Flag to indicate calibration in progress
 
   // Initialize round and device orientation
   useEffect(() => {
@@ -61,7 +65,21 @@ export default function Game() {
           startCountdown();
         }
       } else if (!isLandscape) {
-        wasInPortrait.current = true;
+        // Entering portrait
+        if (!wasInPortrait.current) {
+          // Was in landscape, now in portrait - mark baseline invalid
+          wasInPortrait.current = true;
+          baselineBetaRef.current = null;
+          isCalibrating.current = false;
+          calibrationSamplesRef.current = [];
+        }
+      }
+      
+      // When returning to landscape from portrait (after initial countdown has played),
+      // bump trigger to force recalibration
+      if (isLandscape && wasInPortrait.current && hasShownInitialCountdownRef.current) {
+        wasInPortrait.current = false;
+        setCalibrationTrigger(prev => prev + 1);
       }
       
       setShowRotatePrompt(!isLandscape);
@@ -132,46 +150,80 @@ export default function Game() {
 
   // Device orientation listener
   useEffect(() => {
-    // Disable tilt during countdown
-    if (!hasDeviceOrientation || !store.isPlaying || isPaused || isCountingDown) return;
+    // Disable tilt during countdown or when in portrait
+    const isLandscape = window.innerWidth > window.innerHeight;
+    if (!hasDeviceOrientation || !store.isPlaying || isPaused || isCountingDown || !isLandscape) return;
+    
+    // Start fresh calibration every time this effect runs (only in landscape)
+    baselineBetaRef.current = null;
+    isCalibrating.current = true;
+    calibrationSamplesRef.current = [];
+    
+    // Grace period timer - finalize calibration 500ms after first sample
+    let graceTimeout: NodeJS.Timeout | null = null;
+    
+    const finalizeCalibration = () => {
+      if (calibrationSamplesRef.current.length > 0) {
+        const sum = calibrationSamplesRef.current.reduce((a, b) => a + b, 0);
+        baselineBetaRef.current = sum / calibrationSamplesRef.current.length;
+        isCalibrating.current = false;
+        calibrationSamplesRef.current = [];
+      }
+    };
 
     const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
       const now = Date.now();
-      // Debounce: only allow one gesture per 1 second
-      if (now - lastTiltTimeRef.current < 1000) return;
-
+      
       // Get the current orientation angle
       const angle = orientationAngleRef.current;
       const beta = event.beta || 0;
-      const gamma = event.gamma || 0;
       
-      // Calculate effective tilt based on device orientation
-      // Beta (pitch) is rotation about the device's X axis - this is what we want for forward/backward tilt
-      // In landscape mode, we need to adjust the sign of beta based on which way the device is rotated
-      // Gamma should NOT be used - it sits at ±90° in landscape just from orientation, causing false triggers
-      let tiltValue = 0;
-      
+      // Calculate effective beta based on device orientation
       // Normalize angle to 0-360 range
       const normalizedAngle = ((angle % 360) + 360) % 360;
       
+      let effectiveBeta = beta;
       if (normalizedAngle === 90) {
         // Landscape left (home button on right): use beta as-is
-        tiltValue = beta;
+        effectiveBeta = beta;
       } else if (normalizedAngle === 270) {
         // Landscape right (home button on left): flip beta sign
-        tiltValue = -beta;
-      } else {
-        // Portrait or unknown: use beta (positive = forward tilt)
-        tiltValue = beta;
+        effectiveBeta = -beta;
       }
+      
+      // Calibration phase: collect samples to establish baseline
+      if (isCalibrating.current) {
+        calibrationSamplesRef.current.push(effectiveBeta);
+        
+        // Start grace period after first sample - wait 500ms then finalize
+        if (calibrationSamplesRef.current.length === 1 && !graceTimeout) {
+          graceTimeout = setTimeout(finalizeCalibration, 500);
+        }
+        
+        // Also finalize if we hit 10 samples before grace period ends
+        if (calibrationSamplesRef.current.length >= 10) {
+          if (graceTimeout) clearTimeout(graceTimeout);
+          finalizeCalibration();
+        }
+        return;
+      }
+      
+      // Wait for calibration to complete
+      if (baselineBetaRef.current === null) return;
+      
+      // Debounce: only allow one gesture per 1 second
+      if (now - lastTiltTimeRef.current < 1000) return;
+      
+      // Calculate tilt delta from calibrated baseline
+      const tiltDelta = effectiveBeta - baselineBetaRef.current;
 
-      if (tiltValue > tiltThresholdRef.current) {
+      if (tiltDelta > tiltThresholdRef.current) {
         // Tilted forward (screen toward user) = CORRECT
         lastTiltTimeRef.current = now;
         setTiltFeedback("correct");
         setTimeout(() => setTiltFeedback(null), 300);
         store.nextWord(true);
-      } else if (tiltValue < -tiltThresholdRef.current) {
+      } else if (tiltDelta < -tiltThresholdRef.current) {
         // Tilted backward (screen away from user) = PASS
         lastTiltTimeRef.current = now;
         setTiltFeedback("pass");
@@ -182,9 +234,10 @@ export default function Game() {
 
     window.addEventListener("deviceorientation", handleDeviceOrientation);
     return () => {
+      if (graceTimeout) clearTimeout(graceTimeout);
       window.removeEventListener("deviceorientation", handleDeviceOrientation);
     };
-  }, [hasDeviceOrientation, store.isPlaying, isPaused, isCountingDown, store]);
+  }, [hasDeviceOrientation, store.isPlaying, isPaused, isCountingDown, calibrationTrigger, store]);
 
   // Timer logic - pause during countdown
   useEffect(() => {
@@ -279,6 +332,11 @@ export default function Game() {
     countdownTimeoutsRef.current.forEach(t => clearTimeout(t));
     countdownTimeoutsRef.current = [];
     
+    // Reset calibration for new round
+    baselineBetaRef.current = null;
+    calibrationSamplesRef.current = [];
+    isCalibrating.current = false;
+    
     setIsCountingDown(true);
     setCountdown(3);
     
@@ -290,7 +348,9 @@ export default function Game() {
       setIsCountingDown(false);
       isCountdownActiveRef.current = false;
       hasShownInitialCountdownRef.current = true;
-      // Reset tilt time to allow detection after countdown
+      // Trigger recalibration by bumping the trigger state
+      setCalibrationTrigger(prev => prev + 1);
+      // Reset tilt time to allow detection after calibration
       lastTiltTimeRef.current = Date.now();
     }, 4000));
   };
