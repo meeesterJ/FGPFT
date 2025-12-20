@@ -292,37 +292,25 @@ export function isAudioReady(): boolean {
 }
 
 // Play a specific sound by name
-// iOS Safari doesn't support cloneNode for Audio, so we create new Audio from data URI
+// iOS Safari requires using the same Audio elements that were "unlocked" during user gesture
 export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz') {
   console.log('playSound:', soundName);
   
-  const dataUri = AUDIO_TONES[soundName];
-  if (!dataUri) {
-    console.log('No audio data found for:', soundName);
+  // Use the pre-unlocked pooled audio element (required for iOS)
+  const audio = audioPool.get(soundName);
+  if (!audio) {
+    console.log('No pooled audio for:', soundName);
     return;
   }
   
-  // Create a fresh Audio element each time for iOS compatibility
-  const audio = new Audio(dataUri);
-  audio.volume = 1.0;
-  
   try {
+    // Reset and play the pooled audio
+    audio.currentTime = 0;
+    audio.volume = 1.0;
     await audio.play();
     console.log('playSound success:', soundName);
   } catch (e) {
     console.log('playSound failed:', soundName, e);
-    // Fallback: try the pooled audio
-    const pooledAudio = audioPool.get(soundName);
-    if (pooledAudio) {
-      try {
-        pooledAudio.currentTime = 0;
-        pooledAudio.volume = 1.0;
-        await pooledAudio.play();
-        console.log('playSound fallback success:', soundName);
-      } catch (e2) {
-        console.log('playSound fallback also failed:', e2);
-      }
-    }
   }
 }
 
