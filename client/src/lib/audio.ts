@@ -9,28 +9,45 @@ function unlockAudioForIOS(): Promise<void> {
   if (audioUnlocked) return Promise.resolve();
   
   return new Promise((resolve) => {
-    // Create a silent audio element with a tiny data URI
-    // This is a 0.1 second silent WAV file encoded as base64
-    const silentAudio = new Audio(
-      "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"
-    );
-    silentAudio.volume = 0.01;
+    // Set a timeout to ensure we don't hang forever
+    const timeout = setTimeout(() => {
+      console.log('iOS audio unlock timed out, continuing anyway');
+      audioUnlocked = true;
+      resolve();
+    }, 500);
     
-    const playPromise = silentAudio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          console.log('iOS audio unlocked via silent audio element');
-          audioUnlocked = true;
-          resolve();
-        })
-        .catch((e) => {
-          console.log('iOS audio unlock failed:', e);
-          // Still mark as attempted to avoid repeated failures
-          audioUnlocked = true;
-          resolve();
-        });
-    } else {
+    try {
+      // Create a silent audio element with a tiny data URI
+      // This is a 0.1 second silent WAV file encoded as base64
+      const silentAudio = new Audio(
+        "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"
+      );
+      silentAudio.volume = 0.01;
+      
+      const playPromise = silentAudio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            clearTimeout(timeout);
+            console.log('iOS audio unlocked via silent audio element');
+            audioUnlocked = true;
+            resolve();
+          })
+          .catch((e) => {
+            clearTimeout(timeout);
+            console.log('iOS audio unlock failed:', e);
+            // Still mark as attempted to avoid repeated failures
+            audioUnlocked = true;
+            resolve();
+          });
+      } else {
+        clearTimeout(timeout);
+        audioUnlocked = true;
+        resolve();
+      }
+    } catch (e) {
+      clearTimeout(timeout);
+      console.log('iOS audio unlock error:', e);
       audioUnlocked = true;
       resolve();
     }
