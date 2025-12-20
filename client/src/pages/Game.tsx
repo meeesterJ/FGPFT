@@ -821,21 +821,27 @@ export default function Game() {
         </div>
       )}
 
-      {/* Top/Left Bar */}
-      <div className="flex flex-col w-auto h-full px-4 py-6 gap-4 border-r border-border justify-between items-center z-20">
-        <Button variant="ghost" size="icon" onClick={togglePause} className="rounded-full bg-card/50 backdrop-blur">
-          {isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
-        </Button>
-        
+      {/* Pause Button - Top Left Corner */}
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        onClick={togglePause} 
+        className="absolute top-2 left-2 rounded-full bg-card/30 backdrop-blur p-1.5 opacity-50 hover:opacity-100 z-30"
+      >
+        {isPaused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
+      </Button>
+
+      {/* Left Bar - Timer & Score */}
+      <div className="flex flex-col w-auto h-full px-4 py-6 gap-4 border-r border-border justify-center items-center z-20">
         <div className={cn(
-          "font-black font-mono tracking-tighter text-3xl",
+          "font-black font-mono tracking-tighter text-5xl",
           timeLeft <= 10 ? "text-destructive animate-pulse" : "text-primary"
         )}>
           {timeLeft}s
         </div>
 
-        <div className="font-bold bg-card/50 px-4 py-2 rounded-full backdrop-blur text-sm">
-          Score: <span className="text-accent">{store.currentScore}</span>
+        <div className="font-black text-4xl text-accent">
+          {store.currentScore}
         </div>
       </div>
 
