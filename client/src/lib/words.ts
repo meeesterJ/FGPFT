@@ -55,7 +55,19 @@ export const DEFAULT_WORD_LISTS = [
       'Dancing', 'Swimming', 'Cooking', 'Driving', 'Fishing',
       'Skiing', 'Typing', 'Painting', 'Singing', 'Sleeping',
       'Running', 'Jumping', 'Eating', 'Drinking', 'Reading',
-      'Writing', 'Cleaning', 'Shopping', 'Crying', 'Laughing'
+      'Writing', 'Cleaning', 'Shopping', 'Crying', 'Laughing',
+      'Sneezing', 'Yawning', 'Stretching', 'Whistling', 'Clapping',
+      'Waving', 'Hugging', 'Kissing', 'Shaking Hands', 'High-Fiving',
+      'Climbing', 'Crawling', 'Skipping', 'Hopping', 'Tiptoeing',
+      'Surfing', 'Skateboarding', 'Bowling', 'Golfing', 'Boxing',
+      'Wrestling', 'Juggling', 'Magic Trick', 'Blowing Bubbles', 'Flying a Kite',
+      'Riding a Bike', 'Rowing a Boat', 'Paddling a Canoe', 'Ice Skating', 'Roller Skating',
+      'Snowboarding', 'Rock Climbing', 'Bungee Jumping', 'Parachuting', 'Scuba Diving',
+      'Snorkeling', 'Horseback Riding', 'Weightlifting', 'Doing Yoga', 'Meditating',
+      'Taking a Selfie', 'Texting', 'Video Calling', 'Playing Video Games', 'Knitting',
+      'Sewing', 'Ironing', 'Vacuuming', 'Mopping', 'Gardening',
+      'Planting Flowers', 'Mowing the Lawn', 'Raking Leaves', 'Shoveling Snow', 'Washing Dishes',
+      'Brushing Teeth', 'Combing Hair', 'Shaving', 'Putting on Makeup', 'Tying Shoes'
     ]
   },
   {
@@ -65,7 +77,18 @@ export const DEFAULT_WORD_LISTS = [
       'Toaster', 'Lamp', 'Sofa', 'Fridge', 'Microwave',
       'Television', 'Bed', 'Chair', 'Table', 'Mirror',
       'Clock', 'Vase', 'Rug', 'Curtain', 'Pillow',
-      'Blanket', 'Towel', 'Soap', 'Toothbrush', 'Comb'
+      'Blanket', 'Towel', 'Soap', 'Toothbrush', 'Comb',
+      'Blender', 'Coffee Maker', 'Dishwasher', 'Washing Machine', 'Dryer',
+      'Iron', 'Vacuum Cleaner', 'Broom', 'Mop', 'Dustpan',
+      'Trash Can', 'Recycling Bin', 'Bookshelf', 'Dresser', 'Nightstand',
+      'Desk', 'Filing Cabinet', 'Picture Frame', 'Candle', 'Plant Pot',
+      'Couch', 'Recliner', 'Ottoman', 'Coffee Table', 'End Table',
+      'Dining Table', 'Bar Stool', 'Rocking Chair', 'Bean Bag', 'Hammock',
+      'Chandelier', 'Ceiling Fan', 'Floor Lamp', 'Nightlight', 'Light Switch',
+      'Door Handle', 'Window Blinds', 'Doormat', 'Coat Rack', 'Shoe Rack',
+      'Laundry Basket', 'Hamper', 'Shower Curtain', 'Bath Mat', 'Toilet Paper',
+      'Plunger', 'Toilet Brush', 'Hair Dryer', 'Curling Iron', 'Electric Razor',
+      'Scale', 'First Aid Kit', 'Fire Extinguisher', 'Smoke Detector', 'Thermostat'
     ]
   }
 ];
