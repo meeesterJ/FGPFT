@@ -258,5 +258,47 @@ export const DEFAULT_WORD_LISTS = [
       'Hollywood', 'Silicon Valley', 'Wall Street', 'Broadway', 'Bourbon Street',
       'Route 66', 'Pacific Coast Highway', 'Appalachian Trail', 'Mount Whitney', 'Mount Rainier'
     ]
+  },
+  {
+    id: 'world-geography',
+    name: 'World Geography',
+    words: [
+      'Canada', 'Ottawa', 'Mexico', 'Mexico City', 'Brazil', 'Brasilia',
+      'Argentina', 'Buenos Aires', 'Chile', 'Santiago', 'Peru', 'Lima',
+      'Colombia', 'Bogota', 'Venezuela', 'Caracas', 'Ecuador', 'Quito',
+      'United Kingdom', 'London', 'France', 'Paris', 'Germany', 'Berlin',
+      'Italy', 'Rome', 'Spain', 'Madrid', 'Portugal', 'Lisbon',
+      'Netherlands', 'Amsterdam', 'Belgium', 'Brussels', 'Switzerland', 'Bern',
+      'Austria', 'Vienna', 'Poland', 'Warsaw', 'Greece', 'Athens',
+      'Sweden', 'Stockholm', 'Norway', 'Oslo', 'Denmark', 'Copenhagen',
+      'Finland', 'Helsinki', 'Ireland', 'Dublin', 'Scotland', 'Edinburgh',
+      'Russia', 'Moscow', 'Ukraine', 'Kyiv', 'Turkey', 'Ankara',
+      'China', 'Beijing', 'Japan', 'Tokyo', 'South Korea', 'Seoul',
+      'India', 'New Delhi', 'Thailand', 'Bangkok', 'Vietnam', 'Hanoi',
+      'Indonesia', 'Jakarta', 'Philippines', 'Manila', 'Malaysia', 'Kuala Lumpur',
+      'Singapore', 'Australia', 'Canberra', 'New Zealand', 'Wellington',
+      'Egypt', 'Cairo', 'South Africa', 'Pretoria', 'Morocco', 'Rabat',
+      'Kenya', 'Nairobi', 'Nigeria', 'Abuja', 'Ethiopia', 'Addis Ababa',
+      'Israel', 'Jerusalem', 'Saudi Arabia', 'Riyadh', 'United Arab Emirates', 'Abu Dhabi',
+      'Toronto', 'Vancouver', 'Montreal', 'Sydney', 'Melbourne', 'Auckland',
+      'Rio de Janeiro', 'Sao Paulo', 'Barcelona', 'Milan', 'Munich', 'Prague',
+      'Budapest', 'Venice', 'Florence', 'Nice', 'Geneva', 'Zurich',
+      'Hong Kong', 'Shanghai', 'Dubai', 'Mumbai', 'Bangalore', 'Cape Town',
+      'Marrakech', 'Istanbul', 'St. Petersburg', 'Kyoto', 'Osaka',
+      'Atlantic Ocean', 'Pacific Ocean', 'Indian Ocean', 'Arctic Ocean', 'Southern Ocean',
+      'Mediterranean Sea', 'Caribbean Sea', 'Red Sea', 'Black Sea', 'Baltic Sea',
+      'North Sea', 'South China Sea', 'Bay of Bengal', 'Persian Gulf', 'Gulf of Mexico',
+      'Amazon River', 'Nile River', 'Ganges River', 'Yangtze River', 'Danube River',
+      'Thames River', 'Seine River', 'Rhine River', 'Volga River', 'Congo River',
+      'Dead Sea', 'Caspian Sea', 'Lake Victoria', 'Lake Baikal', 'Great Barrier Reef',
+      'Eiffel Tower', 'Big Ben', 'Colosseum', 'Leaning Tower of Pisa', 'Stonehenge',
+      'Taj Mahal', 'Great Wall of China', 'Machu Picchu', 'Christ the Redeemer', 'Petra',
+      'Pyramids of Giza', 'Sphinx', 'Acropolis', 'Parthenon', 'Tower of London',
+      'Buckingham Palace', 'Vatican City', 'Sistine Chapel', 'Notre Dame', 'Louvre',
+      'Sydney Opera House', 'Burj Khalifa', 'Mount Everest', 'Mount Fuji', 'Matterhorn',
+      'Amazon Rainforest', 'Sahara Desert', 'Gobi Desert', 'Himalayas', 'Alps',
+      'Andes Mountains', 'Victoria Falls', 'Angel Falls', 'Iguazu Falls', 'Northern Lights',
+      'Santorini', 'Bali', 'Fiji', 'Maldives', 'Galapagos Islands'
+    ]
   }
 ];
