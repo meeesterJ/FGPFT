@@ -219,6 +219,36 @@ export default function Settings() {
             </div>
           </section>
 
+          {/* Haptic Feedback Toggle */}
+          <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
+            <div className="flex justify-between items-center">
+              <div className="space-y-1">
+                <h2 className="text-xl font-thin">Haptic Feedback</h2>
+                <p className="text-sm text-muted-foreground">Vibrate the phone when correct or pass is registered. Works on Android devices.</p>
+              </div>
+              <Switch 
+                checked={store.hapticEnabled}
+                onCheckedChange={store.setHapticEnabled}
+                data-testid="switch-haptic"
+              />
+            </div>
+          </section>
+
+          {/* Sound Feedback Toggle */}
+          <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
+            <div className="flex justify-between items-center">
+              <div className="space-y-1">
+                <h2 className="text-xl font-thin">Sound Feedback</h2>
+                <p className="text-sm text-muted-foreground">Play a short beep when correct or pass is registered. Works on all devices.</p>
+              </div>
+              <Switch 
+                checked={store.soundEnabled}
+                onCheckedChange={store.setSoundEnabled}
+                data-testid="switch-sound"
+              />
+            </div>
+          </section>
+
           {/* Word Lists */}
           <section className="space-y-4">
             <div className="flex justify-between items-center">

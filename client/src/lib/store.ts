@@ -14,6 +14,8 @@ interface GameState {
   roundDuration: number; // in seconds
   totalRounds: number;
   showButtons: boolean; // Show/hide Correct/Pass buttons during gameplay
+  hapticEnabled: boolean; // Enable haptic vibration feedback
+  soundEnabled: boolean; // Enable sound feedback
   selectedListIds: string[];
   customLists: WordList[];
   builtInListOverrides: Record<string, { name?: string; words?: string[] }>; // Edits to built-in lists
@@ -36,6 +38,8 @@ interface GameState {
   setRoundDuration: (seconds: number) => void;
   setTotalRounds: (rounds: number) => void;
   setShowButtons: (show: boolean) => void;
+  setHapticEnabled: (enabled: boolean) => void;
+  setSoundEnabled: (enabled: boolean) => void;
   toggleListSelection: (id: string) => void;
   addCustomList: (list: WordList) => void;
   removeCustomList: (id: string) => void;
@@ -61,6 +65,8 @@ export const useGameStore = create<GameState>()(
       roundDuration: 30,
       totalRounds: 3,
       showButtons: true,
+      hapticEnabled: true,
+      soundEnabled: true,
       selectedListIds: ['movies'],
       customLists: [],
       builtInListOverrides: {},
@@ -81,6 +87,8 @@ export const useGameStore = create<GameState>()(
       setRoundDuration: (seconds) => set({ roundDuration: seconds }),
       setTotalRounds: (rounds) => set({ totalRounds: rounds }),
       setShowButtons: (show) => set({ showButtons: show }),
+      setHapticEnabled: (enabled) => set({ hapticEnabled: enabled }),
+      setSoundEnabled: (enabled) => set({ soundEnabled: enabled }),
       
       toggleListSelection: (id) => set((state) => {
         const exists = state.selectedListIds.includes(id);
@@ -265,6 +273,8 @@ export const useGameStore = create<GameState>()(
         roundDuration: state.roundDuration,
         totalRounds: state.totalRounds,
         showButtons: state.showButtons,
+        hapticEnabled: state.hapticEnabled,
+        soundEnabled: state.soundEnabled,
         selectedListIds: state.selectedListIds,
         customLists: state.customLists,
         builtInListOverrides: state.builtInListOverrides,

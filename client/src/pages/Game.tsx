@@ -44,17 +44,113 @@ export default function Game() {
   const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
   const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
   
+  // Audio context for sound feedback - Promise-based for iOS compatibility
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioContextPromiseRef = useRef<Promise<AudioContext> | null>(null);
+  
+  // Ensure audio context is ready - only caches on success, clears on failure
+  const ensureAudioContext = (): Promise<AudioContext> => {
+    // If we have a ready context, return it
+    if (audioContextRef.current && audioContextRef.current.state === 'running') {
+      return Promise.resolve(audioContextRef.current);
+    }
+    
+    // If we have a pending promise, return it
+    if (audioContextPromiseRef.current) {
+      return audioContextPromiseRef.current;
+    }
+    
+    // Create new promise - only cache on success
+    const promise = new Promise<AudioContext>((resolve, reject) => {
+      try {
+        const ctx = audioContextRef.current || new (window.AudioContext || (window as any).webkitAudioContext)();
+        audioContextRef.current = ctx;
+        
+        if (ctx.state === 'suspended') {
+          ctx.resume()
+            .then(() => {
+              audioContextPromiseRef.current = null; // Clear pending promise
+              resolve(ctx);
+            })
+            .catch((e) => {
+              audioContextPromiseRef.current = null; // Clear on failure so retry works
+              reject(e);
+            });
+        } else {
+          resolve(ctx);
+        }
+      } catch (e) {
+        audioContextPromiseRef.current = null; // Clear on failure
+        reject(e);
+      }
+    });
+    
+    audioContextPromiseRef.current = promise;
+    return promise;
+  };
+  
+  // Play a short beep sound - only plays if audio context was already initialized by a gesture
+  const playBeep = (frequency: number, duration: number, type: OscillatorType = 'sine') => {
+    if (!store.soundEnabled) return;
+    
+    // Only play if context exists and is running (was initialized by a gesture handler)
+    const ctx = audioContextRef.current;
+    if (!ctx || ctx.state !== 'running') return;
+    
+    try {
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      
+      oscillator.frequency.value = frequency;
+      oscillator.type = type;
+      
+      gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration / 1000);
+      
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + duration / 1000);
+    } catch (e) {
+      // Audio not supported
+    }
+  };
+  
+  // Sound feedback - distinct tones for correct vs pass
+  const soundCorrect = () => {
+    playBeep(880, 80); // Higher pitch, short - positive feel
+  };
+  
+  const soundPass = () => {
+    playBeep(440, 50); // Lower pitch, shorter
+    setTimeout(() => playBeep(440, 50), 60); // Double beep pattern
+  };
+  
   // Haptic feedback functions using Vibration API
   const vibrateCorrect = () => {
+    if (!store.hapticEnabled) return;
     if (navigator.vibrate) {
-      navigator.vibrate(50); // Single short pulse for correct
+      navigator.vibrate(80); // Single pulse for correct (increased from 50ms)
     }
   };
   
   const vibratePass = () => {
+    if (!store.hapticEnabled) return;
     if (navigator.vibrate) {
-      navigator.vibrate([30, 30, 30]); // Double pulse pattern for pass
+      navigator.vibrate([50, 40, 50]); // Double pulse pattern for pass (more noticeable)
     }
+  };
+  
+  // Combined feedback - haptic + sound
+  const feedbackCorrect = () => {
+    vibrateCorrect();
+    soundCorrect();
+  };
+  
+  const feedbackPass = () => {
+    vibratePass();
+    soundPass();
   };
   
   // Keep nextWord ref updated
@@ -441,12 +537,12 @@ export default function Game() {
         // Tilted forward (screen toward user) = CORRECT
         pendingGestureRef.current = true;
         setTiltFeedback("correct");
-        vibrateCorrect(); // Haptic feedback for tilt
+        feedbackCorrect(); // Haptic + sound feedback for tilt
       } else if (tiltDelta < -tiltThresholdRef.current) {
         // Tilted backward (screen away from user) = PASS
         pendingGestureRef.current = false;
         setTiltFeedback("pass");
-        vibratePass(); // Haptic feedback for tilt
+        feedbackPass(); // Haptic + sound feedback for tilt
       }
     };
 
@@ -542,7 +638,8 @@ export default function Game() {
     pendingGestureRef.current = null; // Clear any pending tilt gesture
     mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
     setTiltFeedback("correct");
-    vibrateCorrect(); // Haptic feedback
+    ensureAudioContext(); // Initialize audio on user gesture for iOS
+    feedbackCorrect(); // Haptic + sound feedback
     store.nextWord(true);
     setTimeout(() => {
       setTiltFeedback(null);
@@ -556,7 +653,8 @@ export default function Game() {
     pendingGestureRef.current = null; // Clear any pending tilt gesture
     mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
     setTiltFeedback("pass");
-    vibratePass(); // Haptic feedback
+    ensureAudioContext(); // Initialize audio on user gesture for iOS
+    feedbackPass(); // Haptic + sound feedback
     store.nextWord(false);
     setTimeout(() => {
       setTiltFeedback(null);
@@ -569,6 +667,9 @@ export default function Game() {
   };
 
   const requestTiltPermission = async () => {
+    // Initialize audio context on user gesture for iOS compatibility
+    ensureAudioContext();
+    
     if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
       try {
         const perm = await (DeviceOrientationEvent as any).requestPermission();
@@ -609,6 +710,9 @@ export default function Game() {
     // Guard: don't overlap countdowns (use ref to avoid stale closures)
     if (isCountdownActiveRef.current) return;
     isCountdownActiveRef.current = true;
+    
+    // Note: Audio context is initialized from button clicks (requestTiltPermission, handleCorrect, handlePass)
+    // NOT here, because startCountdown can be triggered by orientation changes which are not user gestures
     
     // Clear any existing timeouts
     countdownTimeoutsRef.current.forEach(t => clearTimeout(t));
