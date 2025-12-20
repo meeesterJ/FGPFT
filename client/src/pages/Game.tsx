@@ -47,27 +47,32 @@ export default function Game() {
   
   // Sound feedback using enhanced audio system
   const soundCorrect = () => {
+    console.log('soundCorrect called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('correct');
   };
   
   const soundPass = () => {
+    console.log('soundPass called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('pass');
   };
   
   // Countdown sounds - tick/tock pattern for 3, 2, 1 and buzz for round end
   const soundTick = () => {
+    console.log('soundTick called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('tick');
   };
   
   const soundTock = () => {
+    console.log('soundTock called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('tock');
   };
   
   const soundBuzz = () => {
+    console.log('soundBuzz called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('buzz');
   };
