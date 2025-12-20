@@ -81,11 +81,17 @@ export async function playBeep(frequency: number, duration: number, type: Oscill
     oscillator.frequency.value = frequency;
     oscillator.type = type;
     
-    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration / 1000);
+    // Ensure minimum duration for audibility
+    const actualDuration = Math.max(duration, 100) / 1000;
+    
+    // Higher initial gain for better audibility
+    gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + actualDuration);
     
     oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + duration / 1000);
+    oscillator.stop(ctx.currentTime + actualDuration);
+    
+    console.log('sharedPlayBeep: Sound played!', { frequency, duration: actualDuration * 1000, type });
   } catch (e) {
     console.log('Audio playback failed:', e);
   }
