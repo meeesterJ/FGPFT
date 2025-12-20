@@ -277,15 +277,18 @@ export default function Game() {
       
       // Use gamma for landscape mode (it measures the relevant tilt axis)
       // gamma ranges from -90 to 90 degrees
+      // On iOS/Safari:
+      // - Landscape-primary (90°, clockwise rotation): Forward tilt = NEGATIVE gamma
+      // - Landscape-secondary (270°/-90°, counterclockwise rotation): Forward tilt = POSITIVE gamma
       let effectiveTilt = 0;
       if (normalizedAngle === 90 || normalizedAngle === 270) {
         // Landscape mode: use gamma for forward/backward tilt
-        // In landscape-left (90): positive gamma = tilted toward user (forward)
-        // In landscape-right (270): negative gamma = tilted toward user (forward)
         if (normalizedAngle === 90) {
-          effectiveTilt = gamma; // Forward tilt = positive gamma
+          // Landscape-primary (clockwise): invert gamma so forward = positive
+          effectiveTilt = -gamma;
         } else {
-          effectiveTilt = -gamma; // Flip for opposite landscape
+          // Landscape-secondary (counterclockwise): gamma is already correct
+          effectiveTilt = gamma;
         }
       } else {
         // Portrait or unknown: fall back to beta
