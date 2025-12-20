@@ -44,6 +44,19 @@ export default function Game() {
   const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
   const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
   
+  // Haptic feedback functions using Vibration API
+  const vibrateCorrect = () => {
+    if (navigator.vibrate) {
+      navigator.vibrate(50); // Single short pulse for correct
+    }
+  };
+  
+  const vibratePass = () => {
+    if (navigator.vibrate) {
+      navigator.vibrate([30, 30, 30]); // Double pulse pattern for pass
+    }
+  };
+  
   // Keep nextWord ref updated
   useEffect(() => {
     nextWordRef.current = store.nextWord;
@@ -428,10 +441,12 @@ export default function Game() {
         // Tilted forward (screen toward user) = CORRECT
         pendingGestureRef.current = true;
         setTiltFeedback("correct");
+        vibrateCorrect(); // Haptic feedback for tilt
       } else if (tiltDelta < -tiltThresholdRef.current) {
         // Tilted backward (screen away from user) = PASS
         pendingGestureRef.current = false;
         setTiltFeedback("pass");
+        vibratePass(); // Haptic feedback for tilt
       }
     };
 
@@ -527,6 +542,7 @@ export default function Game() {
     pendingGestureRef.current = null; // Clear any pending tilt gesture
     mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
     setTiltFeedback("correct");
+    vibrateCorrect(); // Haptic feedback
     store.nextWord(true);
     setTimeout(() => {
       setTiltFeedback(null);
@@ -540,6 +556,7 @@ export default function Game() {
     pendingGestureRef.current = null; // Clear any pending tilt gesture
     mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
     setTiltFeedback("pass");
+    vibratePass(); // Haptic feedback
     store.nextWord(false);
     setTimeout(() => {
       setTiltFeedback(null);
