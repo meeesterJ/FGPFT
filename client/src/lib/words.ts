@@ -215,5 +215,48 @@ export const DEFAULT_WORD_LISTS = [
       'Mewing', 'Furry', 'Bur-Bur-Patipin', 'Alpha', 'Rizz',
       'Sus', 'Cap'
     ]
+  },
+  {
+    id: 'us-geography',
+    name: 'US Geography',
+    words: [
+      'Alabama', 'Montgomery', 'Alaska', 'Juneau', 'Arizona', 'Phoenix',
+      'Arkansas', 'Little Rock', 'California', 'Sacramento', 'Colorado', 'Denver',
+      'Connecticut', 'Hartford', 'Delaware', 'Dover', 'Florida', 'Tallahassee',
+      'Georgia', 'Atlanta', 'Hawaii', 'Honolulu', 'Idaho', 'Boise',
+      'Illinois', 'Springfield', 'Indiana', 'Indianapolis', 'Iowa', 'Des Moines',
+      'Kansas', 'Topeka', 'Kentucky', 'Frankfort', 'Louisiana', 'Baton Rouge',
+      'Maine', 'Augusta', 'Maryland', 'Annapolis', 'Massachusetts', 'Boston',
+      'Michigan', 'Lansing', 'Minnesota', 'Saint Paul', 'Mississippi', 'Jackson',
+      'Missouri', 'Jefferson City', 'Montana', 'Helena', 'Nebraska', 'Lincoln',
+      'Nevada', 'Carson City', 'New Hampshire', 'Concord', 'New Jersey', 'Trenton',
+      'New Mexico', 'Santa Fe', 'New York', 'Albany', 'North Carolina', 'Raleigh',
+      'North Dakota', 'Bismarck', 'Ohio', 'Columbus', 'Oklahoma', 'Oklahoma City',
+      'Oregon', 'Salem', 'Pennsylvania', 'Harrisburg', 'Rhode Island', 'Providence',
+      'South Carolina', 'Columbia', 'South Dakota', 'Pierre', 'Tennessee', 'Nashville',
+      'Texas', 'Austin', 'Utah', 'Salt Lake City', 'Vermont', 'Montpelier',
+      'Virginia', 'Richmond', 'Washington', 'Olympia', 'West Virginia', 'Charleston',
+      'Wisconsin', 'Madison', 'Wyoming', 'Cheyenne',
+      'New York City', 'Los Angeles', 'Chicago', 'Houston', 'Miami',
+      'San Francisco', 'Seattle', 'Las Vegas', 'San Diego', 'Dallas',
+      'San Antonio', 'Philadelphia', 'Detroit', 'Portland', 'Minneapolis',
+      'New Orleans', 'Baltimore', 'Milwaukee', 'Cleveland', 'Pittsburgh',
+      'Cincinnati', 'Kansas City', 'Tampa', 'Orlando', 'Charlotte',
+      'Statue of Liberty', 'Golden Gate Bridge', 'Mount Rushmore', 'Hollywood Sign', 'Empire State Building',
+      'White House', 'Lincoln Memorial', 'Washington Monument', 'Space Needle', 'Gateway Arch',
+      'Brooklyn Bridge', 'Hoover Dam', 'Freedom Trail', 'Alcatraz Island', 'Pearl Harbor',
+      'Independence Hall', 'Liberty Bell', 'Niagara Falls', 'Times Square', 'Central Park',
+      'Grand Central Station', 'Las Vegas Strip', 'Navy Pier', 'Fisherman\'s Wharf', 'French Quarter',
+      'Grand Canyon', 'Yellowstone', 'Yosemite', 'Zion', 'Glacier National Park',
+      'Rocky Mountain', 'Great Smoky Mountains', 'Acadia', 'Olympic National Park', 'Joshua Tree',
+      'Death Valley', 'Everglades', 'Bryce Canyon', 'Arches', 'Sequoia',
+      'Redwood', 'Denali', 'Hawaii Volcanoes', 'Crater Lake', 'Mesa Verde',
+      'Badlands', 'Shenandoah', 'Big Bend', 'Canyonlands', 'Capitol Reef',
+      'Mississippi River', 'Colorado River', 'Missouri River', 'Great Lakes', 'Lake Michigan',
+      'Lake Superior', 'Lake Erie', 'Lake Tahoe', 'Chesapeake Bay', 'Puget Sound',
+      'Florida Keys', 'Cape Cod', 'Martha\'s Vineyard', 'Long Island', 'Manhattan',
+      'Hollywood', 'Silicon Valley', 'Wall Street', 'Broadway', 'Bourbon Street',
+      'Route 66', 'Pacific Coast Highway', 'Appalachian Trail', 'Mount Whitney', 'Mount Rainier'
+    ]
   }
 ];
