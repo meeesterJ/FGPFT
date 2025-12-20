@@ -34,6 +34,9 @@ export default function Game() {
   const calibrationSamplesRef = useRef<number[]>([]); // Samples for averaging baseline
   const isCalibrating = useRef(false); // Flag to indicate calibration in progress
   const nextWordRef = useRef(store.nextWord); // Stable ref for nextWord function
+  const pendingGestureRef = useRef<boolean | null>(null); // Pending gesture result (true=correct, false=pass, null=none)
+  const returnThresholdRef = useRef(10); // Degrees from baseline to consider "returned to center"
+  const mustReturnToCenterRef = useRef(false); // After button click, must return to center before new tilt gesture
   const wordDisplayRef = useRef<HTMLHeadingElement>(null); // Ref for auto-scaling word display
   const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
   const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
@@ -188,6 +191,9 @@ export default function Game() {
           baselineBetaRef.current = null;
           isCalibrating.current = true;
           calibrationSamplesRef.current = [];
+          pendingGestureRef.current = null; // Clear any pending gesture on recalibration
+          mustReturnToCenterRef.current = false; // Clear return-to-center guard
+          setTiltFeedback(null);
         }, cooldownRemaining);
       } else {
         // No cooldown - calibrate immediately
@@ -195,6 +201,9 @@ export default function Game() {
         baselineBetaRef.current = null;
         isCalibrating.current = true;
         calibrationSamplesRef.current = [];
+        pendingGestureRef.current = null; // Clear any pending gesture on recalibration
+        mustReturnToCenterRef.current = false; // Clear return-to-center guard
+        setTiltFeedback(null);
       }
     }
     
@@ -250,24 +259,42 @@ export default function Game() {
       // Wait for calibration to complete
       if (baselineBetaRef.current === null) return;
       
-      // Debounce: only allow one gesture per 1.5 seconds to prevent double triggers
-      if (eventTime - lastTiltTimeRef.current < 1500) return;
-      
       // Calculate tilt delta from calibrated baseline
       const tiltDelta = effectiveBeta - baselineBetaRef.current;
+      const absDelta = Math.abs(tiltDelta);
+      const isAtCenter = absDelta <= returnThresholdRef.current;
 
+      // If we must return to center first (after button click), wait for that
+      if (mustReturnToCenterRef.current) {
+        if (isAtCenter) {
+          // User returned to center - can now accept new tilt gestures
+          mustReturnToCenterRef.current = false;
+        }
+        return; // Don't process any gestures until centered
+      }
+
+      // If we have a pending gesture, check if user returned to center
+      if (pendingGestureRef.current !== null) {
+        if (isAtCenter) {
+          // User returned to center - advance word now
+          const wasCorrect = pendingGestureRef.current;
+          pendingGestureRef.current = null;
+          lastTiltTimeRef.current = Date.now(); // Update for cooldown logic
+          setTiltFeedback(null);
+          nextWordRef.current(wasCorrect);
+        }
+        return; // Don't process new gestures until return to center
+      }
+
+      // No pending gesture - check for new tilt gesture
       if (tiltDelta > tiltThresholdRef.current) {
         // Tilted forward (screen toward user) = CORRECT
-        lastTiltTimeRef.current = eventTime;
+        pendingGestureRef.current = true;
         setTiltFeedback("correct");
-        setTimeout(() => setTiltFeedback(null), 300);
-        nextWordRef.current(true);
       } else if (tiltDelta < -tiltThresholdRef.current) {
         // Tilted backward (screen away from user) = PASS
-        lastTiltTimeRef.current = eventTime;
+        pendingGestureRef.current = false;
         setTiltFeedback("pass");
-        setTimeout(() => setTiltFeedback(null), 300);
-        nextWordRef.current(false);
       }
     };
 
@@ -360,15 +387,27 @@ export default function Game() {
   const handleCorrect = () => {
     if (isProcessing || !store.isPlaying || isCountingDown) return;
     setIsProcessing(true);
+    pendingGestureRef.current = null; // Clear any pending tilt gesture
+    mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
+    setTiltFeedback("correct");
     store.nextWord(true);
-    setTimeout(() => setIsProcessing(false), 500);
+    setTimeout(() => {
+      setTiltFeedback(null);
+      setIsProcessing(false);
+    }, 300);
   };
 
   const handlePass = () => {
     if (isProcessing || !store.isPlaying || isCountingDown) return;
     setIsProcessing(true);
+    pendingGestureRef.current = null; // Clear any pending tilt gesture
+    mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
+    setTiltFeedback("pass");
     store.nextWord(false);
-    setTimeout(() => setIsProcessing(false), 500);
+    setTimeout(() => {
+      setTiltFeedback(null);
+      setIsProcessing(false);
+    }, 300);
   };
 
   const togglePause = () => {
