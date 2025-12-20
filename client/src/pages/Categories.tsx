@@ -149,14 +149,14 @@ export default function Categories() {
   );
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="p-4 flex items-center border-b border-border bg-card/50 backdrop-blur-md sticky top-0 z-10">
+    <div className="min-h-screen bg-gradient-to-b from-background to-card flex flex-col">
+      <header className="p-4 flex items-center border-b border-cyan-500/30 bg-cyan-900/20 backdrop-blur-md sticky top-0 z-10">
         <Link href="/">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/20">
             <ArrowLeft className="w-6 h-6" />
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold ml-4 text-primary">Word Categories</h1>
+        <h1 className="text-2xl font-thin ml-4 text-cyan-400">Word Categories</h1>
       </header>
 
       <ScrollArea className="flex-1 p-6 max-w-2xl mx-auto w-full">
@@ -166,7 +166,7 @@ export default function Categories() {
             
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90">
+                <Button size="sm" className="bg-pink-500 text-white hover:bg-pink-400 border border-pink-400">
                   <Plus className="w-4 h-4 mr-2" />
                   Create List
                 </Button>
@@ -276,14 +276,14 @@ export default function Categories() {
                   key={list.id} 
                   className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all cursor-pointer ${
                     isSelected 
-                      ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary),0.3)]' 
-                      : 'border-border bg-card hover:border-primary/50'
+                      ? 'border-cyan-400 bg-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.3)]' 
+                      : 'border-border bg-card/50 hover:border-cyan-500/50'
                   }`}
                   onClick={() => store.toggleListSelection(list.id)}
                   data-testid={`category-${list.id}`}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-primary bg-primary' : 'border-muted-foreground'}`}>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-cyan-400 bg-cyan-500' : 'border-muted-foreground'}`}>
                       {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
                     </div>
                     <div>
@@ -295,7 +295,7 @@ export default function Categories() {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="text-primary hover:text-primary hover:bg-primary/10"
+                      className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleStartEdit(list);
@@ -306,7 +306,7 @@ export default function Categories() {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      className="text-red-400 hover:text-red-300 hover:bg-red-500/20"
                       onClick={(e) => {
                         e.stopPropagation();
                         if (list.isCustom) {

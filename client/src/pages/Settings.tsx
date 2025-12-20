@@ -1,33 +1,45 @@
 import { Link } from "wouter";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Share } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Settings() {
   const store = useGameStore();
+  const [isIOS, setIsIOS] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+
+  useEffect(() => {
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isIPadOS = navigator.userAgent.includes('Macintosh') && navigator.maxTouchPoints > 1;
+    setIsIOS(isIOSDevice || isIPadOS);
+    const standalone = window.matchMedia('(display-mode: standalone)').matches || 
+                       (window.navigator as any).standalone === true;
+    setIsStandalone(standalone);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="p-4 flex items-center border-b border-border bg-card/50 backdrop-blur-md sticky top-0 z-10">
+    <div className="min-h-screen bg-gradient-to-b from-background to-card flex flex-col">
+      <header className="p-4 flex items-center border-b border-purple-500/30 bg-purple-900/20 backdrop-blur-md sticky top-0 z-10">
         <Link href="/">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/20">
             <ArrowLeft className="w-6 h-6" />
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold ml-4 text-primary">Settings</h1>
+        <h1 className="text-2xl font-thin ml-4 text-purple-400">Settings</h1>
       </header>
 
       <ScrollArea className="flex-1 p-6 max-w-2xl mx-auto w-full">
         <div className="space-y-8 pb-20">
           
           {/* Game Duration */}
-          <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-thin">Round Timer</h2>
-              <span className="text-2xl font-mono text-primary">{store.roundDuration}s</span>
+              <h2 className="text-xl font-thin text-pink-400">Round Timer</h2>
+              <span className="text-2xl font-mono text-pink-300">{store.roundDuration}s</span>
             </div>
             <Slider 
               value={[store.roundDuration]} 
@@ -41,10 +53,10 @@ export default function Settings() {
           </section>
 
           {/* Rounds Count */}
-          <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-thin">Total Rounds</h2>
-              <span className="text-2xl font-mono text-secondary">{store.totalRounds}</span>
+              <h2 className="text-xl font-thin text-cyan-400">Total Rounds</h2>
+              <span className="text-2xl font-mono text-cyan-300">{store.totalRounds}</span>
             </div>
             <Slider 
               value={[store.totalRounds]} 
@@ -58,10 +70,10 @@ export default function Settings() {
           </section>
 
           {/* Show Buttons Toggle */}
-          <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
             <div className="flex justify-between items-center">
               <div className="space-y-1">
-                <h2 className="text-xl font-thin">Show Buttons</h2>
+                <h2 className="text-xl font-thin text-yellow-400">Show Buttons</h2>
                 <p className="text-sm text-muted-foreground">Display Correct/Pass buttons during gameplay. Disable to use tilt gestures only.</p>
               </div>
               <Switch 
@@ -73,10 +85,10 @@ export default function Settings() {
           </section>
 
           {/* Haptic Feedback Toggle */}
-          <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
             <div className="flex justify-between items-center">
               <div className="space-y-1">
-                <h2 className="text-xl font-thin">Haptic Feedback</h2>
+                <h2 className="text-xl font-thin text-green-400">Haptic Feedback</h2>
                 <p className="text-sm text-muted-foreground">Vibrate the phone when correct or pass is registered. Works on Android devices.</p>
               </div>
               <Switch 
@@ -88,10 +100,10 @@ export default function Settings() {
           </section>
 
           {/* Sound Feedback Toggle */}
-          <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
             <div className="flex justify-between items-center">
               <div className="space-y-1">
-                <h2 className="text-xl font-thin">Sound Feedback</h2>
+                <h2 className="text-xl font-thin text-purple-400">Sound Feedback</h2>
                 <p className="text-sm text-muted-foreground">Play a short beep when correct or pass is registered. Works on all devices.</p>
               </div>
               <Switch 
@@ -101,6 +113,14 @@ export default function Settings() {
               />
             </div>
           </section>
+
+          {/* iOS hint to add to home screen */}
+          {isIOS && !isStandalone && (
+            <section className="bg-card/50 p-4 rounded-2xl border border-border flex items-center gap-3">
+              <Share className="w-5 h-5 flex-shrink-0 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">For the best fullscreen experience, tap the share button and "Add to Home Screen"</span>
+            </section>
+          )}
 
         </div>
       </ScrollArea>

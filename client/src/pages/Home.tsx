@@ -3,26 +3,14 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
 import { initAudioContext } from "@/lib/audio";
-import { Play, Settings as SettingsIcon, Share, List } from "lucide-react";
+import { Play, Settings as SettingsIcon, List } from "lucide-react";
 
 export default function Home() {
   const [, setLocation] = useLocation();
   const startGame = useGameStore(state => state.startGame);
-  const [isIOS, setIsIOS] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
   const [tiltPermissionGranted, setTiltPermissionGranted] = useState(false);
 
   useEffect(() => {
-    // Detect iOS/iPadOS (iPadOS reports as Macintosh, so also check for touch support)
-    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const isIPadOS = navigator.userAgent.includes('Macintosh') && 
-                     navigator.maxTouchPoints > 1;
-    setIsIOS(isIOSDevice || isIPadOS);
-    // Check if running as installed PWA
-    const standalone = window.matchMedia('(display-mode: standalone)').matches || 
-                       (window.navigator as any).standalone === true;
-    setIsStandalone(standalone);
-    
     // Check if device orientation is already available (non-iOS or permission already granted)
     if (typeof DeviceOrientationEvent !== "undefined") {
       if (typeof (DeviceOrientationEvent as any).requestPermission !== "function") {
@@ -113,14 +101,6 @@ export default function Home() {
         </div>
 
         <div className="grid gap-3 w-full animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          {/* iOS hint to add to home screen for fullscreen experience */}
-          {isIOS && !isStandalone && (
-            <div className="bg-card/80 backdrop-blur rounded-xl p-4 text-sm text-muted-foreground flex items-center gap-3 border border-border">
-              <Share className="w-5 h-5 flex-shrink-0" />
-              <span>For the best fullscreen experience, tap the share button and "Add to Home Screen"</span>
-            </div>
-          )}
-          
           <Button 
             size="lg" 
             className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
