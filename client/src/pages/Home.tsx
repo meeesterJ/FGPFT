@@ -49,10 +49,6 @@ export default function Home() {
             </Button>
           </Link>
         </div>
-        
-        <div className="text-sm text-muted-foreground opacity-50 animate-pulse">
-          Tap "Play Now" to start the fun!
-        </div>
       </div>
     </div>
   );
