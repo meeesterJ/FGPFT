@@ -119,15 +119,9 @@ export default function Settings() {
     const isBuiltIn = DEFAULT_WORD_LISTS.some(l => l.id === editingListId);
 
     if (isBuiltIn) {
-      // When editing a built-in list, create a new custom list instead
-      const newCustomList: WordList = {
-        id: `custom-${Date.now()}`,
-        name: editListName,
-        words: filteredWords,
-        isCustom: true
-      };
-      store.addCustomList(newCustomList);
-      toast({ title: "Success", description: `Created custom list "${editListName}" from built-in list!` });
+      // Update built-in list in place (stored as override)
+      store.updateBuiltInList(editingListId!, editListName, filteredWords);
+      toast({ title: "Success", description: `"${editListName}" has been updated!` });
     } else {
       // Update existing custom list
       const updatedList: WordList = {
@@ -145,8 +139,10 @@ export default function Settings() {
   };
 
   // Combine and normalize lists for display (exclude deleted and permanently deleted built-in lists)
+  // Use effective built-in lists which include user modifications
+  const effectiveBuiltInLists = store.getEffectiveBuiltInLists();
   const allLists = [
-    ...DEFAULT_WORD_LISTS.filter(l => 
+    ...effectiveBuiltInLists.filter(l => 
       !store.deletedBuiltInLists.includes(l.id) && 
       !store.permanentlyDeletedBuiltInLists.includes(l.id)
     ).map(l => ({ ...l, isCustom: false })),

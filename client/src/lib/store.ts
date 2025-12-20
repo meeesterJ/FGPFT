@@ -15,6 +15,7 @@ interface GameState {
   totalRounds: number;
   selectedListIds: string[];
   customLists: WordList[];
+  builtInListOverrides: Record<string, { name?: string; words?: string[] }>; // Edits to built-in lists
   deletedBuiltInLists: string[]; // Track deleted built-in lists
   permanentlyDeletedBuiltInLists: string[]; // Track permanently deleted built-in lists
   
@@ -37,9 +38,12 @@ interface GameState {
   addCustomList: (list: WordList) => void;
   removeCustomList: (id: string) => void;
   updateCustomList: (id: string, updatedList: WordList) => void;
+  updateBuiltInList: (id: string, name: string, words: string[]) => void;
+  resetBuiltInList: (id: string) => void;
   deleteBuiltInList: (id: string) => void;
   restoreBuiltInList: (id: string) => void;
   permanentlyDeleteBuiltInList: (id: string) => void;
+  getEffectiveBuiltInLists: () => WordList[];
   
   startGame: () => void;
   startRound: () => void;
@@ -56,6 +60,7 @@ export const useGameStore = create<GameState>()(
       totalRounds: 3,
       selectedListIds: ['movies'],
       customLists: [],
+      builtInListOverrides: {},
       deletedBuiltInLists: [],
       permanentlyDeletedBuiltInLists: [],
       
@@ -97,6 +102,33 @@ export const useGameStore = create<GameState>()(
         customLists: state.customLists.map(l => l.id === id ? updatedList : l)
       })),
 
+      updateBuiltInList: (id, name, words) => set((state) => ({
+        builtInListOverrides: {
+          ...state.builtInListOverrides,
+          [id]: { name, words }
+        }
+      })),
+
+      resetBuiltInList: (id) => set((state) => {
+        const { [id]: _, ...rest } = state.builtInListOverrides;
+        return { builtInListOverrides: rest };
+      }),
+
+      getEffectiveBuiltInLists: () => {
+        const state = get();
+        return DEFAULT_WORD_LISTS.map(list => {
+          const override = state.builtInListOverrides[list.id];
+          if (override) {
+            return {
+              ...list,
+              name: override.name ?? list.name,
+              words: override.words ?? list.words
+            };
+          }
+          return list;
+        });
+      },
+
       deleteBuiltInList: (id) => set((state) => ({
         deletedBuiltInLists: [...state.deletedBuiltInLists, id],
         selectedListIds: state.selectedListIds.filter(lid => lid !== id)
@@ -123,15 +155,16 @@ export const useGameStore = create<GameState>()(
       },
 
       startRound: () => {
-        const { currentRound, totalRounds, selectedListIds, customLists } = get();
+        const { currentRound, totalRounds, selectedListIds, customLists, getEffectiveBuiltInLists } = get();
         
         if (currentRound >= totalRounds) {
           set({ isGameFinished: true, isPlaying: false });
           return;
         }
 
-        // Compile deck
-        const allLists = [...DEFAULT_WORD_LISTS, ...customLists];
+        // Compile deck using effective built-in lists (with user modifications applied)
+        const effectiveBuiltInLists = getEffectiveBuiltInLists();
+        const allLists = [...effectiveBuiltInLists, ...customLists];
         const activeLists = allLists.filter(l => selectedListIds.includes(l.id));
         let words = activeLists.flatMap(l => l.words);
         
@@ -163,8 +196,9 @@ export const useGameStore = create<GameState>()(
         let finalDeck = newDeck;
 
         if (newDeck.length === 0) {
-           // Refill if empty
-           const allLists = [...DEFAULT_WORD_LISTS, ...get().customLists];
+           // Refill if empty using effective built-in lists
+           const effectiveBuiltInLists = get().getEffectiveBuiltInLists();
+           const allLists = [...effectiveBuiltInLists, ...get().customLists];
            const activeLists = allLists.filter(l => get().selectedListIds.includes(l.id));
            let words = activeLists.flatMap(l => l.words).sort(() => Math.random() - 0.5);
            nextWordStr = words[0];
@@ -206,6 +240,7 @@ export const useGameStore = create<GameState>()(
         totalRounds: state.totalRounds,
         selectedListIds: state.selectedListIds,
         customLists: state.customLists,
+        builtInListOverrides: state.builtInListOverrides,
         deletedBuiltInLists: state.deletedBuiltInLists,
         permanentlyDeletedBuiltInLists: state.permanentlyDeletedBuiltInLists
       }),
