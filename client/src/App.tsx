@@ -8,12 +8,14 @@ import Home from "@/pages/Home";
 import Settings from "@/pages/Settings";
 import Game from "@/pages/Game";
 import Summary from "@/pages/Summary";
+import DeletedCategories from "@/pages/DeletedCategories";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/settings" component={Settings} />
+      <Route path="/settings/deleted" component={DeletedCategories} />
       <Route path="/game" component={Game} />
       <Route path="/summary" component={Summary} />
       <Route component={NotFound} />

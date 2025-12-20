@@ -368,38 +368,18 @@ export default function Settings() {
               })}
             </div>
 
-            {/* Deleted Built-in Lists */}
+            {/* Link to Deleted Categories */}
             {deletedLists.length > 0 && (
-              <div className="mt-8 pt-6 border-t border-border">
-                <h3 className="font-bold text-lg mb-3">Deleted Categories ({deletedLists.length})</h3>
-                <p className="text-sm text-muted-foreground mb-4">Restore any built-in categories you deleted.</p>
-                <div className="grid gap-3">
-                  {deletedLists.map(list => (
-                    <div 
-                      key={list.id} 
-                      className="flex items-center justify-between p-4 rounded-xl border-2 border-border bg-card/50 opacity-60"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-6 h-6 rounded-full border-2 border-muted-foreground"></div>
-                        <div>
-                          <h3 className="font-thin">{list.name}</h3>
-                          <p className="text-xs text-muted-foreground">{list.words.length} words</p>
-                        </div>
-                      </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="text-primary hover:text-primary hover:bg-primary/10 border-primary/50"
-                        onClick={() => {
-                          store.restoreBuiltInList(list.id);
-                          toast({ title: "Restored", description: `"${list.name}" has been restored.` });
-                        }}
-                      >
-                        Restore
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+              <div className="mt-6 pt-6 border-t border-border">
+                <Link href="/settings/deleted">
+                  <Button 
+                    variant="outline" 
+                    className="w-full text-muted-foreground hover:text-foreground"
+                    data-testid="link-deleted-categories"
+                  >
+                    View Deleted Categories ({deletedLists.length})
+                  </Button>
+                </Link>
               </div>
             )}
           </section>

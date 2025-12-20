@@ -38,6 +38,7 @@ interface GameState {
   updateCustomList: (id: string, updatedList: WordList) => void;
   deleteBuiltInList: (id: string) => void;
   restoreBuiltInList: (id: string) => void;
+  permanentlyDeleteBuiltInList: (id: string) => void;
   
   startGame: () => void;
   startRound: () => void;
@@ -100,6 +101,10 @@ export const useGameStore = create<GameState>()(
       })),
 
       restoreBuiltInList: (id) => set((state) => ({
+        deletedBuiltInLists: state.deletedBuiltInLists.filter(did => did !== id)
+      })),
+
+      permanentlyDeleteBuiltInList: (id) => set((state) => ({
         deletedBuiltInLists: state.deletedBuiltInLists.filter(did => did !== id)
       })),
 
