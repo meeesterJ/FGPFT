@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
-import { Play, Settings as SettingsIcon, Share } from "lucide-react";
+import { Play, Settings as SettingsIcon, Share, List } from "lucide-react";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -106,6 +106,18 @@ export default function Home() {
             <Play className="mr-3 w-8 h-8 fill-current" />
             Play Now
           </Button>
+
+          <Link href="/categories">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform border-2 border-secondary bg-card hover:bg-secondary hover:text-secondary-foreground"
+              data-testid="button-categories"
+            >
+              <List className="mr-3 w-6 h-6" />
+              Categories
+            </Button>
+          </Link>
 
           <Link href="/settings">
             <Button 
