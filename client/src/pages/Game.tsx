@@ -46,6 +46,17 @@ export default function Game() {
     nextWordRef.current = store.nextWord;
   }, [store.nextWord]);
 
+  // When hasDeviceOrientation becomes true (permission granted), start countdown if in landscape
+  useEffect(() => {
+    if (hasDeviceOrientation && waitingForPermission) {
+      const isLandscape = window.innerWidth > window.innerHeight;
+      if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+        setWaitingForPermission(false);
+        startCountdown();
+      }
+    }
+  }, [hasDeviceOrientation, waitingForPermission]);
+
   // Initialize round and device orientation
   useEffect(() => {
     // Only start round once per mount, using ref to prevent React StrictMode double-call
@@ -60,6 +71,26 @@ export default function Game() {
     // Reset timer
     setTimeLeft(store.roundDuration);
 
+    // Try to lock to current landscape orientation to prevent flipping
+    const lockToCurrentLandscape = async () => {
+      try {
+        if (screen.orientation && (screen.orientation as any).lock) {
+          // Get current orientation type to lock to it specifically
+          const currentType = screen.orientation.type;
+          if (currentType === 'landscape-primary' || currentType === 'landscape-secondary') {
+            // Lock to current landscape orientation to prevent flip
+            await (screen.orientation as any).lock(currentType);
+            setShowRotatePrompt(false);
+          } else {
+            // Not in landscape yet, lock to any landscape
+            await (screen.orientation as any).lock('landscape');
+          }
+        }
+      } catch (e) {
+        // Screen orientation lock not supported or failed - show prompt instead
+      }
+    };
+
     // Check if device is in landscape and prompt to rotate if not
     const checkOrientation = () => {
       const isLandscape = window.innerWidth > window.innerHeight;
@@ -67,11 +98,22 @@ export default function Game() {
       // If in landscape and we haven't shown the initial countdown yet
       if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
         wasInPortrait.current = false;
-        // Check if iOS needs permission - if so, wait for it before countdown
+        
+        // Lock to current landscape orientation when we enter landscape
+        lockToCurrentLandscape();
+        
+        // Check if iOS needs permission - test by checking if we already have orientation events
         if (typeof DeviceOrientationEvent !== "undefined" && 
             typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-          // iOS 13+ - wait for permission before starting countdown
-          setWaitingForPermission(true);
+          // iOS 13+ - check if permission was already granted by testing for events
+          // If hasDeviceOrientation is already true, permission was granted on home screen
+          if (hasDeviceOrientation) {
+            // Permission already granted - start countdown immediately
+            startCountdown();
+          } else {
+            // Need to wait for permission
+            setWaitingForPermission(true);
+          }
         } else {
           // Non-iOS or older iOS - start countdown immediately
           startCountdown();
@@ -88,10 +130,11 @@ export default function Game() {
       }
       
       // When returning to landscape from portrait (after initial countdown has played),
-      // bump trigger to force recalibration
+      // bump trigger to force recalibration and re-lock orientation
       if (isLandscape && wasInPortrait.current && hasShownInitialCountdownRef.current) {
         wasInPortrait.current = false;
         setCalibrationTrigger(prev => prev + 1);
+        lockToCurrentLandscape();
       }
       
       setShowRotatePrompt(!isLandscape);
@@ -106,19 +149,6 @@ export default function Game() {
     
     checkOrientation();
     
-    // Try to lock to landscape (works on Android, not iOS)
-    const lockToLandscape = async () => {
-      try {
-        if (screen.orientation && (screen.orientation as any).lock) {
-          await (screen.orientation as any).lock('landscape');
-          setShowRotatePrompt(false);
-        }
-      } catch (e) {
-        // Screen orientation lock not supported or failed - show prompt instead
-      }
-    };
-    lockToLandscape();
-    
     // Listen for orientation changes
     const handleOrientationChange = () => {
       checkOrientation();
@@ -129,12 +159,26 @@ export default function Game() {
       screen.orientation.addEventListener("change", handleOrientationChange);
     }
 
-    // Check if device orientation is available (non-iOS or pre-iOS 13)
+    // Check if device orientation is available
     if (typeof DeviceOrientationEvent !== "undefined") {
       if (typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-        // iOS 13+ requires user interaction to request permission
-        setNeedsIOSPermission(true);
-        setHasDeviceOrientation(false);
+        // iOS 13+ - test if permission was already granted by listening for an event
+        let testTimeout: NodeJS.Timeout;
+        const testHandler = (e: DeviceOrientationEvent) => {
+          // We received an orientation event - permission was granted!
+          clearTimeout(testTimeout);
+          window.removeEventListener("deviceorientation", testHandler);
+          setHasDeviceOrientation(true);
+          setNeedsIOSPermission(false);
+          // Don't clear waitingForPermission here - the useEffect watching hasDeviceOrientation will handle it
+        };
+        window.addEventListener("deviceorientation", testHandler);
+        // If no event received within 500ms, permission not granted
+        testTimeout = setTimeout(() => {
+          window.removeEventListener("deviceorientation", testHandler);
+          setNeedsIOSPermission(true);
+          setHasDeviceOrientation(false);
+        }, 500);
       } else {
         // Non-iOS or older iOS - orientation events are available
         setHasDeviceOrientation(true);
@@ -225,23 +269,32 @@ export default function Game() {
       // Get the current orientation angle
       const angle = orientationAngleRef.current;
       const beta = event.beta || 0;
+      const gamma = event.gamma || 0;
       
-      // Calculate effective beta based on device orientation
+      // In landscape mode, gamma represents the forward/backward tilt (not beta)
       // Normalize angle to 0-360 range
       const normalizedAngle = ((angle % 360) + 360) % 360;
       
-      let effectiveBeta = beta;
-      if (normalizedAngle === 90) {
-        // Landscape left (home button on right): use beta as-is
-        effectiveBeta = beta;
-      } else if (normalizedAngle === 270) {
-        // Landscape right (home button on left): flip beta sign
-        effectiveBeta = -beta;
+      // Use gamma for landscape mode (it measures the relevant tilt axis)
+      // gamma ranges from -90 to 90 degrees
+      let effectiveTilt = 0;
+      if (normalizedAngle === 90 || normalizedAngle === 270) {
+        // Landscape mode: use gamma for forward/backward tilt
+        // In landscape-left (90): positive gamma = tilted toward user (forward)
+        // In landscape-right (270): negative gamma = tilted toward user (forward)
+        if (normalizedAngle === 90) {
+          effectiveTilt = gamma; // Forward tilt = positive gamma
+        } else {
+          effectiveTilt = -gamma; // Flip for opposite landscape
+        }
+      } else {
+        // Portrait or unknown: fall back to beta
+        effectiveTilt = beta;
       }
       
       // Calibration phase: collect samples to establish baseline
       if (isCalibrating.current) {
-        calibrationSamplesRef.current.push(effectiveBeta);
+        calibrationSamplesRef.current.push(effectiveTilt);
         
         // Start grace period after first sample - wait 500ms then finalize
         if (calibrationSamplesRef.current.length === 1 && !graceTimeout) {
@@ -260,7 +313,7 @@ export default function Game() {
       if (baselineBetaRef.current === null) return;
       
       // Calculate tilt delta from calibrated baseline
-      const tiltDelta = effectiveBeta - baselineBetaRef.current;
+      const tiltDelta = effectiveTilt - baselineBetaRef.current;
       const absDelta = Math.abs(tiltDelta);
       const isAtCenter = absDelta <= returnThresholdRef.current;
 

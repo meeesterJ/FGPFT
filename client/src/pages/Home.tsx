@@ -9,6 +9,7 @@ export default function Home() {
   const startGame = useGameStore(state => state.startGame);
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
+  const [tiltPermissionGranted, setTiltPermissionGranted] = useState(false);
 
   useEffect(() => {
     // Detect iOS/iPadOS (iPadOS reports as Macintosh, so also check for touch support)
@@ -20,9 +21,38 @@ export default function Home() {
     const standalone = window.matchMedia('(display-mode: standalone)').matches || 
                        (window.navigator as any).standalone === true;
     setIsStandalone(standalone);
+    
+    // Check if device orientation is already available (non-iOS or permission already granted)
+    if (typeof DeviceOrientationEvent !== "undefined") {
+      if (typeof (DeviceOrientationEvent as any).requestPermission !== "function") {
+        // Non-iOS - permission not required
+        setTiltPermissionGranted(true);
+      }
+    }
   }, []);
 
+  const requestTiltPermission = async () => {
+    if (typeof DeviceOrientationEvent !== "undefined" && 
+        typeof (DeviceOrientationEvent as any).requestPermission === "function") {
+      try {
+        const perm = await (DeviceOrientationEvent as any).requestPermission();
+        if (perm === "granted") {
+          setTiltPermissionGranted(true);
+          return true;
+        }
+      } catch (e) {
+        console.log("Tilt permission denied:", e);
+      }
+    }
+    return false;
+  };
+
   const handleStart = async () => {
+    // Request tilt permission first (iOS only) if not already granted
+    if (!tiltPermissionGranted) {
+      await requestTiltPermission();
+    }
+    
     // Request fullscreen for immersive experience
     try {
       const elem = document.documentElement;
