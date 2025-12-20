@@ -148,6 +148,28 @@ export const useGameStore = create<GameState>()(
       })),
 
       startGame: () => {
+        // Ensure at least one category is selected, default to first available if none
+        const { selectedListIds, deletedBuiltInLists, permanentlyDeletedBuiltInLists, customLists } = get();
+        const effectiveBuiltInLists = get().getEffectiveBuiltInLists();
+        const allAvailableLists = [
+          ...effectiveBuiltInLists.filter(l => 
+            !deletedBuiltInLists.includes(l.id) && 
+            !permanentlyDeletedBuiltInLists.includes(l.id)
+          ),
+          ...customLists
+        ];
+        const validSelectedIds = selectedListIds.filter(id => 
+          allAvailableLists.some(l => l.id === id)
+        );
+        
+        if (validSelectedIds.length === 0 && allAvailableLists.length > 0) {
+          // Default to first available list if no valid categories selected
+          // Prefer animals-easy if it exists, otherwise use first available
+          const animalsEasy = allAvailableLists.find(l => l.id === 'animals-easy');
+          const defaultList = animalsEasy || allAvailableLists[0];
+          set({ selectedListIds: [defaultList.id] });
+        }
+        
         set({
           currentRound: 0,
           totalScore: 0,

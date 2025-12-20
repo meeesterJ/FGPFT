@@ -6,7 +6,19 @@ export const DEFAULT_WORD_LISTS = [
       'Avatar', 'Titanic', 'Star Wars', 'Jurassic Park', 'The Avengers', 
       'The Lion King', 'Frozen', 'Harry Potter', 'Black Panther', 'Inception',
       'The Matrix', 'Forrest Gump', 'Gladiator', 'Interstellar', 'Jaws',
-      'Rocky', 'Alien', 'The Godfather', 'Back to the Future', 'Toy Story'
+      'Rocky', 'Alien', 'The Godfather', 'Back to the Future', 'Toy Story',
+      'Frozen 2', 'Moana', 'Coco', 'Encanto', 'Turning Red',
+      'Luca', 'Soul', 'Onward', 'Inside Out', 'Zootopia',
+      'Big Hero 6', 'Tangled', 'Brave', 'Ratatouille', 'WALL-E',
+      'Finding Dory', 'The Incredibles', 'Despicable Me', 'Minions', 'Shrek',
+      'Spider-Man', 'Top Gun Maverick', 'Barbie', 'Oppenheimer', 'Dune',
+      'The Batman', 'Joker', 'Deadpool', 'Wonder Woman', 'Aquaman',
+      'Guardians of the Galaxy', 'Thor', 'Doctor Strange', 'Ant-Man', 'Captain Marvel',
+      'Black Widow', 'Shang-Chi', 'Eternals', 'Wakanda Forever', 'No Way Home',
+      'John Wick', 'Fast and Furious', 'Mission Impossible', 'James Bond', 'Transformers',
+      'Godzilla', 'Kong', 'Pacific Rim', 'Ready Player One', 'Tenet',
+      'A Quiet Place', 'Get Out', 'Us', 'Knives Out', 'Glass Onion',
+      'Everything Everywhere', 'La La Land', 'The Greatest Showman', 'Bohemian Rhapsody', 'Rocketman'
     ]
   },
   {
@@ -89,6 +101,58 @@ export const DEFAULT_WORD_LISTS = [
       'Laundry Basket', 'Hamper', 'Shower Curtain', 'Bath Mat', 'Toilet Paper',
       'Plunger', 'Toilet Brush', 'Hair Dryer', 'Curling Iron', 'Electric Razor',
       'Scale', 'First Aid Kit', 'Fire Extinguisher', 'Smoke Detector', 'Thermostat'
+    ]
+  },
+  {
+    id: 'christmas-kids',
+    name: 'Christmas Kids Party',
+    words: [
+      'Santa Claus', 'Rudolph', 'Snowman', 'Elf', 'Reindeer',
+      'Christmas Tree', 'Candy Cane', 'Gingerbread Man', 'Snowflake', 'Present',
+      'Stocking', 'Jingle Bells', 'Hot Cocoa', 'Mittens', 'Scarf',
+      'Snow Angel', 'Igloo', 'Penguin', 'Polar Bear', 'Sleigh',
+      'Wreath', 'Ornament', 'Star', 'Angel', 'Snowball',
+      'Winter Hat', 'Earmuffs', 'Boots', 'Fireplace', 'Chimney',
+      'Cookies', 'Milk', 'Gingerbread House', 'Frosty', 'North Pole',
+      'Toy Workshop', 'Mrs. Claus', 'Nutcracker', 'Drummer Boy', 'Christmas Lights',
+      'Caroling', 'Mistletoe', 'Holly', 'Poinsettia', 'Snow Globe',
+      'Tinsel', 'Garland', 'Bow', 'Ribbon', 'Gift Wrap',
+      'Ice Skating', 'Sledding', 'Snowball Fight', 'Building a Snowman', 'Hot Chocolate',
+      'Marshmallows', 'Candy', 'Sugar Plum', 'Sugarplum Fairy', 'Toy Soldier',
+      'Jack Frost', 'Winter Wonderland', 'Icicle', 'Frozen Pond', 'Snowy Mountain',
+      'Cozy Blanket', 'Fireplace', 'Christmas Movie', 'Christmas Song', 'Jingle',
+      'Festive', 'Merry', 'Jolly', 'Sparkly', 'Magical',
+      'Twinkling Lights', 'Red Nose', 'Antlers', 'Santa Hat', 'Elf Shoes',
+      'Toy Train', 'Teddy Bear', 'Doll', 'Toy Car', 'Building Blocks',
+      'Puzzle', 'Board Game', 'Coloring Book', 'Crayons', 'Play-Doh',
+      'Balloon', 'Party Hat', 'Noisemaker', 'Confetti', 'Streamers',
+      'Cupcake', 'Birthday Cake', 'Ice Cream', 'Lollipop', 'Chocolate'
+    ]
+  },
+  {
+    id: 'family-fun',
+    name: 'Family Fun',
+    words: [
+      'Pizza', 'Hamburger', 'Ice Cream', 'Popcorn', 'Spaghetti',
+      'Pancakes', 'Waffles', 'Tacos', 'Sandwich', 'Hot Dog',
+      'Bicycle', 'Skateboard', 'Scooter', 'Roller Skates', 'Trampoline',
+      'Swing', 'Slide', 'Seesaw', 'Merry-Go-Round', 'Jungle Gym',
+      'Beach Ball', 'Frisbee', 'Kite', 'Jump Rope', 'Hula Hoop',
+      'Bubble Wand', 'Water Balloon', 'Sprinkler', 'Pool Noodle', 'Floatie',
+      'Camping', 'Tent', 'Campfire', 'Marshmallow', 'Sleeping Bag',
+      'Flashlight', 'Binoculars', 'Compass', 'Hiking', 'Fishing Rod',
+      'Treehouse', 'Fort', 'Pillow Fort', 'Blanket Fort', 'Hide and Seek',
+      'Tag', 'Duck Duck Goose', 'Red Light Green Light', 'Simon Says', 'Musical Chairs',
+      'Karaoke', 'Dance Party', 'Limbo', 'Freeze Dance', 'Conga Line',
+      'Magic Show', 'Puppet Show', 'Shadow Puppets', 'Charades', 'Pictionary',
+      'Bowling', 'Mini Golf', 'Arcade', 'Bumper Cars', 'Ferris Wheel',
+      'Roller Coaster', 'Cotton Candy', 'Funnel Cake', 'Corn Dog', 'Snow Cone',
+      'Zoo', 'Aquarium', 'Museum', 'Planetarium', 'Water Park',
+      'Beach', 'Sandcastle', 'Seashell', 'Surfboard', 'Snorkeling',
+      'Airplane', 'Hot Air Balloon', 'Helicopter', 'Train', 'School Bus',
+      'Fire Truck', 'Police Car', 'Ambulance', 'Tow Truck', 'Dump Truck',
+      'Superhero', 'Princess', 'Pirate', 'Cowboy', 'Astronaut',
+      'Dinosaur', 'Robot', 'Unicorn', 'Dragon', 'Mermaid'
     ]
   }
 ];
