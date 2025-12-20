@@ -312,18 +312,59 @@ export default function Game() {
       
       // Use gamma for landscape mode (it measures the forward/backward tilt)
       // gamma ranges from -90 to 90 degrees
-      // On iOS Safari:
-      // - landscape-primary (home button on right): gamma INCREASES when tilting forward
-      // - landscape-secondary (home button on left): gamma DECREASES when tilting forward
+      // 
+      // The key insight: when phone is held vertically (gamma near ±90), tilting
+      // forward causes gamma to wrap across the ±90 boundary. We detect this by
+      // checking if gamma suddenly jumped to the opposite extreme.
+      // 
+      // We use a simple heuristic: if gamma and the previous sample are on opposite
+      // extremes (one > 60, other < -60), we're crossing the wrap boundary.
+      
       let effectiveTilt = 0;
       if (orientationType === 'landscape-primary' || orientationType === 'landscape-secondary') {
-        // Landscape mode: use gamma for forward/backward tilt
-        if (orientationType === 'landscape-primary') {
-          // Home button on right: gamma increases with forward tilt
-          effectiveTilt = gamma;
+        // Apply wrap correction based on raw gamma
+        let unwrappedGamma = gamma;
+        
+        // Check if we need to unwrap based on calibrated baseline
+        // The baseline tells us where "center" is - if it's near ±90, we're vertical
+        const baseline = baselineBetaRef.current;
+        if (baseline !== null) {
+          // Determine if baseline was captured when phone was vertical
+          // For landscape-secondary: vertical = gamma near +90
+          // For landscape-primary: vertical = gamma near -90
+          const isLandscapeSecondary = orientationType === 'landscape-secondary';
+          
+          if (isLandscapeSecondary) {
+            // landscape-secondary: vertical means baseline near +90, wrap happens to -90
+            if (baseline > 60 && gamma < -60) {
+              unwrappedGamma = 180 + gamma; // -85 → 95
+            }
+          } else {
+            // landscape-primary: vertical means baseline near -90, wrap happens to +90
+            if (baseline < -60 && gamma > 60) {
+              unwrappedGamma = gamma - 180; // 85 → -95
+            }
+          }
+        }
+        
+        // For both orientations, we want forward tilt = positive delta
+        // User testing in landscape-secondary showed:
+        // - Vertical: gamma ≈ 89
+        // - Forward: gamma wraps to negative (after unwrap: ~95)
+        // - Backward: gamma decreases toward 0 (~80)
+        // So for landscape-secondary: forward gives higher value = positive delta ✓
+        // 
+        // For landscape-primary (opposite rotation):
+        // - Vertical: gamma ≈ -89
+        // - Forward: gamma wraps to positive (after unwrap: ~-95)
+        // - Backward: gamma increases toward 0 (~-80)
+        // So for landscape-primary: forward gives lower value = negative delta
+        // We need to invert to get positive delta for forward
+        
+        if (orientationType === 'landscape-secondary') {
+          effectiveTilt = unwrappedGamma;
         } else {
-          // Home button on left: gamma decreases with forward tilt, so invert
-          effectiveTilt = -gamma;
+          effectiveTilt = -unwrappedGamma;
         }
       } else {
         // Portrait: use beta
