@@ -47,7 +47,7 @@ export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
       // Defaults
-      roundDuration: 60,
+      roundDuration: 30,
       totalRounds: 3,
       selectedListIds: ['movies'],
       customLists: [],

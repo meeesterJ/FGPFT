@@ -161,9 +161,9 @@ export default function Settings() {
             <Slider 
               value={[store.roundDuration]} 
               onValueChange={(v) => store.setRoundDuration(v[0])} 
-              min={10} 
-              max={120} 
-              step={10}
+              min={5} 
+              max={60} 
+              step={5}
               className="py-4"
             />
             <p className="text-sm text-muted-foreground">Adjust how long each guessing round lasts.</p>
