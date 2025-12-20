@@ -18,6 +18,7 @@ export default function Game() {
   const [needsIOSPermission, setNeedsIOSPermission] = useState(false);
   const [countdown, setCountdown] = useState<number | "Go!" | null>(null); // Countdown state
   const [isCountingDown, setIsCountingDown] = useState(true); // Start counting down immediately
+  const [waitingForPermission, setWaitingForPermission] = useState(false); // Wait for iOS permission before countdown
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tiltThresholdRef = useRef(35); // Degrees of tilt to trigger
   const lastTiltTimeRef = useRef(0);
@@ -27,6 +28,7 @@ export default function Game() {
   const countdownTimeoutsRef = useRef<NodeJS.Timeout[]>([]); // Track countdown timeouts
   const isCountdownActiveRef = useRef(false); // Guard against overlapping countdowns
   const hasShownInitialCountdownRef = useRef(false); // Track if initial countdown shown
+  const permissionGrantedTimeRef = useRef(0); // Track when permission was granted for delay
 
   // Initialize round and device orientation
   useEffect(() => {
@@ -46,10 +48,18 @@ export default function Game() {
     const checkOrientation = () => {
       const isLandscape = window.innerWidth > window.innerHeight;
       
-      // If in landscape and we haven't shown the initial countdown yet, start it
+      // If in landscape and we haven't shown the initial countdown yet
       if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
         wasInPortrait.current = false;
-        startCountdown();
+        // Check if iOS needs permission - if so, wait for it before countdown
+        if (typeof DeviceOrientationEvent !== "undefined" && 
+            typeof (DeviceOrientationEvent as any).requestPermission === "function") {
+          // iOS 13+ - wait for permission before starting countdown
+          setWaitingForPermission(true);
+        } else {
+          // Non-iOS or older iOS - start countdown immediately
+          startCountdown();
+        }
       } else if (!isLandscape) {
         wasInPortrait.current = true;
       }
@@ -62,30 +72,6 @@ export default function Game() {
       } else if (typeof (window as any).orientation === 'number') {
         orientationAngleRef.current = (window as any).orientation;
       }
-    };
-    
-    // Function to start the 3-2-1-Go countdown
-    const startCountdown = () => {
-      // Guard: don't overlap countdowns (use ref to avoid stale closures)
-      if (isCountdownActiveRef.current) return;
-      isCountdownActiveRef.current = true;
-      
-      // Clear any existing timeouts
-      countdownTimeoutsRef.current.forEach(t => clearTimeout(t));
-      countdownTimeoutsRef.current = [];
-      
-      setIsCountingDown(true);
-      setCountdown(3);
-      
-      countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(2), 1000));
-      countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(1), 2000));
-      countdownTimeoutsRef.current.push(setTimeout(() => setCountdown("Go!"), 3000));
-      countdownTimeoutsRef.current.push(setTimeout(() => {
-        setCountdown(null);
-        setIsCountingDown(false);
-        isCountdownActiveRef.current = false;
-        hasShownInitialCountdownRef.current = true;
-      }, 4000));
     };
     
     checkOrientation();
@@ -249,13 +235,61 @@ export default function Game() {
       try {
         const perm = await (DeviceOrientationEvent as any).requestPermission();
         if (perm === "granted") {
+          // Record when permission was granted - use for delay before enabling tilt
+          permissionGrantedTimeRef.current = Date.now();
+          // Also set lastTiltTime to prevent immediate tilt detection
+          lastTiltTimeRef.current = Date.now() + 5000; // 5 second grace period after countdown
+          
           setHasDeviceOrientation(true);
           setNeedsIOSPermission(false);
+          setWaitingForPermission(false);
+          
+          // Now start the countdown
+          if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+            startCountdown();
+          }
+        } else {
+          // Permission denied - still start countdown, just without tilt
+          setWaitingForPermission(false);
+          setNeedsIOSPermission(false);
+          if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+            startCountdown();
+          }
         }
       } catch (e) {
-        // Permission denied
+        // Permission denied - still start countdown
+        setWaitingForPermission(false);
+        if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+          startCountdown();
+        }
       }
     }
+  };
+  
+  // Function to start the countdown (extracted to be callable from permission handler)
+  const startCountdown = () => {
+    // Guard: don't overlap countdowns (use ref to avoid stale closures)
+    if (isCountdownActiveRef.current) return;
+    isCountdownActiveRef.current = true;
+    
+    // Clear any existing timeouts
+    countdownTimeoutsRef.current.forEach(t => clearTimeout(t));
+    countdownTimeoutsRef.current = [];
+    
+    setIsCountingDown(true);
+    setCountdown(3);
+    
+    countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(2), 1000));
+    countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(1), 2000));
+    countdownTimeoutsRef.current.push(setTimeout(() => setCountdown("Go!"), 3000));
+    countdownTimeoutsRef.current.push(setTimeout(() => {
+      setCountdown(null);
+      setIsCountingDown(false);
+      isCountdownActiveRef.current = false;
+      hasShownInitialCountdownRef.current = true;
+      // Reset tilt time to allow detection after countdown
+      lastTiltTimeRef.current = Date.now();
+    }, 4000));
   };
 
   if (!store.currentWord) return null;
@@ -268,6 +302,36 @@ export default function Game() {
           <RotateCcw className="w-24 h-24 text-primary animate-spin" style={{ animationDuration: '3s' }} />
           <h2 className="text-3xl font-black text-primary text-center">Please Rotate Your Device</h2>
           <p className="text-muted-foreground text-center text-lg">Turn your phone sideways to play in landscape mode</p>
+        </div>
+      )}
+
+      {/* iOS Permission Overlay - shown before countdown */}
+      {waitingForPermission && !showRotatePrompt && (
+        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center space-y-8 p-8">
+          <Smartphone className="w-24 h-24 text-primary" />
+          <h2 className="text-3xl font-black text-primary text-center">Enable Tilt Gestures</h2>
+          <p className="text-muted-foreground text-center text-lg max-w-md">
+            Tap the button below to enable tilt gestures for a hands-free experience
+          </p>
+          <Button 
+            onClick={requestTiltPermission}
+            size="lg"
+            className="text-xl px-8 py-6 rounded-xl bg-accent text-accent-foreground"
+          >
+            <Smartphone className="w-6 h-6 mr-3" />
+            Enable Tilt Gestures
+          </Button>
+          <Button 
+            variant="ghost"
+            onClick={() => {
+              setWaitingForPermission(false);
+              setNeedsIOSPermission(false);
+              startCountdown();
+            }}
+            className="text-muted-foreground"
+          >
+            Skip (use buttons instead)
+          </Button>
         </div>
       )}
 
@@ -326,21 +390,9 @@ export default function Game() {
         </div>
       )}
 
-      {/* iOS Permission Request - shown if iOS 13+ needs permission */}
-      {needsIOSPermission && !hasDeviceOrientation && (
-        <div className="absolute top-4 right-4 z-20">
-          <Button 
-            onClick={requestTiltPermission}
-            className="bg-accent text-accent-foreground flex items-center gap-2"
-          >
-            <Smartphone className="w-4 h-4" />
-            Enable Tilt Gestures
-          </Button>
-        </div>
-      )}
       
       {/* Gesture Hint - shown if device orientation not available and not iOS */}
-      {!hasDeviceOrientation && !needsIOSPermission && (
+      {!hasDeviceOrientation && !needsIOSPermission && !waitingForPermission && (
         <div className="absolute top-4 right-4 bg-accent/80 text-accent-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 z-20">
           <Smartphone className="w-4 h-4" />
           Tilt gestures not available on this device
