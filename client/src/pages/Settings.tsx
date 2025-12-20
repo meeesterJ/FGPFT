@@ -144,14 +144,20 @@ export default function Settings() {
     setIsEditDialogOpen(false);
   };
 
-  // Combine and normalize lists for display (exclude deleted built-in lists)
+  // Combine and normalize lists for display (exclude deleted and permanently deleted built-in lists)
   const allLists = [
-    ...DEFAULT_WORD_LISTS.filter(l => !store.deletedBuiltInLists.includes(l.id)).map(l => ({ ...l, isCustom: false })),
+    ...DEFAULT_WORD_LISTS.filter(l => 
+      !store.deletedBuiltInLists.includes(l.id) && 
+      !store.permanentlyDeletedBuiltInLists.includes(l.id)
+    ).map(l => ({ ...l, isCustom: false })),
     ...store.customLists
   ];
 
-  // Lists that have been deleted
-  const deletedLists = DEFAULT_WORD_LISTS.filter(l => store.deletedBuiltInLists.includes(l.id));
+  // Lists that have been deleted (but not permanently)
+  const deletedLists = DEFAULT_WORD_LISTS.filter(l => 
+    store.deletedBuiltInLists.includes(l.id) && 
+    !store.permanentlyDeletedBuiltInLists.includes(l.id)
+  );
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

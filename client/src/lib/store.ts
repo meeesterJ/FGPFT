@@ -16,6 +16,7 @@ interface GameState {
   selectedListIds: string[];
   customLists: WordList[];
   deletedBuiltInLists: string[]; // Track deleted built-in lists
+  permanentlyDeletedBuiltInLists: string[]; // Track permanently deleted built-in lists
   
   // Game Session
   currentRound: number;
@@ -56,6 +57,7 @@ export const useGameStore = create<GameState>()(
       selectedListIds: ['movies'],
       customLists: [],
       deletedBuiltInLists: [],
+      permanentlyDeletedBuiltInLists: [],
       
       currentRound: 0,
       currentScore: 0,
@@ -105,7 +107,8 @@ export const useGameStore = create<GameState>()(
       })),
 
       permanentlyDeleteBuiltInList: (id) => set((state) => ({
-        deletedBuiltInLists: state.deletedBuiltInLists.filter(did => did !== id)
+        deletedBuiltInLists: state.deletedBuiltInLists.filter(did => did !== id),
+        permanentlyDeletedBuiltInLists: [...state.permanentlyDeletedBuiltInLists, id]
       })),
 
       startGame: () => {
@@ -203,7 +206,8 @@ export const useGameStore = create<GameState>()(
         totalRounds: state.totalRounds,
         selectedListIds: state.selectedListIds,
         customLists: state.customLists,
-        deletedBuiltInLists: state.deletedBuiltInLists
+        deletedBuiltInLists: state.deletedBuiltInLists,
+        permanentlyDeletedBuiltInLists: state.permanentlyDeletedBuiltInLists
       }),
     }
   )

@@ -11,7 +11,8 @@ export default function DeletedCategories() {
   const store = useGameStore();
 
   const deletedLists = DEFAULT_WORD_LISTS.filter(l => 
-    store.deletedBuiltInLists.includes(l.id)
+    store.deletedBuiltInLists.includes(l.id) &&
+    !store.permanentlyDeletedBuiltInLists.includes(l.id)
   );
 
   const handleRestore = (list: typeof DEFAULT_WORD_LISTS[0]) => {
