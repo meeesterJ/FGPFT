@@ -58,7 +58,7 @@ export default function Summary() {
           <h2 className="text-3xl font-bold text-muted-foreground uppercase tracking-widest">
             {store.isGameFinished ? "Game Over!" : `Round ${store.currentRound} Complete`}
           </h2>
-          <div className="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent text-stroke drop-shadow-xl">
+          <div className="text-9xl font-black text-primary drop-shadow-2xl filter animate-bounce-in">
              {store.currentScore}
           </div>
           <p className="text-xl font-medium text-foreground">Points this round</p>
