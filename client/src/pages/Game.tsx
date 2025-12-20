@@ -16,11 +16,17 @@ export default function Game() {
   const [showRotatePrompt, setShowRotatePrompt] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false); // Debounce button clicks
   const [needsIOSPermission, setNeedsIOSPermission] = useState(false);
+  const [countdown, setCountdown] = useState<number | "Go!" | null>(null); // Countdown state
+  const [isCountingDown, setIsCountingDown] = useState(true); // Start counting down immediately
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tiltThresholdRef = useRef(35); // Degrees of tilt to trigger
   const lastTiltTimeRef = useRef(0);
   const orientationAngleRef = useRef(0); // Track screen orientation angle
   const hasStartedRound = useRef(false); // Prevent multiple startRound calls
+  const wasInPortrait = useRef(true); // Track if we were in portrait (for countdown trigger)
+  const countdownTimeoutsRef = useRef<NodeJS.Timeout[]>([]); // Track countdown timeouts
+  const isCountdownActiveRef = useRef(false); // Guard against overlapping countdowns
+  const hasShownInitialCountdownRef = useRef(false); // Track if initial countdown shown
 
   // Initialize round and device orientation
   useEffect(() => {
@@ -39,6 +45,15 @@ export default function Game() {
     // Check if device is in landscape and prompt to rotate if not
     const checkOrientation = () => {
       const isLandscape = window.innerWidth > window.innerHeight;
+      
+      // If in landscape and we haven't shown the initial countdown yet, start it
+      if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+        wasInPortrait.current = false;
+        startCountdown();
+      } else if (!isLandscape) {
+        wasInPortrait.current = true;
+      }
+      
       setShowRotatePrompt(!isLandscape);
       
       // Track orientation angle for tilt calculations
@@ -47,6 +62,30 @@ export default function Game() {
       } else if (typeof (window as any).orientation === 'number') {
         orientationAngleRef.current = (window as any).orientation;
       }
+    };
+    
+    // Function to start the 3-2-1-Go countdown
+    const startCountdown = () => {
+      // Guard: don't overlap countdowns (use ref to avoid stale closures)
+      if (isCountdownActiveRef.current) return;
+      isCountdownActiveRef.current = true;
+      
+      // Clear any existing timeouts
+      countdownTimeoutsRef.current.forEach(t => clearTimeout(t));
+      countdownTimeoutsRef.current = [];
+      
+      setIsCountingDown(true);
+      setCountdown(3);
+      
+      countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(2), 1000));
+      countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(1), 2000));
+      countdownTimeoutsRef.current.push(setTimeout(() => setCountdown("Go!"), 3000));
+      countdownTimeoutsRef.current.push(setTimeout(() => {
+        setCountdown(null);
+        setIsCountingDown(false);
+        isCountdownActiveRef.current = false;
+        hasShownInitialCountdownRef.current = true;
+      }, 4000));
     };
     
     checkOrientation();
@@ -93,6 +132,8 @@ export default function Game() {
       if (screen.orientation) {
         screen.orientation.removeEventListener("change", handleOrientationChange);
       }
+      // Clear any countdown timeouts
+      countdownTimeoutsRef.current.forEach(t => clearTimeout(t));
       try {
         if (screen.orientation && screen.orientation.unlock) {
           screen.orientation.unlock();
@@ -105,7 +146,8 @@ export default function Game() {
 
   // Device orientation listener
   useEffect(() => {
-    if (!hasDeviceOrientation || !store.isPlaying || isPaused) return;
+    // Disable tilt during countdown
+    if (!hasDeviceOrientation || !store.isPlaying || isPaused || isCountingDown) return;
 
     const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
       const now = Date.now();
@@ -153,11 +195,11 @@ export default function Game() {
     return () => {
       window.removeEventListener("deviceorientation", handleDeviceOrientation);
     };
-  }, [hasDeviceOrientation, store.isPlaying, isPaused, store]);
+  }, [hasDeviceOrientation, store.isPlaying, isPaused, isCountingDown, store]);
 
-  // Timer logic
+  // Timer logic - pause during countdown
   useEffect(() => {
-    if (store.isPlaying && !isPaused && timeLeft > 0) {
+    if (store.isPlaying && !isPaused && !isCountingDown && timeLeft > 0) {
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
@@ -168,7 +210,7 @@ export default function Game() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [store.isPlaying, isPaused, timeLeft]);
+  }, [store.isPlaying, isPaused, isCountingDown, timeLeft]);
 
   // Handle timer expiration
   useEffect(() => {
@@ -185,14 +227,14 @@ export default function Game() {
   }, [store.isRoundOver, store.isGameFinished, setLocation]);
 
   const handleCorrect = () => {
-    if (isProcessing || !store.isPlaying) return;
+    if (isProcessing || !store.isPlaying || isCountingDown) return;
     setIsProcessing(true);
     store.nextWord(true);
     setTimeout(() => setIsProcessing(false), 500);
   };
 
   const handlePass = () => {
-    if (isProcessing || !store.isPlaying) return;
+    if (isProcessing || !store.isPlaying || isCountingDown) return;
     setIsProcessing(true);
     store.nextWord(false);
     setTimeout(() => setIsProcessing(false), 500);
@@ -226,6 +268,17 @@ export default function Game() {
           <RotateCcw className="w-24 h-24 text-primary animate-spin" style={{ animationDuration: '3s' }} />
           <h2 className="text-3xl font-black text-primary text-center">Please Rotate Your Device</h2>
           <p className="text-muted-foreground text-center text-lg">Turn your phone sideways to play in landscape mode</p>
+        </div>
+      )}
+
+      {/* Countdown Overlay */}
+      {countdown !== null && (
+        <div className="absolute inset-0 z-50 bg-background flex items-center justify-center">
+          <div className="text-center animate-bounce-in" key={countdown}>
+            <h1 className="text-[12rem] font-black text-primary leading-none drop-shadow-2xl">
+              {countdown}
+            </h1>
+          </div>
         </div>
       )}
 
@@ -311,10 +364,10 @@ export default function Game() {
       <div className="flex flex-col w-auto h-full z-20">
         <button 
           onClick={handlePass}
-          disabled={isProcessing || !store.isPlaying}
+          disabled={isProcessing || !store.isPlaying || isCountingDown}
           className={cn(
             "flex-1 bg-destructive hover:bg-destructive/90 active:bg-destructive/80 transition-colors flex items-center justify-center group",
-            (isProcessing || !store.isPlaying) && "opacity-50 cursor-not-allowed"
+            (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
           )}
         >
           <div className="flex flex-col items-center">
@@ -324,10 +377,10 @@ export default function Game() {
         </button>
         <button 
           onClick={handleCorrect}
-          disabled={isProcessing || !store.isPlaying}
+          disabled={isProcessing || !store.isPlaying || isCountingDown}
           className={cn(
             "flex-1 bg-success hover:bg-success/90 active:bg-success/80 transition-colors flex items-center justify-center group",
-            (isProcessing || !store.isPlaying) && "opacity-50 cursor-not-allowed"
+            (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
           )}
         >
           <div className="flex flex-col items-center">
