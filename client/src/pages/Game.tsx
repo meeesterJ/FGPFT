@@ -14,16 +14,23 @@ export default function Game() {
   const [tiltFeedback, setTiltFeedback] = useState<"correct" | "pass" | null>(null);
   const [hasDeviceOrientation, setHasDeviceOrientation] = useState(false);
   const [showRotatePrompt, setShowRotatePrompt] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false); // Debounce button clicks
+  const [needsIOSPermission, setNeedsIOSPermission] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tiltThresholdRef = useRef(35); // Degrees of tilt to trigger
   const lastTiltTimeRef = useRef(0);
   const orientationAngleRef = useRef(0); // Track screen orientation angle
+  const hasStartedRound = useRef(false); // Prevent multiple startRound calls
 
   // Initialize round and device orientation
   useEffect(() => {
-    // Only start round if we aren't already playing and haven't just finished
-    if (!store.isPlaying && !store.isRoundOver && !store.isGameFinished) {
-      store.startRound();
+    // Only start round once per mount, using ref to prevent React StrictMode double-call
+    if (!hasStartedRound.current && !store.isPlaying && !store.isRoundOver && !store.isGameFinished) {
+      hasStartedRound.current = true;
+      // Use setTimeout to avoid setState during render
+      setTimeout(() => {
+        store.startRound();
+      }, 0);
     }
     
     // Reset timer
@@ -67,20 +74,16 @@ export default function Game() {
       screen.orientation.addEventListener("change", handleOrientationChange);
     }
 
-    // Request permission for device orientation (iOS 13+)
-    if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-      (DeviceOrientationEvent as any).requestPermission()
-        .then((perm: string) => {
-          if (perm === "granted") {
-            setHasDeviceOrientation(true);
-          }
-        })
-        .catch(() => {
-          // Permission denied or not available
-        });
-    } else if (typeof DeviceOrientationEvent !== "undefined") {
-      // Non-iOS or older iOS
-      setHasDeviceOrientation(true);
+    // Check if device orientation is available (non-iOS or pre-iOS 13)
+    if (typeof DeviceOrientationEvent !== "undefined") {
+      if (typeof (DeviceOrientationEvent as any).requestPermission === "function") {
+        // iOS 13+ requires user interaction to request permission
+        setNeedsIOSPermission(true);
+        setHasDeviceOrientation(false);
+      } else {
+        // Non-iOS or older iOS - orientation events are available
+        setHasDeviceOrientation(true);
+      }
     }
 
     return () => {
@@ -150,21 +153,13 @@ export default function Game() {
     return () => {
       window.removeEventListener("deviceorientation", handleDeviceOrientation);
     };
-  }, [store.isPlaying, isPaused, store]);
+  }, [hasDeviceOrientation, store.isPlaying, isPaused, store]);
 
   // Timer logic
   useEffect(() => {
     if (store.isPlaying && !isPaused && timeLeft > 0) {
       timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(timerRef.current!);
-            store.endRound();
-            setLocation("/summary");
-            return 0;
-          }
-          return prev - 1;
-        });
+        setTimeLeft((prev) => prev - 1);
       }, 1000);
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -175,6 +170,13 @@ export default function Game() {
     };
   }, [store.isPlaying, isPaused, timeLeft]);
 
+  // Handle timer expiration
+  useEffect(() => {
+    if (timeLeft <= 0 && store.isPlaying) {
+      store.endRound();
+    }
+  }, [timeLeft, store.isPlaying]);
+
   // Handle Game Over / Round End Redirect
   useEffect(() => {
     if (store.isRoundOver || store.isGameFinished) {
@@ -183,15 +185,35 @@ export default function Game() {
   }, [store.isRoundOver, store.isGameFinished, setLocation]);
 
   const handleCorrect = () => {
+    if (isProcessing || !store.isPlaying) return;
+    setIsProcessing(true);
     store.nextWord(true);
+    setTimeout(() => setIsProcessing(false), 500);
   };
 
   const handlePass = () => {
+    if (isProcessing || !store.isPlaying) return;
+    setIsProcessing(true);
     store.nextWord(false);
+    setTimeout(() => setIsProcessing(false), 500);
   };
 
   const togglePause = () => {
     setIsPaused(!isPaused);
+  };
+
+  const requestTiltPermission = async () => {
+    if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
+      try {
+        const perm = await (DeviceOrientationEvent as any).requestPermission();
+        if (perm === "granted") {
+          setHasDeviceOrientation(true);
+          setNeedsIOSPermission(false);
+        }
+      } catch (e) {
+        // Permission denied
+      }
+    }
   };
 
   if (!store.currentWord) return null;
@@ -251,8 +273,21 @@ export default function Game() {
         </div>
       )}
 
-      {/* Gesture Hint - shown if device orientation not available */}
-      {!hasDeviceOrientation && (
+      {/* iOS Permission Request - shown if iOS 13+ needs permission */}
+      {needsIOSPermission && !hasDeviceOrientation && (
+        <div className="absolute top-4 right-4 z-20">
+          <Button 
+            onClick={requestTiltPermission}
+            className="bg-accent text-accent-foreground flex items-center gap-2"
+          >
+            <Smartphone className="w-4 h-4" />
+            Enable Tilt Gestures
+          </Button>
+        </div>
+      )}
+      
+      {/* Gesture Hint - shown if device orientation not available and not iOS */}
+      {!hasDeviceOrientation && !needsIOSPermission && (
         <div className="absolute top-4 right-4 bg-accent/80 text-accent-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 z-20">
           <Smartphone className="w-4 h-4" />
           Tilt gestures not available on this device
@@ -276,7 +311,11 @@ export default function Game() {
       <div className="flex flex-col w-auto h-full z-20">
         <button 
           onClick={handlePass}
-          className="flex-1 bg-destructive hover:bg-destructive/90 active:bg-destructive/80 transition-colors flex items-center justify-center group"
+          disabled={isProcessing || !store.isPlaying}
+          className={cn(
+            "flex-1 bg-destructive hover:bg-destructive/90 active:bg-destructive/80 transition-colors flex items-center justify-center group",
+            (isProcessing || !store.isPlaying) && "opacity-50 cursor-not-allowed"
+          )}
         >
           <div className="flex flex-col items-center">
             <X className="w-16 h-16 text-white mb-2 group-active:scale-90 transition-transform" />
@@ -285,7 +324,11 @@ export default function Game() {
         </button>
         <button 
           onClick={handleCorrect}
-          className="flex-1 bg-success hover:bg-success/90 active:bg-success/80 transition-colors flex items-center justify-center group"
+          disabled={isProcessing || !store.isPlaying}
+          className={cn(
+            "flex-1 bg-success hover:bg-success/90 active:bg-success/80 transition-colors flex items-center justify-center group",
+            (isProcessing || !store.isPlaying) && "opacity-50 cursor-not-allowed"
+          )}
         >
           <div className="flex flex-col items-center">
             <Check className="w-16 h-16 text-black mb-2 group-active:scale-90 transition-transform" />
