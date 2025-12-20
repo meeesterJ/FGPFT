@@ -1,153 +1,204 @@
-// Global audio context for game sounds
-let audioContext: AudioContext | null = null;
-let initPromise: Promise<void> | null = null;
-let audioUnlocked = false;
+// Audio system using HTML5 Audio elements for better iOS compatibility
+// Web Audio API oscillators don't work reliably on iOS, but HTML5 Audio does
 
-// iOS requires playing an actual audio element to unlock audio output
-// This creates a tiny silent audio and plays it on user gesture
-function unlockAudioForIOS(): Promise<void> {
-  if (audioUnlocked) return Promise.resolve();
+let audioInitialized = false;
+let audioPool: HTMLAudioElement[] = [];
+
+// Pre-generated audio tones as base64 WAV files
+// These are short beep sounds at different frequencies
+const AUDIO_TONES: Record<string, string> = {
+  // High beep (880Hz) - correct answer
+  high: generateToneDataURI(880, 0.15),
+  // Medium beep (440Hz) - pass  
+  medium: generateToneDataURI(440, 0.1),
+  // Tick (1000Hz) - countdown tick
+  tick: generateToneDataURI(1000, 0.08),
+  // Low buzz (200Hz) - round end
+  buzz: generateToneDataURI(200, 0.3),
+};
+
+// Generate a WAV data URI for a sine wave tone
+function generateToneDataURI(frequency: number, duration: number): string {
+  const sampleRate = 44100;
+  const numSamples = Math.floor(sampleRate * duration);
+  const numChannels = 1;
+  const bitsPerSample = 16;
   
-  return new Promise((resolve) => {
-    // Set a timeout to ensure we don't hang forever
-    const timeout = setTimeout(() => {
-      console.log('iOS audio unlock timed out, continuing anyway');
-      audioUnlocked = true;
-      resolve();
-    }, 500);
+  // WAV header size
+  const headerSize = 44;
+  const dataSize = numSamples * numChannels * (bitsPerSample / 8);
+  const fileSize = headerSize + dataSize;
+  
+  const buffer = new ArrayBuffer(fileSize);
+  const view = new DataView(buffer);
+  
+  // WAV header
+  const writeString = (offset: number, str: string) => {
+    for (let i = 0; i < str.length; i++) {
+      view.setUint8(offset + i, str.charCodeAt(i));
+    }
+  };
+  
+  writeString(0, 'RIFF');
+  view.setUint32(4, fileSize - 8, true);
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
+  view.setUint32(16, 16, true); // fmt chunk size
+  view.setUint16(20, 1, true); // PCM format
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * numChannels * (bitsPerSample / 8), true);
+  view.setUint16(32, numChannels * (bitsPerSample / 8), true);
+  view.setUint16(34, bitsPerSample, true);
+  writeString(36, 'data');
+  view.setUint32(40, dataSize, true);
+  
+  // Generate audio samples with envelope
+  for (let i = 0; i < numSamples; i++) {
+    const t = i / sampleRate;
+    // Simple envelope: attack 10ms, sustain, release last 20%
+    let envelope = 1.0;
+    const attackTime = 0.01;
+    const releaseStart = duration * 0.8;
+    if (t < attackTime) {
+      envelope = t / attackTime;
+    } else if (t > releaseStart) {
+      envelope = 1.0 - ((t - releaseStart) / (duration - releaseStart));
+    }
     
-    try {
-      // Create a silent audio element with a tiny data URI
-      // This is a 0.1 second silent WAV file encoded as base64
-      const silentAudio = new Audio(
-        "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"
-      );
-      silentAudio.volume = 0.01;
-      
-      const playPromise = silentAudio.play();
-      if (playPromise !== undefined) {
+    // Generate sine wave
+    const sample = Math.sin(2 * Math.PI * frequency * t) * envelope * 0.5;
+    const intSample = Math.max(-32768, Math.min(32767, Math.floor(sample * 32767)));
+    view.setInt16(headerSize + i * 2, intSample, true);
+  }
+  
+  // Convert to base64
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return 'data:audio/wav;base64,' + btoa(binary);
+}
+
+// Pre-create audio elements for each tone
+function createAudioPool() {
+  if (audioPool.length > 0) return;
+  
+  Object.entries(AUDIO_TONES).forEach(([name, dataUri]) => {
+    const audio = new Audio(dataUri);
+    audio.preload = 'auto';
+    (audio as any).toneType = name;
+    audioPool.push(audio);
+  });
+  console.log('Audio pool created with', audioPool.length, 'tones');
+}
+
+// Initialize audio system - must be called from user gesture
+export async function initAudioContext(): Promise<any> {
+  if (audioInitialized) {
+    console.log('Audio already initialized');
+    return { state: 'running' };
+  }
+  
+  createAudioPool();
+  
+  // Try to play and immediately pause each audio to "unlock" them on iOS
+  const unlockPromises = audioPool.map(audio => {
+    return new Promise<void>((resolve) => {
+      audio.volume = 0.01;
+      const playPromise = audio.play();
+      if (playPromise) {
         playPromise
           .then(() => {
-            clearTimeout(timeout);
-            console.log('iOS audio unlocked via silent audio element');
-            audioUnlocked = true;
+            audio.pause();
+            audio.currentTime = 0;
+            audio.volume = 1.0;
             resolve();
           })
-          .catch((e) => {
-            clearTimeout(timeout);
-            console.log('iOS audio unlock failed:', e);
-            // Still mark as attempted to avoid repeated failures
-            audioUnlocked = true;
+          .catch(() => {
+            audio.volume = 1.0;
             resolve();
           });
       } else {
-        clearTimeout(timeout);
-        audioUnlocked = true;
         resolve();
       }
-    } catch (e) {
-      clearTimeout(timeout);
-      console.log('iOS audio unlock error:', e);
-      audioUnlocked = true;
-      resolve();
-    }
+    });
   });
+  
+  await Promise.all(unlockPromises);
+  audioInitialized = true;
+  console.log('Audio initialized and unlocked');
+  return { state: 'running' };
 }
 
-export async function initAudioContext(): Promise<AudioContext | null> {
-  // If already running, return immediately
-  if (audioContext && audioContext.state === 'running') {
-    return audioContext;
-  }
-  
-  // If init is already in progress, wait for it
-  if (initPromise) {
-    await initPromise;
-    return audioContext;
-  }
-  
-  // Create the init promise
-  initPromise = (async () => {
-    try {
-      // First, unlock iOS audio by playing a silent audio element
-      await unlockAudioForIOS();
-      
-      if (!audioContext || audioContext.state === 'closed') {
-        audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-        console.log('AudioContext created, state:', audioContext.state);
-      }
-      
-      if (audioContext.state === 'suspended') {
-        console.log('AudioContext suspended, attempting resume...');
-        await audioContext.resume();
-        console.log('AudioContext after resume, state:', audioContext.state);
-      }
-    } catch (e) {
-      console.log('AudioContext init failed:', e);
-    }
-  })();
-  
-  await initPromise;
-  initPromise = null;
-  console.log('initAudioContext complete, final state:', audioContext?.state);
-  return audioContext;
-}
-
-export function getAudioContext(): AudioContext | null {
-  return audioContext;
+export function getAudioContext(): any {
+  return audioInitialized ? { state: 'running' } : null;
 }
 
 export function isAudioReady(): boolean {
-  return audioContext !== null && audioContext.state === 'running';
+  return audioInitialized;
 }
 
+// Play a beep sound using HTML5 Audio
 export async function playBeep(frequency: number, duration: number, type: OscillatorType = 'sine') {
-  const ctx = audioContext;
+  console.log('playBeep called with frequency:', frequency);
   
-  // If context doesn't exist or is closed, we can't play
-  if (!ctx) {
-    console.log('playBeep: No audio context exists');
-    return;
+  // Map frequency to our pre-generated tones
+  let toneName = 'medium';
+  if (frequency >= 800) {
+    toneName = 'high';
+  } else if (frequency >= 500) {
+    toneName = 'medium';
+  } else if (frequency >= 300) {
+    toneName = 'tick';
+  } else {
+    toneName = 'buzz';
   }
   
-  // If suspended, try to resume (will only work from user gesture)
-  if (ctx.state === 'suspended') {
-    console.log('playBeep: Context suspended, trying resume...');
-    try {
-      await ctx.resume();
-      console.log('playBeep: Resume result, state:', ctx.state);
-    } catch (e) {
-      console.log('playBeep: Resume failed:', e);
+  // For tick sound specifically
+  if (frequency === 1000 && type === 'square') {
+    toneName = 'tick';
+  }
+  // For buzz sound specifically  
+  if (frequency === 200 && type === 'sawtooth') {
+    toneName = 'buzz';
+  }
+  
+  // Find the matching audio element
+  const audio = audioPool.find(a => (a as any).toneType === toneName);
+  if (!audio) {
+    console.log('No audio element found for tone:', toneName);
+    // Create a new one on the fly
+    const dataUri = AUDIO_TONES[toneName];
+    if (dataUri) {
+      const newAudio = new Audio(dataUri);
+      newAudio.volume = 1.0;
+      try {
+        await newAudio.play();
+        console.log('Played new audio for tone:', toneName);
+      } catch (e) {
+        console.log('Failed to play new audio:', e);
+      }
     }
-  }
-  
-  if (ctx.state !== 'running') {
-    console.log('playBeep: Context not running, state:', ctx.state);
     return;
   }
   
   try {
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    
-    oscillator.frequency.value = frequency;
-    oscillator.type = type;
-    
-    // Ensure minimum duration for audibility
-    const actualDuration = Math.max(duration, 100) / 1000;
-    
-    // Higher initial gain for better audibility
-    gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + actualDuration);
-    
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + actualDuration);
-    
-    console.log('sharedPlayBeep: Sound played!', { frequency, duration: actualDuration * 1000, type });
+    // Clone the audio to allow overlapping plays
+    const clone = audio.cloneNode() as HTMLAudioElement;
+    clone.volume = 1.0;
+    await clone.play();
+    console.log('Played audio tone:', toneName);
   } catch (e) {
-    console.log('Audio playback failed:', e);
+    console.log('Failed to play audio:', e);
+    // Try playing the original
+    try {
+      audio.currentTime = 0;
+      audio.volume = 1.0;
+      await audio.play();
+    } catch (e2) {
+      console.log('Fallback play also failed:', e2);
+    }
   }
 }
