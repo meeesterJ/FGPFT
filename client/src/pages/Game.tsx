@@ -37,6 +37,7 @@ export default function Game() {
   const pendingGestureRef = useRef<boolean | null>(null); // Pending gesture result (true=correct, false=pass, null=none)
   const returnThresholdRef = useRef(10); // Degrees from baseline to consider "returned to center"
   const mustReturnToCenterRef = useRef(false); // After button click, must return to center before new tilt gesture
+  const lastOrientationTypeRef = useRef<string | null>(null); // Track orientation type used during calibration
   const wordDisplayRef = useRef<HTMLHeadingElement>(null); // Ref for auto-scaling word display
   const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
   const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
@@ -266,32 +267,56 @@ export default function Game() {
     const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
       const eventTime = Date.now();
       
-      // Get the current orientation angle
-      const angle = orientationAngleRef.current;
       const beta = event.beta || 0;
       const gamma = event.gamma || 0;
       
-      // In landscape mode, gamma represents the forward/backward tilt (not beta)
-      // Normalize angle to 0-360 range
-      const normalizedAngle = ((angle % 360) + 360) % 360;
+      // Determine current orientation type on EVERY event (not from cached ref)
+      // This ensures calibration and gesture detection use the same axis
+      let orientationType: string = 'portrait-primary';
+      if (screen.orientation && screen.orientation.type) {
+        orientationType = screen.orientation.type;
+      } else if (typeof (window as any).orientation === 'number') {
+        // Fallback for older browsers
+        const winOrient = (window as any).orientation;
+        if (winOrient === 90) orientationType = 'landscape-primary';
+        else if (winOrient === -90 || winOrient === 270) orientationType = 'landscape-secondary';
+        else orientationType = 'portrait-primary';
+      }
       
-      // Use gamma for landscape mode (it measures the relevant tilt axis)
+      // Check if orientation changed since last calibration - if so, trigger recalibration
+      if (lastOrientationTypeRef.current !== null && 
+          lastOrientationTypeRef.current !== orientationType) {
+        // Orientation changed - immediately invalidate baseline to prevent stale data use
+        baselineBetaRef.current = null;
+        isCalibrating.current = true;
+        calibrationSamplesRef.current = [];
+        pendingGestureRef.current = null;
+        mustReturnToCenterRef.current = false;
+        setTiltFeedback(null);
+        // Trigger recalibration via state update for proper grace period handling
+        lastOrientationTypeRef.current = orientationType;
+        setCalibrationTrigger(prev => prev + 1);
+        return; // Skip this event, wait for proper recalibration
+      }
+      lastOrientationTypeRef.current = orientationType;
+      
+      // Use gamma for landscape mode (it measures the forward/backward tilt)
       // gamma ranges from -90 to 90 degrees
       // On iOS/Safari:
-      // - Landscape-primary (90°, clockwise rotation): Forward tilt = NEGATIVE gamma
-      // - Landscape-secondary (270°/-90°, counterclockwise rotation): Forward tilt = POSITIVE gamma
+      // - landscape-primary (home button on right): Forward tilt = NEGATIVE gamma
+      // - landscape-secondary (home button on left): Forward tilt = POSITIVE gamma
       let effectiveTilt = 0;
-      if (normalizedAngle === 90 || normalizedAngle === 270) {
+      if (orientationType === 'landscape-primary' || orientationType === 'landscape-secondary') {
         // Landscape mode: use gamma for forward/backward tilt
-        if (normalizedAngle === 90) {
-          // Landscape-primary (clockwise): invert gamma so forward = positive
+        if (orientationType === 'landscape-primary') {
+          // Home button on right: invert gamma so forward = positive
           effectiveTilt = -gamma;
         } else {
-          // Landscape-secondary (counterclockwise): gamma is already correct
+          // Home button on left: gamma is already correct
           effectiveTilt = gamma;
         }
       } else {
-        // Portrait or unknown: fall back to beta
+        // Portrait: use beta
         effectiveTilt = beta;
       }
       
