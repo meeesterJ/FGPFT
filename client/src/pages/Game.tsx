@@ -33,6 +33,12 @@ export default function Game() {
   const baselineBetaRef = useRef<number | null>(null); // Baseline beta for calibrated tilt detection
   const calibrationSamplesRef = useRef<number[]>([]); // Samples for averaging baseline
   const isCalibrating = useRef(false); // Flag to indicate calibration in progress
+  const nextWordRef = useRef(store.nextWord); // Stable ref for nextWord function
+  
+  // Keep nextWord ref updated
+  useEffect(() => {
+    nextWordRef.current = store.nextWord;
+  }, [store.nextWord]);
 
   // Initialize round and device orientation
   useEffect(() => {
@@ -148,16 +154,46 @@ export default function Game() {
     };
   }, []); // Only on mount
 
+  // Track which calibrationTrigger value we've already calibrated for
+  const lastCalibratedTriggerRef = useRef<number>(-1);
+  
   // Device orientation listener
   useEffect(() => {
     // Disable tilt during countdown or when in portrait
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!hasDeviceOrientation || !store.isPlaying || isPaused || isCountingDown || !isLandscape) return;
     
-    // Start fresh calibration every time this effect runs (only in landscape)
-    baselineBetaRef.current = null;
-    isCalibrating.current = true;
-    calibrationSamplesRef.current = [];
+    // Only start fresh calibration when calibrationTrigger changes (not on every effect run)
+    const needsCalibration = lastCalibratedTriggerRef.current !== calibrationTrigger;
+    
+    // Track the cooldown defer timeout
+    let cooldownDeferTimeout: NodeJS.Timeout | null = null;
+    
+    if (needsCalibration) {
+      const now = Date.now();
+      const timeSinceLastTilt = now - lastTiltTimeRef.current;
+      const cooldownRemaining = 2000 - timeSinceLastTilt;
+      
+      if (cooldownRemaining > 0) {
+        // Still in cooldown - defer calibration until cooldown expires
+        cooldownDeferTimeout = setTimeout(() => {
+          // Only calibrate if still in landscape when timeout fires
+          const stillLandscape = window.innerWidth > window.innerHeight;
+          if (!stillLandscape) return; // Skip - next landscape entry will trigger recalibration
+          
+          lastCalibratedTriggerRef.current = calibrationTrigger;
+          baselineBetaRef.current = null;
+          isCalibrating.current = true;
+          calibrationSamplesRef.current = [];
+        }, cooldownRemaining);
+      } else {
+        // No cooldown - calibrate immediately
+        lastCalibratedTriggerRef.current = calibrationTrigger;
+        baselineBetaRef.current = null;
+        isCalibrating.current = true;
+        calibrationSamplesRef.current = [];
+      }
+    }
     
     // Grace period timer - finalize calibration 500ms after first sample
     let graceTimeout: NodeJS.Timeout | null = null;
@@ -172,7 +208,7 @@ export default function Game() {
     };
 
     const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
-      const now = Date.now();
+      const eventTime = Date.now();
       
       // Get the current orientation angle
       const angle = orientationAngleRef.current;
@@ -211,33 +247,34 @@ export default function Game() {
       // Wait for calibration to complete
       if (baselineBetaRef.current === null) return;
       
-      // Debounce: only allow one gesture per 1 second
-      if (now - lastTiltTimeRef.current < 1000) return;
+      // Debounce: only allow one gesture per 1.5 seconds to prevent double triggers
+      if (eventTime - lastTiltTimeRef.current < 1500) return;
       
       // Calculate tilt delta from calibrated baseline
       const tiltDelta = effectiveBeta - baselineBetaRef.current;
 
       if (tiltDelta > tiltThresholdRef.current) {
         // Tilted forward (screen toward user) = CORRECT
-        lastTiltTimeRef.current = now;
+        lastTiltTimeRef.current = eventTime;
         setTiltFeedback("correct");
         setTimeout(() => setTiltFeedback(null), 300);
-        store.nextWord(true);
+        nextWordRef.current(true);
       } else if (tiltDelta < -tiltThresholdRef.current) {
         // Tilted backward (screen away from user) = PASS
-        lastTiltTimeRef.current = now;
+        lastTiltTimeRef.current = eventTime;
         setTiltFeedback("pass");
         setTimeout(() => setTiltFeedback(null), 300);
-        store.nextWord(false);
+        nextWordRef.current(false);
       }
     };
 
     window.addEventListener("deviceorientation", handleDeviceOrientation);
     return () => {
+      if (cooldownDeferTimeout) clearTimeout(cooldownDeferTimeout);
       if (graceTimeout) clearTimeout(graceTimeout);
       window.removeEventListener("deviceorientation", handleDeviceOrientation);
     };
-  }, [hasDeviceOrientation, store.isPlaying, isPaused, isCountingDown, calibrationTrigger, store]);
+  }, [hasDeviceOrientation, store.isPlaying, isPaused, isCountingDown, calibrationTrigger]);
 
   // Timer logic - pause during countdown
   useEffect(() => {
@@ -348,10 +385,10 @@ export default function Game() {
       setIsCountingDown(false);
       isCountdownActiveRef.current = false;
       hasShownInitialCountdownRef.current = true;
+      // Reset tilt time to allow immediate calibration (no cooldown blocking)
+      lastTiltTimeRef.current = 0;
       // Trigger recalibration by bumping the trigger state
       setCalibrationTrigger(prev => prev + 1);
-      // Reset tilt time to allow detection after calibration
-      lastTiltTimeRef.current = Date.now();
     }, 4000));
   };
 
