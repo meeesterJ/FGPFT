@@ -151,12 +151,15 @@ export default function Game() {
       // Gamma should NOT be used - it sits at ±90° in landscape just from orientation, causing false triggers
       let tiltValue = 0;
       
-      if (angle === 90) {
-        // Landscape left (home button on right): flip beta sign
-        tiltValue = -beta;
-      } else if (angle === -90 || angle === 270) {
-        // Landscape right (home button on left): use beta as-is
+      // Normalize angle to 0-360 range
+      const normalizedAngle = ((angle % 360) + 360) % 360;
+      
+      if (normalizedAngle === 90) {
+        // Landscape left (home button on right): use beta as-is
         tiltValue = beta;
+      } else if (normalizedAngle === 270) {
+        // Landscape right (home button on left): flip beta sign
+        tiltValue = -beta;
       } else {
         // Portrait or unknown: use beta (positive = forward tilt)
         tiltValue = beta;
