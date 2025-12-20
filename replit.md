@@ -44,6 +44,19 @@ The server uses a storage abstraction pattern (`IStorage` interface) allowing ea
 - Custom word list creation with CSV import support
 - Soft-delete and permanent delete for built-in categories
 
+### Tilt Detection Implementation
+The tilt detection uses the DeviceOrientation API with gamma axis for landscape orientations:
+
+- **Calibration**: When entering landscape mode, the app collects tilt samples over 500ms to establish a baseline
+- **Dual Baseline Tracking**: Both mapped (effectiveTilt) and raw gamma baselines are stored
+  - `baselineBetaRef`: The mapped tilt value used for delta calculations
+  - `rawGammaBaselineRef`: The raw gamma value used for wrap detection
+- **Gamma Unwrapping**: When phone is held vertically (gamma near ±90°), tilting forward causes gamma to wrap from +90 to -90. The unwrap logic detects this crossing and adds/subtracts 180° to create continuous values
+- **Orientation-Specific Mapping**: 
+  - landscape-secondary: raw gamma used directly
+  - landscape-primary: gamma inverted (-gamma) to maintain consistent forward=positive convention
+- **Return-to-Center**: After a gesture is recognized, user must return phone to center position before the next gesture is processed
+
 ### Build Configuration
 - Development: Vite dev server with HMR
 - Production: esbuild bundles server, Vite builds client to `dist/public`
