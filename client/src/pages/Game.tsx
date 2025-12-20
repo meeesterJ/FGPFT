@@ -42,6 +42,16 @@ export default function Game() {
   const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
   const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
   
+  // Debug state for tilt troubleshooting
+  const [debugInfo, setDebugInfo] = useState<{
+    orientationType: string;
+    gamma: number;
+    beta: number;
+    effectiveTilt: number;
+    baseline: number | null;
+    tiltDelta: number;
+  } | null>(null);
+  
   // Keep nextWord ref updated
   useEffect(() => {
     nextWordRef.current = store.nextWord;
@@ -344,6 +354,16 @@ export default function Game() {
       const tiltDelta = effectiveTilt - baselineBetaRef.current;
       const absDelta = Math.abs(tiltDelta);
       const isAtCenter = absDelta <= returnThresholdRef.current;
+      
+      // Update debug info for on-screen display
+      setDebugInfo({
+        orientationType,
+        gamma,
+        beta,
+        effectiveTilt,
+        baseline: baselineBetaRef.current,
+        tiltDelta
+      });
 
       // If we must return to center first (after button click), wait for that
       if (mustReturnToCenterRef.current) {
@@ -668,6 +688,20 @@ export default function Game() {
         <div className="absolute top-4 right-4 bg-accent/80 text-accent-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 z-20">
           <Smartphone className="w-4 h-4" />
           Tilt gestures not available on this device
+        </div>
+      )}
+
+      {/* Debug Info Display - for troubleshooting tilt */}
+      {debugInfo && (
+        <div className="absolute bottom-2 left-2 bg-black/80 text-white px-3 py-2 rounded text-xs font-mono z-50 max-w-xs">
+          <div>orient: {debugInfo.orientationType}</div>
+          <div>gamma: {debugInfo.gamma.toFixed(1)}</div>
+          <div>beta: {debugInfo.beta.toFixed(1)}</div>
+          <div>effTilt: {debugInfo.effectiveTilt.toFixed(1)}</div>
+          <div>baseline: {debugInfo.baseline?.toFixed(1) ?? 'null'}</div>
+          <div className={debugInfo.tiltDelta > 25 ? 'text-green-400' : debugInfo.tiltDelta < -25 ? 'text-red-400' : ''}>
+            delta: {debugInfo.tiltDelta.toFixed(1)}
+          </div>
         </div>
       )}
 
