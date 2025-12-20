@@ -1,6 +1,41 @@
 // Global audio context for game sounds
 let audioContext: AudioContext | null = null;
 let initPromise: Promise<void> | null = null;
+let audioUnlocked = false;
+
+// iOS requires playing an actual audio element to unlock audio output
+// This creates a tiny silent audio and plays it on user gesture
+function unlockAudioForIOS(): Promise<void> {
+  if (audioUnlocked) return Promise.resolve();
+  
+  return new Promise((resolve) => {
+    // Create a silent audio element with a tiny data URI
+    // This is a 0.1 second silent WAV file encoded as base64
+    const silentAudio = new Audio(
+      "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"
+    );
+    silentAudio.volume = 0.01;
+    
+    const playPromise = silentAudio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          console.log('iOS audio unlocked via silent audio element');
+          audioUnlocked = true;
+          resolve();
+        })
+        .catch((e) => {
+          console.log('iOS audio unlock failed:', e);
+          // Still mark as attempted to avoid repeated failures
+          audioUnlocked = true;
+          resolve();
+        });
+    } else {
+      audioUnlocked = true;
+      resolve();
+    }
+  });
+}
 
 export async function initAudioContext(): Promise<AudioContext | null> {
   // If already running, return immediately
@@ -17,6 +52,9 @@ export async function initAudioContext(): Promise<AudioContext | null> {
   // Create the init promise
   initPromise = (async () => {
     try {
+      // First, unlock iOS audio by playing a silent audio element
+      await unlockAudioForIOS();
+      
       if (!audioContext || audioContext.state === 'closed') {
         audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
         console.log('AudioContext created, state:', audioContext.state);
