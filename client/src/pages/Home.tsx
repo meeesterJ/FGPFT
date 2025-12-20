@@ -1,11 +1,26 @@
 import { Link, useLocation } from "wouter";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
-import { Play, Settings as SettingsIcon, Trophy } from "lucide-react";
+import { Play, Settings as SettingsIcon, Share } from "lucide-react";
 
 export default function Home() {
   const [, setLocation] = useLocation();
   const startGame = useGameStore(state => state.startGame);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+
+  useEffect(() => {
+    // Detect iOS/iPadOS (iPadOS reports as Macintosh, so also check for touch support)
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isIPadOS = navigator.userAgent.includes('Macintosh') && 
+                     navigator.maxTouchPoints > 1;
+    setIsIOS(isIOSDevice || isIPadOS);
+    // Check if running as installed PWA
+    const standalone = window.matchMedia('(display-mode: standalone)').matches || 
+                       (window.navigator as any).standalone === true;
+    setIsStandalone(standalone);
+  }, []);
 
   const handleStart = async () => {
     // Request fullscreen for immersive experience
@@ -44,10 +59,19 @@ export default function Home() {
         </div>
 
         <div className="grid gap-4 w-full animate-slide-up mt-auto" style={{ animationDelay: '0.2s' }}>
+          {/* iOS hint to add to home screen for fullscreen experience */}
+          {isIOS && !isStandalone && (
+            <div className="bg-card/80 backdrop-blur rounded-xl p-4 text-sm text-muted-foreground flex items-center gap-3 border border-border">
+              <Share className="w-5 h-5 flex-shrink-0" />
+              <span>For the best fullscreen experience, tap the share button and "Add to Home Screen"</span>
+            </div>
+          )}
+          
           <Button 
             size="lg" 
             className="w-full h-20 text-2xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-transform bg-primary hover:bg-primary/90 text-white border-b-4 border-primary-foreground/20 active:border-b-0 active:translate-y-1"
             onClick={handleStart}
+            data-testid="button-play"
           >
             <Play className="mr-3 w-8 h-8 fill-current" />
             Play Now
@@ -58,6 +82,7 @@ export default function Home() {
               variant="outline" 
               size="lg" 
               className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform border-2 border-border bg-card hover:bg-accent hover:text-accent-foreground"
+              data-testid="button-settings"
             >
               <SettingsIcon className="mr-3 w-6 h-6" />
               Settings
