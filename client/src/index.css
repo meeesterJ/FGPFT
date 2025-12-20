@@ -135,8 +135,9 @@ h1, h2, h3, h4, h5, h6 {
   font-size: clamp(2rem, 10vw, 9rem);
   max-width: 95%;
   white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
   text-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.5),
     0 4px 8px rgba(0, 0, 0, 0.3),

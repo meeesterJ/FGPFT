@@ -34,6 +34,9 @@ export default function Game() {
   const calibrationSamplesRef = useRef<number[]>([]); // Samples for averaging baseline
   const isCalibrating = useRef(false); // Flag to indicate calibration in progress
   const nextWordRef = useRef(store.nextWord); // Stable ref for nextWord function
+  const wordDisplayRef = useRef<HTMLHeadingElement>(null); // Ref for auto-scaling word display
+  const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
+  const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
   
   // Keep nextWord ref updated
   useEffect(() => {
@@ -305,6 +308,55 @@ export default function Game() {
     }
   }, [store.isRoundOver, store.isGameFinished, setLocation]);
 
+  // Auto-scale font size for long words that don't fit on one line
+  useEffect(() => {
+    if (!wordDisplayRef.current || !wordContainerRef.current || !store.currentWord) {
+      setWordFontSize(null);
+      return;
+    }
+
+    // Reset font size first to get natural size
+    setWordFontSize(null);
+    
+    // Use requestAnimationFrame to ensure DOM has updated
+    requestAnimationFrame(() => {
+      const container = wordContainerRef.current;
+      const display = wordDisplayRef.current;
+      if (!container || !display) return;
+      
+      const containerWidth = container.clientWidth * 0.9; // 90% of container width
+      const words = store.currentWord?.split(' ') || [];
+      
+      // Find the longest single word
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      
+      // Get computed style for font
+      const computedStyle = window.getComputedStyle(display);
+      const baseFontSize = parseFloat(computedStyle.fontSize);
+      ctx.font = `${computedStyle.fontWeight} ${baseFontSize}px ${computedStyle.fontFamily}`;
+      
+      // Measure each word
+      let longestWordWidth = 0;
+      for (const word of words) {
+        const width = ctx.measureText(word).width;
+        if (width > longestWordWidth) {
+          longestWordWidth = width;
+        }
+      }
+      
+      // If longest word is wider than container, scale down
+      if (longestWordWidth > containerWidth) {
+        const scaleFactor = containerWidth / longestWordWidth;
+        const newFontSize = Math.floor(baseFontSize * scaleFactor * 0.95); // 95% to add margin
+        setWordFontSize(`${Math.max(newFontSize, 16)}px`); // Minimum 16px
+      } else {
+        setWordFontSize(null);
+      }
+    });
+  }, [store.currentWord]);
+
   const handleCorrect = () => {
     if (isProcessing || !store.isPlaying || isCountingDown) return;
     setIsProcessing(true);
@@ -501,12 +553,19 @@ export default function Game() {
 
       {/* Game Area */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-6 z-10">
-        <div className="bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 md:p-8 shadow-2xl relative overflow-hidden group w-full h-full max-w-2xl max-h-96">
+        <div 
+          ref={wordContainerRef}
+          className="bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 md:p-8 shadow-2xl relative overflow-hidden group w-full h-full max-w-2xl max-h-96"
+        >
            {/* Card Background Decoration */}
            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
            <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl transform -translate-x-10 translate-y-10"></div>
            
-           <h1 className="word-display font-body text-center text-white animate-bounce-in">
+           <h1 
+             ref={wordDisplayRef}
+             className="word-display font-body text-center text-white animate-bounce-in"
+             style={wordFontSize ? { fontSize: wordFontSize } : undefined}
+           >
              {store.currentWord}
            </h1>
         </div>
