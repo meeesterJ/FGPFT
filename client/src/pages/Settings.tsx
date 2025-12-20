@@ -5,6 +5,7 @@ import { useGameStore, WordList } from "@/lib/store";
 import { DEFAULT_WORD_LISTS } from "@/lib/words";
 import { ArrowLeft, Plus, Trash2, Edit2, X } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -201,6 +202,21 @@ export default function Settings() {
               className="py-4"
             />
             <p className="text-sm text-muted-foreground">How many rounds to play before the game ends.</p>
+          </section>
+
+          {/* Show Buttons Toggle */}
+          <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
+            <div className="flex justify-between items-center">
+              <div className="space-y-1">
+                <h2 className="text-xl font-thin">Show Buttons</h2>
+                <p className="text-sm text-muted-foreground">Display Correct/Pass buttons during gameplay. Disable to use tilt gestures only.</p>
+              </div>
+              <Switch 
+                checked={store.showButtons}
+                onCheckedChange={store.setShowButtons}
+                data-testid="switch-show-buttons"
+              />
+            </div>
           </section>
 
           {/* Word Lists */}

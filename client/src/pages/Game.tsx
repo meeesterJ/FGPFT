@@ -747,35 +747,39 @@ export default function Game() {
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="flex flex-col w-auto h-full z-20">
-        <button 
-          onClick={handlePass}
-          disabled={isProcessing || !store.isPlaying || isCountingDown}
-          className={cn(
-            "flex-1 bg-destructive hover:bg-destructive/90 active:bg-destructive/80 transition-colors flex items-center justify-center group",
-            (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
-          )}
-        >
-          <div className="flex flex-col items-center">
-            <X className="w-16 h-16 text-white mb-2 group-active:scale-90 transition-transform" />
-            <span className="text-white font-bold text-xl uppercase tracking-widest">Pass</span>
-          </div>
-        </button>
-        <button 
-          onClick={handleCorrect}
-          disabled={isProcessing || !store.isPlaying || isCountingDown}
-          className={cn(
-            "flex-1 bg-success hover:bg-success/90 active:bg-success/80 transition-colors flex items-center justify-center group",
-            (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
-          )}
-        >
-          <div className="flex flex-col items-center">
-            <Check className="w-16 h-16 text-black mb-2 group-active:scale-90 transition-transform" />
-            <span className="text-black font-bold text-xl uppercase tracking-widest">Correct</span>
-          </div>
-        </button>
-      </div>
+      {/* Controls - conditionally rendered based on showButtons setting */}
+      {store.showButtons && (
+        <div className="flex flex-col w-auto h-full z-20">
+          <button 
+            onClick={handlePass}
+            disabled={isProcessing || !store.isPlaying || isCountingDown}
+            data-testid="button-pass"
+            className={cn(
+              "flex-1 bg-destructive hover:bg-destructive/90 active:bg-destructive/80 transition-colors flex items-center justify-center group",
+              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
+            )}
+          >
+            <div className="flex flex-col items-center">
+              <X className="w-16 h-16 text-white mb-2 group-active:scale-90 transition-transform" />
+              <span className="text-white font-bold text-xl uppercase tracking-widest">Pass</span>
+            </div>
+          </button>
+          <button 
+            onClick={handleCorrect}
+            disabled={isProcessing || !store.isPlaying || isCountingDown}
+            data-testid="button-correct"
+            className={cn(
+              "flex-1 bg-success hover:bg-success/90 active:bg-success/80 transition-colors flex items-center justify-center group",
+              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
+            )}
+          >
+            <div className="flex flex-col items-center">
+              <Check className="w-16 h-16 text-black mb-2 group-active:scale-90 transition-transform" />
+              <span className="text-black font-bold text-xl uppercase tracking-widest">Correct</span>
+            </div>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

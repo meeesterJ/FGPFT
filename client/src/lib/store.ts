@@ -13,6 +13,7 @@ interface GameState {
   // Settings
   roundDuration: number; // in seconds
   totalRounds: number;
+  showButtons: boolean; // Show/hide Correct/Pass buttons during gameplay
   selectedListIds: string[];
   customLists: WordList[];
   builtInListOverrides: Record<string, { name?: string; words?: string[] }>; // Edits to built-in lists
@@ -34,6 +35,7 @@ interface GameState {
   // Actions
   setRoundDuration: (seconds: number) => void;
   setTotalRounds: (rounds: number) => void;
+  setShowButtons: (show: boolean) => void;
   toggleListSelection: (id: string) => void;
   addCustomList: (list: WordList) => void;
   removeCustomList: (id: string) => void;
@@ -58,6 +60,7 @@ export const useGameStore = create<GameState>()(
       // Defaults
       roundDuration: 30,
       totalRounds: 3,
+      showButtons: true,
       selectedListIds: ['movies'],
       customLists: [],
       builtInListOverrides: {},
@@ -77,6 +80,7 @@ export const useGameStore = create<GameState>()(
 
       setRoundDuration: (seconds) => set({ roundDuration: seconds }),
       setTotalRounds: (rounds) => set({ totalRounds: rounds }),
+      setShowButtons: (show) => set({ showButtons: show }),
       
       toggleListSelection: (id) => set((state) => {
         const exists = state.selectedListIds.includes(id);
@@ -238,6 +242,7 @@ export const useGameStore = create<GameState>()(
       partialize: (state) => ({ 
         roundDuration: state.roundDuration,
         totalRounds: state.totalRounds,
+        showButtons: state.showButtons,
         selectedListIds: state.selectedListIds,
         customLists: state.customLists,
         builtInListOverrides: state.builtInListOverrides,
