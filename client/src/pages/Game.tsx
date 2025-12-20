@@ -4,7 +4,7 @@ import { useGameStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Check, X, Pause, Play, Smartphone, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getAudioContext, initAudioContext, playBeep as sharedPlayBeep } from "@/lib/audio";
+import { getAudioContext, initAudioContext, playSound } from "@/lib/audio";
 
 export default function Game() {
   const [, setLocation] = useLocation();
@@ -45,38 +45,31 @@ export default function Game() {
   const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
   const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
   
-  // Use shared audio context - wraps sharedPlayBeep with soundEnabled check
-  const playBeep = (frequency: number, duration: number, type: OscillatorType = 'sine') => {
-    console.log('playBeep called:', { frequency, soundEnabled: store.soundEnabled });
-    if (!store.soundEnabled) {
-      console.log('playBeep: Sound disabled, skipping');
-      return;
-    }
-    console.log('playBeep: Calling sharedPlayBeep');
-    sharedPlayBeep(frequency, duration, type);
-  };
-  
-  // Sound feedback - distinct tones for correct vs pass
+  // Sound feedback using enhanced audio system
   const soundCorrect = () => {
-    playBeep(880, 80); // Higher pitch, short - positive feel
+    if (!store.soundEnabled) return;
+    playSound('correct');
   };
   
   const soundPass = () => {
-    playBeep(440, 50); // Lower pitch, shorter
-    setTimeout(() => playBeep(440, 50), 60); // Double beep pattern
+    if (!store.soundEnabled) return;
+    playSound('pass');
   };
   
   // Countdown sounds - tick/tock pattern for 3, 2, 1 and buzz for round end
   const soundTick = () => {
-    playBeep(1200, 100, 'square'); // High tick at 1200Hz (for 3 and 1)
+    if (!store.soundEnabled) return;
+    playSound('tick');
   };
   
   const soundTock = () => {
-    playBeep(800, 100, 'square'); // Lower tock at 800Hz (for 2)
+    if (!store.soundEnabled) return;
+    playSound('tock');
   };
   
   const soundBuzz = () => {
-    playBeep(200, 300, 'sawtooth'); // Low buzz at 200Hz, longer duration
+    if (!store.soundEnabled) return;
+    playSound('buzz');
   };
   
   // Haptic feedback functions using Vibration API
