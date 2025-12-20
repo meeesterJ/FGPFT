@@ -47,7 +47,12 @@ export default function Game() {
   
   // Use shared audio context - wraps sharedPlayBeep with soundEnabled check
   const playBeep = (frequency: number, duration: number, type: OscillatorType = 'sine') => {
-    if (!store.soundEnabled) return;
+    console.log('playBeep called:', { frequency, soundEnabled: store.soundEnabled });
+    if (!store.soundEnabled) {
+      console.log('playBeep: Sound disabled, skipping');
+      return;
+    }
+    console.log('playBeep: Calling sharedPlayBeep');
     sharedPlayBeep(frequency, duration, type);
   };
   
