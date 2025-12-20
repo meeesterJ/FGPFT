@@ -132,13 +132,13 @@ export default function Game() {
       }
 
       if (tiltValue > tiltThresholdRef.current) {
-        // Tilted forward = CORRECT
+        // Tilted forward (screen toward user) = CORRECT
         lastTiltTimeRef.current = now;
         setTiltFeedback("correct");
         setTimeout(() => setTiltFeedback(null), 300);
         store.nextWord(true);
       } else if (tiltValue < -tiltThresholdRef.current) {
-        // Tilted backward = PASS
+        // Tilted backward (screen away from user) = PASS
         lastTiltTimeRef.current = now;
         setTiltFeedback("pass");
         setTimeout(() => setTiltFeedback(null), 300);
