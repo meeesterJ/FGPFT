@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useGameStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { Check, X, Pause, Play, Smartphone } from "lucide-react";
+import { Check, X, Pause, Play, Smartphone, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function Game() {
@@ -13,10 +13,11 @@ export default function Game() {
   const [isPaused, setIsPaused] = useState(false);
   const [tiltFeedback, setTiltFeedback] = useState<"correct" | "pass" | null>(null);
   const [hasDeviceOrientation, setHasDeviceOrientation] = useState(false);
-  const [isLandscape, setIsLandscape] = useState(window.innerHeight < window.innerWidth);
+  const [showRotatePrompt, setShowRotatePrompt] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tiltThresholdRef = useRef(35); // Degrees of tilt to trigger
   const lastTiltTimeRef = useRef(0);
+  const orientationAngleRef = useRef(0); // Track screen orientation angle
 
   // Initialize round and device orientation
   useEffect(() => {
@@ -28,13 +29,43 @@ export default function Game() {
     // Reset timer
     setTimeLeft(store.roundDuration);
 
-    // Handle orientation changes
-    const handleOrientationChange = () => {
-      setIsLandscape(window.innerHeight < window.innerWidth);
+    // Check if device is in landscape and prompt to rotate if not
+    const checkOrientation = () => {
+      const isLandscape = window.innerWidth > window.innerHeight;
+      setShowRotatePrompt(!isLandscape);
+      
+      // Track orientation angle for tilt calculations
+      if (screen.orientation) {
+        orientationAngleRef.current = screen.orientation.angle;
+      } else if (typeof (window as any).orientation === 'number') {
+        orientationAngleRef.current = (window as any).orientation;
+      }
     };
-
+    
+    checkOrientation();
+    
+    // Try to lock to landscape (works on Android, not iOS)
+    const lockToLandscape = async () => {
+      try {
+        if (screen.orientation && (screen.orientation as any).lock) {
+          await (screen.orientation as any).lock('landscape');
+          setShowRotatePrompt(false);
+        }
+      } catch (e) {
+        // Screen orientation lock not supported or failed - show prompt instead
+      }
+    };
+    lockToLandscape();
+    
+    // Listen for orientation changes
+    const handleOrientationChange = () => {
+      checkOrientation();
+    };
     window.addEventListener("orientationchange", handleOrientationChange);
     window.addEventListener("resize", handleOrientationChange);
+    if (screen.orientation) {
+      screen.orientation.addEventListener("change", handleOrientationChange);
+    }
 
     // Request permission for device orientation (iOS 13+)
     if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
@@ -53,8 +84,19 @@ export default function Game() {
     }
 
     return () => {
+      // Clean up listeners and unlock orientation
       window.removeEventListener("orientationchange", handleOrientationChange);
       window.removeEventListener("resize", handleOrientationChange);
+      if (screen.orientation) {
+        screen.orientation.removeEventListener("change", handleOrientationChange);
+      }
+      try {
+        if (screen.orientation && screen.orientation.unlock) {
+          screen.orientation.unlock();
+        }
+      } catch (e) {
+        // Ignore unlock errors
+      }
     };
   }, []); // Only on mount
 
@@ -67,22 +109,36 @@ export default function Game() {
       // Debounce: only allow one gesture per 1 second
       if (now - lastTiltTimeRef.current < 1000) return;
 
+      // Get the current orientation angle
+      const angle = orientationAngleRef.current;
+      const beta = event.beta || 0;
+      const gamma = event.gamma || 0;
+      
+      // Calculate effective tilt based on device orientation
+      // In landscape mode, gamma represents front/back tilt, but sign varies by orientation
+      // Landscape left (90): forward tilt = negative gamma, so we negate to make positive = forward
+      // Landscape right (-90/270): forward tilt = positive gamma, so we use as-is
       let tiltValue = 0;
-      // In portrait: use beta (forward/backward), in landscape: use gamma (left/right)
-      if (isLandscape) {
-        tiltValue = event.gamma || 0; // Left/right tilt
+      
+      if (angle === 90) {
+        // Landscape left: negate gamma so forward tilt becomes positive
+        tiltValue = -gamma;
+      } else if (angle === -90 || angle === 270) {
+        // Landscape right: gamma already positive for forward tilt
+        tiltValue = gamma;
       } else {
-        tiltValue = event.beta || 0; // Forward/backward tilt
+        // Portrait or unknown: use beta (positive = forward tilt)
+        tiltValue = beta;
       }
 
       if (tiltValue > tiltThresholdRef.current) {
-        // Tilted forward/right significantly = CORRECT
+        // Tilted forward = CORRECT
         lastTiltTimeRef.current = now;
         setTiltFeedback("correct");
         setTimeout(() => setTiltFeedback(null), 300);
         store.nextWord(true);
       } else if (tiltValue < -tiltThresholdRef.current) {
-        // Tilted backward/left significantly = PASS
+        // Tilted backward = PASS
         lastTiltTimeRef.current = now;
         setTiltFeedback("pass");
         setTimeout(() => setTiltFeedback(null), 300);
@@ -94,7 +150,7 @@ export default function Game() {
     return () => {
       window.removeEventListener("deviceorientation", handleDeviceOrientation);
     };
-  }, [store.isPlaying, isPaused, store, isLandscape]);
+  }, [store.isPlaying, isPaused, store]);
 
   // Timer logic
   useEffect(() => {
@@ -141,22 +197,30 @@ export default function Game() {
   if (!store.currentWord) return null;
 
   return (
-    <div className={cn("h-screen w-full flex bg-background overflow-hidden relative", isLandscape ? "flex-row" : "flex-col")}>
+    <div className={cn("h-screen w-full flex bg-background overflow-hidden relative", "flex-row")}>
+      {/* Rotate Prompt Overlay */}
+      {showRotatePrompt && (
+        <div className="absolute inset-0 z-50 bg-background/95 backdrop-blur-sm flex flex-col items-center justify-center space-y-6 p-8">
+          <RotateCcw className="w-24 h-24 text-primary animate-spin" style={{ animationDuration: '3s' }} />
+          <h2 className="text-3xl font-black text-primary text-center">Please Rotate Your Device</h2>
+          <p className="text-muted-foreground text-center text-lg">Turn your phone sideways to play in landscape mode</p>
+        </div>
+      )}
+
       {/* Top/Left Bar */}
-      <div className={cn("flex justify-between items-center z-20", isLandscape ? "flex-col w-auto h-full px-4 py-6 gap-4 border-r border-border" : "flex-row p-4 w-full h-auto gap-2")}>
+      <div className="flex flex-col w-auto h-full px-4 py-6 gap-4 border-r border-border justify-between items-center z-20">
         <Button variant="ghost" size="icon" onClick={togglePause} className="rounded-full bg-card/50 backdrop-blur">
-          {isPaused ? <Play className={cn("w-6 h-6", isLandscape && "w-5 h-5")} /> : <Pause className={cn("w-6 h-6", isLandscape && "w-5 h-5")} />}
+          {isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
         </Button>
         
         <div className={cn(
-          "font-black font-mono tracking-tighter",
-          timeLeft <= 10 ? "text-destructive animate-pulse" : "text-primary",
-          isLandscape ? "text-3xl" : "text-4xl"
+          "font-black font-mono tracking-tighter text-3xl",
+          timeLeft <= 10 ? "text-destructive animate-pulse" : "text-primary"
         )}>
           {timeLeft}s
         </div>
 
-        <div className={cn("font-bold bg-card/50 px-4 py-2 rounded-full backdrop-blur", isLandscape ? "text-sm" : "text-xl")}>
+        <div className="font-bold bg-card/50 px-4 py-2 rounded-full backdrop-blur text-sm">
           Score: <span className="text-accent">{store.currentScore}</span>
         </div>
       </div>
@@ -197,9 +261,7 @@ export default function Game() {
 
       {/* Game Area */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-6 z-10">
-        <div className={cn("bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 md:p-8 shadow-2xl relative overflow-hidden group", 
-          isLandscape ? "w-full h-full max-w-2xl max-h-96" : "w-full max-w-lg aspect-[4/3]"
-        )}>
+        <div className="bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 md:p-8 shadow-2xl relative overflow-hidden group w-full h-full max-w-2xl max-h-96">
            {/* Card Background Decoration */}
            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
            <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl transform -translate-x-10 translate-y-10"></div>
@@ -211,7 +273,7 @@ export default function Game() {
       </div>
 
       {/* Controls */}
-      <div className={cn("flex z-20", isLandscape ? "flex-col w-auto h-full" : "flex-row h-1/3")}>
+      <div className="flex flex-col w-auto h-full z-20">
         <button 
           onClick={handlePass}
           className="flex-1 bg-destructive hover:bg-destructive/90 active:bg-destructive/80 transition-colors flex items-center justify-center group"
