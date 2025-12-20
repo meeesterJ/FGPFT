@@ -142,6 +142,6 @@ h1, h2, h3, h4, h5, h6 {
     0 4px 8px rgba(0, 0, 0, 0.3),
     0 0 20px rgba(0, 0, 0, 0.4);
   letter-spacing: 0.08em;
-  font-weight: 300;
+  font-weight: 100;
   line-height: 1.2;
 }
