@@ -103,12 +103,16 @@ export default function Home() {
 
       <div className="z-10 flex flex-col items-center justify-between min-h-[80vh] max-w-md w-full text-center py-8">
         <div className="space-y-4 animate-bounce-in flex-1 flex items-center">
-          <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent text-stroke drop-shadow-xl tracking-wider transform -rotate-2 leading-tight">
-            Family<br/>Guess<br/>Party<br/>Fun<br/>Time
+          <h1 className="text-6xl md:text-7xl font-black tracking-wider transform -rotate-2 leading-tight drop-shadow-2xl">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-300 drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(236, 72, 153, 0.8), 0 4px 8px rgba(0,0,0,0.3)' }}>Family</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-300 drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(34, 211, 238, 0.8), 0 4px 8px rgba(0,0,0,0.3)' }}>Guess</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-300 drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(250, 204, 21, 0.8), 0 4px 8px rgba(0,0,0,0.3)' }}>Party</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-300 drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(74, 222, 128, 0.8), 0 4px 8px rgba(0,0,0,0.3)' }}>Fun</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-300 drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(192, 132, 252, 0.8), 0 4px 8px rgba(0,0,0,0.3)' }}>Time</span>
           </h1>
         </div>
 
-        <div className="grid gap-4 w-full animate-slide-up mt-auto" style={{ animationDelay: '0.2s' }}>
+        <div className="grid gap-4 w-full animate-slide-up mt-12" style={{ animationDelay: '0.2s' }}>
           {/* iOS hint to add to home screen for fullscreen experience */}
           {isIOS && !isStandalone && (
             <div className="bg-card/80 backdrop-blur rounded-xl p-4 text-sm text-muted-foreground flex items-center gap-3 border border-border">
@@ -119,19 +123,18 @@ export default function Home() {
           
           <Button 
             size="lg" 
-            className="w-full h-20 text-2xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-transform bg-primary hover:bg-primary/90 text-white border-b-4 border-primary-foreground/20 active:border-b-0 active:translate-y-1"
+            className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-xl hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
             onClick={handleStart}
             data-testid="button-play"
           >
-            <Play className="mr-3 w-8 h-8 fill-current" />
+            <Play className="mr-3 w-6 h-6 fill-current" />
             Play Now
           </Button>
 
           <Link href="/categories">
             <Button 
-              variant="outline" 
               size="lg" 
-              className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform border-2 border-secondary bg-card hover:bg-secondary hover:text-secondary-foreground"
+              className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-xl hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400"
               data-testid="button-categories"
             >
               <List className="mr-3 w-6 h-6" />
@@ -141,9 +144,8 @@ export default function Home() {
 
           <Link href="/settings">
             <Button 
-              variant="outline" 
               size="lg" 
-              className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform border-2 border-border bg-card hover:bg-accent hover:text-accent-foreground"
+              className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-xl hover:scale-105 transition-transform bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-400"
               data-testid="button-settings"
             >
               <SettingsIcon className="mr-3 w-6 h-6" />
