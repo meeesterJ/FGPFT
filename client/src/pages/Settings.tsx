@@ -132,11 +132,14 @@ export default function Settings() {
     setIsEditDialogOpen(false);
   };
 
-  // Combine and normalize lists for display
+  // Combine and normalize lists for display (exclude deleted built-in lists)
   const allLists = [
-    ...DEFAULT_WORD_LISTS.map(l => ({ ...l, isCustom: false })),
+    ...DEFAULT_WORD_LISTS.filter(l => !store.deletedBuiltInLists.includes(l.id)).map(l => ({ ...l, isCustom: false })),
     ...store.customLists
   ];
+
+  // Lists that have been deleted
+  const deletedLists = DEFAULT_WORD_LISTS.filter(l => store.deletedBuiltInLists.includes(l.id));
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -321,9 +324,9 @@ export default function Settings() {
                             store.removeCustomList(list.id);
                             toast({ title: "Deleted", description: `"${list.name}" has been removed.` });
                           } else {
-                            // Remove built-in list from selected
-                            store.toggleListSelection(list.id);
-                            toast({ title: "Removed", description: `"${list.name}" is no longer in your game.` });
+                            // Delete built-in list
+                            store.deleteBuiltInList(list.id);
+                            toast({ title: "Deleted", description: `"${list.name}" has been deleted.` });
                           }
                         }}
                       >
@@ -334,6 +337,41 @@ export default function Settings() {
                 );
               })}
             </div>
+
+            {/* Deleted Built-in Lists */}
+            {deletedLists.length > 0 && (
+              <div className="mt-8 pt-6 border-t border-border">
+                <h3 className="font-bold text-lg mb-3">Deleted Categories ({deletedLists.length})</h3>
+                <p className="text-sm text-muted-foreground mb-4">Restore any built-in categories you deleted.</p>
+                <div className="grid gap-3">
+                  {deletedLists.map(list => (
+                    <div 
+                      key={list.id} 
+                      className="flex items-center justify-between p-4 rounded-xl border-2 border-border bg-card/50 opacity-60"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-6 h-6 rounded-full border-2 border-muted-foreground"></div>
+                        <div>
+                          <h3 className="font-bold">{list.name}</h3>
+                          <p className="text-xs text-muted-foreground">{list.words.length} words</p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="text-primary hover:text-primary hover:bg-primary/10 border-primary/50"
+                        onClick={() => {
+                          store.restoreBuiltInList(list.id);
+                          toast({ title: "Restored", description: `"${list.name}" has been restored.` });
+                        }}
+                      >
+                        Restore
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </section>
         </div>
       </ScrollArea>

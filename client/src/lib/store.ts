@@ -15,6 +15,7 @@ interface GameState {
   totalRounds: number;
   selectedListIds: string[];
   customLists: WordList[];
+  deletedBuiltInLists: string[]; // Track deleted built-in lists
   
   // Game Session
   currentRound: number;
@@ -35,6 +36,8 @@ interface GameState {
   addCustomList: (list: WordList) => void;
   removeCustomList: (id: string) => void;
   updateCustomList: (id: string, updatedList: WordList) => void;
+  deleteBuiltInList: (id: string) => void;
+  restoreBuiltInList: (id: string) => void;
   
   startGame: () => void;
   startRound: () => void;
@@ -51,6 +54,7 @@ export const useGameStore = create<GameState>()(
       totalRounds: 3,
       selectedListIds: ['movies'],
       customLists: [],
+      deletedBuiltInLists: [],
       
       currentRound: 0,
       currentScore: 0,
@@ -88,6 +92,15 @@ export const useGameStore = create<GameState>()(
 
       updateCustomList: (id, updatedList) => set((state) => ({
         customLists: state.customLists.map(l => l.id === id ? updatedList : l)
+      })),
+
+      deleteBuiltInList: (id) => set((state) => ({
+        deletedBuiltInLists: [...state.deletedBuiltInLists, id],
+        selectedListIds: state.selectedListIds.filter(lid => lid !== id)
+      })),
+
+      restoreBuiltInList: (id) => set((state) => ({
+        deletedBuiltInLists: state.deletedBuiltInLists.filter(did => did !== id)
       })),
 
       startGame: () => {
@@ -184,7 +197,8 @@ export const useGameStore = create<GameState>()(
         roundDuration: state.roundDuration,
         totalRounds: state.totalRounds,
         selectedListIds: state.selectedListIds,
-        customLists: state.customLists
+        customLists: state.customLists,
+        deletedBuiltInLists: state.deletedBuiltInLists
       }),
     }
   )
