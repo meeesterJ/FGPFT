@@ -834,13 +834,13 @@ export default function Game() {
       {/* Left Bar - Timer & Score */}
       <div className="flex flex-col w-auto h-full px-4 py-6 gap-4 border-r border-border justify-center items-center z-20">
         <div className={cn(
-          "font-black font-mono tracking-tighter text-5xl",
+          "font-black font-mono tracking-tighter text-5xl tabular-nums",
           timeLeft <= 10 ? "text-destructive animate-pulse" : "text-primary"
         )}>
-          {timeLeft}s
+          {String(timeLeft).padStart(2, '\u00A0')}s
         </div>
 
-        <div className="font-black text-4xl text-accent">
+        <div className="font-black font-mono text-5xl text-accent tabular-nums">
           {store.currentScore}
         </div>
       </div>
