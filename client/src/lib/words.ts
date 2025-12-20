@@ -22,6 +22,80 @@ export const DEFAULT_WORD_LISTS = [
     ]
   },
   {
+    id: 'actions',
+    name: 'Charades - Actions',
+    words: [
+      'Dancing', 'Swimming', 'Cooking', 'Driving', 'Fishing',
+      'Skiing', 'Typing', 'Painting', 'Singing', 'Sleeping',
+      'Running', 'Jumping', 'Eating', 'Drinking', 'Reading',
+      'Writing', 'Cleaning', 'Shopping', 'Crying', 'Laughing',
+      'Sneezing', 'Yawning', 'Stretching', 'Whistling', 'Clapping',
+      'Waving', 'Hugging', 'Kissing', 'Shaking Hands', 'High-Fiving',
+      'Climbing', 'Crawling', 'Skipping', 'Hopping', 'Tiptoeing',
+      'Surfing', 'Skateboarding', 'Bowling', 'Golfing', 'Boxing',
+      'Wrestling', 'Juggling', 'Magic Trick', 'Blowing Bubbles', 'Flying a Kite',
+      'Riding a Bike', 'Rowing a Boat', 'Paddling a Canoe', 'Ice Skating', 'Roller Skating',
+      'Snowboarding', 'Rock Climbing', 'Bungee Jumping', 'Parachuting', 'Scuba Diving',
+      'Snorkeling', 'Horseback Riding', 'Weightlifting', 'Doing Yoga', 'Meditating',
+      'Taking a Selfie', 'Texting', 'Video Calling', 'Playing Video Games', 'Knitting',
+      'Sewing', 'Ironing', 'Vacuuming', 'Mopping', 'Gardening',
+      'Planting Flowers', 'Mowing the Lawn', 'Raking Leaves', 'Shoveling Snow', 'Washing Dishes',
+      'Brushing Teeth', 'Combing Hair', 'Shaving', 'Putting on Makeup', 'Tying Shoes'
+    ]
+  },
+  {
+    id: 'food-charades',
+    name: 'Charades - Food & Snacks',
+    words: [
+      'Pizza', 'Spaghetti', 'Hamburger', 'Hot Dog', 'Taco',
+      'Burrito', 'Nachos', 'French Fries', 'Chicken Nuggets', 'Popcorn',
+      'Ice Cream Cone', 'Popsicle', 'Lollipop', 'Cotton Candy', 'Cupcake',
+      'Birthday Cake', 'Donut', 'Cookie', 'Brownie', 'Candy Bar',
+      'Gummy Bears', 'Jelly Beans', 'Chocolate', 'Marshmallow', 'S\'mores',
+      'Apple', 'Banana', 'Orange', 'Grapes', 'Watermelon',
+      'Strawberry', 'Pineapple', 'Cherry', 'Lemon', 'Coconut',
+      'Corn on the Cob', 'Carrot', 'Broccoli', 'Celery Stick', 'Pickle',
+      'Sandwich', 'Grilled Cheese', 'PB&J', 'BLT', 'Sub Sandwich',
+      'Sushi', 'Ramen Noodles', 'Fried Rice', 'Egg Roll', 'Fortune Cookie',
+      'Pancakes', 'Waffles', 'French Toast', 'Cereal', 'Oatmeal',
+      'Bacon', 'Scrambled Eggs', 'Fried Egg', 'Toast', 'Bagel',
+      'Pretzel', 'Soft Pretzel', 'Chips', 'Crackers', 'Cheese Puffs',
+      'Milkshake', 'Smoothie', 'Slushie', 'Soda Pop', 'Juice Box',
+      'Lemonade', 'Hot Chocolate', 'Coffee', 'Tea', 'Milk',
+      'Soup', 'Chili', 'Mac and Cheese', 'Mashed Potatoes', 'Gravy',
+      'Fried Chicken', 'Chicken Wings', 'Ribs', 'Steak', 'Meatballs',
+      'Fish Sticks', 'Shrimp', 'Lobster', 'Crab Legs', 'Clam Chowder',
+      'Cheese', 'String Cheese', 'Cheese Pizza', 'Pepperoni Pizza', 'Cheese Quesadilla',
+      'Funnel Cake', 'Churro', 'Cinnamon Roll', 'Apple Pie', 'Ice Cream Sundae'
+    ]
+  },
+  {
+    id: 'animals-kids-charades',
+    name: 'Charades - Animals',
+    words: [
+      'Dog', 'Cat', 'Bunny', 'Hamster', 'Goldfish',
+      'Puppy', 'Kitten', 'Duckling', 'Chick', 'Piglet',
+      'Horse', 'Pony', 'Cow', 'Pig', 'Sheep',
+      'Goat', 'Chicken', 'Rooster', 'Duck', 'Goose',
+      'Frog', 'Toad', 'Turtle', 'Snail', 'Caterpillar',
+      'Butterfly', 'Ladybug', 'Bee', 'Ant', 'Spider',
+      'Lion', 'Tiger', 'Bear', 'Elephant', 'Giraffe',
+      'Zebra', 'Hippo', 'Rhino', 'Gorilla', 'Monkey',
+      'Kangaroo', 'Koala', 'Panda', 'Sloth', 'Penguin',
+      'Polar Bear', 'Seal', 'Walrus', 'Otter', 'Beaver',
+      'Dolphin', 'Whale', 'Shark', 'Octopus', 'Jellyfish',
+      'Starfish', 'Crab', 'Lobster', 'Seahorse', 'Clownfish',
+      'Eagle', 'Owl', 'Parrot', 'Flamingo', 'Peacock',
+      'Toucan', 'Hummingbird', 'Swan', 'Pelican', 'Woodpecker',
+      'Snake', 'Lizard', 'Alligator', 'Crocodile', 'Chameleon',
+      'T-Rex', 'Triceratops', 'Pterodactyl', 'Brontosaurus', 'Velociraptor',
+      'Unicorn', 'Dragon', 'Pegasus', 'Phoenix', 'Mermaid',
+      'Wolf', 'Fox', 'Deer', 'Moose', 'Reindeer',
+      'Squirrel', 'Chipmunk', 'Raccoon', 'Skunk', 'Hedgehog',
+      'Bat', 'Mouse', 'Cheetah', 'Camel', 'Llama'
+    ]
+  },
+  {
     id: 'animals-easy',
     name: 'Animals - Easy',
     words: [
@@ -58,28 +132,6 @@ export const DEFAULT_WORD_LISTS = [
       'Civet', 'Coati', 'Fisher', 'Howler Monkey', 'Kinkajou', 'Kookaburra', 'Leafcutter Ant', 'Mandrill', 'Marlin', 'Nautilus',
       'Ocelot', 'Okapi', 'Pangolin', 'Proboscis Monkey', 'Serval', 'Shoebill', 'Star-Nosed Mole', 'Stoat', 'Takin', 'Tamarin',
       'Tapir', 'Zebra Finch'
-    ]
-  },
-  {
-    id: 'actions',
-    name: 'Actions (Charades)',
-    words: [
-      'Dancing', 'Swimming', 'Cooking', 'Driving', 'Fishing',
-      'Skiing', 'Typing', 'Painting', 'Singing', 'Sleeping',
-      'Running', 'Jumping', 'Eating', 'Drinking', 'Reading',
-      'Writing', 'Cleaning', 'Shopping', 'Crying', 'Laughing',
-      'Sneezing', 'Yawning', 'Stretching', 'Whistling', 'Clapping',
-      'Waving', 'Hugging', 'Kissing', 'Shaking Hands', 'High-Fiving',
-      'Climbing', 'Crawling', 'Skipping', 'Hopping', 'Tiptoeing',
-      'Surfing', 'Skateboarding', 'Bowling', 'Golfing', 'Boxing',
-      'Wrestling', 'Juggling', 'Magic Trick', 'Blowing Bubbles', 'Flying a Kite',
-      'Riding a Bike', 'Rowing a Boat', 'Paddling a Canoe', 'Ice Skating', 'Roller Skating',
-      'Snowboarding', 'Rock Climbing', 'Bungee Jumping', 'Parachuting', 'Scuba Diving',
-      'Snorkeling', 'Horseback Riding', 'Weightlifting', 'Doing Yoga', 'Meditating',
-      'Taking a Selfie', 'Texting', 'Video Calling', 'Playing Video Games', 'Knitting',
-      'Sewing', 'Ironing', 'Vacuuming', 'Mopping', 'Gardening',
-      'Planting Flowers', 'Mowing the Lawn', 'Raking Leaves', 'Shoveling Snow', 'Washing Dishes',
-      'Brushing Teeth', 'Combing Hair', 'Shaving', 'Putting on Makeup', 'Tying Shoes'
     ]
   },
   {
@@ -156,55 +208,12 @@ export const DEFAULT_WORD_LISTS = [
     ]
   },
   {
-    id: 'food-charades',
-    name: 'Food & Snacks Charades',
+    id: 'brainrot',
+    name: 'Brainrot',
     words: [
-      'Pizza', 'Spaghetti', 'Hamburger', 'Hot Dog', 'Taco',
-      'Burrito', 'Nachos', 'French Fries', 'Chicken Nuggets', 'Popcorn',
-      'Ice Cream Cone', 'Popsicle', 'Lollipop', 'Cotton Candy', 'Cupcake',
-      'Birthday Cake', 'Donut', 'Cookie', 'Brownie', 'Candy Bar',
-      'Gummy Bears', 'Jelly Beans', 'Chocolate', 'Marshmallow', 'S\'mores',
-      'Apple', 'Banana', 'Orange', 'Grapes', 'Watermelon',
-      'Strawberry', 'Pineapple', 'Cherry', 'Lemon', 'Coconut',
-      'Corn on the Cob', 'Carrot', 'Broccoli', 'Celery Stick', 'Pickle',
-      'Sandwich', 'Grilled Cheese', 'PB&J', 'BLT', 'Sub Sandwich',
-      'Sushi', 'Ramen Noodles', 'Fried Rice', 'Egg Roll', 'Fortune Cookie',
-      'Pancakes', 'Waffles', 'French Toast', 'Cereal', 'Oatmeal',
-      'Bacon', 'Scrambled Eggs', 'Fried Egg', 'Toast', 'Bagel',
-      'Pretzel', 'Soft Pretzel', 'Chips', 'Crackers', 'Cheese Puffs',
-      'Milkshake', 'Smoothie', 'Slushie', 'Soda Pop', 'Juice Box',
-      'Lemonade', 'Hot Chocolate', 'Coffee', 'Tea', 'Milk',
-      'Soup', 'Chili', 'Mac and Cheese', 'Mashed Potatoes', 'Gravy',
-      'Fried Chicken', 'Chicken Wings', 'Ribs', 'Steak', 'Meatballs',
-      'Fish Sticks', 'Shrimp', 'Lobster', 'Crab Legs', 'Clam Chowder',
-      'Cheese', 'String Cheese', 'Cheese Pizza', 'Pepperoni Pizza', 'Cheese Quesadilla',
-      'Funnel Cake', 'Churro', 'Cinnamon Roll', 'Apple Pie', 'Ice Cream Sundae'
-    ]
-  },
-  {
-    id: 'animals-kids-charades',
-    name: 'Animal Charades for Kids',
-    words: [
-      'Dog', 'Cat', 'Bunny', 'Hamster', 'Goldfish',
-      'Puppy', 'Kitten', 'Duckling', 'Chick', 'Piglet',
-      'Horse', 'Pony', 'Cow', 'Pig', 'Sheep',
-      'Goat', 'Chicken', 'Rooster', 'Duck', 'Goose',
-      'Frog', 'Toad', 'Turtle', 'Snail', 'Caterpillar',
-      'Butterfly', 'Ladybug', 'Bee', 'Ant', 'Spider',
-      'Lion', 'Tiger', 'Bear', 'Elephant', 'Giraffe',
-      'Zebra', 'Hippo', 'Rhino', 'Gorilla', 'Monkey',
-      'Kangaroo', 'Koala', 'Panda', 'Sloth', 'Penguin',
-      'Polar Bear', 'Seal', 'Walrus', 'Otter', 'Beaver',
-      'Dolphin', 'Whale', 'Shark', 'Octopus', 'Jellyfish',
-      'Starfish', 'Crab', 'Lobster', 'Seahorse', 'Clownfish',
-      'Eagle', 'Owl', 'Parrot', 'Flamingo', 'Peacock',
-      'Toucan', 'Hummingbird', 'Swan', 'Pelican', 'Woodpecker',
-      'Snake', 'Lizard', 'Alligator', 'Crocodile', 'Chameleon',
-      'T-Rex', 'Triceratops', 'Pterodactyl', 'Brontosaurus', 'Velociraptor',
-      'Unicorn', 'Dragon', 'Pegasus', 'Phoenix', 'Mermaid',
-      'Wolf', 'Fox', 'Deer', 'Moose', 'Reindeer',
-      'Squirrel', 'Chipmunk', 'Raccoon', 'Skunk', 'Hedgehog',
-      'Bat', 'Mouse', 'Cheetah', 'Camel', 'Llama'
+      'Gyatt', 'Rizzler', '6-7', '4-1', 'Skibidi Toilet',
+      'Mewing', 'Furry', 'Bur-Bur-Patipin', 'Alpha', 'Rizz',
+      'Sus', 'Cap'
     ]
   }
 ];
