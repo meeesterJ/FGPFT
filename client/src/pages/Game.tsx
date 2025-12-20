@@ -146,17 +146,17 @@ export default function Game() {
       const gamma = event.gamma || 0;
       
       // Calculate effective tilt based on device orientation
-      // In landscape mode, gamma represents front/back tilt, but sign varies by orientation
-      // Landscape left (90): forward tilt = negative gamma, so we negate to make positive = forward
-      // Landscape right (-90/270): forward tilt = positive gamma, so we use as-is
+      // Beta (pitch) is rotation about the device's X axis - this is what we want for forward/backward tilt
+      // In landscape mode, we need to adjust the sign of beta based on which way the device is rotated
+      // Gamma should NOT be used - it sits at ±90° in landscape just from orientation, causing false triggers
       let tiltValue = 0;
       
       if (angle === 90) {
-        // Landscape left: negate gamma so forward tilt becomes positive
-        tiltValue = -gamma;
+        // Landscape left (home button on right): flip beta sign
+        tiltValue = -beta;
       } else if (angle === -90 || angle === 270) {
-        // Landscape right: gamma already positive for forward tilt
-        tiltValue = gamma;
+        // Landscape right (home button on left): use beta as-is
+        tiltValue = beta;
       } else {
         // Portrait or unknown: use beta (positive = forward tilt)
         tiltValue = beta;
