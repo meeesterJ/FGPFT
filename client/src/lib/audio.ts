@@ -250,10 +250,11 @@ export async function initAudioContext(): Promise<any> {
   
   createAudioPool();
   
-  // Unlock audio on iOS by playing each at low volume
+  // Unlock audio on iOS by playing each at zero volume (silent unlock)
   const unlockPromises = Array.from(audioPool.values()).map(audio => {
     return new Promise<void>((resolve) => {
-      audio.volume = 0.01;
+      audio.volume = 0; // Silent unlock - no audible chirp
+      audio.muted = true;
       const playPromise = audio.play();
       if (playPromise) {
         playPromise
@@ -261,13 +262,16 @@ export async function initAudioContext(): Promise<any> {
             audio.pause();
             audio.currentTime = 0;
             audio.volume = 1.0;
+            audio.muted = false;
             resolve();
           })
           .catch(() => {
             audio.volume = 1.0;
+            audio.muted = false;
             resolve();
           });
       } else {
+        audio.muted = false;
         resolve();
       }
     });
@@ -288,38 +292,36 @@ export function isAudioReady(): boolean {
 }
 
 // Play a specific sound by name
+// iOS Safari doesn't support cloneNode for Audio, so we create new Audio from data URI
 export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz') {
   console.log('playSound:', soundName);
   
-  const audio = audioPool.get(soundName);
-  if (!audio) {
-    console.log('No audio found for:', soundName);
-    // Try to create on the fly
-    const dataUri = AUDIO_TONES[soundName];
-    if (dataUri) {
-      const newAudio = new Audio(dataUri);
-      newAudio.volume = 1.0;
-      try {
-        await newAudio.play();
-      } catch (e) {
-        console.log('Failed to play:', e);
-      }
-    }
+  const dataUri = AUDIO_TONES[soundName];
+  if (!dataUri) {
+    console.log('No audio data found for:', soundName);
     return;
   }
   
+  // Create a fresh Audio element each time for iOS compatibility
+  const audio = new Audio(dataUri);
+  audio.volume = 1.0;
+  
   try {
-    const clone = audio.cloneNode() as HTMLAudioElement;
-    clone.volume = 1.0;
-    await clone.play();
+    await audio.play();
+    console.log('playSound success:', soundName);
   } catch (e) {
-    console.log('Failed to play, trying original:', e);
-    try {
-      audio.currentTime = 0;
-      audio.volume = 1.0;
-      await audio.play();
-    } catch (e2) {
-      console.log('Fallback also failed:', e2);
+    console.log('playSound failed:', soundName, e);
+    // Fallback: try the pooled audio
+    const pooledAudio = audioPool.get(soundName);
+    if (pooledAudio) {
+      try {
+        pooledAudio.currentTime = 0;
+        pooledAudio.volume = 1.0;
+        await pooledAudio.play();
+        console.log('playSound fallback success:', soundName);
+      } catch (e2) {
+        console.log('playSound fallback also failed:', e2);
+      }
     }
   }
 }
