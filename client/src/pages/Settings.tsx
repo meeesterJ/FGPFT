@@ -31,6 +31,7 @@ export default function Settings() {
   const [editListName, setEditListName] = useState("");
   const [editListWords, setEditListWords] = useState<string[]>([]);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [bulkAddWords, setBulkAddWords] = useState("");
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -75,11 +76,22 @@ export default function Settings() {
     setEditingListId(list.id);
     setEditListName(list.name);
     setEditListWords([...list.words]);
+    setBulkAddWords("");
     setIsEditDialogOpen(true);
   };
 
   const handleAddWord = () => {
     setEditListWords([...editListWords, ""]);
+  };
+
+  const handleBulkAdd = () => {
+    if (!bulkAddWords.trim()) return;
+    const newWords = bulkAddWords.split(',').map(w => w.trim()).filter(w => w.length > 0);
+    if (newWords.length > 0) {
+      setEditListWords([...editListWords, ...newWords]);
+      setBulkAddWords("");
+      toast({ title: "Added!", description: `Added ${newWords.length} words.` });
+    }
   };
 
   const handleRemoveWord = (index: number) => {
@@ -274,6 +286,24 @@ export default function Settings() {
                     >
                       <Plus className="w-4 h-4 mr-2" /> Add Word
                     </Button>
+                    
+                    <div className="space-y-2 pt-4 border-t border-border">
+                      <Label>Bulk Add Words (comma separated)</Label>
+                      <Textarea 
+                        placeholder="word1, word2, word3, word4"
+                        className="h-20"
+                        value={bulkAddWords}
+                        onChange={e => setBulkAddWords(e.target.value)}
+                      />
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={handleBulkAdd}
+                      >
+                        <Plus className="w-4 h-4 mr-2" /> Add All Words
+                      </Button>
+                    </div>
+                    
                     <Button className="w-full" onClick={handleSaveEdit}>Save Changes</Button>
                   </div>
                 </DialogContent>
