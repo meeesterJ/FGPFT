@@ -66,9 +66,13 @@ export default function Game() {
     setTimeout(() => playBeep(440, 50), 60); // Double beep pattern
   };
   
-  // Countdown sounds - tick for 3, 2, 1 and buzz for round end
+  // Countdown sounds - tick/tock pattern for 3, 2, 1 and buzz for round end
   const soundTick = () => {
-    playBeep(1000, 60, 'square'); // Sharp tick at 1000Hz
+    playBeep(1200, 100, 'square'); // High tick at 1200Hz (for 3 and 1)
+  };
+  
+  const soundTock = () => {
+    playBeep(800, 100, 'square'); // Lower tock at 800Hz (for 2)
   };
   
   const soundBuzz = () => {
@@ -534,8 +538,10 @@ export default function Game() {
     if (lastSoundTimeRef.current === timeLeft) return;
     lastSoundTimeRef.current = timeLeft;
     
-    if (timeLeft === 3 || timeLeft === 2 || timeLeft === 1) {
-      soundTick();
+    if (timeLeft === 3 || timeLeft === 1) {
+      soundTick(); // High tick for 3 and 1
+    } else if (timeLeft === 2) {
+      soundTock(); // Lower tock for 2
     } else if (timeLeft === 0) {
       soundBuzz();
     }

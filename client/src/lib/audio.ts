@@ -11,8 +11,10 @@ const AUDIO_TONES: Record<string, string> = {
   high: generateToneDataURI(880, 0.15),
   // Medium beep (440Hz) - pass  
   medium: generateToneDataURI(440, 0.1),
-  // Tick (1000Hz) - countdown tick
-  tick: generateToneDataURI(1000, 0.08),
+  // Tick (1200Hz) - countdown tick (high, for 3 and 1)
+  tick: generateToneDataURI(1200, 0.1),
+  // Tock (800Hz) - countdown tock (lower, for 2)
+  tock: generateToneDataURI(800, 0.1),
   // Low buzz (200Hz) - round end
   buzz: generateToneDataURI(200, 0.3),
 };
@@ -156,9 +158,13 @@ export async function playBeep(frequency: number, duration: number, type: Oscill
     toneName = 'buzz';
   }
   
-  // For tick sound specifically
-  if (frequency === 1000 && type === 'square') {
+  // For tick sound specifically (high tick)
+  if (frequency === 1200) {
     toneName = 'tick';
+  }
+  // For tock sound specifically (lower tick)
+  if (frequency === 800) {
+    toneName = 'tock';
   }
   // For buzz sound specifically  
   if (frequency === 200 && type === 'sawtooth') {
