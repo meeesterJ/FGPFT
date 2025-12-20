@@ -49,13 +49,17 @@ export default function Home() {
   };
 
   const handleStart = async () => {
-    // Initialize audio context on user gesture (must happen before game starts)
-    await initAudioContext();
+    // Start audio init but DON'T await yet - iOS requires tilt permission to be
+    // requested synchronously within the user gesture (any await before it breaks it)
+    const audioPromise = initAudioContext();
     
-    // Request tilt permission first (iOS only) if not already granted
+    // Request tilt permission first (iOS only) - must happen synchronously in click handler
     if (!tiltPermissionGranted) {
       await requestTiltPermission();
     }
+    
+    // Now await audio initialization
+    await audioPromise;
     
     // Request fullscreen for immersive experience
     try {

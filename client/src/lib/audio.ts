@@ -42,16 +42,13 @@ export function isAudioReady(): boolean {
   return audioContext !== null && audioContext.state === 'running';
 }
 
-export function playBeep(frequency: number, duration: number, type: OscillatorType = 'sine') {
+export async function playBeep(frequency: number, duration: number, type: OscillatorType = 'sine') {
+  // Ensure audio context is initialized and running
+  await initAudioContext();
+  
   const ctx = audioContext;
-  
-  // If context isn't running, try to resume (may work if called from user gesture)
-  if (ctx && ctx.state === 'suspended') {
-    ctx.resume();
-  }
-  
-  // Only play if context is running
   if (!ctx || ctx.state !== 'running') {
+    console.log('Audio context not ready, state:', ctx?.state);
     return;
   }
   
@@ -71,6 +68,6 @@ export function playBeep(frequency: number, duration: number, type: OscillatorTy
     oscillator.start(ctx.currentTime);
     oscillator.stop(ctx.currentTime + duration / 1000);
   } catch (e) {
-    // Audio playback failed
+    console.log('Audio playback failed:', e);
   }
 }
