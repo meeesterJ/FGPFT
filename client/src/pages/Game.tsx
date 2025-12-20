@@ -127,6 +127,15 @@ export default function Game() {
     setTimeout(() => playBeep(440, 50), 60); // Double beep pattern
   };
   
+  // Countdown sounds - tick for 3, 2, 1 and buzz for round end
+  const soundTick = () => {
+    playBeep(1000, 60, 'square'); // Sharp tick at 1000Hz
+  };
+  
+  const soundBuzz = () => {
+    playBeep(200, 300, 'sawtooth'); // Low buzz at 200Hz, longer duration
+  };
+  
   // Haptic feedback functions using Vibration API
   const vibrateCorrect = () => {
     if (!store.hapticEnabled) return;
@@ -575,6 +584,23 @@ export default function Game() {
       store.endRound();
     }
   }, [timeLeft, store.isPlaying]);
+  
+  // Countdown sounds - tick at 3, 2, 1 and buzz at 0
+  const lastSoundTimeRef = useRef<number | null>(null);
+  useEffect(() => {
+    // Only play sounds when playing and not counting down
+    if (!store.isPlaying || isPaused || isCountingDown) return;
+    
+    // Avoid playing the same sound twice for the same timeLeft value
+    if (lastSoundTimeRef.current === timeLeft) return;
+    lastSoundTimeRef.current = timeLeft;
+    
+    if (timeLeft === 3 || timeLeft === 2 || timeLeft === 1) {
+      soundTick();
+    } else if (timeLeft === 0) {
+      soundBuzz();
+    }
+  }, [timeLeft, store.isPlaying, isPaused, isCountingDown]);
 
   // Handle Game Over / Round End Redirect
   useEffect(() => {
