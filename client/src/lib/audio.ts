@@ -2,6 +2,7 @@
 // Uses custom WAV files for game sounds with multiple copies for rapid playback
 
 let audioInitialized = false;
+let audioUnlocked = false;
 
 // Pool of audio elements - multiple copies per sound for rapid successive plays
 let audioPool: Map<string, HTMLAudioElement[]> = new Map();
@@ -38,21 +39,17 @@ function createAudioPool() {
   console.log('Audio pool created with', audioPool.size, 'sounds,', COPIES_PER_SOUND, 'copies each');
 }
 
-// Initialize audio system - must be called from user gesture
-export async function initAudioContext(): Promise<any> {
-  if (audioInitialized) {
-    console.log('Audio already initialized');
-    return { state: 'running' };
-  }
+// Unlock all audio elements for iOS - must be called from user gesture
+async function unlockAudioElements(): Promise<void> {
+  if (audioPool.size === 0) return;
   
-  createAudioPool();
-  
-  // Unlock audio on iOS by playing each copy at zero volume (silent unlock)
+  console.log('Unlocking audio elements for iOS...');
   const unlockPromises: Promise<void>[] = [];
   
   audioPool.forEach((copies) => {
     copies.forEach(audio => {
       unlockPromises.push(new Promise<void>((resolve) => {
+        const originalVolume = audio.volume;
         audio.volume = 0;
         audio.muted = true;
         const playPromise = audio.play();
@@ -61,12 +58,12 @@ export async function initAudioContext(): Promise<any> {
             .then(() => {
               audio.pause();
               audio.currentTime = 0;
-              audio.volume = 1.0;
+              audio.volume = originalVolume;
               audio.muted = false;
               resolve();
             })
             .catch(() => {
-              audio.volume = 1.0;
+              audio.volume = originalVolume;
               audio.muted = false;
               resolve();
             });
@@ -79,8 +76,28 @@ export async function initAudioContext(): Promise<any> {
   });
   
   await Promise.all(unlockPromises);
+  audioUnlocked = true;
+  console.log('Audio elements unlocked');
+}
+
+// Initialize audio system - must be called from user gesture
+export async function initAudioContext(): Promise<any> {
+  // If pool is empty, we need to reinitialize (handles hot reload case)
+  if (audioPool.size === 0) {
+    audioInitialized = false;
+    audioUnlocked = false;
+  }
+  
+  // Create pool if needed
+  createAudioPool();
+  
+  // Always unlock on user gesture if not yet unlocked
+  if (!audioUnlocked) {
+    await unlockAudioElements();
+  }
+  
   audioInitialized = true;
-  console.log('Audio initialized and unlocked');
+  console.log('Audio initialized, unlocked:', audioUnlocked);
   return { state: 'running' };
 }
 
@@ -89,7 +106,7 @@ export function getAudioContext(): any {
 }
 
 export function isAudioReady(): boolean {
-  return audioInitialized;
+  return audioInitialized && audioUnlocked;
 }
 
 // Play a specific sound by name using round-robin selection of copies
@@ -99,6 +116,8 @@ export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' 
   // Ensure audio pool is created (for edge cases like page refresh)
   if (audioPool.size === 0) {
     createAudioPool();
+    // Note: These won't be unlocked, but we try anyway
+    console.log('Warning: Audio pool created lazily, may not play on iOS');
   }
   
   const copies = audioPool.get(soundName);
