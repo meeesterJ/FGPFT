@@ -58,8 +58,20 @@ export default function Home() {
       await requestTiltPermission();
     }
     
-    // Now await audio initialization
-    await audioPromise;
+    // Now await audio initialization and verify it's running
+    const ctx = await audioPromise;
+    console.log('Home: Audio context after init:', ctx?.state);
+    
+    // If context is still suspended, try one more resume within this gesture
+    if (ctx && ctx.state === 'suspended') {
+      console.log('Home: Context still suspended, trying extra resume...');
+      try {
+        await ctx.resume();
+        console.log('Home: After extra resume, state:', ctx.state);
+      } catch (e) {
+        console.log('Home: Extra resume failed:', e);
+      }
+    }
     
     // Request fullscreen for immersive experience
     try {

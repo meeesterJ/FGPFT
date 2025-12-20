@@ -19,10 +19,13 @@ export async function initAudioContext(): Promise<AudioContext | null> {
     try {
       if (!audioContext || audioContext.state === 'closed') {
         audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        console.log('AudioContext created, state:', audioContext.state);
       }
       
       if (audioContext.state === 'suspended') {
+        console.log('AudioContext suspended, attempting resume...');
         await audioContext.resume();
+        console.log('AudioContext after resume, state:', audioContext.state);
       }
     } catch (e) {
       console.log('AudioContext init failed:', e);
@@ -31,6 +34,7 @@ export async function initAudioContext(): Promise<AudioContext | null> {
   
   await initPromise;
   initPromise = null;
+  console.log('initAudioContext complete, final state:', audioContext?.state);
   return audioContext;
 }
 
@@ -43,12 +47,27 @@ export function isAudioReady(): boolean {
 }
 
 export async function playBeep(frequency: number, duration: number, type: OscillatorType = 'sine') {
-  // Ensure audio context is initialized and running
-  await initAudioContext();
-  
   const ctx = audioContext;
-  if (!ctx || ctx.state !== 'running') {
-    console.log('Audio context not ready, state:', ctx?.state);
+  
+  // If context doesn't exist or is closed, we can't play
+  if (!ctx) {
+    console.log('playBeep: No audio context exists');
+    return;
+  }
+  
+  // If suspended, try to resume (will only work from user gesture)
+  if (ctx.state === 'suspended') {
+    console.log('playBeep: Context suspended, trying resume...');
+    try {
+      await ctx.resume();
+      console.log('playBeep: Resume result, state:', ctx.state);
+    } catch (e) {
+      console.log('playBeep: Resume failed:', e);
+    }
+  }
+  
+  if (ctx.state !== 'running') {
+    console.log('playBeep: Context not running, state:', ctx.state);
     return;
   }
   
