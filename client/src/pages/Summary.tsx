@@ -3,7 +3,8 @@ import { useGameStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, ArrowRight, Home, Trophy, ListX, CheckCircle2 } from "lucide-react";
 import Confetti from "react-confetti";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { playSound } from "@/lib/audio";
 
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
@@ -32,6 +33,15 @@ export default function Summary() {
   const [, setLocation] = useLocation();
   const store = useGameStore();
   const { width, height } = useWindowSize();
+  const hasPlayedGameEndSound = useRef(false);
+
+  // Play game end sound when game is finished
+  useEffect(() => {
+    if (store.isGameFinished && !hasPlayedGameEndSound.current) {
+      hasPlayedGameEndSound.current = true;
+      playSound('gameEnd');
+    }
+  }, [store.isGameFinished]);
 
   const handleNext = () => {
     if (store.isGameFinished) {

@@ -80,6 +80,11 @@ export function isAudioReady(): boolean {
 export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz' | 'gameEnd') {
   console.log('playSound:', soundName);
   
+  // Ensure audio pool is created (for edge cases like page refresh)
+  if (audioPool.size === 0) {
+    createAudioPool();
+  }
+  
   const audio = audioPool.get(soundName);
   if (!audio) {
     console.log('No pooled audio for:', soundName);

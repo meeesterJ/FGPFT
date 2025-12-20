@@ -526,7 +526,7 @@ export default function Game() {
     }
   }, [timeLeft, store.isPlaying]);
   
-  // Countdown sounds - tick at 3, 2, 1 and buzz at 0
+  // Countdown sounds - tick/tock pattern for last 5 seconds and buzz at 0
   const lastSoundTimeRef = useRef<number | null>(null);
   useEffect(() => {
     // Only play sounds when playing and not counting down
@@ -536,10 +536,11 @@ export default function Game() {
     if (lastSoundTimeRef.current === timeLeft) return;
     lastSoundTimeRef.current = timeLeft;
     
-    if (timeLeft === 3 || timeLeft === 1) {
-      soundTick(); // High tick for 3 and 1
-    } else if (timeLeft === 2) {
-      soundTock(); // Lower tock for 2
+    // Play tick for odd seconds (5, 3, 1), tock for even seconds (4, 2)
+    if (timeLeft === 5 || timeLeft === 3 || timeLeft === 1) {
+      soundTick();
+    } else if (timeLeft === 4 || timeLeft === 2) {
+      soundTock();
     } else if (timeLeft === 0) {
       soundBuzz();
     }
