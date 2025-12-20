@@ -89,9 +89,9 @@ export default function Home() {
          <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-accent rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      <div className="z-10 flex flex-col items-center justify-center max-w-md w-full text-center gap-6">
+      <div className="z-10 flex flex-col items-center justify-center max-w-md w-full text-center gap-10">
         <div className="animate-bounce-in">
-          <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
+          <h1 className="text-7xl font-thin tracking-wide transform -rotate-2 leading-none">
             <span className="block text-pink-400">Family</span>
             <span className="block text-cyan-400">Guess</span>
             <span className="block text-yellow-400">Party</span>
