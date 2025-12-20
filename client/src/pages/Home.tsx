@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
+import { initAudioContext } from "@/lib/audio";
 import { Play, Settings as SettingsIcon, Share, List } from "lucide-react";
 
 export default function Home() {
@@ -48,6 +49,9 @@ export default function Home() {
   };
 
   const handleStart = async () => {
+    // Initialize audio context on user gesture (must happen before game starts)
+    await initAudioContext();
+    
     // Request tilt permission first (iOS only) if not already granted
     if (!tiltPermissionGranted) {
       await requestTiltPermission();

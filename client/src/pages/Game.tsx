@@ -4,6 +4,7 @@ import { useGameStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Check, X, Pause, Play, Smartphone, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getAudioContext, initAudioContext, playBeep as sharedPlayBeep } from "@/lib/audio";
 
 export default function Game() {
   const [, setLocation] = useLocation();
@@ -44,77 +45,10 @@ export default function Game() {
   const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
   const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
   
-  // Audio context for sound feedback - Promise-based for iOS compatibility
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const audioContextPromiseRef = useRef<Promise<AudioContext> | null>(null);
-  
-  // Ensure audio context is ready - only caches on success, clears on failure
-  const ensureAudioContext = (): Promise<AudioContext> => {
-    // If we have a ready context, return it
-    if (audioContextRef.current && audioContextRef.current.state === 'running') {
-      return Promise.resolve(audioContextRef.current);
-    }
-    
-    // If we have a pending promise, return it
-    if (audioContextPromiseRef.current) {
-      return audioContextPromiseRef.current;
-    }
-    
-    // Create new promise - only cache on success
-    const promise = new Promise<AudioContext>((resolve, reject) => {
-      try {
-        const ctx = audioContextRef.current || new (window.AudioContext || (window as any).webkitAudioContext)();
-        audioContextRef.current = ctx;
-        
-        if (ctx.state === 'suspended') {
-          ctx.resume()
-            .then(() => {
-              audioContextPromiseRef.current = null; // Clear pending promise
-              resolve(ctx);
-            })
-            .catch((e) => {
-              audioContextPromiseRef.current = null; // Clear on failure so retry works
-              reject(e);
-            });
-        } else {
-          resolve(ctx);
-        }
-      } catch (e) {
-        audioContextPromiseRef.current = null; // Clear on failure
-        reject(e);
-      }
-    });
-    
-    audioContextPromiseRef.current = promise;
-    return promise;
-  };
-  
-  // Play a short beep sound - only plays if audio context was already initialized by a gesture
+  // Use shared audio context - wraps sharedPlayBeep with soundEnabled check
   const playBeep = (frequency: number, duration: number, type: OscillatorType = 'sine') => {
     if (!store.soundEnabled) return;
-    
-    // Only play if context exists and is running (was initialized by a gesture handler)
-    const ctx = audioContextRef.current;
-    if (!ctx || ctx.state !== 'running') return;
-    
-    try {
-      const oscillator = ctx.createOscillator();
-      const gainNode = ctx.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(ctx.destination);
-      
-      oscillator.frequency.value = frequency;
-      oscillator.type = type;
-      
-      gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration / 1000);
-      
-      oscillator.start(ctx.currentTime);
-      oscillator.stop(ctx.currentTime + duration / 1000);
-    } catch (e) {
-      // Audio not supported
-    }
+    sharedPlayBeep(frequency, duration, type);
   };
   
   // Sound feedback - distinct tones for correct vs pass
@@ -658,13 +592,13 @@ export default function Game() {
     });
   }, [store.currentWord]);
 
-  const handleCorrect = () => {
+  const handleCorrect = async () => {
     if (isProcessing || !store.isPlaying || isCountingDown) return;
     setIsProcessing(true);
     pendingGestureRef.current = null; // Clear any pending tilt gesture
     mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
     setTiltFeedback("correct");
-    ensureAudioContext(); // Initialize audio on user gesture for iOS
+    await initAudioContext(); // Initialize audio on user gesture for iOS
     feedbackCorrect(); // Haptic + sound feedback
     store.nextWord(true);
     setTimeout(() => {
@@ -673,13 +607,13 @@ export default function Game() {
     }, 300);
   };
 
-  const handlePass = () => {
+  const handlePass = async () => {
     if (isProcessing || !store.isPlaying || isCountingDown) return;
     setIsProcessing(true);
     pendingGestureRef.current = null; // Clear any pending tilt gesture
     mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
     setTiltFeedback("pass");
-    ensureAudioContext(); // Initialize audio on user gesture for iOS
+    await initAudioContext(); // Initialize audio on user gesture for iOS
     feedbackPass(); // Haptic + sound feedback
     store.nextWord(false);
     setTimeout(() => {
@@ -694,7 +628,7 @@ export default function Game() {
 
   const requestTiltPermission = async () => {
     // Initialize audio context on user gesture for iOS compatibility
-    ensureAudioContext();
+    await initAudioContext();
     
     if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
       try {
@@ -798,7 +732,8 @@ export default function Game() {
           </Button>
           <Button 
             variant="ghost"
-            onClick={() => {
+            onClick={async () => {
+              await initAudioContext(); // Initialize audio on user gesture
               setWaitingForPermission(false);
               setNeedsIOSPermission(false);
               startCountdown();
