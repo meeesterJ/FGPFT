@@ -154,5 +154,57 @@ export const DEFAULT_WORD_LISTS = [
       'Superhero', 'Princess', 'Pirate', 'Cowboy', 'Astronaut',
       'Dinosaur', 'Robot', 'Unicorn', 'Dragon', 'Mermaid'
     ]
+  },
+  {
+    id: 'food-charades',
+    name: 'Food & Snacks Charades',
+    words: [
+      'Pizza', 'Spaghetti', 'Hamburger', 'Hot Dog', 'Taco',
+      'Burrito', 'Nachos', 'French Fries', 'Chicken Nuggets', 'Popcorn',
+      'Ice Cream Cone', 'Popsicle', 'Lollipop', 'Cotton Candy', 'Cupcake',
+      'Birthday Cake', 'Donut', 'Cookie', 'Brownie', 'Candy Bar',
+      'Gummy Bears', 'Jelly Beans', 'Chocolate', 'Marshmallow', 'S\'mores',
+      'Apple', 'Banana', 'Orange', 'Grapes', 'Watermelon',
+      'Strawberry', 'Pineapple', 'Cherry', 'Lemon', 'Coconut',
+      'Corn on the Cob', 'Carrot', 'Broccoli', 'Celery Stick', 'Pickle',
+      'Sandwich', 'Grilled Cheese', 'PB&J', 'BLT', 'Sub Sandwich',
+      'Sushi', 'Ramen Noodles', 'Fried Rice', 'Egg Roll', 'Fortune Cookie',
+      'Pancakes', 'Waffles', 'French Toast', 'Cereal', 'Oatmeal',
+      'Bacon', 'Scrambled Eggs', 'Fried Egg', 'Toast', 'Bagel',
+      'Pretzel', 'Soft Pretzel', 'Chips', 'Crackers', 'Cheese Puffs',
+      'Milkshake', 'Smoothie', 'Slushie', 'Soda Pop', 'Juice Box',
+      'Lemonade', 'Hot Chocolate', 'Coffee', 'Tea', 'Milk',
+      'Soup', 'Chili', 'Mac and Cheese', 'Mashed Potatoes', 'Gravy',
+      'Fried Chicken', 'Chicken Wings', 'Ribs', 'Steak', 'Meatballs',
+      'Fish Sticks', 'Shrimp', 'Lobster', 'Crab Legs', 'Clam Chowder',
+      'Cheese', 'String Cheese', 'Cheese Pizza', 'Pepperoni Pizza', 'Cheese Quesadilla',
+      'Funnel Cake', 'Churro', 'Cinnamon Roll', 'Apple Pie', 'Ice Cream Sundae'
+    ]
+  },
+  {
+    id: 'animals-kids-charades',
+    name: 'Animal Charades for Kids',
+    words: [
+      'Dog', 'Cat', 'Bunny', 'Hamster', 'Goldfish',
+      'Puppy', 'Kitten', 'Duckling', 'Chick', 'Piglet',
+      'Horse', 'Pony', 'Cow', 'Pig', 'Sheep',
+      'Goat', 'Chicken', 'Rooster', 'Duck', 'Goose',
+      'Frog', 'Toad', 'Turtle', 'Snail', 'Caterpillar',
+      'Butterfly', 'Ladybug', 'Bee', 'Ant', 'Spider',
+      'Lion', 'Tiger', 'Bear', 'Elephant', 'Giraffe',
+      'Zebra', 'Hippo', 'Rhino', 'Gorilla', 'Monkey',
+      'Kangaroo', 'Koala', 'Panda', 'Sloth', 'Penguin',
+      'Polar Bear', 'Seal', 'Walrus', 'Otter', 'Beaver',
+      'Dolphin', 'Whale', 'Shark', 'Octopus', 'Jellyfish',
+      'Starfish', 'Crab', 'Lobster', 'Seahorse', 'Clownfish',
+      'Eagle', 'Owl', 'Parrot', 'Flamingo', 'Peacock',
+      'Toucan', 'Hummingbird', 'Swan', 'Pelican', 'Woodpecker',
+      'Snake', 'Lizard', 'Alligator', 'Crocodile', 'Chameleon',
+      'T-Rex', 'Triceratops', 'Pterodactyl', 'Brontosaurus', 'Velociraptor',
+      'Unicorn', 'Dragon', 'Pegasus', 'Phoenix', 'Mermaid',
+      'Wolf', 'Fox', 'Deer', 'Moose', 'Reindeer',
+      'Squirrel', 'Chipmunk', 'Raccoon', 'Skunk', 'Hedgehog',
+      'Bat', 'Mouse', 'Cheetah', 'Camel', 'Llama'
+    ]
   }
 ];
