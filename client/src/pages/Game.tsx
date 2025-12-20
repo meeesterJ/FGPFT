@@ -124,7 +124,7 @@ export default function Game() {
     if (store.isRoundOver || store.isGameFinished) {
       setLocation("/summary");
     }
-  }, [store.isRoundOver, store.isGameFinished]);
+  }, [store.isRoundOver, store.isGameFinished, setLocation]);
 
   const handleCorrect = () => {
     store.nextWord(true);
