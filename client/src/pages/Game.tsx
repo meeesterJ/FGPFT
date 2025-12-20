@@ -302,18 +302,18 @@ export default function Game() {
       
       // Use gamma for landscape mode (it measures the forward/backward tilt)
       // gamma ranges from -90 to 90 degrees
-      // On iOS/Safari:
-      // - landscape-primary (home button on right): Forward tilt = NEGATIVE gamma
-      // - landscape-secondary (home button on left): Forward tilt = POSITIVE gamma
+      // On iOS Safari:
+      // - landscape-primary (home button on right): gamma INCREASES when tilting forward
+      // - landscape-secondary (home button on left): gamma DECREASES when tilting forward
       let effectiveTilt = 0;
       if (orientationType === 'landscape-primary' || orientationType === 'landscape-secondary') {
         // Landscape mode: use gamma for forward/backward tilt
         if (orientationType === 'landscape-primary') {
-          // Home button on right: invert gamma so forward = positive
-          effectiveTilt = -gamma;
-        } else {
-          // Home button on left: gamma is already correct
+          // Home button on right: gamma increases with forward tilt
           effectiveTilt = gamma;
+        } else {
+          // Home button on left: gamma decreases with forward tilt, so invert
+          effectiveTilt = -gamma;
         }
       } else {
         // Portrait: use beta
