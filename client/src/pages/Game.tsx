@@ -31,7 +31,9 @@ export default function Game() {
   const hasShownInitialCountdownRef = useRef(false); // Track if initial countdown shown
   const permissionGrantedTimeRef = useRef(0); // Track when permission was granted for delay
   const baselineBetaRef = useRef<number | null>(null); // Baseline beta for calibrated tilt detection
+  const rawGammaBaselineRef = useRef<number | null>(null); // Raw gamma baseline for wrap detection
   const calibrationSamplesRef = useRef<number[]>([]); // Samples for averaging baseline
+  const rawGammaSamplesRef = useRef<number[]>([]); // Raw gamma samples for wrap detection baseline
   const isCalibrating = useRef(false); // Flag to indicate calibration in progress
   const nextWordRef = useRef(store.nextWord); // Stable ref for nextWord function
   const pendingGestureRef = useRef<boolean | null>(null); // Pending gesture result (true=correct, false=pass, null=none)
@@ -41,16 +43,6 @@ export default function Game() {
   const wordDisplayRef = useRef<HTMLHeadingElement>(null); // Ref for auto-scaling word display
   const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
   const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
-  
-  // Debug state for tilt troubleshooting
-  const [debugInfo, setDebugInfo] = useState<{
-    orientationType: string;
-    gamma: number;
-    beta: number;
-    effectiveTilt: number;
-    baseline: number | null;
-    tiltDelta: number;
-  } | null>(null);
   
   // Keep nextWord ref updated
   useEffect(() => {
@@ -244,8 +236,10 @@ export default function Game() {
           
           lastCalibratedTriggerRef.current = calibrationTrigger;
           baselineBetaRef.current = null;
+          rawGammaBaselineRef.current = null;
           isCalibrating.current = true;
           calibrationSamplesRef.current = [];
+          rawGammaSamplesRef.current = [];
           pendingGestureRef.current = null; // Clear any pending gesture on recalibration
           mustReturnToCenterRef.current = false; // Clear return-to-center guard
           setTiltFeedback(null);
@@ -254,8 +248,10 @@ export default function Game() {
         // No cooldown - calibrate immediately
         lastCalibratedTriggerRef.current = calibrationTrigger;
         baselineBetaRef.current = null;
+        rawGammaBaselineRef.current = null;
         isCalibrating.current = true;
         calibrationSamplesRef.current = [];
+        rawGammaSamplesRef.current = [];
         pendingGestureRef.current = null; // Clear any pending gesture on recalibration
         mustReturnToCenterRef.current = false; // Clear return-to-center guard
         setTiltFeedback(null);
@@ -269,8 +265,14 @@ export default function Game() {
       if (calibrationSamplesRef.current.length > 0) {
         const sum = calibrationSamplesRef.current.reduce((a, b) => a + b, 0);
         baselineBetaRef.current = sum / calibrationSamplesRef.current.length;
+        // Also store raw gamma baseline for wrap detection
+        if (rawGammaSamplesRef.current.length > 0) {
+          const rawSum = rawGammaSamplesRef.current.reduce((a, b) => a + b, 0);
+          rawGammaBaselineRef.current = rawSum / rawGammaSamplesRef.current.length;
+        }
         isCalibrating.current = false;
         calibrationSamplesRef.current = [];
+        rawGammaSamplesRef.current = [];
       }
     };
 
@@ -298,8 +300,10 @@ export default function Game() {
           lastOrientationTypeRef.current !== orientationType) {
         // Orientation changed - immediately invalidate baseline to prevent stale data use
         baselineBetaRef.current = null;
+        rawGammaBaselineRef.current = null;
         isCalibrating.current = true;
         calibrationSamplesRef.current = [];
+        rawGammaSamplesRef.current = [];
         pendingGestureRef.current = null;
         mustReturnToCenterRef.current = false;
         setTiltFeedback(null);
@@ -322,26 +326,26 @@ export default function Game() {
       
       let effectiveTilt = 0;
       if (orientationType === 'landscape-primary' || orientationType === 'landscape-secondary') {
-        // Apply wrap correction based on raw gamma
+        // Apply wrap correction based on RAW gamma baseline (not the mapped one)
         let unwrappedGamma = gamma;
         
-        // Check if we need to unwrap based on calibrated baseline
-        // The baseline tells us where "center" is - if it's near ±90, we're vertical
-        const baseline = baselineBetaRef.current;
-        if (baseline !== null) {
+        // Check if we need to unwrap based on raw gamma baseline
+        // The raw baseline tells us where "center" is in sensor space
+        const rawBaseline = rawGammaBaselineRef.current;
+        if (rawBaseline !== null) {
           // Determine if baseline was captured when phone was vertical
-          // For landscape-secondary: vertical = gamma near +90
-          // For landscape-primary: vertical = gamma near -90
+          // For landscape-secondary: vertical = raw gamma near +90
+          // For landscape-primary: vertical = raw gamma near -90
           const isLandscapeSecondary = orientationType === 'landscape-secondary';
           
           if (isLandscapeSecondary) {
-            // landscape-secondary: vertical means baseline near +90, wrap happens to -90
-            if (baseline > 60 && gamma < -60) {
+            // landscape-secondary: vertical means raw gamma near +90, wrap happens to -90
+            if (rawBaseline > 60 && gamma < -60) {
               unwrappedGamma = 180 + gamma; // -85 → 95
             }
           } else {
-            // landscape-primary: vertical means baseline near -90, wrap happens to +90
-            if (baseline < -60 && gamma > 60) {
+            // landscape-primary: vertical means raw gamma near -90, wrap happens to +90
+            if (rawBaseline < -60 && gamma > 60) {
               unwrappedGamma = gamma - 180; // 85 → -95
             }
           }
@@ -374,6 +378,7 @@ export default function Game() {
       // Calibration phase: collect samples to establish baseline
       if (isCalibrating.current) {
         calibrationSamplesRef.current.push(effectiveTilt);
+        rawGammaSamplesRef.current.push(gamma); // Also collect raw gamma for wrap detection
         
         // Start grace period after first sample - wait 500ms then finalize
         if (calibrationSamplesRef.current.length === 1 && !graceTimeout) {
@@ -396,16 +401,6 @@ export default function Game() {
       const absDelta = Math.abs(tiltDelta);
       const isAtCenter = absDelta <= returnThresholdRef.current;
       
-      // Update debug info for on-screen display
-      setDebugInfo({
-        orientationType,
-        gamma,
-        beta,
-        effectiveTilt,
-        baseline: baselineBetaRef.current,
-        tiltDelta
-      });
-
       // If we must return to center first (after button click), wait for that
       if (mustReturnToCenterRef.current) {
         if (isAtCenter) {
@@ -729,20 +724,6 @@ export default function Game() {
         <div className="absolute top-4 right-4 bg-accent/80 text-accent-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 z-20">
           <Smartphone className="w-4 h-4" />
           Tilt gestures not available on this device
-        </div>
-      )}
-
-      {/* Debug Info Display - for troubleshooting tilt */}
-      {debugInfo && (
-        <div className="absolute bottom-2 left-2 bg-black/80 text-white px-3 py-2 rounded text-xs font-mono z-50 max-w-xs">
-          <div>orient: {debugInfo.orientationType}</div>
-          <div>gamma: {debugInfo.gamma.toFixed(1)}</div>
-          <div>beta: {debugInfo.beta.toFixed(1)}</div>
-          <div>effTilt: {debugInfo.effectiveTilt.toFixed(1)}</div>
-          <div>baseline: {debugInfo.baseline?.toFixed(1) ?? 'null'}</div>
-          <div className={debugInfo.tiltDelta > 25 ? 'text-green-400' : debugInfo.tiltDelta < -25 ? 'text-red-400' : ''}>
-            delta: {debugInfo.tiltDelta.toFixed(1)}
-          </div>
         </div>
       )}
 
