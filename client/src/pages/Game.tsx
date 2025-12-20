@@ -204,9 +204,7 @@ export default function Game() {
            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
            <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl transform -translate-x-10 translate-y-10"></div>
            
-           <h1 className={cn("text-center font-bold font-body leading-tight text-foreground break-words animate-bounce-in",
-             isLandscape ? "text-4xl md:text-6xl" : "text-6xl md:text-8xl"
-           )}>
+           <h1 className="word-display font-bold font-body text-center text-white animate-bounce-in">
              {store.currentWord}
            </h1>
         </div>
