@@ -158,7 +158,7 @@ export default function Settings() {
           {/* Game Duration */}
           <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Round Timer</h2>
+              <h2 className="text-xl font-thin">Round Timer</h2>
               <span className="text-2xl font-mono text-primary">{store.roundDuration}s</span>
             </div>
             <Slider 
@@ -175,7 +175,7 @@ export default function Settings() {
           {/* Rounds Count */}
           <section className="space-y-4 bg-card p-6 rounded-2xl border border-border">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Total Rounds</h2>
+              <h2 className="text-xl font-thin">Total Rounds</h2>
               <span className="text-2xl font-mono text-secondary">{store.totalRounds}</span>
             </div>
             <Slider 
@@ -192,7 +192,7 @@ export default function Settings() {
           {/* Word Lists */}
           <section className="space-y-4">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Word Categories</h2>
+              <h2 className="text-xl font-thin">Word Categories</h2>
               
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
@@ -298,7 +298,7 @@ export default function Settings() {
                         {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
                       </div>
                       <div>
-                        <h3 className="font-bold">{list.name}</h3>
+                        <h3 className="font-thin">{list.name}</h3>
                         <p className="text-xs text-muted-foreground">{list.words.length} words {list.isCustom && '(Custom)'}</p>
                       </div>
                     </div>
@@ -352,7 +352,7 @@ export default function Settings() {
                       <div className="flex items-center space-x-3">
                         <div className="w-6 h-6 rounded-full border-2 border-muted-foreground"></div>
                         <div>
-                          <h3 className="font-bold">{list.name}</h3>
+                          <h3 className="font-thin">{list.name}</h3>
                           <p className="text-xs text-muted-foreground">{list.words.length} words</p>
                         </div>
                       </div>
