@@ -1,96 +1,29 @@
 // Audio system using HTML5 Audio elements for iOS compatibility
-// Uses simple sine wave WAV generation for reliable playback
+// Uses custom WAV files for game sounds
 
 let audioInitialized = false;
 let audioPool: Map<string, HTMLAudioElement> = new Map();
 
-// Generate a simple WAV data URI for a sine wave tone with envelope
-function generateToneDataURI(frequency: number, duration: number): string {
-  const sampleRate = 44100;
-  const numSamples = Math.floor(sampleRate * duration);
-  const numChannels = 1;
-  const bitsPerSample = 16;
-  
-  const headerSize = 44;
-  const dataSize = numSamples * numChannels * (bitsPerSample / 8);
-  const fileSize = headerSize + dataSize;
-  
-  const buffer = new ArrayBuffer(fileSize);
-  const view = new DataView(buffer);
-  
-  // WAV header
-  const writeString = (offset: number, str: string) => {
-    for (let i = 0; i < str.length; i++) {
-      view.setUint8(offset + i, str.charCodeAt(i));
-    }
-  };
-  
-  writeString(0, 'RIFF');
-  view.setUint32(4, fileSize - 8, true);
-  writeString(8, 'WAVE');
-  writeString(12, 'fmt ');
-  view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
-  view.setUint16(22, numChannels, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, sampleRate * numChannels * (bitsPerSample / 8), true);
-  view.setUint16(32, numChannels * (bitsPerSample / 8), true);
-  view.setUint16(34, bitsPerSample, true);
-  writeString(36, 'data');
-  view.setUint32(40, dataSize, true);
-  
-  // Generate audio samples with envelope
-  for (let i = 0; i < numSamples; i++) {
-    const t = i / sampleRate;
-    // Simple envelope: quick attack, sustain, fade out last 30%
-    let envelope = 1.0;
-    const attackTime = 0.01;
-    const releaseStart = duration * 0.7;
-    if (t < attackTime) {
-      envelope = t / attackTime;
-    } else if (t > releaseStart) {
-      envelope = 1.0 - ((t - releaseStart) / (duration - releaseStart));
-    }
-    
-    // Generate sine wave
-    const sample = Math.sin(2 * Math.PI * frequency * t) * envelope * 0.5;
-    const intSample = Math.max(-32768, Math.min(32767, Math.floor(sample * 32767)));
-    view.setInt16(headerSize + i * 2, intSample, true);
-  }
-  
-  // Convert to base64
-  const bytes = new Uint8Array(buffer);
-  let binary = '';
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return 'data:audio/wav;base64,' + btoa(binary);
-}
-
-// Pre-generated audio tones - simple sine waves at different frequencies
-const AUDIO_TONES: Record<string, string> = {
-  // Correct answer: Higher pitch (880Hz)
-  correct: generateToneDataURI(880, 0.15),
-  // Pass: Lower pitch (440Hz)
-  pass: generateToneDataURI(440, 0.12),
-  // Tick: High crisp tick (1200Hz)
-  tick: generateToneDataURI(1200, 0.08),
-  // Tock: Lower tick (800Hz)
-  tock: generateToneDataURI(800, 0.1),
-  // Buzz: Low buzzer (200Hz)
-  buzz: generateToneDataURI(200, 0.3),
+// Custom WAV files in public/audio folder
+const AUDIO_FILES: Record<string, string> = {
+  correct: '/audio/correct.wav',
+  pass: '/audio/pass.wav',
+  tick: '/audio/tick.wav',
+  tock: '/audio/tock.wav',
+  buzz: '/audio/buzz.wav',
+  gameEnd: '/audio/gameEnd.wav',
 };
 
-// Pre-create audio elements for each tone
+// Pre-create audio elements for each sound
 function createAudioPool() {
   if (audioPool.size > 0) return;
   
-  Object.entries(AUDIO_TONES).forEach(([name, dataUri]) => {
-    const audio = new Audio(dataUri);
+  Object.entries(AUDIO_FILES).forEach(([name, path]) => {
+    const audio = new Audio(path);
     audio.preload = 'auto';
     audioPool.set(name, audio);
   });
-  console.log('Audio pool created with', audioPool.size, 'tones');
+  console.log('Audio pool created with', audioPool.size, 'sounds');
 }
 
 // Initialize audio system - must be called from user gesture
@@ -144,7 +77,7 @@ export function isAudioReady(): boolean {
 }
 
 // Play a specific sound by name
-export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz') {
+export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz' | 'gameEnd') {
   console.log('playSound:', soundName);
   
   const audio = audioPool.get(soundName);
