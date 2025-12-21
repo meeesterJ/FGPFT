@@ -1,20 +1,71 @@
 import { Link, useLocation } from "wouter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
 import { initAudioContext } from "@/lib/audio";
 import { Play, Settings as SettingsIcon, List } from "lucide-react";
+
+const titleWords = [
+  { text: "Family", color: "text-pink-400" },
+  { text: "Guess", color: "text-cyan-400" },
+  { text: "Party", color: "text-yellow-400" },
+  { text: "Fun", color: "text-green-400" },
+  { text: "Time", color: "text-purple-400" },
+];
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      delayChildren: 0.1,
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const wordVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.5,
+    y: -40,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 500,
+      damping: 25,
+      mass: 0.8,
+    },
+  },
+};
+
+let hasPlayedAnimation = false;
 
 export default function Home() {
   const [, setLocation] = useLocation();
   const startGame = useGameStore(state => state.startGame);
   const [tiltPermissionGranted, setTiltPermissionGranted] = useState(false);
 
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+
+  const shouldAnimate = !hasPlayedAnimation && !prefersReducedMotion;
+  
   useEffect(() => {
-    // Check if device orientation is already available (non-iOS or permission already granted)
+    if (shouldAnimate) {
+      hasPlayedAnimation = true;
+    }
+  }, [shouldAnimate]);
+
+  useEffect(() => {
     if (typeof DeviceOrientationEvent !== "undefined") {
       if (typeof (DeviceOrientationEvent as any).requestPermission !== "function") {
-        // Non-iOS - permission not required
         setTiltPermissionGranted(true);
       }
     }
@@ -37,20 +88,15 @@ export default function Home() {
   };
 
   const handleStart = async () => {
-    // Start audio init but DON'T await yet - iOS requires tilt permission to be
-    // requested synchronously within the user gesture (any await before it breaks it)
     const audioPromise = initAudioContext();
     
-    // Request tilt permission first (iOS only) - must happen synchronously in click handler
     if (!tiltPermissionGranted) {
       await requestTiltPermission();
     }
     
-    // Now await audio initialization and verify it's running
     const ctx = await audioPromise;
     console.log('Home: Audio context after init:', ctx?.state);
     
-    // If context is still suspended, try one more resume within this gesture
     if (ctx && ctx.state === 'suspended') {
       console.log('Home: Context still suspended, trying extra resume...');
       try {
@@ -61,7 +107,6 @@ export default function Home() {
       }
     }
     
-    // Request fullscreen for immersive experience
     try {
       const elem = document.documentElement;
       if (elem.requestFullscreen) {
@@ -72,7 +117,6 @@ export default function Home() {
         await (elem as any).msRequestFullscreen();
       }
     } catch (err) {
-      // Fullscreen not supported or denied, continue anyway
       console.log("Fullscreen not available:", err);
     }
     
@@ -82,7 +126,6 @@ export default function Home() {
 
   return (
     <div className="h-[100dvh] flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-card overflow-hidden relative">
-      {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
          <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full blur-3xl animate-pulse"></div>
          <div className="absolute bottom-10 right-10 w-40 h-40 bg-secondary rounded-full blur-3xl animate-pulse delay-700"></div>
@@ -90,17 +133,29 @@ export default function Home() {
       </div>
 
       <div className="z-10 flex flex-col items-center justify-center max-w-md w-full text-center gap-10">
-        <div className="animate-bounce-in">
+        <motion.div
+          variants={containerVariants}
+          initial={shouldAnimate ? "hidden" : "visible"}
+          animate="visible"
+        >
           <h1 className="text-7xl font-thin tracking-wide transform -rotate-2 leading-none">
-            <span className="block text-pink-400">Family</span>
-            <span className="block text-cyan-400">Guess</span>
-            <span className="block text-yellow-400">Party</span>
-            <span className="block text-green-400">Fun</span>
-            <span className="block text-purple-400">Time</span>
+            {titleWords.map((word) => (
+              <motion.span
+                key={word.text}
+                className={`block ${word.color}`}
+                variants={shouldAnimate ? wordVariants : undefined}
+                style={{
+                  display: 'block',
+                  textShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                }}
+              >
+                {word.text}
+              </motion.span>
+            ))}
           </h1>
-        </div>
+        </motion.div>
 
-        <div className="grid gap-3 w-full animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="grid gap-3 w-full">
           <Button 
             size="lg" 
             className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
