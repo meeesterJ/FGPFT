@@ -18,8 +18,8 @@ const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      delayChildren: 0.1,
-      staggerChildren: 0.15,
+      delayChildren: 0.15,
+      staggerChildren: 0.22,
     },
   },
 };
@@ -27,8 +27,8 @@ const containerVariants = {
 const wordVariants = {
   hidden: {
     opacity: 0,
-    scale: 0.5,
-    y: -40,
+    scale: 0.3,
+    y: -60,
   },
   visible: {
     opacity: 1,
@@ -36,9 +36,9 @@ const wordVariants = {
     y: 0,
     transition: {
       type: "spring" as const,
-      stiffness: 500,
-      damping: 25,
-      mass: 0.8,
+      stiffness: 600,
+      damping: 18,
+      mass: 1,
     },
   },
 };
