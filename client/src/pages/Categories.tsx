@@ -18,6 +18,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Papa from "papaparse";
 import { useToast } from "@/hooks/use-toast";
 
+const ENABLE_CSV_UPLOAD = false;
+
 export default function Categories() {
   const { toast } = useToast();
   const store = useGameStore();
@@ -193,10 +195,12 @@ export default function Categories() {
                       onChange={e => setNewListWords(e.target.value)}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Or Upload CSV</Label>
-                    <Input type="file" accept=".csv" onChange={handleFileUpload} />
-                  </div>
+                  {ENABLE_CSV_UPLOAD && (
+                    <div className="space-y-2">
+                      <Label>Or Upload CSV</Label>
+                      <Input type="file" accept=".csv" onChange={handleFileUpload} />
+                    </div>
+                  )}
                   <Button className="w-full" onClick={handleCreateList}>Save List</Button>
                 </div>
               </DialogContent>
