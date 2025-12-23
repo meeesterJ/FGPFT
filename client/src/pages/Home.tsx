@@ -66,16 +66,14 @@ export default function Home() {
 
   // Handle splash screen tap - unlock audio silently and reveal buttons
   const handleSplashTap = async () => {
-    // Mark animation as played
-    if (shouldAnimate) {
-      hasPlayedAnimation = true;
-    }
-    
     // Initialize audio silently during this tap gesture
     await initAudioContextAsync();
     
     // Reveal the buttons
     setShowButtons(true);
+    
+    // Mark animation as played (for future visits)
+    hasPlayedAnimation = true;
   };
 
   const handleStart = () => {
