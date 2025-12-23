@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
-import { initAudioContext } from "@/lib/audio";
+import { initAudioContextAsync } from "@/lib/audio";
 import { Play, Settings as SettingsIcon, List } from "lucide-react";
 
 const titleWords = [
@@ -63,14 +63,15 @@ export default function Home() {
 
   const shouldAnimate = !hasPlayedAnimation && !prefersReducedMotion && !isDesktop;
 
-  const handleStart = () => {
+  const handleStart = async () => {
     // Mark animation as played
     if (shouldAnimate) {
       hasPlayedAnimation = true;
     }
     
-    // Initialize audio (non-blocking) - prepares audio pool for sounds
-    initAudioContext();
+    // Initialize audio and WAIT for unlock to complete
+    // This must complete during the tap gesture for iOS
+    await initAudioContextAsync();
     
     // Try fullscreen (non-blocking, fire and forget)
     try {
@@ -84,7 +85,7 @@ export default function Home() {
       // Fullscreen not available - continue anyway
     }
     
-    // Navigate to game immediately
+    // Navigate to game after audio is ready
     startGame();
     setLocation("/game");
   };
