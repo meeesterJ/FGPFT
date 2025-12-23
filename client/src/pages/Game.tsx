@@ -833,26 +833,30 @@ export default function Game() {
 
       {/* Ready Screen Overlay - shown before countdown */}
       {isWaitingForReady && !showRotatePrompt && !waitingForPermission && (
-        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center space-y-8 p-8">
-          <h1 className="text-6xl font-black text-primary tracking-tight">
-            Round {store.currentRound || 1}
-          </h1>
-          {/* Only show tilt instructions on devices with orientation support */}
-          {hasDeviceOrientation && (
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative">
-                <Smartphone className="w-20 h-20 text-accent animate-bounce" style={{ animationDuration: '1.5s' }} />
-                <div className="absolute -right-2 -bottom-2 w-8 h-8 rounded-full bg-success flex items-center justify-center">
-                  <Check className="w-5 h-5 text-white" />
-                </div>
+        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-between p-8">
+          {/* Top spacer for balance */}
+          <div className="flex-1" />
+          
+          {/* Dramatic Round Number - centered and huge */}
+          <div className="flex flex-col items-center text-center animate-bounce-in">
+            <span className="text-2xl md:text-3xl font-body text-muted-foreground uppercase tracking-[0.3em] mb-2">
+              Round
+            </span>
+            <span className="text-[10rem] md:text-[14rem] font-black text-primary leading-none drop-shadow-2xl animate-pulse" style={{ animationDuration: '2s' }}>
+              {store.currentRound || 1}
+            </span>
+          </div>
+          
+          {/* Bottom section with instructions and Play button */}
+          <div className="flex-1 flex flex-col items-center justify-end pb-8 space-y-6">
+            {/* Tilt instructions - only on devices with orientation support */}
+            {hasDeviceOrientation && (
+              <div className="flex items-center gap-3 text-muted-foreground">
+                <Smartphone className="w-6 h-6 animate-bounce" style={{ animationDuration: '1.5s' }} />
+                <span className="text-lg">Tilt forward to start</span>
               </div>
-              <p className="text-xl text-muted-foreground text-center max-w-md">
-                Tilt forward when ready
-              </p>
-            </div>
-          )}
-          {/* Show Play button on desktop or when buttons are enabled */}
-          {(store.showButtons || !hasDeviceOrientation) && (
+            )}
+            {/* Play button - always available as fallback */}
             <Button 
               onClick={onReady}
               size="lg"
@@ -861,7 +865,7 @@ export default function Game() {
               <Play className="w-8 h-8 mr-3" />
               Play
             </Button>
-          )}
+          </div>
         </div>
       )}
 
