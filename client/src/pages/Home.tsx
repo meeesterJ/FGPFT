@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
@@ -48,7 +48,6 @@ let hasPlayedAnimation = false;
 export default function Home() {
   const [, setLocation] = useLocation();
   const startGame = useGameStore(state => state.startGame);
-  const [tiltPermissionGranted, setTiltPermissionGranted] = useState(false);
 
   const prefersReducedMotion = useMemo(() => {
     if (typeof window === 'undefined') return false;
@@ -63,49 +62,15 @@ export default function Home() {
   }, []);
 
   const shouldAnimate = !hasPlayedAnimation && !prefersReducedMotion && !isDesktop;
-  
-  useEffect(() => {
+
+  const handleStart = async () => {
+    // Mark animation as played
     if (shouldAnimate) {
       hasPlayedAnimation = true;
     }
-  }, [shouldAnimate]);
-
-  useEffect(() => {
-    if (typeof DeviceOrientationEvent !== "undefined") {
-      if (typeof (DeviceOrientationEvent as any).requestPermission !== "function") {
-        setTiltPermissionGranted(true);
-      }
-    }
-  }, []);
-
-  const requestTiltPermission = async () => {
-    if (typeof DeviceOrientationEvent !== "undefined" && 
-        typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-      try {
-        const perm = await (DeviceOrientationEvent as any).requestPermission();
-        if (perm === "granted") {
-          setTiltPermissionGranted(true);
-          return true;
-        }
-      } catch (e) {
-        console.log("Tilt permission denied:", e);
-      }
-    }
-    return false;
-  };
-
-  const handleStart = async () => {
-    // Create a timeout promise that resolves after 500ms
-    const timeout = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     
-    // Initialize audio and request permission with timeout fallback
-    const initPromise = Promise.all([
-      initAudioContext().catch(() => {}),
-      !tiltPermissionGranted ? requestTiltPermission().catch(() => {}) : Promise.resolve()
-    ]);
-    
-    // Wait for init or timeout (whichever comes first)
-    await Promise.race([initPromise, timeout(500)]);
+    // Initialize audio on user gesture
+    await initAudioContext().catch(() => {});
     
     // Try fullscreen (non-blocking, fire and forget)
     try {
@@ -119,7 +84,7 @@ export default function Home() {
       // Fullscreen not available - continue anyway
     }
     
-    // Navigate after init is settled (or timeout)
+    // Navigate to game
     startGame();
     setLocation("/game");
   };

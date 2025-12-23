@@ -13,7 +13,8 @@ export default function Game() {
   const [timeLeft, setTimeLeft] = useState(store.roundDuration);
   const [isPaused, setIsPaused] = useState(false);
   const [tiltFeedback, setTiltFeedback] = useState<"correct" | "pass" | null>(null);
-  const [hasDeviceOrientation, setHasDeviceOrientation] = useState(false);
+  const [hasDeviceOrientation, setHasDeviceOrientation] = useState(store.tiltPermissionGranted);
+  const [isHydrated, setIsHydrated] = useState(useGameStore.persist.hasHydrated());
   const [showRotatePrompt, setShowRotatePrompt] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false); // Debounce button clicks
   const [needsIOSPermission, setNeedsIOSPermission] = useState(false);
@@ -42,6 +43,8 @@ export default function Game() {
   const returnThresholdRef = useRef(10); // Degrees from baseline to consider "returned to center"
   const mustReturnToCenterRef = useRef(false); // After button click, must return to center before new tilt gesture
   const lastOrientationTypeRef = useRef<string | null>(null); // Track orientation type used during calibration
+  const permissionProbeTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Track permission probe timeout for cancellation
+  const permissionProbeHandlerRef = useRef<((e: DeviceOrientationEvent) => void) | null>(null); // Track permission probe handler
   const wordDisplayRef = useRef<HTMLHeadingElement>(null); // Ref for auto-scaling word display
   const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
   const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
@@ -108,6 +111,101 @@ export default function Game() {
   useEffect(() => {
     nextWordRef.current = store.nextWord;
   }, [store.nextWord]);
+
+  // Track Zustand hydration status
+  useEffect(() => {
+    if (useGameStore.persist.hasHydrated()) {
+      setIsHydrated(true);
+      return;
+    }
+    
+    const unsubscribe = useGameStore.persist.onFinishHydration(() => {
+      setIsHydrated(true);
+    });
+    
+    return () => unsubscribe();
+  }, []);
+
+  // Run iOS permission probe ONLY after Zustand hydration completes
+  useEffect(() => {
+    // Don't run until hydrated
+    if (!isHydrated) return;
+    
+    // Check if this is iOS 13+ requiring permission
+    if (typeof DeviceOrientationEvent !== "undefined" &&
+        typeof (DeviceOrientationEvent as any).requestPermission === "function") {
+      
+      // Check persisted permission from hydrated store
+      if (useGameStore.getState().tiltPermissionGranted) {
+        // Permission was previously granted - skip the probe entirely
+        setHasDeviceOrientation(true);
+        setNeedsIOSPermission(false);
+        
+        // Trigger ready screen if in landscape
+        const isLandscape = window.innerWidth > window.innerHeight;
+        if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+          showReadyScreen();
+        }
+      } else {
+        // Need to probe for permission - start the 500ms test
+        const testHandler = (e: DeviceOrientationEvent) => {
+          // We received an orientation event - permission was granted!
+          if (permissionProbeTimeoutRef.current) {
+            clearTimeout(permissionProbeTimeoutRef.current);
+            permissionProbeTimeoutRef.current = null;
+          }
+          window.removeEventListener("deviceorientation", testHandler);
+          permissionProbeHandlerRef.current = null;
+          setHasDeviceOrientation(true);
+          setNeedsIOSPermission(false);
+          store.setTiltPermissionGranted(true);
+          
+          // Trigger ready screen if in landscape
+          const isLandscape = window.innerWidth > window.innerHeight;
+          if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+            showReadyScreen();
+          }
+        };
+        permissionProbeHandlerRef.current = testHandler;
+        window.addEventListener("deviceorientation", testHandler);
+        
+        // If no event received within 500ms, permission not granted
+        permissionProbeTimeoutRef.current = setTimeout(() => {
+          window.removeEventListener("deviceorientation", testHandler);
+          permissionProbeHandlerRef.current = null;
+          permissionProbeTimeoutRef.current = null;
+          setNeedsIOSPermission(true);
+          setHasDeviceOrientation(false);
+          setWaitingForPermission(true);
+        }, 500);
+      }
+    } else if (typeof DeviceOrientationEvent !== "undefined") {
+      // Non-iOS - orientation events are available
+      setHasDeviceOrientation(true);
+      const isLandscape = window.innerWidth > window.innerHeight;
+      if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+        showReadyScreen();
+      }
+    } else {
+      // No DeviceOrientationEvent at all - show ready screen anyway
+      const isLandscape = window.innerWidth > window.innerHeight;
+      if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+        showReadyScreen();
+      }
+    }
+    
+    // Cleanup probe on unmount
+    return () => {
+      if (permissionProbeTimeoutRef.current) {
+        clearTimeout(permissionProbeTimeoutRef.current);
+        permissionProbeTimeoutRef.current = null;
+      }
+      if (permissionProbeHandlerRef.current) {
+        window.removeEventListener("deviceorientation", permissionProbeHandlerRef.current);
+        permissionProbeHandlerRef.current = null;
+      }
+    };
+  }, [isHydrated]); // Run when hydration completes
 
   // When hasDeviceOrientation becomes true (permission granted), start countdown if in landscape
   useEffect(() => {
@@ -204,8 +302,7 @@ export default function Game() {
     };
 
     // Check if device is in landscape and prompt to rotate if not
-    // permissionKnown parameter indicates if we've completed the iOS permission test
-    const checkOrientation = (permissionKnown: boolean = false) => {
+    const checkOrientation = () => {
       const isLandscape = window.innerWidth > window.innerHeight;
       
       // If in landscape and we haven't shown the initial countdown yet
@@ -215,24 +312,16 @@ export default function Game() {
         // Lock to current landscape orientation when we enter landscape
         lockToCurrentLandscape();
         
-        // Only show ready screen or permission prompt after iOS test completes
-        if (permissionKnown) {
-          // Check if iOS needs permission
-          if (typeof DeviceOrientationEvent !== "undefined" && 
-              typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-            // iOS 13+ - check if permission was already granted
-            if (hasDeviceOrientation) {
-              // Permission already granted - show ready screen
-              showReadyScreen();
-            } else {
-              // Need to request permission
-              setWaitingForPermission(true);
-            }
-          } else {
-            // Non-iOS or older iOS - show ready screen
-            showReadyScreen();
-          }
+        // Permission handling is done by the dedicated hydration-aware effect
+        // Only show ready screen here if permission is already confirmed granted
+        if (useGameStore.getState().tiltPermissionGranted) {
+          showReadyScreen();
+        } else if (typeof DeviceOrientationEvent === "undefined" || 
+                   typeof (DeviceOrientationEvent as any).requestPermission !== "function") {
+          // Non-iOS device - orientation events work without permission
+          showReadyScreen();
         }
+        // For iOS without permission, the hydration-aware effect handles showing the permission UI
       } else if (!isLandscape) {
         // Entering portrait
         if (!wasInPortrait.current) {
@@ -262,12 +351,12 @@ export default function Game() {
       }
     };
     
-    // Initial orientation check (just for rotate prompt, not permission)
-    checkOrientation(false);
+    // Initial orientation check (just for rotate prompt)
+    checkOrientation();
     
-    // Listen for orientation changes (permission is known after initial test)
+    // Listen for orientation changes
     const handleOrientationChange = () => {
-      checkOrientation(true);
+      checkOrientation();
     };
     window.addEventListener("orientationchange", handleOrientationChange);
     window.addEventListener("resize", handleOrientationChange);
@@ -275,39 +364,8 @@ export default function Game() {
       screen.orientation.addEventListener("change", handleOrientationChange);
     }
 
-    // Check if device orientation is available
-    if (typeof DeviceOrientationEvent !== "undefined") {
-      if (typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-        // iOS 13+ - test if permission was already granted by listening for an event
-        let testTimeout: NodeJS.Timeout;
-        const testHandler = (e: DeviceOrientationEvent) => {
-          // We received an orientation event - permission was granted!
-          clearTimeout(testTimeout);
-          window.removeEventListener("deviceorientation", testHandler);
-          setHasDeviceOrientation(true);
-          setNeedsIOSPermission(false);
-          // Now check orientation with permission known
-          checkOrientation(true);
-        };
-        window.addEventListener("deviceorientation", testHandler);
-        // If no event received within 500ms, permission not granted
-        testTimeout = setTimeout(() => {
-          window.removeEventListener("deviceorientation", testHandler);
-          setNeedsIOSPermission(true);
-          setHasDeviceOrientation(false);
-          // Now check orientation with permission known (need to show permission button)
-          checkOrientation(true);
-        }, 500);
-      } else {
-        // Non-iOS or older iOS - orientation events are available
-        setHasDeviceOrientation(true);
-        // Check orientation immediately for non-iOS
-        checkOrientation(true);
-      }
-    } else {
-      // No DeviceOrientationEvent - still show ready screen
-      checkOrientation(true);
-    }
+    // Note: Permission check is handled by the hydration-aware effect above
+    // This mount effect only handles orientation listeners and screen locking
 
     return () => {
       // Clean up listeners and unlock orientation
@@ -591,8 +649,8 @@ export default function Game() {
   // Countdown sounds - tick/tock pattern for last 5 seconds and roundEnd at 0
   const lastSoundTimeRef = useRef<number | null>(null);
   useEffect(() => {
-    // Only play sounds when playing and not counting down, waiting for ready, or waiting for permission
-    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || waitingForPermission) return;
+    // Only play sounds when playing and not counting down, waiting for ready, waiting for permission, or showing rotate prompt
+    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || waitingForPermission || showRotatePrompt) return;
     
     // Avoid playing the same sound twice for the same timeLeft value
     if (lastSoundTimeRef.current === timeLeft) return;
@@ -610,7 +668,7 @@ export default function Game() {
         soundRoundEnd();
       }
     }
-  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, waitingForPermission, store.currentRound, store.totalRounds]);
+  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, waitingForPermission, showRotatePrompt, store.currentRound, store.totalRounds]);
 
   // Handle Game Over / Round End Redirect
   useEffect(() => {
@@ -718,6 +776,7 @@ export default function Game() {
           setHasDeviceOrientation(true);
           setNeedsIOSPermission(false);
           setWaitingForPermission(false);
+          store.setTiltPermissionGranted(true);
           
           // Now show ready screen
           if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {

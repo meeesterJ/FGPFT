@@ -16,6 +16,7 @@ interface GameState {
   showButtons: boolean; // Show/hide Correct/Pass buttons during gameplay
   hapticEnabled: boolean; // Enable haptic vibration feedback
   soundEnabled: boolean; // Enable sound feedback
+  tiltPermissionGranted: boolean; // iOS device orientation permission granted
   selectedListIds: string[];
   customLists: WordList[];
   builtInListOverrides: Record<string, { name?: string; words?: string[] }>; // Edits to built-in lists
@@ -40,6 +41,7 @@ interface GameState {
   setShowButtons: (show: boolean) => void;
   setHapticEnabled: (enabled: boolean) => void;
   setSoundEnabled: (enabled: boolean) => void;
+  setTiltPermissionGranted: (granted: boolean) => void;
   toggleListSelection: (id: string) => void;
   addCustomList: (list: WordList) => void;
   removeCustomList: (id: string) => void;
@@ -69,6 +71,7 @@ export const useGameStore = create<GameState>()(
       showButtons: false,
       hapticEnabled: true,
       soundEnabled: true,
+      tiltPermissionGranted: false,
       selectedListIds: ['animals-easy'],
       customLists: [],
       builtInListOverrides: {},
@@ -91,6 +94,7 @@ export const useGameStore = create<GameState>()(
       setShowButtons: (show) => set({ showButtons: show }),
       setHapticEnabled: (enabled) => set({ hapticEnabled: enabled }),
       setSoundEnabled: (enabled) => set({ soundEnabled: enabled }),
+      setTiltPermissionGranted: (granted) => set({ tiltPermissionGranted: granted }),
       
       toggleListSelection: (id) => set((state) => {
         const exists = state.selectedListIds.includes(id);
@@ -289,6 +293,7 @@ export const useGameStore = create<GameState>()(
         showButtons: state.showButtons,
         hapticEnabled: state.hapticEnabled,
         soundEnabled: state.soundEnabled,
+        tiltPermissionGranted: state.tiltPermissionGranted,
         selectedListIds: state.selectedListIds,
         customLists: state.customLists,
         builtInListOverrides: state.builtInListOverrides,
