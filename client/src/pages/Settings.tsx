@@ -6,8 +6,10 @@ import { ArrowLeft, Share } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useSwipeBack } from "@/hooks/use-swipe-back";
 
 export default function Settings() {
+  useSwipeBack({ targetPath: "/" });
   const store = useGameStore();
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);

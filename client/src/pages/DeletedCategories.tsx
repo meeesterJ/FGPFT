@@ -5,8 +5,10 @@ import { DEFAULT_WORD_LISTS } from "@/lib/words";
 import { ArrowLeft, Trash2, RotateCcw } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
+import { useSwipeBack } from "@/hooks/use-swipe-back";
 
 export default function DeletedCategories() {
+  useSwipeBack({ targetPath: "/categories" });
   const { toast } = useToast();
   const store = useGameStore();
 

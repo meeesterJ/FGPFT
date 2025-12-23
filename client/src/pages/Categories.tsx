@@ -17,10 +17,12 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Papa from "papaparse";
 import { useToast } from "@/hooks/use-toast";
+import { useSwipeBack } from "@/hooks/use-swipe-back";
 
 const ENABLE_CSV_UPLOAD = false;
 
 export default function Categories() {
+  useSwipeBack({ targetPath: "/" });
   const { toast } = useToast();
   const store = useGameStore();
   
