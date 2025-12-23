@@ -115,7 +115,7 @@ export default function Summary() {
               <span className="text-xl text-muted-foreground uppercase tracking-widest">Complete</span>
             </div>
           )}
-          <div className="text-[14rem] font-thin text-yellow-400 leading-none animate-bounce-in" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+          <div className="text-[14rem] font-thin text-yellow-400 leading-none animate-bounce-in" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
              {store.currentScore}
           </div>
           <p className="text-xl font-medium text-foreground">Points this round</p>
