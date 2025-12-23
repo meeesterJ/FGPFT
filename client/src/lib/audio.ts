@@ -17,7 +17,7 @@ const AUDIO_FILES: Record<string, string> = {
   pass: '/audio/pass.wav',
   tick: '/audio/tick.wav',
   tock: '/audio/tock.wav',
-  buzz: '/audio/buzz.wav',
+  roundEnd: '/audio/roundEnd.wav',
   gameEnd: '/audio/gameEnd.wav',
   applause: '/audio/applause.wav',
   drumroll: '/audio/drumroll.wav',
@@ -113,7 +113,7 @@ export function isAudioReady(): boolean {
 }
 
 // Stop a specific sound (useful for drumroll which needs to be stoppable)
-export function stopSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz' | 'gameEnd' | 'applause' | 'drumroll' | 'countdown') {
+export function stopSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'roundEnd' | 'gameEnd' | 'applause' | 'drumroll' | 'countdown') {
   const copies = audioPool.get(soundName);
   if (!copies) return;
   
@@ -125,7 +125,7 @@ export function stopSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buz
 }
 
 // Play a specific sound by name using round-robin selection of copies
-export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz' | 'gameEnd' | 'applause' | 'drumroll' | 'countdown') {
+export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'roundEnd' | 'gameEnd' | 'applause' | 'drumroll' | 'countdown') {
   console.log('playSound:', soundName);
   
   // Ensure audio pool is created (for edge cases like page refresh)
@@ -165,7 +165,7 @@ export async function playBeep(frequency: number, duration: number, type: Oscill
   } else if (frequency === 800) {
     await playSound('tock');
   } else if (frequency === 200) {
-    await playSound('buzz');
+    await playSound('roundEnd');
   } else if (frequency >= 800) {
     await playSound('correct');
   } else {

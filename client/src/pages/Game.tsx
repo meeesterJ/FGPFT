@@ -59,7 +59,7 @@ export default function Game() {
     playSound('pass');
   };
   
-  // Countdown sounds - tick/tock pattern for 3, 2, 1 and buzz for round end
+  // Countdown sounds - tick/tock pattern for 3, 2, 1 and roundEnd for round end
   const soundTick = () => {
     console.log('soundTick called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
@@ -75,7 +75,7 @@ export default function Game() {
   const soundBuzz = () => {
     console.log('soundBuzz called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
-    playSound('buzz');
+    playSound('roundEnd');
   };
   
   // Haptic feedback functions using Vibration API
@@ -577,7 +577,7 @@ export default function Game() {
     }
   }, [timeLeft, store.isPlaying]);
   
-  // Countdown sounds - tick/tock pattern for last 5 seconds and buzz at 0
+  // Countdown sounds - tick/tock pattern for last 5 seconds and roundEnd at 0
   const lastSoundTimeRef = useRef<number | null>(null);
   useEffect(() => {
     // Only play sounds when playing and not counting down
