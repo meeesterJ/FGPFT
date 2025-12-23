@@ -97,7 +97,9 @@ export default function Home() {
 
   return (
     <div 
-      className="h-[100dvh] flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-card overflow-hidden relative"
+      className={`h-[100dvh] flex flex-col items-center p-4 bg-gradient-to-b from-background to-card relative ${
+        showButtons ? 'justify-start pt-8 overflow-y-auto' : 'justify-center overflow-hidden'
+      }`}
       onClick={!showButtons ? handleSplashTap : undefined}
       data-testid="home-container"
     >
@@ -107,13 +109,17 @@ export default function Home() {
          <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-accent rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      <div className="z-10 flex flex-col items-center justify-center max-w-md w-full text-center gap-10">
+      <div className={`z-10 flex flex-col items-center max-w-md w-full text-center ${
+        showButtons ? 'gap-6' : 'justify-center gap-10'
+      }`}>
         <motion.div
           variants={containerVariants}
           initial={shouldAnimate ? "hidden" : "visible"}
           animate="visible"
         >
-          <h1 className="text-7xl font-thin tracking-wide transform -rotate-2 leading-none">
+          <h1 className={`font-thin tracking-wide transform -rotate-2 leading-none ${
+            showButtons ? 'text-5xl' : 'text-7xl'
+          }`}>
             {titleWords.map((word) => (
               <motion.span
                 key={word.text}
