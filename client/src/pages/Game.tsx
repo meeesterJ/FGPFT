@@ -221,7 +221,7 @@ export default function Game() {
 
     let readyBaseline: number | null = null;
     const samples: number[] = [];
-    const readyThreshold = 20; // Degrees of tilt to trigger ready
+    const readyThreshold = 30; // Degrees of tilt to trigger ready (higher than gameplay for deliberate action)
     let tiltEnabled = false; // Delay before allowing tilt detection
     let enableTimerId: ReturnType<typeof setTimeout> | null = null;
 
