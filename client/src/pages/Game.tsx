@@ -593,9 +593,13 @@ export default function Game() {
     } else if (timeLeft === 4 || timeLeft === 2) {
       soundTock();
     } else if (timeLeft === 0) {
-      soundRoundEnd();
+      // Skip roundEnd sound on the final round (drumroll plays on summary instead)
+      const isLastRound = store.currentRound >= store.totalRounds;
+      if (!isLastRound) {
+        soundRoundEnd();
+      }
     }
-  }, [timeLeft, store.isPlaying, isPaused, isCountingDown]);
+  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, store.currentRound, store.totalRounds]);
 
   // Handle Game Over / Round End Redirect
   useEffect(() => {
