@@ -1,5 +1,4 @@
 import { Link, useLocation } from "wouter";
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
@@ -86,11 +85,12 @@ function MainScreen({ onStart }: { onStart: () => void }) {
 export default function Home() {
   const [, setLocation] = useLocation();
   const startGame = useGameStore(state => state.startGame);
-  const [showSplash, setShowSplash] = useState(true);
+  const splashDismissed = useGameStore(state => state.splashDismissed);
+  const setSplashDismissed = useGameStore(state => state.setSplashDismissed);
 
   const handleSplashTap = async () => {
     await initAudioContextAsync();
-    setShowSplash(false);
+    setSplashDismissed(true);
   };
 
   const handleStart = () => {
@@ -110,7 +110,7 @@ export default function Home() {
   return (
     <div data-testid="home-container">
       <AnimatePresence mode="wait">
-        {showSplash ? (
+        {!splashDismissed ? (
           <SplashScreen key="splash" onTap={handleSplashTap} />
         ) : (
           <MainScreen key="main" onStart={handleStart} />

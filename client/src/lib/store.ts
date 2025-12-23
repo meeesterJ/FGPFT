@@ -17,6 +17,7 @@ interface GameState {
   hapticEnabled: boolean; // Enable haptic vibration feedback
   soundEnabled: boolean; // Enable sound feedback
   tiltPermissionGranted: boolean; // iOS device orientation permission granted
+  splashDismissed: boolean; // Track if splash screen has been dismissed this session
   selectedListIds: string[];
   customLists: WordList[];
   builtInListOverrides: Record<string, { name?: string; words?: string[] }>; // Edits to built-in lists
@@ -43,6 +44,7 @@ interface GameState {
   setHapticEnabled: (enabled: boolean) => void;
   setSoundEnabled: (enabled: boolean) => void;
   setTiltPermissionGranted: (granted: boolean) => void;
+  setSplashDismissed: (dismissed: boolean) => void;
   toggleListSelection: (id: string) => void;
   addCustomList: (list: WordList) => void;
   removeCustomList: (id: string) => void;
@@ -73,6 +75,7 @@ export const useGameStore = create<GameState>()(
       hapticEnabled: true,
       soundEnabled: true,
       tiltPermissionGranted: false,
+      splashDismissed: false,
       selectedListIds: ['animals-easy'],
       customLists: [],
       builtInListOverrides: {},
@@ -97,6 +100,7 @@ export const useGameStore = create<GameState>()(
       setHapticEnabled: (enabled) => set({ hapticEnabled: enabled }),
       setSoundEnabled: (enabled) => set({ soundEnabled: enabled }),
       setTiltPermissionGranted: (granted) => set({ tiltPermissionGranted: granted }),
+      setSplashDismissed: (dismissed) => set({ splashDismissed: dismissed }),
       
       toggleListSelection: (id) => set((state) => {
         const exists = state.selectedListIds.includes(id);
