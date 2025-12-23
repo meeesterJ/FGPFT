@@ -19,6 +19,9 @@ const AUDIO_FILES: Record<string, string> = {
   tock: '/audio/tock.wav',
   buzz: '/audio/buzz.wav',
   gameEnd: '/audio/gameEnd.wav',
+  applause: '/audio/applause.wav',
+  drumroll: '/audio/drumroll.wav',
+  countdown: '/audio/countdown.wav',
 };
 
 // Pre-create multiple audio elements for each sound
@@ -109,8 +112,20 @@ export function isAudioReady(): boolean {
   return audioInitialized && audioUnlocked;
 }
 
+// Stop a specific sound (useful for drumroll which needs to be stoppable)
+export function stopSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz' | 'gameEnd' | 'applause' | 'drumroll' | 'countdown') {
+  const copies = audioPool.get(soundName);
+  if (!copies) return;
+  
+  copies.forEach(audio => {
+    audio.pause();
+    audio.currentTime = 0;
+  });
+  console.log('stopSound:', soundName);
+}
+
 // Play a specific sound by name using round-robin selection of copies
-export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz' | 'gameEnd') {
+export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'buzz' | 'gameEnd' | 'applause' | 'drumroll' | 'countdown') {
   console.log('playSound:', soundName);
   
   // Ensure audio pool is created (for edge cases like page refresh)

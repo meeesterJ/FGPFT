@@ -759,6 +759,11 @@ export default function Game() {
     setIsCountingDown(true);
     setCountdown(3);
     
+    // Play countdown sound at start of countdown sequence
+    if (store.soundEnabled) {
+      playSound('countdown');
+    }
+    
     countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(2), 1000));
     countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(1), 2000));
     countdownTimeoutsRef.current.push(setTimeout(() => setCountdown("Go!"), 3000));

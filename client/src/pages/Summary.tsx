@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { RotateCcw, ArrowRight, Home, Trophy, ListX, CheckCircle2 } from "lucide-react";
 import Confetti from "react-confetti";
 import { useState, useEffect, useRef } from 'react';
-import { playSound } from "@/lib/audio";
+import { playSound, stopSound } from "@/lib/audio";
 
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
@@ -34,16 +34,30 @@ export default function Summary() {
   const store = useGameStore();
   const { width, height } = useWindowSize();
   const hasPlayedGameEndSound = useRef(false);
+  const hasPlayedDrumroll = useRef(false);
 
-  // Play game end sound when game is finished
+  const isLastRound = store.currentRound >= store.totalRounds && !store.isGameFinished;
+
+  // Play game end sound + applause when game is finished
   useEffect(() => {
     if (store.isGameFinished && !hasPlayedGameEndSound.current) {
       hasPlayedGameEndSound.current = true;
-      playSound('gameEnd');
+      if (store.soundEnabled) {
+        playSound('gameEnd');
+        playSound('applause');
+      }
     }
-  }, [store.isGameFinished]);
+  }, [store.isGameFinished, store.soundEnabled]);
 
-  const isLastRound = store.currentRound >= store.totalRounds && !store.isGameFinished;
+  // Play drumroll when showing "And the Winner Is..." button
+  useEffect(() => {
+    if (isLastRound && !hasPlayedDrumroll.current) {
+      hasPlayedDrumroll.current = true;
+      if (store.soundEnabled) {
+        playSound('drumroll');
+      }
+    }
+  }, [isLastRound, store.soundEnabled]);
 
   const handleNext = () => {
     if (store.isGameFinished) {
@@ -51,6 +65,8 @@ export default function Summary() {
       store.startGame();
       setLocation("/game");
     } else if (isLastRound) {
+      // Stop the drumroll when clicking "And the Winner Is..."
+      stopSound('drumroll');
       // This is the final round - calling startRound will set isGameFinished=true
       // Stay on this page to show the final scoreboard
       store.startRound();
@@ -62,6 +78,7 @@ export default function Summary() {
   };
 
   const handleHome = () => {
+    stopSound('drumroll'); // Stop drumroll if playing
     store.resetGame();
     setLocation("/");
   };
