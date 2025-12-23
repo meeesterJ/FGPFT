@@ -223,11 +223,7 @@ export default function Game() {
     const samples: number[] = [];
     const readyThreshold = 20; // Degrees of tilt to trigger ready
     let tiltEnabled = false; // Delay before allowing tilt detection
-    
-    // Wait 500ms before enabling tilt detection to ensure user sees the ready screen
-    const enableTimer = setTimeout(() => {
-      tiltEnabled = true;
-    }, 500);
+    let enableTimerId: ReturnType<typeof setTimeout> | null = null;
 
     const handleReadyTilt = (event: DeviceOrientationEvent) => {
       // Guard against multiple triggers
@@ -251,16 +247,21 @@ export default function Game() {
         }
       }
       
-      // Collect baseline samples (even before tiltEnabled, so baseline is ready)
+      // Collect baseline samples first
       if (samples.length < 5) {
         samples.push(effectiveTilt);
         if (samples.length === 5) {
           readyBaseline = samples.reduce((a, b) => a + b, 0) / samples.length;
+          // Baseline established - NOW start the delay timer
+          // This ensures phone has been held still for 500ms after baseline
+          enableTimerId = setTimeout(() => {
+            tiltEnabled = true;
+          }, 500);
         }
         return;
       }
       
-      // Don't process tilt gestures until delay has passed
+      // Don't process tilt gestures until delay has passed (after baseline + 500ms)
       if (!tiltEnabled) return;
       
       if (readyBaseline === null) return;
@@ -276,7 +277,7 @@ export default function Game() {
 
     window.addEventListener("deviceorientation", handleReadyTilt);
     return () => {
-      clearTimeout(enableTimer);
+      if (enableTimerId) clearTimeout(enableTimerId);
       window.removeEventListener("deviceorientation", handleReadyTilt);
     };
   }, [isWaitingForReady, hasDeviceOrientation]);
