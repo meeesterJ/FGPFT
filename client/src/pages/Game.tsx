@@ -566,9 +566,9 @@ export default function Game() {
     };
   }, [hasDeviceOrientation, store.isPlaying, isPaused, isCountingDown, calibrationTrigger]);
 
-  // Timer logic - pause during countdown and ready screen
+  // Timer logic - pause during countdown, ready screen, and permission prompt
   useEffect(() => {
-    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && timeLeft > 0) {
+    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !waitingForPermission && timeLeft > 0) {
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
@@ -579,7 +579,7 @@ export default function Game() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, timeLeft]);
+  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, waitingForPermission, timeLeft]);
 
   // Handle timer expiration
   useEffect(() => {
@@ -591,8 +591,8 @@ export default function Game() {
   // Countdown sounds - tick/tock pattern for last 5 seconds and roundEnd at 0
   const lastSoundTimeRef = useRef<number | null>(null);
   useEffect(() => {
-    // Only play sounds when playing and not counting down or waiting for ready
-    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady) return;
+    // Only play sounds when playing and not counting down, waiting for ready, or waiting for permission
+    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || waitingForPermission) return;
     
     // Avoid playing the same sound twice for the same timeLeft value
     if (lastSoundTimeRef.current === timeLeft) return;
@@ -610,7 +610,7 @@ export default function Game() {
         soundRoundEnd();
       }
     }
-  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, store.currentRound, store.totalRounds]);
+  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, waitingForPermission, store.currentRound, store.totalRounds]);
 
   // Handle Game Over / Round End Redirect
   useEffect(() => {
