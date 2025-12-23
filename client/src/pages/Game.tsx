@@ -846,7 +846,7 @@ export default function Game() {
               <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
               <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
             </h1>
-            <span className="text-[10rem] md:text-[14rem] font-thin text-yellow-400 leading-none transform -rotate-2" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+            <span className="text-[14rem] font-thin text-yellow-400 leading-none" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
               {store.currentRound || 1}
             </span>
           </div>
