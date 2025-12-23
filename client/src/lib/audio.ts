@@ -3,6 +3,10 @@
 
 let audioInitialized = false;
 let audioUnlocked = false;
+let unlockPromise: Promise<void> | null = null; // Track in-progress unlock
+
+// Web Audio API context for silent unlock
+let webAudioContext: AudioContext | null = null;
 
 // Pool of audio elements - multiple copies per sound for rapid successive plays
 let audioPool: Map<string, HTMLAudioElement[]> = new Map();
@@ -25,6 +29,7 @@ const AUDIO_FILES: Record<string, string> = {
 };
 
 // Pre-create multiple audio elements for each sound
+// Elements are created MUTED to ensure silent unlock
 function createAudioPool() {
   if (audioPool.size > 0) return;
   
@@ -34,6 +39,7 @@ function createAudioPool() {
       const audio = new Audio(path);
       audio.preload = 'auto';
       audio.volume = 1.0;
+      audio.muted = true; // Start muted for silent unlock
       copies.push(audio);
     }
     audioPool.set(name, copies);
@@ -42,42 +48,91 @@ function createAudioPool() {
   console.log('Audio pool created with', audioPool.size, 'sounds,', COPIES_PER_SOUND, 'copies each');
 }
 
-// Silently unlock all audio elements for iOS - fires in parallel, doesn't wait
+// Silently unlock iOS audio by playing/pausing muted audio elements
+// Elements were created muted, so playing them is silent
 // Must be called from a user gesture (tap/click)
-function unlockAudioSilently(): void {
-  if (audioUnlocked) return;
+// Returns a promise that resolves when all audio is unlocked
+function unlockAudioSilently(): Promise<void> {
+  // Already unlocked
+  if (audioUnlocked) return Promise.resolve();
   
-  // Fire play/pause on all audio elements simultaneously with volume 0
-  // This primes iOS to allow future audio playback
-  audioPool.forEach((copies) => {
-    copies.forEach(audio => {
-      const originalVolume = audio.volume;
-      audio.volume = 0;
-      audio.muted = true;
-      const playPromise = audio.play();
-      if (playPromise && typeof playPromise.then === 'function') {
-        playPromise
-          .then(() => {
-            audio.pause();
-            audio.currentTime = 0;
-            audio.volume = originalVolume;
-            audio.muted = false;
-          })
-          .catch(() => {
-            audio.volume = originalVolume;
-            audio.muted = false;
-          });
-      } else {
-        // Older browsers where play() returns void - restore immediately
-        audio.pause();
-        audio.currentTime = 0;
-        audio.volume = originalVolume;
-        audio.muted = false;
+  // Already unlocking - return existing promise
+  if (unlockPromise) return unlockPromise;
+  
+  unlockPromise = (async () => {
+    try {
+      // Step 1: Create and resume Web Audio context with silent buffer
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioContextClass) {
+        if (!webAudioContext) {
+          webAudioContext = new AudioContextClass();
+        }
+        
+        // Resume the context (required for iOS after user gesture)
+        if (webAudioContext.state === 'suspended') {
+          try {
+            await webAudioContext.resume();
+          } catch (e) {
+            console.log('Web Audio resume failed:', e);
+          }
+        }
+        
+        // Create and play a tiny silent buffer (1 sample of silence)
+        try {
+          const buffer = webAudioContext.createBuffer(1, 1, 22050);
+          const source = webAudioContext.createBufferSource();
+          source.buffer = buffer;
+          source.connect(webAudioContext.destination);
+          source.start(0);
+        } catch (e) {
+          console.log('Web Audio buffer play failed:', e);
+        }
       }
-    });
-  });
+      
+      // Step 2: Play/pause each pooled audio element (they're already muted from creation)
+      // Wait for all unlocks to complete before marking as unlocked
+      const unlockPromises: Promise<void>[] = [];
+      
+      audioPool.forEach((copies) => {
+        copies.forEach(audio => {
+          // Elements are already muted from createAudioPool()
+          const promise = new Promise<void>((resolve) => {
+            const playPromise = audio.play();
+            if (playPromise && typeof playPromise.then === 'function') {
+              playPromise
+                .then(() => {
+                  audio.pause();
+                  audio.currentTime = 0;
+                  audio.muted = false; // Unmute for future plays
+                  resolve();
+                })
+                .catch((e) => {
+                  console.log('Audio unlock play failed:', e);
+                  audio.muted = false; // Unmute even on failure
+                  resolve(); // Resolve anyway so we don't block forever
+                });
+            } else {
+              audio.pause();
+              audio.currentTime = 0;
+              audio.muted = false;
+              resolve();
+            }
+          });
+          unlockPromises.push(promise);
+        });
+      });
+      
+      // Wait for all audio elements to be unlocked
+      await Promise.all(unlockPromises);
+      audioUnlocked = true;
+      console.log('Audio unlock complete');
+    } catch (e) {
+      console.log('Audio unlock failed:', e);
+      audioUnlocked = true; // Mark as unlocked anyway to avoid blocking
+    }
+  })();
   
-  audioUnlocked = true;
+  return unlockPromise;
 }
 
 // Initialize audio system - must be called from user gesture
@@ -91,6 +146,7 @@ export function initAudioContext(): { state: string } {
   if (audioPool.size === 0) {
     audioInitialized = false;
     audioUnlocked = false;
+    unlockPromise = null;
   }
   
   // Create pool if needed
@@ -130,8 +186,13 @@ export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' 
   // Ensure audio pool is created (for edge cases like page refresh)
   if (audioPool.size === 0) {
     createAudioPool();
-    // Note: These won't be unlocked, but we try anyway
     console.log('Warning: Audio pool created lazily, may not play on iOS');
+  }
+  
+  // Wait for unlock to complete if in progress
+  if (unlockPromise && !audioUnlocked) {
+    console.log('Waiting for audio unlock...');
+    await unlockPromise;
   }
   
   const copies = audioPool.get(soundName);
