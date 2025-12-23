@@ -97,7 +97,7 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
 function MainScreen({ onStart }: { onStart: () => void }) {
   return (
     <motion.div
-      className="h-[100dvh] flex flex-col items-center justify-start pt-8 pb-8 px-4 gap-6 bg-gradient-to-b from-background to-card overflow-y-auto"
+      className="h-[100dvh] flex flex-col items-center justify-between pt-12 pb-8 px-4 bg-gradient-to-b from-background to-card overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -108,8 +108,8 @@ function MainScreen({ onStart }: { onStart: () => void }) {
         <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-accent rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      <div className="z-10 flex flex-col items-center max-w-md w-full text-center gap-6">
-        <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
+      <div className="z-10 flex flex-col items-center max-w-md w-full text-center">
+        <h1 className="text-6xl font-thin tracking-wide transform -rotate-2 leading-none">
           {titleWords.map((word) => (
             <span
               key={word.text}
@@ -123,40 +123,40 @@ function MainScreen({ onStart }: { onStart: () => void }) {
             </span>
           ))}
         </h1>
+      </div>
 
-        <div className="grid gap-3 w-full">
+      <div className="z-10 grid gap-3 w-full max-w-md px-4">
+        <Button 
+          size="lg" 
+          className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
+          onClick={onStart}
+          data-testid="button-play"
+        >
+          <Play className="mr-2 w-5 h-5 fill-current" />
+          Play Now
+        </Button>
+
+        <Link href="/categories">
           <Button 
             size="lg" 
-            className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
-            onClick={onStart}
-            data-testid="button-play"
+            className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400"
+            data-testid="button-categories"
           >
-            <Play className="mr-2 w-5 h-5 fill-current" />
-            Play Now
+            <List className="mr-2 w-5 h-5" />
+            Categories
           </Button>
+        </Link>
 
-          <Link href="/categories">
-            <Button 
-              size="lg" 
-              className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400"
-              data-testid="button-categories"
-            >
-              <List className="mr-2 w-5 h-5" />
-              Categories
-            </Button>
-          </Link>
-
-          <Link href="/settings">
-            <Button 
-              size="lg" 
-              className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-400"
-              data-testid="button-settings"
-            >
-              <SettingsIcon className="mr-2 w-5 h-5" />
-              Settings
-            </Button>
-          </Link>
-        </div>
+        <Link href="/settings">
+          <Button 
+            size="lg" 
+            className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-400"
+            data-testid="button-settings"
+          >
+            <SettingsIcon className="mr-2 w-5 h-5" />
+            Settings
+          </Button>
+        </Link>
       </div>
     </motion.div>
   );
