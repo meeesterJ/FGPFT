@@ -42,68 +42,16 @@ function createAudioPool() {
   console.log('Audio pool created with', audioPool.size, 'sounds,', COPIES_PER_SOUND, 'copies each');
 }
 
-// Unlock all audio elements for iOS - must be called from user gesture
-async function unlockAudioElements(): Promise<void> {
-  if (audioPool.size === 0) return;
-  
-  console.log('Unlocking audio elements for iOS...');
-  const unlockPromises: Promise<void>[] = [];
-  
-  audioPool.forEach((copies) => {
-    copies.forEach(audio => {
-      unlockPromises.push(new Promise<void>((resolve) => {
-        const originalVolume = audio.volume;
-        audio.volume = 0;
-        audio.muted = true;
-        const playPromise = audio.play();
-        if (playPromise) {
-          playPromise
-            .then(() => {
-              audio.pause();
-              audio.currentTime = 0;
-              audio.volume = originalVolume;
-              audio.muted = false;
-              resolve();
-            })
-            .catch(() => {
-              audio.volume = originalVolume;
-              audio.muted = false;
-              resolve();
-            });
-        } else {
-          audio.muted = false;
-          resolve();
-        }
-      }));
-    });
-  });
-  
-  await Promise.all(unlockPromises);
+// Mark audio as ready - actual unlock happens on first sound play
+function markAudioReady(): void {
   audioUnlocked = true;
-  console.log('Audio elements unlocked');
 }
 
-// Track if we've already started the unlock process this session
-let unlockInProgress = false;
-
 // Initialize audio system - must be called from user gesture
-export async function initAudioContext(): Promise<any> {
+export function initAudioContext(): { state: string } {
   // Already fully initialized - return immediately
   if (audioInitialized && audioUnlocked) {
     return { state: 'running' };
-  }
-  
-  // Already unlocking - wait but don't start another unlock
-  if (unlockInProgress) {
-    // Return a promise that resolves when unlock completes
-    return new Promise((resolve) => {
-      const checkUnlock = setInterval(() => {
-        if (audioUnlocked) {
-          clearInterval(checkUnlock);
-          resolve({ state: 'running' });
-        }
-      }, 50);
-    });
   }
   
   // If pool is empty, we need to reinitialize (handles hot reload case)
@@ -115,15 +63,10 @@ export async function initAudioContext(): Promise<any> {
   // Create pool if needed
   createAudioPool();
   
-  // Start unlock process (only once per session)
-  if (!audioUnlocked) {
-    unlockInProgress = true;
-    await unlockAudioElements();
-    unlockInProgress = false;
-  }
+  // Mark as ready - sounds will play on user gesture
+  markAudioReady();
   
   audioInitialized = true;
-  console.log('Audio initialized, unlocked:', audioUnlocked);
   return { state: 'running' };
 }
 

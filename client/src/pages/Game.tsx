@@ -733,7 +733,7 @@ export default function Game() {
     pendingGestureRef.current = null; // Clear any pending tilt gesture
     mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
     setTiltFeedback("correct");
-    await initAudioContext(); // Initialize audio on user gesture for iOS
+    initAudioContext(); // Initialize audio on user gesture for iOS
     feedbackCorrect(); // Haptic + sound feedback
     store.nextWord(true);
     setTimeout(() => {
@@ -748,7 +748,7 @@ export default function Game() {
     pendingGestureRef.current = null; // Clear any pending tilt gesture
     mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
     setTiltFeedback("pass");
-    await initAudioContext(); // Initialize audio on user gesture for iOS
+    initAudioContext(); // Initialize audio on user gesture for iOS
     feedbackPass(); // Haptic + sound feedback
     store.nextWord(false);
     setTimeout(() => {
@@ -763,7 +763,7 @@ export default function Game() {
 
   const requestTiltPermission = async () => {
     // Initialize audio context on user gesture for iOS compatibility
-    await initAudioContext();
+    initAudioContext();
     
     if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
       try {
@@ -808,7 +808,7 @@ export default function Game() {
 
   // Function called when user is ready (tilt or button press)
   const onReady = async () => {
-    await initAudioContext(); // Initialize audio on user gesture for iOS
+    initAudioContext(); // Initialize audio on user gesture for iOS
     setIsWaitingForReady(false);
     // Don't start round here - it will be started after countdown completes
     startCountdown();
@@ -891,8 +891,8 @@ export default function Game() {
           </Button>
           <Button 
             variant="ghost"
-            onClick={async () => {
-              await initAudioContext(); // Initialize audio on user gesture
+            onClick={() => {
+              initAudioContext(); // Initialize audio on user gesture
               setWaitingForPermission(false);
               setNeedsIOSPermission(false);
               showReadyScreen();

@@ -69,8 +69,8 @@ export default function Home() {
       hasPlayedAnimation = true;
     }
     
-    // Initialize audio in background (non-blocking) - will complete before sounds are needed
-    initAudioContext().catch(() => {});
+    // Initialize audio (non-blocking) - prepares audio pool for sounds
+    initAudioContext();
     
     // Try fullscreen (non-blocking, fire and forget)
     try {
