@@ -63,14 +63,14 @@ export default function Home() {
 
   const shouldAnimate = !hasPlayedAnimation && !prefersReducedMotion && !isDesktop;
 
-  const handleStart = async () => {
+  const handleStart = () => {
     // Mark animation as played
     if (shouldAnimate) {
       hasPlayedAnimation = true;
     }
     
-    // Initialize audio on user gesture
-    await initAudioContext().catch(() => {});
+    // Initialize audio in background (non-blocking) - will complete before sounds are needed
+    initAudioContext().catch(() => {});
     
     // Try fullscreen (non-blocking, fire and forget)
     try {
@@ -84,7 +84,7 @@ export default function Home() {
       // Fullscreen not available - continue anyway
     }
     
-    // Navigate to game
+    // Navigate to game immediately
     startGame();
     setLocation("/game");
   };

@@ -140,50 +140,39 @@ export default function Game() {
       const persistedPermission = useGameStore.getState().tiltPermissionGranted;
       console.log('iOS device, persisted permission:', persistedPermission);
       
-      if (persistedPermission) {
-        // Permission was previously granted - skip the probe entirely
-        console.log('Setting hasDeviceOrientation = true (from persisted)');
+      // Always probe to verify events are actually arriving (iOS may revoke between sessions)
+      const testHandler = (e: DeviceOrientationEvent) => {
+        console.log('Probe received orientation event!');
+        // We received an orientation event - permission is active!
+        if (permissionProbeTimeoutRef.current) {
+          clearTimeout(permissionProbeTimeoutRef.current);
+          permissionProbeTimeoutRef.current = null;
+        }
+        window.removeEventListener("deviceorientation", testHandler);
+        permissionProbeHandlerRef.current = null;
         setHasDeviceOrientation(true);
         setNeedsIOSPermission(false);
+        store.setTiltPermissionGranted(true);
         
         // Trigger ready screen if in landscape
         const isLandscape = window.innerWidth > window.innerHeight;
         if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
           showReadyScreen();
         }
-      } else {
-        // Need to probe for permission - start the 500ms test
-        const testHandler = (e: DeviceOrientationEvent) => {
-          // We received an orientation event - permission was granted!
-          if (permissionProbeTimeoutRef.current) {
-            clearTimeout(permissionProbeTimeoutRef.current);
-            permissionProbeTimeoutRef.current = null;
-          }
-          window.removeEventListener("deviceorientation", testHandler);
-          permissionProbeHandlerRef.current = null;
-          setHasDeviceOrientation(true);
-          setNeedsIOSPermission(false);
-          store.setTiltPermissionGranted(true);
-          
-          // Trigger ready screen if in landscape
-          const isLandscape = window.innerWidth > window.innerHeight;
-          if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
-            showReadyScreen();
-          }
-        };
-        permissionProbeHandlerRef.current = testHandler;
-        window.addEventListener("deviceorientation", testHandler);
-        
-        // If no event received within 500ms, permission not granted
-        permissionProbeTimeoutRef.current = setTimeout(() => {
-          window.removeEventListener("deviceorientation", testHandler);
-          permissionProbeHandlerRef.current = null;
-          permissionProbeTimeoutRef.current = null;
-          setNeedsIOSPermission(true);
-          setHasDeviceOrientation(false);
-          setWaitingForPermission(true);
-        }, 500);
-      }
+      };
+      permissionProbeHandlerRef.current = testHandler;
+      window.addEventListener("deviceorientation", testHandler);
+      
+      // If no event received within 500ms, need permission (even if previously granted)
+      permissionProbeTimeoutRef.current = setTimeout(() => {
+        console.log('Probe timeout - no orientation events received');
+        window.removeEventListener("deviceorientation", testHandler);
+        permissionProbeHandlerRef.current = null;
+        permissionProbeTimeoutRef.current = null;
+        setNeedsIOSPermission(true);
+        setHasDeviceOrientation(false);
+        setWaitingForPermission(true);
+      }, 500);
     } else if (typeof DeviceOrientationEvent !== "undefined") {
       // Non-iOS - orientation events are available
       setHasDeviceOrientation(true);
