@@ -84,97 +84,95 @@ export default function Summary() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div className="h-[100dvh] bg-background flex items-center justify-center p-4 relative overflow-hidden">
       {store.isGameFinished && <Confetti width={width} height={height} recycle={false} numberOfPieces={500} />}
       
-      <div className="max-w-md w-full space-y-8 z-10 text-center">
+      <div className="w-full h-full max-h-full z-10 flex flex-row gap-4">
         
-        <div className="space-y-4 animate-bounce-in">
-          {store.isGameFinished ? (
-            <h1 className="text-7xl font-thin tracking-wide transform -rotate-2 leading-none">
-              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>G</span>
-              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>a</span>
-              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>m</span>
-              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>e</span>
-              <span className="text-yellow-400 ml-4" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>O</span>
-              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>v</span>
-              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>e</span>
-              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>r</span>
-              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>!</span>
-            </h1>
-          ) : (
-            <div className="flex flex-col items-center">
-              <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none mb-2">
-                <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
-                <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
-                <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
-                <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
-                <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
-                <span className="text-yellow-400 ml-3 text-6xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
-              </h1>
-              <span className="text-xl text-muted-foreground uppercase tracking-widest">Complete</span>
-            </div>
-          )}
-          <div className="text-[14rem] font-thin text-yellow-400 leading-none animate-bounce-in" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
-             {store.currentScore}
-          </div>
-          <p className="text-xl font-medium text-foreground">Points this round</p>
-        </div>
-
-        <div className="bg-card rounded-2xl border border-border p-6 shadow-xl max-h-[40vh] overflow-y-auto">
-          <h3 className="text-lg font-bold mb-4 text-left sticky top-0 bg-card z-10 pb-2 border-b border-border">Word History</h3>
-          <div className="space-y-3">
-            {store.roundResults.map((res, i) => (
-              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/50">
-                <span className="font-medium text-lg">{res.word}</span>
-                {res.correct ? (
-                  <CheckCircle2 className="text-success w-6 h-6" />
-                ) : (
-                  <ListX className="text-destructive w-6 h-6" />
-                )}
-              </div>
-            ))}
-            {store.roundResults.length === 0 && (
-               <p className="text-muted-foreground italic">No guesses made this round.</p>
-            )}
-          </div>
-        </div>
-
-        {store.isGameFinished && (
-           <div className="bg-cyan-600 p-5 rounded-2xl border-2 border-cyan-400 shadow-xl">
-             <div className="flex items-center justify-center space-x-3">
-                <Trophy className="w-10 h-10 text-yellow-300 drop-shadow-lg" />
-                <h3 className="text-3xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-                  Total Score: <span className="text-yellow-300 font-thin text-4xl">{store.totalScore}</span>
-                </h3>
-             </div>
-           </div>
-        )}
-
-        <div className="flex flex-col gap-4 pt-4">
-          <Button 
-            size="lg" 
-            className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
-            onClick={handleNext}
-          >
+        {/* Left side - Score display */}
+        <div className="flex-1 flex flex-col items-center justify-center text-center">
+          <div className="space-y-2 animate-bounce-in">
             {store.isGameFinished ? (
-              <>
-                <RotateCcw className="mr-2 w-6 h-6" /> Play Again
-              </>
-            ) : isLastRound ? (
-              <>
-                And the Winner Is... <Trophy className="ml-2 w-6 h-6" />
-              </>
+              <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none">
+                <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
+              </h1>
             ) : (
-              <>
-                Next Round <ArrowRight className="ml-2 w-6 h-6" />
-              </>
+              <div className="flex flex-col items-center">
+                <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
+                  <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
+                  <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
+                  <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
+                  <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
+                  <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                  <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
+                </h1>
+                <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
+              </div>
             )}
-          </Button>
+            <div className="text-[8rem] font-thin text-yellow-400 leading-none" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+               {store.currentScore}
+            </div>
+            <p className="text-lg font-medium text-foreground">Points this round</p>
+          </div>
 
-          <Button variant="outline" size="lg" onClick={handleHome} className="hover:scale-105 transition-transform">
-            <Home className="mr-2 w-5 h-5" /> Back to Home
-          </Button>
+          {store.isGameFinished && (
+             <div className="bg-cyan-600 p-3 rounded-xl border-2 border-cyan-400 shadow-xl mt-4">
+               <div className="flex items-center justify-center space-x-2">
+                  <Trophy className="w-8 h-8 text-yellow-300 drop-shadow-lg" />
+                  <h3 className="text-2xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                    Total: <span className="text-yellow-300 font-thin text-3xl" style={{ fontFamily: 'var(--font-display)' }}>{store.totalScore}</span>
+                  </h3>
+               </div>
+             </div>
+          )}
+        </div>
+
+        {/* Right side - Word history and buttons */}
+        <div className="flex-1 flex flex-col gap-3 max-h-full">
+          <div className="bg-card rounded-xl border border-border p-3 shadow-xl flex-1 overflow-y-auto min-h-0">
+            <h3 className="text-sm font-bold mb-2 text-left sticky top-0 bg-card z-10 pb-1 border-b border-border">Word History</h3>
+            <div className="space-y-1">
+              {store.roundResults.map((res, i) => (
+                <div key={i} className="flex items-center justify-between p-1.5 rounded-lg bg-background/50">
+                  <span className="font-medium text-sm">{res.word}</span>
+                  {res.correct ? (
+                    <CheckCircle2 className="text-success w-5 h-5" />
+                  ) : (
+                    <ListX className="text-destructive w-5 h-5" />
+                  )}
+                </div>
+              ))}
+              {store.roundResults.length === 0 && (
+                 <p className="text-muted-foreground italic text-sm">No guesses made this round.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Button 
+              size="lg" 
+              className="w-full h-12 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
+              onClick={handleNext}
+            >
+              {store.isGameFinished ? (
+                <>
+                  <RotateCcw className="mr-2 w-5 h-5" /> Play Again
+                </>
+              ) : isLastRound ? (
+                <>
+                  And the Winner Is... <Trophy className="ml-2 w-5 h-5" />
+                </>
+              ) : (
+                <>
+                  Next Round <ArrowRight className="ml-2 w-5 h-5" />
+                </>
+              )}
+            </Button>
+
+            <Button variant="outline" size="default" onClick={handleHome} className="hover:scale-105 transition-transform">
+              <Home className="mr-2 w-4 h-4" /> Back to Home
+            </Button>
+          </div>
         </div>
       </div>
     </div>
