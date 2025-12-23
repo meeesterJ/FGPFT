@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
-import { useMemo } from "react";
-import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
 import { initAudioContextAsync } from "@/lib/audio";
@@ -48,6 +48,7 @@ let hasPlayedAnimation = false;
 export default function Home() {
   const [, setLocation] = useLocation();
   const startGame = useGameStore(state => state.startGame);
+  const [showButtons, setShowButtons] = useState(false);
 
   const prefersReducedMotion = useMemo(() => {
     if (typeof window === 'undefined') return false;
@@ -63,16 +64,22 @@ export default function Home() {
 
   const shouldAnimate = !hasPlayedAnimation && !prefersReducedMotion && !isDesktop;
 
-  const handleStart = async () => {
+  // Handle splash screen tap - unlock audio silently and reveal buttons
+  const handleSplashTap = async () => {
     // Mark animation as played
     if (shouldAnimate) {
       hasPlayedAnimation = true;
     }
     
-    // Initialize audio and WAIT for unlock to complete
-    // This must complete during the tap gesture for iOS
+    // Initialize audio silently during this tap gesture
     await initAudioContextAsync();
     
+    // Reveal the buttons
+    setShowButtons(true);
+  };
+
+  const handleStart = () => {
+    // Audio is already unlocked from splash tap
     // Try fullscreen (non-blocking, fire and forget)
     try {
       const elem = document.documentElement;
@@ -85,13 +92,17 @@ export default function Home() {
       // Fullscreen not available - continue anyway
     }
     
-    // Navigate to game after audio is ready
+    // Navigate to game
     startGame();
     setLocation("/game");
   };
 
   return (
-    <div className="h-[100dvh] flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-card overflow-hidden relative">
+    <div 
+      className="h-[100dvh] flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-card overflow-hidden relative"
+      onClick={!showButtons ? handleSplashTap : undefined}
+      data-testid="home-container"
+    >
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
          <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full blur-3xl animate-pulse"></div>
          <div className="absolute bottom-10 right-10 w-40 h-40 bg-secondary rounded-full blur-3xl animate-pulse delay-700"></div>
@@ -121,39 +132,61 @@ export default function Home() {
           </h1>
         </motion.div>
 
-        <div className="grid gap-3 w-full">
-          <Button 
-            size="lg" 
-            className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
-            onClick={handleStart}
-            data-testid="button-play"
-          >
-            <Play className="mr-2 w-5 h-5 fill-current" />
-            Play Now
-          </Button>
-
-          <Link href="/categories">
-            <Button 
-              size="lg" 
-              className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400"
-              data-testid="button-categories"
+        <AnimatePresence mode="wait">
+          {!showButtons ? (
+            <motion.p
+              key="tap-prompt"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-xl text-muted-foreground font-light animate-pulse"
+              data-testid="text-tap-prompt"
             >
-              <List className="mr-2 w-5 h-5" />
-              Categories
-            </Button>
-          </Link>
-
-          <Link href="/settings">
-            <Button 
-              size="lg" 
-              className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-400"
-              data-testid="button-settings"
+              Tap anywhere to start
+            </motion.p>
+          ) : (
+            <motion.div
+              key="buttons"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="grid gap-3 w-full"
             >
-              <SettingsIcon className="mr-2 w-5 h-5" />
-              Settings
-            </Button>
-          </Link>
-        </div>
+              <Button 
+                size="lg" 
+                className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
+                onClick={handleStart}
+                data-testid="button-play"
+              >
+                <Play className="mr-2 w-5 h-5 fill-current" />
+                Play Now
+              </Button>
+
+              <Link href="/categories">
+                <Button 
+                  size="lg" 
+                  className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400"
+                  data-testid="button-categories"
+                >
+                  <List className="mr-2 w-5 h-5" />
+                  Categories
+                </Button>
+              </Link>
+
+              <Link href="/settings">
+                <Button 
+                  size="lg" 
+                  className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-400"
+                  data-testid="button-settings"
+                >
+                  <SettingsIcon className="mr-2 w-5 h-5" />
+                  Settings
+                </Button>
+              </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

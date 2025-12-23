@@ -29,7 +29,6 @@ const AUDIO_FILES: Record<string, string> = {
 };
 
 // Pre-create multiple audio elements for each sound
-// Elements are created MUTED to ensure silent unlock
 function createAudioPool() {
   if (audioPool.size > 0) return;
   
@@ -39,7 +38,6 @@ function createAudioPool() {
       const audio = new Audio(path);
       audio.preload = 'auto';
       audio.volume = 1.0;
-      audio.muted = true; // Start muted for silent unlock
       copies.push(audio);
     }
     audioPool.set(name, copies);
@@ -48,11 +46,11 @@ function createAudioPool() {
   console.log('Audio pool created with', audioPool.size, 'sounds,', COPIES_PER_SOUND, 'copies each');
 }
 
-// Silently unlock iOS audio by playing/pausing muted audio elements
-// Elements were created muted, so playing them is silent
+// Minimal silent WAV as base64 data URI (44 bytes header + 2 bytes of silence)
+const SILENT_WAV_DATA_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+
+// Silently unlock iOS audio using Web Audio API AND HTML Audio
 // Must be called from a user gesture (tap/click)
-// IMPORTANT: All play() calls must happen SYNCHRONOUSLY during the gesture
-// Returns a promise that resolves when all audio is unlocked
 function unlockAudioSilently(): Promise<void> {
   // Already unlocked
   if (audioUnlocked) return Promise.resolve();
@@ -60,18 +58,24 @@ function unlockAudioSilently(): Promise<void> {
   // Already unlocking - return existing promise
   if (unlockPromise) return unlockPromise;
   
-  // Step 1: Create Web Audio context SYNCHRONOUSLY during gesture
+  console.log('Starting silent audio unlock...');
+  
+  const promises: Promise<void>[] = [];
+  
+  // Step 1: Unlock Web Audio API
   const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
   if (AudioContextClass) {
     if (!webAudioContext) {
       webAudioContext = new AudioContextClass();
     }
     
-    // Resume MUST be called synchronously during gesture
+    // Resume context if suspended (MUST be called synchronously during gesture)
     if (webAudioContext.state === 'suspended') {
-      webAudioContext.resume().catch((e) => {
-        console.log('Web Audio resume failed:', e);
-      });
+      promises.push(
+        webAudioContext.resume()
+          .then(() => console.log('Web Audio context resumed'))
+          .catch((e) => console.log('Web Audio resume failed:', e))
+      );
     }
     
     // Create and play a tiny silent buffer SYNCHRONOUSLY
@@ -81,61 +85,37 @@ function unlockAudioSilently(): Promise<void> {
       source.buffer = buffer;
       source.connect(webAudioContext.destination);
       source.start(0);
+      console.log('Silent Web Audio buffer played');
     } catch (e) {
-      console.log('Web Audio buffer play failed:', e);
+      console.log('Silent buffer play failed:', e);
     }
   }
   
-  // Step 2: Call play() on ALL audio elements SYNCHRONOUSLY during gesture
-  // This is critical - iOS requires the play() call to happen during the gesture
-  const playPromises: Promise<void>[] = [];
-  let successCount = 0;
-  let failCount = 0;
+  // Step 2: Unlock HTML Audio by playing a silent WAV data URI
+  // This is a truly silent audio file, not our game sounds
+  const silentAudio = new Audio(SILENT_WAV_DATA_URI);
+  silentAudio.volume = 1; // Full volume is fine - it's silent
   
-  audioPool.forEach((copies) => {
-    copies.forEach(audio => {
-      // Elements are already muted from createAudioPool()
-      // Call play() SYNCHRONOUSLY during the gesture
-      const playPromise = audio.play();
-      
-      if (playPromise && typeof playPromise.then === 'function') {
-        const promise = playPromise
-          .then(() => {
-            audio.pause();
-            audio.currentTime = 0;
-            audio.muted = false; // Unmute for future plays
-            successCount++;
-          })
-          .catch((e) => {
-            console.log('Audio unlock play failed:', e);
-            audio.muted = false; // Unmute even on failure
-            failCount++;
-          });
-        playPromises.push(promise);
-      } else {
-        audio.pause();
-        audio.currentTime = 0;
-        audio.muted = false;
-        successCount++;
-      }
+  const htmlAudioPromise = silentAudio.play()
+    .then(() => {
+      silentAudio.pause();
+      console.log('Silent HTML Audio played - HTML Audio unlocked');
+    })
+    .catch((e) => {
+      console.log('Silent HTML Audio play failed:', e);
     });
-  });
+  promises.push(htmlAudioPromise);
   
-  // Step 3: Wait for all play promises to settle, then mark as unlocked
-  unlockPromise = Promise.all(playPromises).then(() => {
-    console.log(`Audio unlock complete: ${successCount} success, ${failCount} failed`);
-    // Only mark as unlocked if at least some succeeded
-    if (successCount > 0) {
+  // Wait for all unlocks to complete
+  unlockPromise = Promise.all(promises)
+    .then(() => {
       audioUnlocked = true;
-    } else {
-      console.log('Audio unlock failed - no elements unlocked');
-      // Still mark as unlocked to avoid blocking, sounds just won't work
-      audioUnlocked = true;
-    }
-  }).catch((e) => {
-    console.log('Audio unlock failed:', e);
-    audioUnlocked = true; // Mark as unlocked anyway to avoid blocking
-  });
+      console.log('Audio unlock complete');
+    })
+    .catch((e) => {
+      console.log('Audio unlock failed:', e);
+      audioUnlocked = true; // Mark as unlocked anyway to avoid blocking
+    });
   
   return unlockPromise;
 }
