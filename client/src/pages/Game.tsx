@@ -220,8 +220,11 @@ export default function Game() {
     if (!isWaitingForReady || !hasDeviceOrientation) return;
 
     let readyBaseline: number | null = null;
-    const samples: number[] = [];
+    let samples: number[] = [];
+    let lastOrientationType: string = '';
     const readyThreshold = 30; // Degrees of tilt to trigger ready (higher than gameplay for deliberate action)
+    const centerTolerance = 10; // Must be within this many degrees of baseline to be "settled"
+    let phoneSettled = false; // Phone must settle at center before tilt detection enabled
     let tiltEnabled = false; // Delay before allowing tilt detection
     let enableTimerId: ReturnType<typeof setTimeout> | null = null;
 
@@ -231,29 +234,75 @@ export default function Game() {
       
       const gamma = event.gamma || 0;
       
-      // Determine orientation type
-      let orientationType: string = 'portrait-primary';
+      // Use window dimensions for landscape check (works on all browsers including iOS Safari)
+      const isLandscape = window.innerWidth > window.innerHeight;
+      if (!isLandscape) {
+        // Reset everything if we're not in landscape
+        samples = [];
+        readyBaseline = null;
+        phoneSettled = false;
+        tiltEnabled = false;
+        if (enableTimerId) {
+          clearTimeout(enableTimerId);
+          enableTimerId = null;
+        }
+        lastOrientationType = '';
+        return;
+      }
+      
+      // Determine orientation type for gamma mapping
+      let orientationType: string = 'landscape-primary';
       if (screen.orientation && screen.orientation.type) {
         orientationType = screen.orientation.type;
+      } else if (typeof (window as any).orientation === 'number') {
+        // iOS fallback using window.orientation
+        const angle = (window as any).orientation;
+        if (angle === 90) {
+          orientationType = 'landscape-primary';
+        } else if (angle === -90 || angle === 270) {
+          orientationType = 'landscape-secondary';
+        }
+      }
+      
+      // If orientation type changed, reset baseline
+      if (orientationType !== lastOrientationType) {
+        samples = [];
+        readyBaseline = null;
+        phoneSettled = false;
+        tiltEnabled = false;
+        if (enableTimerId) {
+          clearTimeout(enableTimerId);
+          enableTimerId = null;
+        }
+        lastOrientationType = orientationType;
       }
       
       // Use gamma for landscape mode
       let effectiveTilt = 0;
-      if (orientationType === 'landscape-primary' || orientationType === 'landscape-secondary') {
-        if (orientationType === 'landscape-secondary') {
-          effectiveTilt = gamma;
-        } else {
-          effectiveTilt = -gamma;
-        }
+      if (orientationType === 'landscape-secondary') {
+        effectiveTilt = gamma;
+      } else {
+        effectiveTilt = -gamma;
       }
       
-      // Collect baseline samples first
+      // Collect baseline samples first (only in landscape)
       if (samples.length < 5) {
         samples.push(effectiveTilt);
         if (samples.length === 5) {
           readyBaseline = samples.reduce((a, b) => a + b, 0) / samples.length;
-          // Baseline established - NOW start the delay timer
-          // This ensures phone has been held still for 500ms after baseline
+        }
+        return;
+      }
+      
+      if (readyBaseline === null) return;
+      
+      const tiltDelta = effectiveTilt - readyBaseline;
+      
+      // Phase 1: Wait for phone to settle at center (user stopped rotating)
+      if (!phoneSettled) {
+        if (Math.abs(tiltDelta) <= centerTolerance) {
+          phoneSettled = true;
+          // Phone is settled - NOW start the delay timer
           enableTimerId = setTimeout(() => {
             tiltEnabled = true;
           }, 500);
@@ -261,14 +310,10 @@ export default function Game() {
         return;
       }
       
-      // Don't process tilt gestures until delay has passed (after baseline + 500ms)
+      // Phase 2: Wait for 500ms delay after settling
       if (!tiltEnabled) return;
       
-      if (readyBaseline === null) return;
-      
-      const tiltDelta = effectiveTilt - readyBaseline;
-      
-      // Either direction tilt = ready to start (user requested either way to acknowledge)
+      // Phase 3: Detect deliberate tilt gesture
       if (Math.abs(tiltDelta) >= readyThreshold) {
         readyTriggeredRef.current = true;
         onReady();

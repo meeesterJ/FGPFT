@@ -42,8 +42,41 @@ function createAudioPool() {
   console.log('Audio pool created with', audioPool.size, 'sounds,', COPIES_PER_SOUND, 'copies each');
 }
 
-// Mark audio as ready - actual unlock happens on first sound play
-function markAudioReady(): void {
+// Silently unlock all audio elements for iOS - fires in parallel, doesn't wait
+// Must be called from a user gesture (tap/click)
+function unlockAudioSilently(): void {
+  if (audioUnlocked) return;
+  
+  // Fire play/pause on all audio elements simultaneously with volume 0
+  // This primes iOS to allow future audio playback
+  audioPool.forEach((copies) => {
+    copies.forEach(audio => {
+      const originalVolume = audio.volume;
+      audio.volume = 0;
+      audio.muted = true;
+      const playPromise = audio.play();
+      if (playPromise && typeof playPromise.then === 'function') {
+        playPromise
+          .then(() => {
+            audio.pause();
+            audio.currentTime = 0;
+            audio.volume = originalVolume;
+            audio.muted = false;
+          })
+          .catch(() => {
+            audio.volume = originalVolume;
+            audio.muted = false;
+          });
+      } else {
+        // Older browsers where play() returns void - restore immediately
+        audio.pause();
+        audio.currentTime = 0;
+        audio.volume = originalVolume;
+        audio.muted = false;
+      }
+    });
+  });
+  
   audioUnlocked = true;
 }
 
@@ -63,8 +96,8 @@ export function initAudioContext(): { state: string } {
   // Create pool if needed
   createAudioPool();
   
-  // Mark as ready - sounds will play on user gesture
-  markAudioReady();
+  // Silently unlock audio for iOS (fires in parallel, doesn't block)
+  unlockAudioSilently();
   
   audioInitialized = true;
   return { state: 'running' };
