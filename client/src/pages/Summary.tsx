@@ -89,11 +89,33 @@ export default function Summary() {
       
       <div className="max-w-md w-full space-y-8 z-10 text-center">
         
-        <div className="space-y-2 animate-bounce-in">
-          <h2 className="text-3xl font-bold text-muted-foreground uppercase tracking-widest">
-            {store.isGameFinished ? "Game Over!" : `Round ${store.currentRound} Complete`}
-          </h2>
-          <div className="text-9xl font-black text-primary drop-shadow-2xl filter animate-bounce-in">
+        <div className="space-y-4 animate-bounce-in">
+          {store.isGameFinished ? (
+            <h1 className="text-7xl font-thin tracking-wide transform -rotate-2 leading-none">
+              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>G</span>
+              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>a</span>
+              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>m</span>
+              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>e</span>
+              <span className="text-yellow-400 ml-4" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>O</span>
+              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>v</span>
+              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>e</span>
+              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>r</span>
+              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>!</span>
+            </h1>
+          ) : (
+            <div className="flex flex-col items-center">
+              <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none mb-2">
+                <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
+                <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
+                <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
+                <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
+                <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                <span className="text-yellow-400 ml-3 text-6xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
+              </h1>
+              <span className="text-xl text-muted-foreground uppercase tracking-widest">Complete</span>
+            </div>
+          )}
+          <div className="text-9xl font-thin text-primary drop-shadow-2xl filter animate-bounce-in" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
              {store.currentScore}
           </div>
           <p className="text-xl font-medium text-foreground">Points this round</p>
@@ -119,10 +141,12 @@ export default function Summary() {
         </div>
 
         {store.isGameFinished && (
-           <div className="bg-secondary/20 p-4 rounded-xl border border-secondary">
-             <div className="flex items-center justify-center space-x-3 mb-2">
-                <Trophy className="w-8 h-8 text-accent" />
-                <h3 className="text-2xl font-black text-secondary-foreground">TOTAL SCORE: {store.totalScore}</h3>
+           <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-5 rounded-2xl border-2 border-purple-400 shadow-xl">
+             <div className="flex items-center justify-center space-x-3">
+                <Trophy className="w-10 h-10 text-yellow-300 drop-shadow-lg" />
+                <h3 className="text-3xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                  Total Score: <span className="text-yellow-300 font-thin text-4xl">{store.totalScore}</span>
+                </h3>
              </div>
            </div>
         )}
@@ -130,7 +154,13 @@ export default function Summary() {
         <div className="flex flex-col gap-4 pt-4">
           <Button 
             size="lg" 
-            className="w-full h-16 text-xl font-bold shadow-lg" 
+            className={`w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform ${
+              store.isGameFinished 
+                ? 'bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400' 
+                : isLastRound 
+                  ? 'bg-yellow-500 hover:bg-yellow-400 text-black border-2 border-yellow-300'
+                  : 'bg-green-600 hover:bg-green-500 text-white border-2 border-green-400'
+            }`}
             onClick={handleNext}
           >
             {store.isGameFinished ? (
@@ -148,7 +178,7 @@ export default function Summary() {
             )}
           </Button>
 
-          <Button variant="outline" size="lg" onClick={handleHome}>
+          <Button variant="outline" size="lg" onClick={handleHome} className="hover:scale-105 transition-transform">
             <Home className="mr-2 w-5 h-5" /> Back to Home
           </Button>
         </div>
