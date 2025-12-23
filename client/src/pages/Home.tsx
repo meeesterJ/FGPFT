@@ -35,15 +35,15 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
 function MainScreen({ onStart }: { onStart: () => void }) {
   return (
     <motion.div
-      className="h-[100dvh] flex flex-col items-center justify-between pt-12 pb-8 px-4 bg-gradient-to-b from-background to-card overflow-hidden"
+      className="h-[100dvh] flex flex-col items-center justify-center gap-8 py-8 px-4 bg-gradient-to-b from-background to-card overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
       <BackgroundGlow />
 
-      <div className="z-10 flex flex-col items-center max-w-md w-full text-center">
-        <TitleStack size="lg" />
+      <div className="z-10 flex flex-col items-center max-w-md w-full text-center flex-1 justify-center">
+        <TitleStack size="xl" />
       </div>
 
       <div className="z-10 grid gap-3 w-full max-w-md px-4">

@@ -49,11 +49,16 @@ export function BackgroundGlow() {
 
 interface TitleStackProps {
   animated?: boolean;
-  size?: "lg" | "xl";
+  size?: "md" | "lg" | "xl";
 }
 
 export function TitleStack({ animated = false, size = "xl" }: TitleStackProps) {
-  const sizeClass = size === "xl" ? "text-7xl" : "text-6xl";
+  const sizeClasses = {
+    md: "text-6xl leading-tight",
+    lg: "text-7xl leading-snug",
+    xl: "text-8xl leading-normal",
+  };
+  const sizeClass = sizeClasses[size];
   
   if (animated) {
     return (
@@ -62,7 +67,7 @@ export function TitleStack({ animated = false, size = "xl" }: TitleStackProps) {
         initial="hidden"
         animate="visible"
       >
-        <h1 className={`${sizeClass} font-thin tracking-wide transform -rotate-2 leading-none`}>
+        <h1 className={`${sizeClass} font-thin tracking-wide transform -rotate-2`}>
           {titleWords.map((word) => (
             <motion.span
               key={word.text}
@@ -82,7 +87,7 @@ export function TitleStack({ animated = false, size = "xl" }: TitleStackProps) {
   }
   
   return (
-    <h1 className={`${sizeClass} font-thin tracking-wide transform -rotate-2 leading-none`}>
+    <h1 className={`${sizeClass} font-thin tracking-wide transform -rotate-2`}>
       {titleWords.map((word) => (
         <span
           key={word.text}
