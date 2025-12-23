@@ -87,6 +87,15 @@ export default function Summary() {
     <div className="h-[100dvh] bg-background flex items-center justify-center p-4 relative overflow-hidden">
       {store.isGameFinished && <Confetti width={width} height={height} recycle={false} numberOfPieces={500} />}
       
+      {/* Home icon in top left corner */}
+      <button 
+        onClick={handleHome}
+        className="absolute top-4 left-4 z-20 p-2 rounded-full bg-card/80 hover:bg-card border border-border shadow-lg hover:scale-110 transition-transform"
+        data-testid="button-home"
+      >
+        <Home className="w-6 h-6 text-foreground" />
+      </button>
+      
       <div className="w-full h-full max-h-full z-10 flex flex-row gap-4">
         
         {/* Left side - Score display */}
@@ -148,31 +157,25 @@ export default function Summary() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <Button 
-              size="lg" 
-              className="w-full h-12 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
-              onClick={handleNext}
-            >
-              {store.isGameFinished ? (
-                <>
-                  <RotateCcw className="mr-2 w-5 h-5" /> Play Again
-                </>
-              ) : isLastRound ? (
-                <>
-                  And the Winner Is... <Trophy className="ml-2 w-5 h-5" />
-                </>
-              ) : (
-                <>
-                  Next Round <ArrowRight className="ml-2 w-5 h-5" />
-                </>
-              )}
-            </Button>
-
-            <Button variant="outline" size="default" onClick={handleHome} className="hover:scale-105 transition-transform">
-              <Home className="mr-2 w-4 h-4" /> Back to Home
-            </Button>
-          </div>
+          <Button 
+            size="lg" 
+            className="w-full h-12 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
+            onClick={handleNext}
+          >
+            {store.isGameFinished ? (
+              <>
+                <RotateCcw className="mr-2 w-5 h-5" /> Play Again
+              </>
+            ) : isLastRound ? (
+              <>
+                And the Winner Is... <Trophy className="ml-2 w-5 h-5" />
+              </>
+            ) : (
+              <>
+                Next Round <ArrowRight className="ml-2 w-5 h-5" />
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>
