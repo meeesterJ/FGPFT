@@ -46,9 +46,6 @@ function createAudioPool() {
   console.log('Audio pool created with', audioPool.size, 'sounds,', COPIES_PER_SOUND, 'copies each');
 }
 
-// Minimal silent WAV as base64 data URI (44 bytes header + 2 bytes of silence)
-const SILENT_WAV_DATA_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-
 // Silently unlock iOS audio using Web Audio API AND HTML Audio
 // Must be called from a user gesture (tap/click)
 function unlockAudioSilently(): Promise<void> {
@@ -78,44 +75,63 @@ function unlockAudioSilently(): Promise<void> {
       );
     }
     
-    // Create and play a tiny silent buffer SYNCHRONOUSLY
+    // Create and play a silent buffer with actual samples (not zero-length)
+    // This ensures the audio system is fully initialized
     try {
-      const buffer = webAudioContext.createBuffer(1, 1, 22050);
+      // Create a buffer with 4410 samples (100ms at 44100Hz) of silence
+      const buffer = webAudioContext.createBuffer(1, 4410, 44100);
       const source = webAudioContext.createBufferSource();
       source.buffer = buffer;
       source.connect(webAudioContext.destination);
       source.start(0);
-      console.log('Silent Web Audio buffer played');
+      console.log('Silent Web Audio buffer played (100ms)');
     } catch (e) {
       console.log('Silent buffer play failed:', e);
     }
   }
   
-  // Step 2: Unlock HTML Audio by playing a silent WAV data URI
-  // This is a truly silent audio file, not our game sounds
-  const silentAudio = new Audio(SILENT_WAV_DATA_URI);
-  silentAudio.volume = 1; // Full volume is fine - it's silent
+  // Step 2: Unlock HTML Audio by playing ONE of our pooled audio elements (muted)
+  // This is more reliable than a data URI which may have encoding issues
+  const firstSound = audioPool.get('tick');
+  if (firstSound && firstSound[0]) {
+    const audio = firstSound[0];
+    audio.muted = true; // Mute it so no sound plays
+    
+    const htmlAudioPromise = audio.play()
+      .then(() => {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.muted = false; // Unmute for future use
+        console.log('HTML Audio unlocked via muted tick');
+      })
+      .catch((e) => {
+        audio.muted = false;
+        console.log('HTML Audio unlock failed:', e);
+      });
+    promises.push(htmlAudioPromise);
+  }
   
-  const htmlAudioPromise = silentAudio.play()
-    .then(() => {
-      silentAudio.pause();
-      console.log('Silent HTML Audio played - HTML Audio unlocked');
-    })
-    .catch((e) => {
-      console.log('Silent HTML Audio play failed:', e);
-    });
-  promises.push(htmlAudioPromise);
+  // Add a timeout so we don't hang forever (500ms max wait)
+  const timeoutPromise = new Promise<void>((resolve) => {
+    setTimeout(() => {
+      console.log('Audio unlock timeout reached');
+      resolve();
+    }, 500);
+  });
   
-  // Wait for all unlocks to complete
-  unlockPromise = Promise.all(promises)
-    .then(() => {
-      audioUnlocked = true;
-      console.log('Audio unlock complete');
-    })
-    .catch((e) => {
-      console.log('Audio unlock failed:', e);
-      audioUnlocked = true; // Mark as unlocked anyway to avoid blocking
-    });
+  // Race between actual unlocks and timeout
+  unlockPromise = Promise.race([
+    Promise.all(promises).then(() => {
+      console.log('Audio unlock promises resolved');
+    }),
+    timeoutPromise
+  ]).then(() => {
+    audioUnlocked = true;
+    console.log('Audio unlock complete');
+  }).catch((e) => {
+    console.log('Audio unlock failed:', e);
+    audioUnlocked = true; // Mark as unlocked anyway to avoid blocking
+  });
   
   return unlockPromise;
 }
