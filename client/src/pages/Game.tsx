@@ -222,6 +222,12 @@ export default function Game() {
     let readyBaseline: number | null = null;
     const samples: number[] = [];
     const readyThreshold = 20; // Degrees of tilt to trigger ready
+    let tiltEnabled = false; // Delay before allowing tilt detection
+    
+    // Wait 500ms before enabling tilt detection to ensure user sees the ready screen
+    const enableTimer = setTimeout(() => {
+      tiltEnabled = true;
+    }, 500);
 
     const handleReadyTilt = (event: DeviceOrientationEvent) => {
       // Guard against multiple triggers
@@ -245,7 +251,7 @@ export default function Game() {
         }
       }
       
-      // Collect baseline samples
+      // Collect baseline samples (even before tiltEnabled, so baseline is ready)
       if (samples.length < 5) {
         samples.push(effectiveTilt);
         if (samples.length === 5) {
@@ -253,6 +259,9 @@ export default function Game() {
         }
         return;
       }
+      
+      // Don't process tilt gestures until delay has passed
+      if (!tiltEnabled) return;
       
       if (readyBaseline === null) return;
       
@@ -266,7 +275,10 @@ export default function Game() {
     };
 
     window.addEventListener("deviceorientation", handleReadyTilt);
-    return () => window.removeEventListener("deviceorientation", handleReadyTilt);
+    return () => {
+      clearTimeout(enableTimer);
+      window.removeEventListener("deviceorientation", handleReadyTilt);
+    };
   }, [isWaitingForReady, hasDeviceOrientation]);
 
   // Initialize round when component mounts - prepare deck but don't start playing
