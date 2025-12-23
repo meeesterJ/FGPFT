@@ -72,8 +72,8 @@ export default function Game() {
     playSound('tock');
   };
   
-  const soundBuzz = () => {
-    console.log('soundBuzz called, soundEnabled:', store.soundEnabled);
+  const soundRoundEnd = () => {
+    console.log('soundRoundEnd called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('roundEnd');
   };
@@ -593,7 +593,7 @@ export default function Game() {
     } else if (timeLeft === 4 || timeLeft === 2) {
       soundTock();
     } else if (timeLeft === 0) {
-      soundBuzz();
+      soundRoundEnd();
     }
   }, [timeLeft, store.isPlaying, isPaused, isCountingDown]);
 
