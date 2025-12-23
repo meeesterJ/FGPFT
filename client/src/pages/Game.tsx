@@ -877,7 +877,7 @@ export default function Game() {
       {countdown !== null && (
         <div className="absolute inset-0 z-50 bg-background flex items-center justify-center">
           <div className="text-center animate-bounce-in" key={countdown}>
-            <h1 className="text-[14rem] font-thin text-primary leading-none drop-shadow-2xl">
+            <h1 className="text-[14rem] font-thin text-yellow-400 leading-none" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
               {countdown}
             </h1>
           </div>
