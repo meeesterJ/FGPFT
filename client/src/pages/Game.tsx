@@ -128,6 +128,7 @@ export default function Game() {
 
   // Run iOS permission probe ONLY after Zustand hydration completes
   useEffect(() => {
+    console.log('Permission effect, isHydrated:', isHydrated);
     // Don't run until hydrated
     if (!isHydrated) return;
     
@@ -136,8 +137,12 @@ export default function Game() {
         typeof (DeviceOrientationEvent as any).requestPermission === "function") {
       
       // Check persisted permission from hydrated store
-      if (useGameStore.getState().tiltPermissionGranted) {
+      const persistedPermission = useGameStore.getState().tiltPermissionGranted;
+      console.log('iOS device, persisted permission:', persistedPermission);
+      
+      if (persistedPermission) {
         // Permission was previously granted - skip the probe entirely
+        console.log('Setting hasDeviceOrientation = true (from persisted)');
         setHasDeviceOrientation(true);
         setNeedsIOSPermission(false);
         
@@ -218,15 +223,31 @@ export default function Game() {
     }
   }, [hasDeviceOrientation, waitingForPermission]);
 
-  // Listen for tilt forward during ready screen to start countdown
+  // Ref to prevent multiple onReady calls
+  const readyTriggeredRef = useRef(false);
+  
+  // Reset ready trigger when waiting for ready screen
   useEffect(() => {
+    if (isWaitingForReady) {
+      readyTriggeredRef.current = false;
+    }
+  }, [isWaitingForReady]);
+  
+  // Listen for tilt during ready screen to start countdown
+  useEffect(() => {
+    console.log('Ready screen tilt effect:', { isWaitingForReady, hasDeviceOrientation });
     if (!isWaitingForReady || !hasDeviceOrientation) return;
+    
+    console.log('Setting up ready screen tilt listener');
 
     let readyBaseline: number | null = null;
     const samples: number[] = [];
     const readyThreshold = 20; // Degrees of tilt to trigger ready
 
     const handleReadyTilt = (event: DeviceOrientationEvent) => {
+      // Guard against multiple triggers
+      if (readyTriggeredRef.current) return;
+      
       const gamma = event.gamma || 0;
       
       // Determine orientation type
@@ -260,6 +281,7 @@ export default function Game() {
       
       // Either direction tilt = ready to start (user requested either way to acknowledge)
       if (Math.abs(tiltDelta) >= readyThreshold) {
+        readyTriggeredRef.current = true;
         onReady();
       }
     };
