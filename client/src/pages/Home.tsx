@@ -94,39 +94,28 @@ export default function Home() {
     return false;
   };
 
-  const handleStart = async () => {
-    const audioPromise = initAudioContext();
+  const handleStart = () => {
+    // Initialize audio context (non-blocking)
+    initAudioContext().catch(() => {});
     
+    // Request tilt permission in background (non-blocking) 
     if (!tiltPermissionGranted) {
-      await requestTiltPermission();
+      requestTiltPermission().catch(() => {});
     }
     
-    const ctx = await audioPromise;
-    console.log('Home: Audio context after init:', ctx?.state);
-    
-    if (ctx && ctx.state === 'suspended') {
-      console.log('Home: Context still suspended, trying extra resume...');
-      try {
-        await ctx.resume();
-        console.log('Home: After extra resume, state:', ctx.state);
-      } catch (e) {
-        console.log('Home: Extra resume failed:', e);
-      }
-    }
-    
+    // Try fullscreen (non-blocking, fire and forget)
     try {
       const elem = document.documentElement;
       if (elem.requestFullscreen) {
-        await elem.requestFullscreen();
+        elem.requestFullscreen().catch(() => {});
       } else if ((elem as any).webkitRequestFullscreen) {
-        await (elem as any).webkitRequestFullscreen();
-      } else if ((elem as any).msRequestFullscreen) {
-        await (elem as any).msRequestFullscreen();
+        (elem as any).webkitRequestFullscreen();
       }
     } catch (err) {
-      console.log("Fullscreen not available:", err);
+      // Fullscreen not available - continue anyway
     }
     
+    // Navigate immediately - don't wait for any async operations
     startGame();
     setLocation("/game");
   };
