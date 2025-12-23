@@ -18,8 +18,9 @@ export default function Game() {
   const [isProcessing, setIsProcessing] = useState(false); // Debounce button clicks
   const [needsIOSPermission, setNeedsIOSPermission] = useState(false);
   const [countdown, setCountdown] = useState<number | "Go!" | null>(null); // Countdown state
-  const [isCountingDown, setIsCountingDown] = useState(true); // Start counting down immediately
+  const [isCountingDown, setIsCountingDown] = useState(false); // Start as false, only count after onReady
   const [waitingForPermission, setWaitingForPermission] = useState(false); // Wait for iOS permission before countdown
+  const [isWaitingForReady, setIsWaitingForReady] = useState(false); // Wait for user to be ready before countdown
   const [calibrationTrigger, setCalibrationTrigger] = useState(0); // Increment to force recalibration
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tiltThresholdRef = useRef(25); // Degrees of tilt delta to trigger (lowered for better sensitivity)
@@ -114,10 +115,60 @@ export default function Game() {
       const isLandscape = window.innerWidth > window.innerHeight;
       if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
         setWaitingForPermission(false);
-        startCountdown();
+        showReadyScreen();
       }
     }
   }, [hasDeviceOrientation, waitingForPermission]);
+
+  // Listen for tilt forward during ready screen to start countdown
+  useEffect(() => {
+    if (!isWaitingForReady || !hasDeviceOrientation) return;
+
+    let readyBaseline: number | null = null;
+    const samples: number[] = [];
+    const readyThreshold = 20; // Degrees of tilt to trigger ready
+
+    const handleReadyTilt = (event: DeviceOrientationEvent) => {
+      const gamma = event.gamma || 0;
+      
+      // Determine orientation type
+      let orientationType: string = 'portrait-primary';
+      if (screen.orientation && screen.orientation.type) {
+        orientationType = screen.orientation.type;
+      }
+      
+      // Use gamma for landscape mode
+      let effectiveTilt = 0;
+      if (orientationType === 'landscape-primary' || orientationType === 'landscape-secondary') {
+        if (orientationType === 'landscape-secondary') {
+          effectiveTilt = gamma;
+        } else {
+          effectiveTilt = -gamma;
+        }
+      }
+      
+      // Collect baseline samples
+      if (samples.length < 5) {
+        samples.push(effectiveTilt);
+        if (samples.length === 5) {
+          readyBaseline = samples.reduce((a, b) => a + b, 0) / samples.length;
+        }
+        return;
+      }
+      
+      if (readyBaseline === null) return;
+      
+      const tiltDelta = effectiveTilt - readyBaseline;
+      
+      // Forward tilt = positive delta = ready to start
+      if (tiltDelta > readyThreshold) {
+        onReady();
+      }
+    };
+
+    window.addEventListener("deviceorientation", handleReadyTilt);
+    return () => window.removeEventListener("deviceorientation", handleReadyTilt);
+  }, [isWaitingForReady, hasDeviceOrientation]);
 
   // Initialize round and device orientation
   useEffect(() => {
@@ -170,15 +221,15 @@ export default function Game() {
           // iOS 13+ - check if permission was already granted by testing for events
           // If hasDeviceOrientation is already true, permission was granted on home screen
           if (hasDeviceOrientation) {
-            // Permission already granted - start countdown immediately
-            startCountdown();
+            // Permission already granted - show ready screen
+            showReadyScreen();
           } else {
             // Need to wait for permission
             setWaitingForPermission(true);
           }
         } else {
-          // Non-iOS or older iOS - start countdown immediately
-          startCountdown();
+          // Non-iOS or older iOS - show ready screen
+          showReadyScreen();
         }
       } else if (!isLandscape) {
         // Entering portrait
@@ -653,26 +704,38 @@ export default function Game() {
           setNeedsIOSPermission(false);
           setWaitingForPermission(false);
           
-          // Now start the countdown
+          // Now show ready screen
           if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
-            startCountdown();
+            showReadyScreen();
           }
         } else {
-          // Permission denied - still start countdown, just without tilt
+          // Permission denied - still show ready screen, just without tilt
           setWaitingForPermission(false);
           setNeedsIOSPermission(false);
           if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
-            startCountdown();
+            showReadyScreen();
           }
         }
       } catch (e) {
-        // Permission denied - still start countdown
+        // Permission denied - still show ready screen
         setWaitingForPermission(false);
         if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
-          startCountdown();
+          showReadyScreen();
         }
       }
     }
+  };
+
+  // Function to show the ready screen before countdown
+  const showReadyScreen = () => {
+    setIsWaitingForReady(true);
+  };
+
+  // Function called when user is ready (tilt or button press)
+  const onReady = async () => {
+    await initAudioContext(); // Initialize audio on user gesture for iOS
+    setIsWaitingForReady(false);
+    startCountdown();
   };
   
   // Function to start the countdown (extracted to be callable from permission handler)
@@ -746,12 +809,42 @@ export default function Game() {
               await initAudioContext(); // Initialize audio on user gesture
               setWaitingForPermission(false);
               setNeedsIOSPermission(false);
-              startCountdown();
+              showReadyScreen();
             }}
             className="text-muted-foreground"
           >
             Skip (use buttons instead)
           </Button>
+        </div>
+      )}
+
+      {/* Ready Screen Overlay - shown before countdown */}
+      {isWaitingForReady && !showRotatePrompt && !waitingForPermission && (
+        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center space-y-8 p-8">
+          <h1 className="text-6xl font-black text-primary tracking-tight">
+            Round {store.currentRound}
+          </h1>
+          <div className="flex flex-col items-center space-y-4">
+            <div className="relative">
+              <Smartphone className="w-20 h-20 text-accent animate-bounce" style={{ animationDuration: '1.5s' }} />
+              <div className="absolute -right-2 -bottom-2 w-8 h-8 rounded-full bg-success flex items-center justify-center">
+                <Check className="w-5 h-5 text-white" />
+              </div>
+            </div>
+            <p className="text-xl text-muted-foreground text-center max-w-md">
+              Tilt forward when ready
+            </p>
+          </div>
+          {(store.showButtons || !hasDeviceOrientation) && (
+            <Button 
+              onClick={onReady}
+              size="lg"
+              className="text-2xl px-12 py-8 rounded-xl bg-accent text-accent-foreground font-bold"
+            >
+              <Play className="w-8 h-8 mr-3" />
+              Play
+            </Button>
+          )}
         </div>
       )}
 

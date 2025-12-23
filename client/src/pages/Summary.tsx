@@ -43,10 +43,18 @@ export default function Summary() {
     }
   }, [store.isGameFinished]);
 
+  const isLastRound = store.currentRound >= store.totalRounds && !store.isGameFinished;
+
   const handleNext = () => {
     if (store.isGameFinished) {
-      store.resetGame();
-      setLocation("/");
+      // Start a new game immediately with current settings
+      store.startGame();
+      setLocation("/game");
+    } else if (isLastRound) {
+      // This is the final round - calling startRound will set isGameFinished=true
+      // Stay on this page to show the final scoreboard
+      store.startRound();
+      // Page will re-render with isGameFinished=true, showing confetti and total score
     } else {
       store.startRound();
       setLocation("/game");
@@ -111,6 +119,10 @@ export default function Summary() {
             {store.isGameFinished ? (
               <>
                 <RotateCcw className="mr-2 w-6 h-6" /> Play Again
+              </>
+            ) : isLastRound ? (
+              <>
+                And the Winner Is... <Trophy className="ml-2 w-6 h-6" />
               </>
             ) : (
               <>
