@@ -249,6 +249,12 @@ export default function Game() {
       if (readyTriggeredRef.current) return;
       
       const gamma = event.gamma || 0;
+      const beta = event.beta || 0;
+      
+      // Log first 5 events and then every 20th for debugging
+      if (samples.length < 5 || samples.length % 20 === 0) {
+        console.log('Ready tilt event:', { gamma, beta, orientationType: screen.orientation?.type, samples: samples.length, baseline: readyBaseline });
+      }
       
       // Determine orientation type
       let orientationType: string = 'portrait-primary';
@@ -837,8 +843,12 @@ export default function Game() {
   
   // Function to start the countdown (extracted to be callable from permission handler)
   const startCountdown = () => {
+    console.log('startCountdown called');
     // Guard: don't overlap countdowns (use ref to avoid stale closures)
-    if (isCountdownActiveRef.current) return;
+    if (isCountdownActiveRef.current) {
+      console.log('startCountdown blocked - already active');
+      return;
+    }
     isCountdownActiveRef.current = true;
     
     // Note: Audio context is initialized from button clicks (requestTiltPermission, handleCorrect, handlePass)
