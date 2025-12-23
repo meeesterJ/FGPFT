@@ -864,7 +864,7 @@ export default function Game() {
             <Button 
               onClick={onReady}
               size="lg"
-              className="text-2xl px-12 py-8 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
+              className="text-2xl px-12 py-8 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
             >
               <Play className="w-8 h-8 mr-3" />
               Play

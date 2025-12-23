@@ -141,7 +141,7 @@ export default function Summary() {
         </div>
 
         {store.isGameFinished && (
-           <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-5 rounded-2xl border-2 border-purple-400 shadow-xl">
+           <div className="bg-cyan-600 p-5 rounded-2xl border-2 border-cyan-400 shadow-xl">
              <div className="flex items-center justify-center space-x-3">
                 <Trophy className="w-10 h-10 text-yellow-300 drop-shadow-lg" />
                 <h3 className="text-3xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
@@ -154,7 +154,7 @@ export default function Summary() {
         <div className="flex flex-col gap-4 pt-4">
           <Button 
             size="lg" 
-            className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400"
+            className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
             onClick={handleNext}
           >
             {store.isGameFinished ? (
