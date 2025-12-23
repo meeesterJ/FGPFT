@@ -55,7 +55,14 @@ export default function Home() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }, []);
 
-  const shouldAnimate = !hasPlayedAnimation && !prefersReducedMotion;
+  // Detect desktop using pointer precision (fine = mouse, coarse = touch)
+  const isDesktop = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    // Use pointer media query - "fine" means mouse/trackpad, "coarse" means touch
+    return window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(hover: none)').matches;
+  }, []);
+
+  const shouldAnimate = !hasPlayedAnimation && !prefersReducedMotion && !isDesktop;
   
   useEffect(() => {
     if (shouldAnimate) {

@@ -52,7 +52,9 @@ interface GameState {
   getEffectiveBuiltInLists: () => WordList[];
   
   startGame: () => void;
-  startRound: () => void;
+  prepareRound: () => void;  // Set up deck/word, isPlaying stays false
+  beginRound: () => void;    // Set isPlaying=true after countdown
+  startRound: () => void;    // Legacy: prepareRound + beginRound
   nextWord: (correct: boolean) => void;
   endRound: () => void;
   resetGame: () => void;
@@ -185,10 +187,11 @@ export const useGameStore = create<GameState>()(
           isRoundOver: true, // Start in "ready for round 1" state
           isPlaying: false
         });
-        get().startRound(); // Actually, let's just prep round 1
+        get().prepareRound(); // Prep round 1 deck/word, but don't start playing
       },
 
-      startRound: () => {
+      // Set up deck and word WITHOUT starting play - called from startGame and Summary
+      prepareRound: () => {
         const { currentRound, totalRounds, selectedListIds, customLists, getEffectiveBuiltInLists } = get();
         
         if (currentRound >= totalRounds) {
@@ -211,9 +214,20 @@ export const useGameStore = create<GameState>()(
           roundResults: [],
           deck: words,
           currentWord: words[0] || "No Words!",
-          isPlaying: true,
+          isPlaying: false,  // NOT playing yet - wait for countdown to complete
           isRoundOver: false
         });
+      },
+
+      // Start playing - called after countdown completes
+      beginRound: () => {
+        set({ isPlaying: true });
+      },
+
+      // Legacy: calls prepareRound + beginRound (for Summary.tsx compatibility)
+      startRound: () => {
+        get().prepareRound();
+        get().beginRound();
       },
 
       nextWord: (correct) => {

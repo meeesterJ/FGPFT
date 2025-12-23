@@ -170,14 +170,13 @@ export default function Game() {
     return () => window.removeEventListener("deviceorientation", handleReadyTilt);
   }, [isWaitingForReady, hasDeviceOrientation]);
 
-  // Initialize round and device orientation
+  // Initialize round when component mounts - prepare deck but don't start playing
   useEffect(() => {
-    // Only start round once per mount, using ref to prevent React StrictMode double-call
-    if (!hasStartedRound.current && !store.isPlaying && !store.isRoundOver && !store.isGameFinished) {
+    // Prepare round deck/word if not already done, but don't start playing
+    if (!hasStartedRound.current && !store.currentWord) {
       hasStartedRound.current = true;
-      // Use setTimeout to avoid setState during render
       setTimeout(() => {
-        store.startRound();
+        store.prepareRound();
       }, 0);
     }
     
@@ -555,9 +554,9 @@ export default function Game() {
     };
   }, [hasDeviceOrientation, store.isPlaying, isPaused, isCountingDown, calibrationTrigger]);
 
-  // Timer logic - pause during countdown
+  // Timer logic - pause during countdown and ready screen
   useEffect(() => {
-    if (store.isPlaying && !isPaused && !isCountingDown && timeLeft > 0) {
+    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && timeLeft > 0) {
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
@@ -568,7 +567,7 @@ export default function Game() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [store.isPlaying, isPaused, isCountingDown, timeLeft]);
+  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, timeLeft]);
 
   // Handle timer expiration
   useEffect(() => {
@@ -580,8 +579,8 @@ export default function Game() {
   // Countdown sounds - tick/tock pattern for last 5 seconds and roundEnd at 0
   const lastSoundTimeRef = useRef<number | null>(null);
   useEffect(() => {
-    // Only play sounds when playing and not counting down
-    if (!store.isPlaying || isPaused || isCountingDown) return;
+    // Only play sounds when playing and not counting down or waiting for ready
+    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady) return;
     
     // Avoid playing the same sound twice for the same timeLeft value
     if (lastSoundTimeRef.current === timeLeft) return;
@@ -599,7 +598,7 @@ export default function Game() {
         soundRoundEnd();
       }
     }
-  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, store.currentRound, store.totalRounds]);
+  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, store.currentRound, store.totalRounds]);
 
   // Handle Game Over / Round End Redirect
   useEffect(() => {
@@ -739,6 +738,7 @@ export default function Game() {
   const onReady = async () => {
     await initAudioContext(); // Initialize audio on user gesture for iOS
     setIsWaitingForReady(false);
+    // Don't start round here - it will be started after countdown completes
     startCountdown();
   };
   
@@ -780,6 +780,10 @@ export default function Game() {
       lastTiltTimeRef.current = 0;
       // Trigger recalibration by bumping the trigger state
       setCalibrationTrigger(prev => prev + 1);
+      // Countdown complete - now start playing
+      if (!store.isPlaying) {
+        store.beginRound();
+      }
     }, 4000));
   };
 
@@ -831,19 +835,23 @@ export default function Game() {
       {isWaitingForReady && !showRotatePrompt && !waitingForPermission && (
         <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center space-y-8 p-8">
           <h1 className="text-6xl font-black text-primary tracking-tight">
-            Round {store.currentRound}
+            Round {store.currentRound || 1}
           </h1>
-          <div className="flex flex-col items-center space-y-4">
-            <div className="relative">
-              <Smartphone className="w-20 h-20 text-accent animate-bounce" style={{ animationDuration: '1.5s' }} />
-              <div className="absolute -right-2 -bottom-2 w-8 h-8 rounded-full bg-success flex items-center justify-center">
-                <Check className="w-5 h-5 text-white" />
+          {/* Only show tilt instructions on devices with orientation support */}
+          {hasDeviceOrientation && (
+            <div className="flex flex-col items-center space-y-4">
+              <div className="relative">
+                <Smartphone className="w-20 h-20 text-accent animate-bounce" style={{ animationDuration: '1.5s' }} />
+                <div className="absolute -right-2 -bottom-2 w-8 h-8 rounded-full bg-success flex items-center justify-center">
+                  <Check className="w-5 h-5 text-white" />
+                </div>
               </div>
+              <p className="text-xl text-muted-foreground text-center max-w-md">
+                Tilt forward when ready
+              </p>
             </div>
-            <p className="text-xl text-muted-foreground text-center max-w-md">
-              Tilt forward when ready
-            </p>
-          </div>
+          )}
+          {/* Show Play button on desktop or when buttons are enabled */}
           {(store.showButtons || !hasDeviceOrientation) && (
             <Button 
               onClick={onReady}
@@ -931,7 +939,7 @@ export default function Game() {
       <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-6 z-10">
         <div 
           ref={wordContainerRef}
-          className="bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 md:p-8 shadow-2xl relative overflow-hidden group w-full h-full max-w-2xl max-h-96"
+          className="bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 md:p-8 shadow-2xl relative group w-full h-full max-w-3xl"
         >
            {/* Card Background Decoration */}
            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>

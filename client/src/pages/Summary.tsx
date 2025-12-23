@@ -67,12 +67,12 @@ export default function Summary() {
     } else if (isLastRound) {
       // Stop the drumroll when clicking "And the Winner Is..."
       stopSound('drumroll');
-      // This is the final round - calling startRound will set isGameFinished=true
+      // This is the final round - calling prepareRound will set isGameFinished=true
       // Stay on this page to show the final scoreboard
-      store.startRound();
+      store.prepareRound();
       // Page will re-render with isGameFinished=true, showing confetti and total score
     } else {
-      store.startRound();
+      store.prepareRound(); // Prep next round, Game.tsx will call beginRound after countdown
       setLocation("/game");
     }
   };
