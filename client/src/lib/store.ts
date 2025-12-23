@@ -64,10 +64,10 @@ export const useGameStore = create<GameState>()(
       // Defaults
       roundDuration: 30,
       totalRounds: 3,
-      showButtons: true,
+      showButtons: false,
       hapticEnabled: true,
       soundEnabled: true,
-      selectedListIds: ['movies'],
+      selectedListIds: ['animals-easy'],
       customLists: [],
       builtInListOverrides: {},
       deletedBuiltInLists: [],
