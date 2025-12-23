@@ -29,7 +29,8 @@ interface GameState {
   totalScore: number;
   roundWords: string[]; // Words processed in current round
   currentWord: string | null;
-  deck: string[]; // Remaining words to guess
+  deck: string[]; // Remaining words to guess in current game
+  usedWords: string[]; // Words already shown in this game (for no-repeat until exhausted)
   isPlaying: boolean;
   isRoundOver: boolean;
   isGameFinished: boolean;
@@ -84,6 +85,7 @@ export const useGameStore = create<GameState>()(
       roundWords: [],
       currentWord: null,
       deck: [],
+      usedWords: [],
       isPlaying: false,
       isRoundOver: false,
       isGameFinished: false,
@@ -172,53 +174,49 @@ export const useGameStore = create<GameState>()(
           ),
           ...customLists
         ];
-        const validSelectedIds = selectedListIds.filter(id => 
+        let activeListIds = selectedListIds.filter(id => 
           allAvailableLists.some(l => l.id === id)
         );
         
-        if (validSelectedIds.length === 0 && allAvailableLists.length > 0) {
+        if (activeListIds.length === 0 && allAvailableLists.length > 0) {
           // Default to first available list if no valid categories selected
-          // Prefer animals-easy if it exists, otherwise use first available
           const animalsEasy = allAvailableLists.find(l => l.id === 'animals-easy');
           const defaultList = animalsEasy || allAvailableLists[0];
-          set({ selectedListIds: [defaultList.id] });
+          activeListIds = [defaultList.id];
+          set({ selectedListIds: activeListIds });
         }
+        
+        // Build the master deck for this game session (shuffled once)
+        const activeLists = allAvailableLists.filter(l => activeListIds.includes(l.id));
+        const allWords = activeLists.flatMap(l => l.words).sort(() => Math.random() - 0.5);
         
         set({
           currentRound: 0,
           totalScore: 0,
+          deck: allWords,
+          usedWords: [],
           isGameFinished: false,
-          isRoundOver: true, // Start in "ready for round 1" state
+          isRoundOver: true,
           isPlaying: false
         });
-        get().prepareRound(); // Prep round 1 deck/word, but don't start playing
+        get().prepareRound();
       },
 
-      // Set up deck and word WITHOUT starting play - called from startGame and Summary
+      // Set up for next round WITHOUT rebuilding deck - uses existing game deck
       prepareRound: () => {
-        const { currentRound, totalRounds, selectedListIds, customLists, getEffectiveBuiltInLists } = get();
+        const { currentRound, totalRounds, deck } = get();
         
         if (currentRound >= totalRounds) {
           set({ isGameFinished: true, isPlaying: false });
           return;
         }
 
-        // Compile deck using effective built-in lists (with user modifications applied)
-        const effectiveBuiltInLists = getEffectiveBuiltInLists();
-        const allLists = [...effectiveBuiltInLists, ...customLists];
-        const activeLists = allLists.filter(l => selectedListIds.includes(l.id));
-        let words = activeLists.flatMap(l => l.words);
-        
-        // Shuffle words
-        words = words.sort(() => Math.random() - 0.5);
-
         set({
           currentRound: currentRound + 1,
           currentScore: 0,
           roundResults: [],
-          deck: words,
-          currentWord: words[0] || "No Words!",
-          isPlaying: false,  // NOT playing yet - wait for countdown to complete
+          currentWord: deck[0] || "No Words!",
+          isPlaying: false,
           isRoundOver: false
         });
       },
@@ -235,32 +233,31 @@ export const useGameStore = create<GameState>()(
       },
 
       nextWord: (correct) => {
-        const { deck, currentWord, roundResults, currentScore } = get();
+        const { deck, currentWord, roundResults, currentScore, usedWords } = get();
         if (!currentWord) return;
 
         const newResults = [...roundResults, { word: currentWord, correct }];
         const newScore = correct ? currentScore + 1 : currentScore;
+        const newUsedWords = [...usedWords, currentWord];
         const newDeck = deck.slice(1);
         
-        // If deck runs out, recycle? Or just end round?
-        // Let's recycle for endless play within timer
         let nextWordStr = newDeck[0];
         let finalDeck = newDeck;
+        let finalUsedWords = newUsedWords;
 
         if (newDeck.length === 0) {
-           // Refill if empty using effective built-in lists
-           const effectiveBuiltInLists = get().getEffectiveBuiltInLists();
-           const allLists = [...effectiveBuiltInLists, ...get().customLists];
-           const activeLists = allLists.filter(l => get().selectedListIds.includes(l.id));
-           let words = activeLists.flatMap(l => l.words).sort(() => Math.random() - 0.5);
-           nextWordStr = words[0];
-           finalDeck = words;
+           // All words exhausted - reshuffle used words back into deck
+           const reshuffled = [...newUsedWords].sort(() => Math.random() - 0.5);
+           nextWordStr = reshuffled[0];
+           finalDeck = reshuffled;
+           finalUsedWords = []; // Reset used words after reshuffle
         }
 
         set({
           currentScore: newScore,
           roundResults: newResults,
           deck: finalDeck,
+          usedWords: finalUsedWords,
           currentWord: nextWordStr
         });
       },
@@ -279,6 +276,8 @@ export const useGameStore = create<GameState>()(
           currentRound: 0,
           currentScore: 0,
           totalScore: 0,
+          deck: [],
+          usedWords: [],
           isPlaying: false,
           isRoundOver: false,
           isGameFinished: false
