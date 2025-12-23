@@ -5,45 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
 import { initAudioContextAsync } from "@/lib/audio";
 import { Play, Settings as SettingsIcon, List } from "lucide-react";
+import { BackgroundGlow, TitleStack, menuButtonStyles } from "@/components/ui/game-ui";
 
-const titleWords = [
-  { text: "Family", color: "text-pink-400" },
-  { text: "Guess", color: "text-cyan-400" },
-  { text: "Party", color: "text-yellow-400" },
-  { text: "Fun", color: "text-green-400" },
-  { text: "Time", color: "text-purple-400" },
-];
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      delayChildren: 0.15,
-      staggerChildren: 0.22,
-    },
-  },
-};
-
-const wordVariants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.3,
-    y: -60,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      type: "spring" as const,
-      stiffness: 600,
-      damping: 18,
-      mass: 1,
-    },
-  },
-};
-
-// Splash screen overlay with animated title
 function SplashScreen({ onTap }: { onTap: () => void }) {
   return (
     <motion.div
@@ -53,34 +16,10 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-40 h-40 bg-secondary rounded-full blur-3xl animate-pulse delay-700"></div>
-        <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-accent rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
+      <BackgroundGlow />
 
       <div className="z-10 flex flex-col items-center justify-center max-w-md w-full text-center gap-10">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <h1 className="text-7xl font-thin tracking-wide transform -rotate-2 leading-none">
-            {titleWords.map((word) => (
-              <motion.span
-                key={word.text}
-                className={`block ${word.color}`}
-                variants={wordVariants}
-                style={{
-                  display: 'block',
-                  textShadow: '0 4px 8px rgba(0,0,0,0.3)',
-                }}
-              >
-                {word.text}
-              </motion.span>
-            ))}
-          </h1>
-        </motion.div>
+        <TitleStack animated size="xl" />
 
         <p 
           className="text-xl text-muted-foreground font-light animate-pulse"
@@ -93,7 +32,6 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
   );
 }
 
-// Main screen with static title and buttons
 function MainScreen({ onStart }: { onStart: () => void }) {
   return (
     <motion.div
@@ -102,33 +40,16 @@ function MainScreen({ onStart }: { onStart: () => void }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-40 h-40 bg-secondary rounded-full blur-3xl animate-pulse delay-700"></div>
-        <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-accent rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
+      <BackgroundGlow />
 
       <div className="z-10 flex flex-col items-center max-w-md w-full text-center">
-        <h1 className="text-6xl font-thin tracking-wide transform -rotate-2 leading-none">
-          {titleWords.map((word) => (
-            <span
-              key={word.text}
-              className={`block ${word.color}`}
-              style={{
-                display: 'block',
-                textShadow: '0 4px 8px rgba(0,0,0,0.3)',
-              }}
-            >
-              {word.text}
-            </span>
-          ))}
-        </h1>
+        <TitleStack size="lg" />
       </div>
 
       <div className="z-10 grid gap-3 w-full max-w-md px-4">
         <Button 
           size="lg" 
-          className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
+          className={menuButtonStyles.pink}
           onClick={onStart}
           data-testid="button-play"
         >
@@ -139,7 +60,7 @@ function MainScreen({ onStart }: { onStart: () => void }) {
         <Link href="/categories">
           <Button 
             size="lg" 
-            className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400"
+            className={menuButtonStyles.cyan}
             data-testid="button-categories"
           >
             <List className="mr-2 w-5 h-5" />
@@ -150,7 +71,7 @@ function MainScreen({ onStart }: { onStart: () => void }) {
         <Link href="/settings">
           <Button 
             size="lg" 
-            className="w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-purple-600 hover:bg-purple-500 text-white border-2 border-purple-400"
+            className={menuButtonStyles.purple}
             data-testid="button-settings"
           >
             <SettingsIcon className="mr-2 w-5 h-5" />
@@ -168,14 +89,11 @@ export default function Home() {
   const [showSplash, setShowSplash] = useState(true);
 
   const handleSplashTap = async () => {
-    // Initialize audio silently during this tap gesture
     await initAudioContextAsync();
-    // Hide splash, show main screen
     setShowSplash(false);
   };
 
   const handleStart = () => {
-    // Try fullscreen (non-blocking, fire and forget)
     try {
       const elem = document.documentElement;
       if (elem.requestFullscreen) {
@@ -183,11 +101,8 @@ export default function Home() {
       } else if ((elem as any).webkitRequestFullscreen) {
         (elem as any).webkitRequestFullscreen();
       }
-    } catch (err) {
-      // Fullscreen not available - continue anyway
-    }
+    } catch (err) {}
     
-    // Navigate to game
     startGame();
     setLocation("/game");
   };

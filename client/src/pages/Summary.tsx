@@ -2,6 +2,7 @@ import { useLocation } from "wouter";
 import { useGameStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, ArrowRight, Home, Trophy, ListX, CheckCircle2 } from "lucide-react";
+import { menuButtonStyles } from "@/components/ui/game-ui";
 import Confetti from "react-confetti";
 import { useState, useEffect, useRef } from 'react';
 import { playSound, stopSound } from "@/lib/audio";
@@ -159,7 +160,7 @@ export default function Summary() {
 
           <Button 
             size="lg" 
-            className="w-full h-12 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400"
+            className={`${menuButtonStyles.pink} h-12`}
             onClick={handleNext}
           >
             {store.isGameFinished ? (
