@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useGameStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { Check, X, Pause, Play, Smartphone, RotateCcw } from "lucide-react";
+import { Check, X, Home, Play, Smartphone, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getAudioContext, initAudioContext, playSound } from "@/lib/audio";
 
@@ -896,15 +896,17 @@ export default function Game() {
         </div>
       )}
 
-      {/* Pause Button - Top Left Corner */}
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        onClick={togglePause} 
-        className="absolute top-2 left-2 rounded-full bg-card/30 backdrop-blur p-1.5 opacity-50 hover:opacity-100 z-30"
+      {/* Home Button - Top Left Corner */}
+      <button 
+        onClick={() => {
+          store.resetGame();
+          setLocation("/");
+        }}
+        className="absolute top-2 left-2 z-30 p-2 rounded-full bg-card/80 hover:bg-card border border-border shadow-lg hover:scale-110 transition-transform"
+        data-testid="button-home"
       >
-        {isPaused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
-      </Button>
+        <Home className="w-5 h-5 text-foreground" />
+      </button>
 
       {/* Left Bar - Timer & Score */}
       <div className="flex flex-col w-auto h-full px-4 py-6 gap-4 border-r border-border justify-center items-center z-20">
@@ -920,21 +922,6 @@ export default function Game() {
         </div>
       </div>
 
-      {/* Paused Overlay */}
-      {isPaused && (
-        <div className="absolute inset-0 z-50 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-6">
-          <h2 className="text-5xl font-black text-primary">PAUSED</h2>
-          <Button size="lg" className="text-xl px-8 py-6 rounded-xl" onClick={togglePause}>
-            Resume Game
-          </Button>
-          <Button variant="destructive" className="text-lg" onClick={() => {
-              store.endRound();
-              setLocation("/summary");
-          }}>
-            End Round Early
-          </Button>
-        </div>
-      )}
 
       {/* Tilt Feedback Animation */}
       {tiltFeedback && (
