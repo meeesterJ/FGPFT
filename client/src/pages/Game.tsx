@@ -160,8 +160,8 @@ export default function Game() {
       
       const tiltDelta = effectiveTilt - readyBaseline;
       
-      // Forward tilt = positive delta = ready to start
-      if (tiltDelta > readyThreshold) {
+      // Either direction tilt = ready to start (user requested either way to acknowledge)
+      if (Math.abs(tiltDelta) >= readyThreshold) {
         onReady();
       }
     };
@@ -204,7 +204,8 @@ export default function Game() {
     };
 
     // Check if device is in landscape and prompt to rotate if not
-    const checkOrientation = () => {
+    // permissionKnown parameter indicates if we've completed the iOS permission test
+    const checkOrientation = (permissionKnown: boolean = false) => {
       const isLandscape = window.innerWidth > window.innerHeight;
       
       // If in landscape and we haven't shown the initial countdown yet
@@ -214,21 +215,23 @@ export default function Game() {
         // Lock to current landscape orientation when we enter landscape
         lockToCurrentLandscape();
         
-        // Check if iOS needs permission - test by checking if we already have orientation events
-        if (typeof DeviceOrientationEvent !== "undefined" && 
-            typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-          // iOS 13+ - check if permission was already granted by testing for events
-          // If hasDeviceOrientation is already true, permission was granted on home screen
-          if (hasDeviceOrientation) {
-            // Permission already granted - show ready screen
-            showReadyScreen();
+        // Only show ready screen or permission prompt after iOS test completes
+        if (permissionKnown) {
+          // Check if iOS needs permission
+          if (typeof DeviceOrientationEvent !== "undefined" && 
+              typeof (DeviceOrientationEvent as any).requestPermission === "function") {
+            // iOS 13+ - check if permission was already granted
+            if (hasDeviceOrientation) {
+              // Permission already granted - show ready screen
+              showReadyScreen();
+            } else {
+              // Need to request permission
+              setWaitingForPermission(true);
+            }
           } else {
-            // Need to wait for permission
-            setWaitingForPermission(true);
+            // Non-iOS or older iOS - show ready screen
+            showReadyScreen();
           }
-        } else {
-          // Non-iOS or older iOS - show ready screen
-          showReadyScreen();
         }
       } else if (!isLandscape) {
         // Entering portrait
@@ -259,11 +262,12 @@ export default function Game() {
       }
     };
     
-    checkOrientation();
+    // Initial orientation check (just for rotate prompt, not permission)
+    checkOrientation(false);
     
-    // Listen for orientation changes
+    // Listen for orientation changes (permission is known after initial test)
     const handleOrientationChange = () => {
-      checkOrientation();
+      checkOrientation(true);
     };
     window.addEventListener("orientationchange", handleOrientationChange);
     window.addEventListener("resize", handleOrientationChange);
@@ -282,7 +286,8 @@ export default function Game() {
           window.removeEventListener("deviceorientation", testHandler);
           setHasDeviceOrientation(true);
           setNeedsIOSPermission(false);
-          // Don't clear waitingForPermission here - the useEffect watching hasDeviceOrientation will handle it
+          // Now check orientation with permission known
+          checkOrientation(true);
         };
         window.addEventListener("deviceorientation", testHandler);
         // If no event received within 500ms, permission not granted
@@ -290,11 +295,18 @@ export default function Game() {
           window.removeEventListener("deviceorientation", testHandler);
           setNeedsIOSPermission(true);
           setHasDeviceOrientation(false);
+          // Now check orientation with permission known (need to show permission button)
+          checkOrientation(true);
         }, 500);
       } else {
         // Non-iOS or older iOS - orientation events are available
         setHasDeviceOrientation(true);
+        // Check orientation immediately for non-iOS
+        checkOrientation(true);
       }
+    } else {
+      // No DeviceOrientationEvent - still show ready screen
+      checkOrientation(true);
     }
 
     return () => {

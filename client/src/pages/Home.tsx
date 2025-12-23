@@ -94,14 +94,18 @@ export default function Home() {
     return false;
   };
 
-  const handleStart = () => {
-    // Initialize audio context (non-blocking)
-    initAudioContext().catch(() => {});
+  const handleStart = async () => {
+    // Create a timeout promise that resolves after 500ms
+    const timeout = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     
-    // Request tilt permission in background (non-blocking) 
-    if (!tiltPermissionGranted) {
-      requestTiltPermission().catch(() => {});
-    }
+    // Initialize audio and request permission with timeout fallback
+    const initPromise = Promise.all([
+      initAudioContext().catch(() => {}),
+      !tiltPermissionGranted ? requestTiltPermission().catch(() => {}) : Promise.resolve()
+    ]);
+    
+    // Wait for init or timeout (whichever comes first)
+    await Promise.race([initPromise, timeout(500)]);
     
     // Try fullscreen (non-blocking, fire and forget)
     try {
@@ -115,7 +119,7 @@ export default function Home() {
       // Fullscreen not available - continue anyway
     }
     
-    // Navigate immediately - don't wait for any async operations
+    // Navigate after init is settled (or timeout)
     startGame();
     setLocation("/game");
   };
