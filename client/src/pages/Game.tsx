@@ -128,7 +128,6 @@ export default function Game() {
 
   // Run iOS permission probe ONLY after Zustand hydration completes
   useEffect(() => {
-    console.log('Permission effect, isHydrated:', isHydrated);
     // Don't run until hydrated
     if (!isHydrated) return;
     
@@ -136,13 +135,8 @@ export default function Game() {
     if (typeof DeviceOrientationEvent !== "undefined" &&
         typeof (DeviceOrientationEvent as any).requestPermission === "function") {
       
-      // Check persisted permission from hydrated store
-      const persistedPermission = useGameStore.getState().tiltPermissionGranted;
-      console.log('iOS device, persisted permission:', persistedPermission);
-      
       // Always probe to verify events are actually arriving (iOS may revoke between sessions)
       const testHandler = (e: DeviceOrientationEvent) => {
-        console.log('Probe received orientation event!');
         // We received an orientation event - permission is active!
         if (permissionProbeTimeoutRef.current) {
           clearTimeout(permissionProbeTimeoutRef.current);
@@ -165,7 +159,6 @@ export default function Game() {
       
       // If no event received within 500ms, need permission (even if previously granted)
       permissionProbeTimeoutRef.current = setTimeout(() => {
-        console.log('Probe timeout - no orientation events received');
         window.removeEventListener("deviceorientation", testHandler);
         permissionProbeHandlerRef.current = null;
         permissionProbeTimeoutRef.current = null;
@@ -224,10 +217,7 @@ export default function Game() {
   
   // Listen for tilt during ready screen to start countdown
   useEffect(() => {
-    console.log('Ready screen tilt effect:', { isWaitingForReady, hasDeviceOrientation });
     if (!isWaitingForReady || !hasDeviceOrientation) return;
-    
-    console.log('Setting up ready screen tilt listener');
 
     let readyBaseline: number | null = null;
     const samples: number[] = [];
@@ -238,12 +228,6 @@ export default function Game() {
       if (readyTriggeredRef.current) return;
       
       const gamma = event.gamma || 0;
-      const beta = event.beta || 0;
-      
-      // Log first 5 events and then every 20th for debugging
-      if (samples.length < 5 || samples.length % 20 === 0) {
-        console.log('Ready tilt event:', { gamma, beta, orientationType: screen.orientation?.type, samples: samples.length, baseline: readyBaseline });
-      }
       
       // Determine orientation type
       let orientationType: string = 'portrait-primary';
@@ -832,12 +816,8 @@ export default function Game() {
   
   // Function to start the countdown (extracted to be callable from permission handler)
   const startCountdown = () => {
-    console.log('startCountdown called');
     // Guard: don't overlap countdowns (use ref to avoid stale closures)
-    if (isCountdownActiveRef.current) {
-      console.log('startCountdown blocked - already active');
-      return;
-    }
+    if (isCountdownActiveRef.current) return;
     isCountdownActiveRef.current = true;
     
     // Note: Audio context is initialized from button clicks (requestTiltPermission, handleCorrect, handlePass)
@@ -892,9 +872,9 @@ export default function Game() {
         </div>
       )}
 
-      {/* iOS Permission Overlay - shown before countdown */}
+      {/* iOS Permission Overlay - shown before countdown, highest z-index for clickability */}
       {waitingForPermission && !showRotatePrompt && (
-        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center space-y-8 p-8">
+        <div className="absolute inset-0 z-[60] bg-background flex flex-col items-center justify-center space-y-8 p-8 pointer-events-auto">
           <Smartphone className="w-24 h-24 text-primary" />
           <h2 className="text-3xl font-black text-primary text-center">Enable Tilt Gestures</h2>
           <p className="text-muted-foreground text-center text-lg max-w-md">
@@ -903,7 +883,8 @@ export default function Game() {
           <Button 
             onClick={requestTiltPermission}
             size="lg"
-            className="text-xl px-8 py-6 rounded-xl bg-accent text-accent-foreground"
+            className="text-xl px-8 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 pointer-events-auto"
+            data-testid="button-enable-tilt"
           >
             <Smartphone className="w-6 h-6 mr-3" />
             Enable Tilt Gestures
@@ -916,7 +897,8 @@ export default function Game() {
               setNeedsIOSPermission(false);
               showReadyScreen();
             }}
-            className="text-muted-foreground"
+            className="text-muted-foreground pointer-events-auto"
+            data-testid="button-skip-tilt"
           >
             Skip (use buttons instead)
           </Button>
