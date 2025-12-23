@@ -154,13 +154,7 @@ export default function Summary() {
         <div className="flex flex-col gap-4 pt-4">
           <Button 
             size="lg" 
-            className={`w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform ${
-              store.isGameFinished 
-                ? 'bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400' 
-                : isLastRound 
-                  ? 'bg-yellow-500 hover:bg-yellow-400 text-black border-2 border-yellow-300'
-                  : 'bg-green-600 hover:bg-green-500 text-white border-2 border-green-400'
-            }`}
+            className="w-full h-16 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400"
             onClick={handleNext}
           >
             {store.isGameFinished ? (
