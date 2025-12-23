@@ -189,17 +189,21 @@ export default function Game() {
         if (screen.orientation && (screen.orientation as any).lock) {
           // Get current orientation type to lock to it specifically
           const currentType = screen.orientation.type;
-          if (currentType === 'landscape-primary' || currentType === 'landscape-secondary') {
-            // Lock to current landscape orientation to prevent flip
-            await (screen.orientation as any).lock(currentType);
-            setShowRotatePrompt(false);
-          } else {
-            // Not in landscape yet, lock to any landscape
-            await (screen.orientation as any).lock('landscape');
-          }
+          const orientationToLock = (currentType === 'landscape-primary' || currentType === 'landscape-secondary') 
+            ? currentType 
+            : 'landscape';
+          
+          // Use Promise.race with timeout to prevent hanging
+          const lockPromise = (screen.orientation as any).lock(orientationToLock);
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Orientation lock timeout')), 1000)
+          );
+          
+          await Promise.race([lockPromise, timeoutPromise]);
+          setShowRotatePrompt(false);
         }
       } catch (e) {
-        // Screen orientation lock not supported or failed - show prompt instead
+        // Screen orientation lock not supported, failed, or timed out - continue anyway
       }
     };
 
@@ -695,37 +699,40 @@ export default function Game() {
     await initAudioContext();
     
     if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-      try {
-        const perm = await (DeviceOrientationEvent as any).requestPermission();
+      // Start the permission request but don't block on it
+      const permissionPromise = (DeviceOrientationEvent as any).requestPermission();
+      
+      // Always handle the result when it comes, even after timeout
+      permissionPromise.then((perm: string) => {
         if (perm === "granted") {
-          // Record when permission was granted - use for delay before enabling tilt
+          // Record when permission was granted
           permissionGrantedTimeRef.current = Date.now();
-          // Also set lastTiltTime to prevent immediate tilt detection
-          lastTiltTimeRef.current = Date.now() + 5000; // 5 second grace period after countdown
+          lastTiltTimeRef.current = Date.now() + 5000;
           
           setHasDeviceOrientation(true);
           setNeedsIOSPermission(false);
           setWaitingForPermission(false);
           
-          // Now show ready screen
-          if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+          // Show ready screen if not already shown
+          if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current && !isWaitingForReady) {
             showReadyScreen();
           }
         } else {
-          // Permission denied - still show ready screen, just without tilt
           setWaitingForPermission(false);
           setNeedsIOSPermission(false);
-          if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
-            showReadyScreen();
-          }
         }
-      } catch (e) {
-        // Permission denied - still show ready screen
+      }).catch(() => {
+        setWaitingForPermission(false);
+      });
+      
+      // After a short delay, show ready screen anyway so user isn't stuck
+      // (the permission handler above will still enable tilt if granted later)
+      setTimeout(() => {
         setWaitingForPermission(false);
         if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
           showReadyScreen();
         }
-      }
+      }, 500);
     }
   };
 
