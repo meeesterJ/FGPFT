@@ -839,14 +839,14 @@ export default function Game() {
           
           {/* Dramatic Round Number - centered and huge */}
           <div className="flex flex-col items-center text-center animate-bounce-in">
-            <span className="text-6xl md:text-7xl font-thin tracking-wide mb-4">
-              <span className="text-pink-400">R</span>
-              <span className="text-cyan-400">o</span>
-              <span className="text-yellow-400">u</span>
-              <span className="text-green-400">n</span>
-              <span className="text-purple-400">d</span>
-            </span>
-            <span className="text-[10rem] md:text-[14rem] font-thin text-primary leading-none drop-shadow-2xl">
+            <h1 className="text-7xl font-thin tracking-wide transform -rotate-2 leading-none mb-6">
+              <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
+              <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
+              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
+              <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
+              <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+            </h1>
+            <span className="text-[10rem] md:text-[14rem] font-thin text-primary leading-none" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
               {store.currentRound || 1}
             </span>
           </div>
