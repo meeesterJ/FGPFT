@@ -18,8 +18,8 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
     >
       <BackgroundGlow />
 
-      <div className="z-10 flex flex-col items-center justify-center max-w-md w-full text-center gap-10">
-        <TitleStack animated size="xl" />
+      <div className="z-10 flex flex-col items-center justify-center max-w-md w-full text-center gap-8">
+        <TitleStack animated />
 
         <p 
           className="text-xl text-muted-foreground font-light animate-pulse"
@@ -35,7 +35,7 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
 function MainScreen({ onStart }: { onStart: () => void }) {
   return (
     <motion.div
-      className="h-[100dvh] flex flex-col items-center justify-center gap-8 py-8 px-4 bg-gradient-to-b from-background to-card overflow-hidden"
+      className="h-[100dvh] flex flex-col items-center justify-between pt-10 pb-6 px-4 bg-gradient-to-b from-background to-card overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -43,7 +43,7 @@ function MainScreen({ onStart }: { onStart: () => void }) {
       <BackgroundGlow />
 
       <div className="z-10 flex flex-col items-center max-w-md w-full text-center flex-1 justify-center">
-        <TitleStack size="xl" />
+        <TitleStack />
       </div>
 
       <div className="z-10 grid gap-3 w-full max-w-md px-4">
