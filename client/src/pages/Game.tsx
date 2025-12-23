@@ -736,53 +736,32 @@ export default function Game() {
     }
   }, [store.isRoundOver, store.isGameFinished, setLocation]);
 
-  // Auto-scale font size for long words that don't fit on one line
+  // Get font size based on word length - simpler and faster than canvas measurement
+  const getWordFontSize = (word: string): string | null => {
+    if (!word) return null;
+    
+    // Find the longest single word (for multi-word phrases)
+    const words = word.split(' ');
+    const longestWord = words.reduce((a, b) => a.length > b.length ? a : b, '');
+    const len = longestWord.length;
+    
+    // Scale font size based on character count
+    // Base size uses clamp(2rem, 10vw, 9rem) from CSS, we override for long words
+    if (len <= 8) return null; // Use default CSS size
+    if (len <= 10) return 'clamp(1.8rem, 8vw, 7rem)'; // ~85% 
+    if (len <= 12) return 'clamp(1.5rem, 7vw, 5.5rem)'; // ~70%
+    if (len <= 14) return 'clamp(1.3rem, 6vw, 4.5rem)'; // ~60%
+    if (len <= 16) return 'clamp(1.1rem, 5vw, 3.5rem)'; // ~50%
+    return 'clamp(1rem, 4vw, 3rem)'; // Very long words ~40%
+  };
+
+  // Update font size when word changes
   useEffect(() => {
-    if (!wordDisplayRef.current || !wordContainerRef.current || !store.currentWord) {
+    if (!store.currentWord) {
       setWordFontSize(null);
       return;
     }
-
-    // Reset font size first to get natural size
-    setWordFontSize(null);
-    
-    // Use requestAnimationFrame to ensure DOM has updated
-    requestAnimationFrame(() => {
-      const container = wordContainerRef.current;
-      const display = wordDisplayRef.current;
-      if (!container || !display) return;
-      
-      const containerWidth = container.clientWidth * 0.9; // 90% of container width
-      const words = store.currentWord?.split(' ') || [];
-      
-      // Find the longest single word
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      
-      // Get computed style for font
-      const computedStyle = window.getComputedStyle(display);
-      const baseFontSize = parseFloat(computedStyle.fontSize);
-      ctx.font = `${computedStyle.fontWeight} ${baseFontSize}px ${computedStyle.fontFamily}`;
-      
-      // Measure each word
-      let longestWordWidth = 0;
-      for (const word of words) {
-        const width = ctx.measureText(word).width;
-        if (width > longestWordWidth) {
-          longestWordWidth = width;
-        }
-      }
-      
-      // If longest word is wider than container, scale down
-      if (longestWordWidth > containerWidth) {
-        const scaleFactor = containerWidth / longestWordWidth;
-        const newFontSize = Math.floor(baseFontSize * scaleFactor * 0.95); // 95% to add margin
-        setWordFontSize(`${Math.max(newFontSize, 16)}px`); // Minimum 16px
-      } else {
-        setWordFontSize(null);
-      }
-    });
+    setWordFontSize(getWordFontSize(store.currentWord));
   }, [store.currentWord]);
 
   const handleCorrect = async () => {
