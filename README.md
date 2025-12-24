@@ -5,8 +5,24 @@ FGPFT delivers an interactive guessing game perfect for parties, with support fo
 
 ## Key Features
 - Gesture-based guessing with visual timers for dynamic play.
+- Large, editable built in word lists for families 
 - Customizable word lists to fit any theme or group.
 - Responsive design optimized for mobile and desktop parties.
+
+## Default Settings
+- Timer: 30 seconds per round
+- Rounds: 3 rounds per game
+- Selected Category: Only "Animals - Easy"
+- Show Buttons: Off (tilt-only mode)
+- Haptic Feedback: On
+- Sound: On
+
+## Saved between sessions in browser settings:
+- Timer duration and number of rounds
+- Which categories you have selected
+- Button, haptic, and sound preferences
+- Any custom word lists you create
+- Changes to built-in lists (edits, soft deletes, permanent deletes)
 
 ## Quick Start
 Visit the live demo at https://familyguesspartyfuntime.replit.app/ to play immediately—no setup required. For self-hosting on Replit, fork the repo, click "Run," and share the generated URL with friends. The app loads assets like fonts and scripts automatically.
