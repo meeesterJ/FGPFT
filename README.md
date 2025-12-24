@@ -24,9 +24,9 @@ Fork on GitHub or Replit, make changes, and submit a pull request with details o
 Licensed under the MIT License (LICENSE.txt)
 
 ## Credits
-Built on Replit: Instant deployment and sharing powered by Replit: (https://replit.com/).
-Fonts: Outfit: (https://fonts.google.com/specimen/Outfit) and Titan One: (https://fonts.google.com/specimen/Titan+One) from Google Fonts under (https://scripts.sil.org/OFL).
-Game Concept: Inspired by classic party guessing games like Charades and Heads Up!
-Author: Keith Jasken © 2025. Contributions welcome via pull requests.
+- Built on Replit: Instant deployment and sharing powered by Replit: (https://replit.com/)
+- Fonts: Outfit: (https://fonts.google.com/specimen/Outfit) and Titan One: (https://fonts.google.com/specimen/Titan+One) from Google Fonts under (https://scripts.sil.org/OFL).
+- Game Concept: Inspired by classic party guessing games like Charades and Heads Up!
+- Author: Keith Jasken © 2025. Contributions welcome via pull requests.
 
 
