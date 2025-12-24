@@ -45,4 +45,11 @@ Licensed under the MIT License (LICENSE.txt)
 - Game Concept: Inspired by classic party guessing games like Charades and Heads Up!
 - Author: Keith Jasken © 2025. Contributions welcome via pull requests.
 
+## Audio Credits
+Sound effects obtained free for personal and commercial use.from FreeSoundEffects.net: (https://free-sound-effects.net/).
+
+## Artwork Credits
+App icon designed with the assistance of Perplexity AI: (https://perplexity.ai/), based on original concept and direction by Keith Jasken.
+
+
 
