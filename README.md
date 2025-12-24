@@ -1,13 +1,12 @@
-Family Guess Party Fun Time (FGPFT) is a web-based party guessing game built on Replit, featuring gestures, timers, and custom word lists for multiplayer fun. A strong README will help players, deployers, and contributors quickly understand and engage with it.
+Family Guess Party Fun Time (FGPFT) is a web-based party guessing game built on Replit, featuring gestures, timers, and custom word lists for multiplayer fun. 
 
 ## Project Overview
-FGPFT delivers an interactive guessing game perfect for parties, with support for gestures, timed rounds, and user-defined word lists. The app runs entirely in the browser via a single-page HTML/JS setup hosted on Replit. Target users include party hosts seeking quick, no-install entertainment.[3][1]
+FGPFT delivers an interactive guessing game perfect for parties, with support for gestures, timed rounds, and user-defined word lists. The app runs entirely in the browser via a single-page HTML/JS setup hosted on Replit. Target users include party hosts seeking quick, no-install entertainment.
 
 ## Key Features
 - Gesture-based guessing with visual timers for dynamic play.
 - Customizable word lists to fit any theme or group.
 - Responsive design optimized for mobile and desktop parties.
-- Social sharing via Open Graph and Twitter meta tags.[1]
 
 ## Quick Start
 Visit the live demo at https://familyguesspartyfuntime.replit.app/ to play immediately—no setup required. For self-hosting on Replit, fork the repo, click "Run," and share the generated URL with friends. The app loads assets like fonts and scripts automatically.
@@ -21,5 +20,13 @@ Edit word lists or themes directly in the JS source (likely in /assets/index-CNk
 ## Contributing
 Fork on GitHub or Replit, make changes, and submit a pull request with details on what you fixed or added. Include screenshots of gameplay improvements. Follow standard JS formatting and test on multiple devices.
 
-## License and Credits
-Use MIT license for open sharing. Credit Replit for hosting and Google Fonts for typography. Link back to the original demo URL.
+## License
+Licensed under the MIT License (LICENSE.txt)
+
+## Credits
+Built on Replit: Instant deployment and sharing powered by Replit: (https://replit.com/).
+Fonts: Outfit: (https://fonts.google.com/specimen/Outfit) and Titan One: (https://fonts.google.com/specimen/Titan+One) from Google Fonts under (https://scripts.sil.org/OFL).
+Game Concept: Inspired by classic party guessing games like Charades and Heads Up!
+Author: Keith Jasken © 2025. Contributions welcome via pull requests.
+
+
