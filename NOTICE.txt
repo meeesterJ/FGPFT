@@ -1,0 +1,16 @@
+Family Guess Party Fun Time™
+
+Copyright © 2025 K Jasken and Associates, LLC.
+All rights reserved.
+
+This software and associated content are proprietary to
+K Jasken and Associates, LLC.
+
+Unauthorized copying, modification, distribution, or use
+of this software or its components, in whole or in part,
+is strictly prohibited without prior written permission.
+
+This project may include third-party libraries or components
+licensed under their respective open-source licenses.
+Such components remain the property of their respective owners
+and are subject to their individual license terms.
