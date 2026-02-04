@@ -1,0 +1,23 @@
+{
+  "name": "Family Guess Party Fun Time™",
+  "short_name": "Guess Party",
+  "description": "The ultimate party guessing game for the whole family! One player guesses while others give clues. Tilt to answer, customize your word lists, and compete with friends. © 2025 K Jasken and Associates LLC. Family Guess Party Fun Time is a trademark of K Jasken and Associates LLC.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c0a1a",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["games", "entertainment"]
+}
