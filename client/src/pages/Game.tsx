@@ -755,14 +755,6 @@ export default function Game() {
     return 'clamp(1rem, 4vw, 3rem)'; // Very long words ~40%
   };
 
-  // Check if word needs wrapping (only for very long words 17+ chars)
-  const needsWordWrap = (word: string): boolean => {
-    if (!word) return false;
-    const words = word.split(' ');
-    const longestWord = words.reduce((a, b) => a.length > b.length ? a : b, '');
-    return longestWord.length >= 17;
-  };
-
   // Update font size when word changes
   useEffect(() => {
     if (!store.currentWord) {
@@ -1061,10 +1053,7 @@ export default function Game() {
            
            <h1 
              ref={wordDisplayRef}
-             className={cn(
-               "word-display font-body text-center text-white animate-bounce-in",
-               needsWordWrap(store.currentWord || '') && "allow-wrap"
-             )}
+             className="word-display font-body text-white animate-bounce-in"
              style={wordFontSize ? { fontSize: wordFontSize } : undefined}
            >
              {store.currentWord}
