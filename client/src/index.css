@@ -132,7 +132,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .word-container-fixed {
-  width: clamp(400px, 85vw, 1000px);
+  width: clamp(300px, 75vw, 700px);
   height: clamp(200px, 75vh, 380px);
   flex-shrink: 0;
 }
