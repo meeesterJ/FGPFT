@@ -26,11 +26,7 @@ export default function About() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               A fun party guessing game for the whole family! One player holds the phone to their forehead while others give verbal clues. Tilt forward when you guess correctly, or tilt backward to pass.
             </p>
-          </section>
-
-          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
-            <h2 className="text-xl font-thin text-yellow-400">Family Guess Party Fun Time</h2>
-            <p className="text-sm text-muted-foreground">Version 1.0.0</p>
+            <p className="text-sm text-muted-foreground mt-4">Version 1.0.0</p>
             <p className="text-sm text-muted-foreground">© 2025 K Jasken and Associates LLC</p>
             <p className="text-sm text-muted-foreground">All rights reserved.</p>
             <p className="text-sm text-muted-foreground mt-4">This app is intended for fun, group play, and entertainment.</p>
