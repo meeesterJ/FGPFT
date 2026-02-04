@@ -9,40 +9,36 @@ function QuickStartDiagram() {
     <section className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 p-6 rounded-2xl border border-purple-500/40" data-testid="quick-start-diagram">
       <h2 className="text-xl font-thin text-purple-300 text-center mb-6">Quick Start</h2>
       
-      <div className="flex items-center justify-center gap-6 mb-6">
-        <div className="flex flex-col items-center gap-3 flex-1">
-          <div className="relative">
-            <svg className="w-8 h-8 text-green-400 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M12 19V5M12 5l-5 5M12 5l5 5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M5 12a7 7 0 0 1 2-4" strokeLinecap="round" />
-            </svg>
-          </div>
-          <div className="relative w-24 h-14 bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg border-2 border-gray-600 shadow-lg transform -rotate-[25deg] origin-bottom">
+      <div className="flex items-center justify-center gap-8 mb-6">
+        <div className="flex flex-col items-center flex-1">
+          <div className="relative w-24 h-14 bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg border-2 border-gray-600 shadow-lg transform -rotate-[20deg]">
             <div className="absolute top-1 bottom-1 left-1 right-3 bg-gradient-to-br from-green-500/40 to-green-600/30 rounded-md flex items-center justify-center">
               <Check className="w-5 h-5 text-green-400" />
             </div>
             <div className="absolute right-1.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-gray-500" />
           </div>
-          <span className="text-green-400 font-medium text-sm mt-3">Tilt Forward</span>
+          <svg className="w-20 h-12 text-green-400 mt-1" viewBox="0 0 80 48" fill="none">
+            <path d="M20 38 C 25 20, 55 20, 60 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" fill="none" />
+            <path d="M54 8 L62 8 L60 16" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          </svg>
+          <span className="text-green-400 font-medium text-sm">Tilt Forward</span>
           <span className="text-green-300/80 text-xs">CORRECT</span>
         </div>
 
-        <div className="w-px h-28 bg-purple-500/30" />
+        <div className="w-px h-32 bg-purple-500/30" />
 
-        <div className="flex flex-col items-center gap-3 flex-1">
-          <div className="relative">
-            <svg className="w-8 h-8 text-yellow-400 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M12 5v14M12 19l-5-5M12 19l5-5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M19 12a7 7 0 0 1-2 4" strokeLinecap="round" />
-            </svg>
-          </div>
-          <div className="relative w-24 h-14 bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg border-2 border-gray-600 shadow-lg transform rotate-[25deg] origin-top">
+        <div className="flex flex-col items-center flex-1">
+          <div className="relative w-24 h-14 bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg border-2 border-gray-600 shadow-lg transform rotate-[20deg]">
             <div className="absolute top-1 bottom-1 left-1 right-3 bg-gradient-to-br from-yellow-500/40 to-yellow-600/30 rounded-md flex items-center justify-center">
               <RotateCcw className="w-5 h-5 text-yellow-400" />
             </div>
             <div className="absolute right-1.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-gray-500" />
           </div>
-          <span className="text-yellow-400 font-medium text-sm mt-3">Tilt Back</span>
+          <svg className="w-20 h-12 text-yellow-400 mt-1" viewBox="0 0 80 48" fill="none">
+            <path d="M60 10 C 55 28, 25 28, 20 38" stroke="currentColor" strokeWidth="3" strokeLinecap="round" fill="none" />
+            <path d="M26 40 L18 40 L20 32" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          </svg>
+          <span className="text-yellow-400 font-medium text-sm">Tilt Back</span>
           <span className="text-yellow-300/80 text-xs">PASS</span>
         </div>
       </div>
