@@ -89,7 +89,7 @@ export default function Categories() {
 
   const handleBulkAdd = () => {
     if (!bulkAddWords.trim()) return;
-    const newWords = bulkAddWords.split(',').map(w => w.trim()).filter(w => w.length > 0);
+    const newWords = bulkAddWords.split('\n').map(w => w.trim()).filter(w => w.length > 0);
     if (newWords.length > 0) {
       setEditListWords([...editListWords, ...newWords]);
       setBulkAddWords("");
@@ -176,7 +176,7 @@ export default function Categories() {
                   Create List
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
                 <DialogHeader>
                   <DialogTitle>Create Custom List</DialogTitle>
                 </DialogHeader>
@@ -249,11 +249,12 @@ export default function Categories() {
             </Dialog>
 
             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-              <DialogContent className="max-h-[80vh] overflow-y-auto">
+              <DialogContent className="max-h-[80vh] flex flex-col" onOpenAutoFocus={(e) => e.preventDefault()}>
                 <DialogHeader>
                   <DialogTitle>Edit List: {editListName}</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4 py-4">
+                <div className="flex flex-col gap-4 py-2">
+                  {/* Fixed controls at top */}
                   <div className="space-y-2">
                     <Label>List Name</Label>
                     <Input 
@@ -261,9 +262,39 @@ export default function Categories() {
                       onChange={e => setEditListName(e.target.value)}
                     />
                   </div>
-                  <div className="space-y-2">
+                  
+                  <div className="space-y-2 border-t border-border pt-4">
+                    <Label>Bulk Add Words (one per line)</Label>
+                    <Textarea 
+                      placeholder={"Word 1\nWord 2\nWord 3"}
+                      className="h-20"
+                      value={bulkAddWords}
+                      onChange={e => setBulkAddWords(e.target.value)}
+                    />
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={handleBulkAdd}
+                      >
+                        <Plus className="w-4 h-4 mr-2" /> Add All Words
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={handleAddWord}
+                      >
+                        <Plus className="w-4 h-4 mr-2" /> Add Empty
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <Button className="w-full" onClick={handleSaveEdit}>Save Changes</Button>
+                  
+                  {/* Scrollable word list */}
+                  <div className="space-y-2 border-t border-border pt-4">
                     <Label>Words ({editListWords.filter(w => w.trim()).length})</Label>
-                    <div className="space-y-2 max-h-80 overflow-y-auto">
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
                       {editListWords.map((word, index) => (
                         <div key={index} className="flex gap-2">
                           <Input 
@@ -283,32 +314,6 @@ export default function Categories() {
                       ))}
                     </div>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={handleAddWord}
-                  >
-                    <Plus className="w-4 h-4 mr-2" /> Add Word
-                  </Button>
-                  
-                  <div className="space-y-2 pt-4 border-t border-border">
-                    <Label>Bulk Add Words (comma separated)</Label>
-                    <Textarea 
-                      placeholder="word1, word2, word3, word4"
-                      className="h-20"
-                      value={bulkAddWords}
-                      onChange={e => setBulkAddWords(e.target.value)}
-                    />
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      onClick={handleBulkAdd}
-                    >
-                      <Plus className="w-4 h-4 mr-2" /> Add All Words
-                    </Button>
-                  </div>
-                  
-                  <Button className="w-full" onClick={handleSaveEdit}>Save Changes</Button>
                 </div>
               </DialogContent>
             </Dialog>
