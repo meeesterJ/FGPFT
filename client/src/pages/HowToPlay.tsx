@@ -31,7 +31,7 @@ export default function HowToPlay() {
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30">
             <h2 className="text-xl font-thin text-cyan-400">Step by Step</h2>
             <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
-              <li>1. Choose a category and start the game</li>
+              <li>1. Choose categories, time per round, and number of rounds in Settings, and start the game</li>
               <li>2. Hold your phone to your forehead in landscape mode</li>
               <li>3. Your friends give you clues without saying the word</li>
               <li>4. Tilt forward for correct, backward to pass</li>
