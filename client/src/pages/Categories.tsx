@@ -34,6 +34,7 @@ export default function Categories() {
   const [editListWords, setEditListWords] = useState<string[]>([]);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [bulkAddWords, setBulkAddWords] = useState("");
+  const [deleteConfirmList, setDeleteConfirmList] = useState<{ id: string; name: string; isCustom: boolean } | null>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -208,6 +209,45 @@ export default function Categories() {
               </DialogContent>
             </Dialog>
 
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={deleteConfirmList !== null} onOpenChange={(open) => !open && setDeleteConfirmList(null)}>
+              <DialogContent className="bg-card/95 backdrop-blur-md border-red-500/30 max-w-sm">
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-thin text-red-400">Delete Category?</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-4">
+                  <p className="text-muted-foreground">
+                    Are you sure you want to delete <span className="text-foreground font-medium">"{deleteConfirmList?.name}"</span>?
+                  </p>
+                  <div className="flex gap-3">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1 border-border hover:bg-muted"
+                      onClick={() => setDeleteConfirmList(null)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      className="flex-1 bg-red-500 hover:bg-red-400 text-white border-red-400"
+                      onClick={() => {
+                        if (deleteConfirmList) {
+                          if (deleteConfirmList.isCustom) {
+                            store.removeCustomList(deleteConfirmList.id);
+                          } else {
+                            store.deleteBuiltInList(deleteConfirmList.id);
+                          }
+                          toast({ title: "Deleted", description: `"${deleteConfirmList.name}" has been removed.` });
+                          setDeleteConfirmList(null);
+                        }
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
               <DialogContent className="max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
@@ -315,13 +355,7 @@ export default function Categories() {
                       className="text-red-400 hover:text-red-300 hover:bg-red-500/20"
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (list.isCustom) {
-                          store.removeCustomList(list.id);
-                          toast({ title: "Deleted", description: `"${list.name}" has been removed.` });
-                        } else {
-                          store.deleteBuiltInList(list.id);
-                          toast({ title: "Deleted", description: `"${list.name}" has been deleted.` });
-                        }
+                        setDeleteConfirmList({ id: list.id, name: list.name, isCustom: !!list.isCustom });
                       }}
                     >
                       <Trash2 className="w-5 h-5" />
