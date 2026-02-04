@@ -41,7 +41,7 @@ function MainScreen({ onStart }: { onStart: () => void }) {
     >
       <BackgroundGlow />
 
-      <div className="z-10 flex flex-col items-center max-w-md w-full text-center flex-1 justify-center">
+      <div className="z-10 flex flex-col items-center max-w-md w-full text-center flex-1 justify-center pb-16">
         <TitleStack />
       </div>
 
