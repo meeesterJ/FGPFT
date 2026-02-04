@@ -7,7 +7,7 @@ import { useSwipeBack } from "@/hooks/use-swipe-back";
 function QuickStartDiagram() {
   return (
     <section className="flex flex-col items-center" data-testid="quick-start-diagram">
-      <h2 className="text-xl font-thin text-purple-300 text-center mb-4">Quick Start</h2>
+      <h2 className="text-3xl font-thin text-green-400 text-center mb-4">Quick Start</h2>
       <img 
         src="/quick-start-guide.jpg" 
         alt="Tilt forward for correct, tilt back to pass"
