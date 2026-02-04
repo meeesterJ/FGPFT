@@ -44,21 +44,21 @@ export default function Summary() {
     if (store.isGameFinished && !hasPlayedGameEndSound.current) {
       hasPlayedGameEndSound.current = true;
       if (store.soundEnabled) {
-        playSound('gameEnd');
-        playSound('applause');
+        playSound('gameEnd', store.soundVolume);
+        playSound('applause', store.soundVolume);
       }
     }
-  }, [store.isGameFinished, store.soundEnabled]);
+  }, [store.isGameFinished, store.soundEnabled, store.soundVolume]);
 
   // Play drumroll when showing "And the Winner Is..." button
   useEffect(() => {
     if (isLastRound && !hasPlayedDrumroll.current) {
       hasPlayedDrumroll.current = true;
       if (store.soundEnabled) {
-        playSound('drumroll');
+        playSound('drumroll', store.soundVolume);
       }
     }
-  }, [isLastRound, store.soundEnabled]);
+  }, [isLastRound, store.soundEnabled, store.soundVolume]);
 
   const handleNext = () => {
     if (store.isGameFinished) {

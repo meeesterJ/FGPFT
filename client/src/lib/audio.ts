@@ -155,7 +155,7 @@ export function stopSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'rou
   });
 }
 
-export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'roundEnd' | 'gameEnd' | 'applause' | 'drumroll' | 'countdown') {
+export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' | 'roundEnd' | 'gameEnd' | 'applause' | 'drumroll' | 'countdown', volume: number = 100) {
   if (audioPool.size === 0) {
     createAudioPool();
     console.warn('Audio pool created lazily, may not play on iOS');
@@ -176,23 +176,23 @@ export async function playSound(soundName: 'correct' | 'pass' | 'tick' | 'tock' 
   
   try {
     audio.currentTime = 0;
-    audio.volume = 1.0;
+    audio.volume = Math.max(0, Math.min(1, volume / 100));
     await audio.play();
   } catch (e) {
     console.warn('playSound failed:', soundName, e);
   }
 }
 
-export async function playBeep(frequency: number, duration: number, type: OscillatorType = 'sine') {
+export async function playBeep(frequency: number, duration: number, type: OscillatorType = 'sine', volume: number = 100) {
   if (frequency === 1200) {
-    await playSound('tick');
+    await playSound('tick', volume);
   } else if (frequency === 800) {
-    await playSound('tock');
+    await playSound('tock', volume);
   } else if (frequency === 200) {
-    await playSound('roundEnd');
+    await playSound('roundEnd', volume);
   } else if (frequency >= 800) {
-    await playSound('correct');
+    await playSound('correct', volume);
   } else {
-    await playSound('pass');
+    await playSound('pass', volume);
   }
 }

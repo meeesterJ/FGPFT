@@ -116,6 +116,23 @@ export default function Settings() {
                 data-testid="switch-sound"
               />
             </div>
+            {store.soundEnabled && (
+              <div className="space-y-2 pt-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Volume</span>
+                  <span className="text-sm font-mono text-purple-300">{store.soundVolume}%</span>
+                </div>
+                <Slider 
+                  value={[store.soundVolume]} 
+                  onValueChange={(v) => store.setSoundVolume(v[0])} 
+                  min={0} 
+                  max={100} 
+                  step={5}
+                  className="py-2"
+                  data-testid="slider-volume"
+                />
+              </div>
+            )}
           </section>
 
           {/* iOS hint to add to home screen - show only in browser */}

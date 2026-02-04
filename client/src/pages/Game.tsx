@@ -54,32 +54,32 @@ export default function Game() {
   const soundCorrect = () => {
     console.log('soundCorrect called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
-    playSound('correct');
+    playSound('correct', store.soundVolume);
   };
   
   const soundPass = () => {
     console.log('soundPass called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
-    playSound('pass');
+    playSound('pass', store.soundVolume);
   };
   
   // Countdown sounds - tick/tock pattern for 3, 2, 1 and roundEnd for round end
   const soundTick = () => {
     console.log('soundTick called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
-    playSound('tick');
+    playSound('tick', store.soundVolume);
   };
   
   const soundTock = () => {
     console.log('soundTock called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
-    playSound('tock');
+    playSound('tock', store.soundVolume);
   };
   
   const soundRoundEnd = () => {
     console.log('soundRoundEnd called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
-    playSound('roundEnd');
+    playSound('roundEnd', store.soundVolume);
   };
   
   // Combined feedback - haptic + sound (haptics now use platform abstraction)
@@ -860,7 +860,7 @@ export default function Game() {
     
     // Play countdown sound at start of countdown sequence
     if (store.soundEnabled) {
-      playSound('countdown');
+      playSound('countdown', store.soundVolume);
     }
     
     countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(2), 1000));
