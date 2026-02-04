@@ -249,69 +249,71 @@ export default function Categories() {
             </Dialog>
 
             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-              <DialogContent className="max-h-[80vh] flex flex-col" onOpenAutoFocus={(e) => e.preventDefault()}>
-                <DialogHeader>
+              <DialogContent className="max-h-[80vh] flex flex-col p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
+                <DialogHeader className="px-6 pt-6 pb-2">
                   <DialogTitle>Edit List: {editListName}</DialogTitle>
                 </DialogHeader>
-                <div className="flex flex-col gap-4 py-2">
-                  {/* Fixed controls at top */}
-                  <div className="space-y-2">
-                    <Label>List Name</Label>
-                    <Input 
-                      value={editListName}
-                      onChange={e => setEditListName(e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className="space-y-2 border-t border-border pt-4">
-                    <Label>Bulk Add Words (one per line)</Label>
-                    <Textarea 
-                      placeholder={"Word 1\nWord 2\nWord 3"}
-                      className="h-20"
-                      value={bulkAddWords}
-                      onChange={e => setBulkAddWords(e.target.value)}
-                    />
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        className="flex-1"
-                        onClick={handleBulkAdd}
-                      >
-                        <Plus className="w-4 h-4 mr-2" /> Add All Words
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="flex-1"
-                        onClick={handleAddWord}
-                      >
-                        <Plus className="w-4 h-4 mr-2" /> Add Empty
-                      </Button>
+                <div className="flex-1 overflow-y-auto px-6 pb-6">
+                  <div className="flex flex-col gap-4 py-2">
+                    {/* Controls at top */}
+                    <div className="space-y-2">
+                      <Label>List Name</Label>
+                      <Input 
+                        value={editListName}
+                        onChange={e => setEditListName(e.target.value)}
+                      />
                     </div>
-                  </div>
-                  
-                  <Button className="w-full" onClick={handleSaveEdit}>Save Changes</Button>
-                  
-                  {/* Scrollable word list */}
-                  <div className="space-y-2 border-t border-border pt-4">
-                    <Label>Words ({editListWords.filter(w => w.trim()).length})</Label>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {editListWords.map((word, index) => (
-                        <div key={index} className="flex gap-2">
-                          <Input 
-                            value={word}
-                            onChange={e => handleUpdateWord(index, e.target.value)}
-                            placeholder={`Word ${index + 1}`}
-                          />
-                          <Button 
-                            variant="ghost" 
-                            size="icon"
-                            className="text-destructive hover:bg-destructive/10"
-                            onClick={() => handleRemoveWord(index)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ))}
+                    
+                    <div className="space-y-2 border-t border-border pt-4">
+                      <Label>Bulk Add Words (one per line)</Label>
+                      <Textarea 
+                        placeholder={"Word 1\nWord 2\nWord 3"}
+                        className="h-20"
+                        value={bulkAddWords}
+                        onChange={e => setBulkAddWords(e.target.value)}
+                      />
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          className="flex-1"
+                          onClick={handleBulkAdd}
+                        >
+                          <Plus className="w-4 h-4 mr-2" /> Add All Words
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          className="flex-1"
+                          onClick={handleAddWord}
+                        >
+                          <Plus className="w-4 h-4 mr-2" /> Add Empty
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <Button className="w-full" onClick={handleSaveEdit}>Save Changes</Button>
+                    
+                    {/* Word list - scrolls with dialog */}
+                    <div className="space-y-2 border-t border-border pt-4">
+                      <Label>Words ({editListWords.filter(w => w.trim()).length})</Label>
+                      <div className="space-y-2">
+                        {editListWords.map((word, index) => (
+                          <div key={index} className="flex gap-2">
+                            <Input 
+                              value={word}
+                              onChange={e => handleUpdateWord(index, e.target.value)}
+                              placeholder={`Word ${index + 1}`}
+                            />
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              className="text-destructive hover:bg-destructive/10"
+                              onClick={() => handleRemoveWord(index)}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
