@@ -76,7 +76,7 @@ export const useGameStore = create<GameState>()(
       showButtons: false,
       hapticEnabled: true,
       soundEnabled: true,
-      soundVolume: 80,
+      soundVolume: 100,
       tiltPermissionGranted: false,
       splashDismissed: false,
       selectedListIds: ['animals-easy'],

@@ -71,38 +71,6 @@ export default function Settings() {
             <p className="text-sm text-muted-foreground">How many rounds to play before the game ends.</p>
           </section>
 
-          {/* Show Buttons Toggle */}
-          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
-            <div className="flex justify-between items-center">
-              <div className="space-y-1">
-                <h2 className="text-xl font-thin text-yellow-400">Show Buttons</h2>
-                <p className="text-sm text-muted-foreground">Display Correct/Pass buttons during gameplay. Disable to use tilt gestures only.</p>
-              </div>
-              <Switch 
-                checked={store.showButtons}
-                onCheckedChange={store.setShowButtons}
-                data-testid="switch-show-buttons"
-              />
-            </div>
-          </section>
-
-          {/* Haptic Feedback Toggle - only show when installed as PWA */}
-          {isStandalone && (
-            <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
-              <div className="flex justify-between items-center">
-                <div className="space-y-1">
-                  <h2 className="text-xl font-thin text-green-400">Haptic Feedback</h2>
-                  <p className="text-sm text-muted-foreground">Vibrate the phone when correct or pass is registered. Works on Android devices.</p>
-                </div>
-                <Switch 
-                  checked={store.hapticEnabled}
-                  onCheckedChange={store.setHapticEnabled}
-                  data-testid="switch-haptic"
-                />
-              </div>
-            </section>
-          )}
-
           {/* Sound Feedback Toggle */}
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
             <div className="flex justify-between items-center">
@@ -134,6 +102,38 @@ export default function Settings() {
               </div>
             )}
           </section>
+
+          {/* Show Buttons Toggle */}
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
+            <div className="flex justify-between items-center">
+              <div className="space-y-1">
+                <h2 className="text-xl font-thin text-yellow-400">Show Buttons</h2>
+                <p className="text-sm text-muted-foreground">Display Correct/Pass buttons during gameplay. Disable to use tilt gestures only.</p>
+              </div>
+              <Switch 
+                checked={store.showButtons}
+                onCheckedChange={store.setShowButtons}
+                data-testid="switch-show-buttons"
+              />
+            </div>
+          </section>
+
+          {/* Haptic Feedback Toggle - only show when installed as PWA */}
+          {isStandalone && (
+            <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
+              <div className="flex justify-between items-center">
+                <div className="space-y-1">
+                  <h2 className="text-xl font-thin text-green-400">Haptic Feedback</h2>
+                  <p className="text-sm text-muted-foreground">Vibrate the phone when correct or pass is registered. Works on Android devices.</p>
+                </div>
+                <Switch 
+                  checked={store.hapticEnabled}
+                  onCheckedChange={store.setHapticEnabled}
+                  data-testid="switch-haptic"
+                />
+              </div>
+            </section>
+          )}
 
           {/* iOS hint to add to home screen - show only in browser */}
           {isIOS && !isStandalone && (
