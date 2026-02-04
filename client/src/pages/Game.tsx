@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Check, X, Home, Play, Smartphone, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getAudioContext, initAudioContext, playSound } from "@/lib/audio";
+import { hapticCorrect, hapticPass } from "@/lib/haptics";
 
 export default function Game() {
   const [, setLocation] = useLocation();
@@ -81,29 +82,14 @@ export default function Game() {
     playSound('roundEnd');
   };
   
-  // Haptic feedback functions using Vibration API
-  const vibrateCorrect = () => {
-    if (!store.hapticEnabled) return;
-    if (navigator.vibrate) {
-      navigator.vibrate(80); // Single pulse for correct (increased from 50ms)
-    }
-  };
-  
-  const vibratePass = () => {
-    if (!store.hapticEnabled) return;
-    if (navigator.vibrate) {
-      navigator.vibrate([50, 40, 50]); // Double pulse pattern for pass (more noticeable)
-    }
-  };
-  
-  // Combined feedback - haptic + sound
+  // Combined feedback - haptic + sound (haptics now use platform abstraction)
   const feedbackCorrect = () => {
-    vibrateCorrect();
+    if (store.hapticEnabled) hapticCorrect();
     soundCorrect();
   };
   
   const feedbackPass = () => {
-    vibratePass();
+    if (store.hapticEnabled) hapticPass();
     soundPass();
   };
   

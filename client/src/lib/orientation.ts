@@ -1,0 +1,126 @@
+import { isNative, isIOS } from './platform';
+
+export type OrientationType = 'portrait' | 'landscape-primary' | 'landscape-secondary' | 'unknown';
+
+export interface OrientationData {
+  alpha: number | null;
+  beta: number | null;
+  gamma: number | null;
+}
+
+export type OrientationHandler = (data: OrientationData) => void;
+
+let permissionGranted = false;
+let activeHandler: OrientationHandler | null = null;
+
+export function isOrientationSupported(): boolean {
+  return typeof DeviceOrientationEvent !== 'undefined';
+}
+
+export function needsPermissionRequest(): boolean {
+  if (isNative()) return false;
+  
+  return isIOS() && 
+         typeof DeviceOrientationEvent !== 'undefined' &&
+         typeof (DeviceOrientationEvent as any).requestPermission === 'function';
+}
+
+export async function requestOrientationPermission(): Promise<boolean> {
+  if (isNative()) {
+    permissionGranted = true;
+    return true;
+  }
+
+  if (!needsPermissionRequest()) {
+    permissionGranted = true;
+    return true;
+  }
+
+  try {
+    const permission = await (DeviceOrientationEvent as any).requestPermission();
+    permissionGranted = permission === 'granted';
+    return permissionGranted;
+  } catch (e) {
+    console.warn('Orientation permission request failed:', e);
+    return false;
+  }
+}
+
+export function hasOrientationPermission(): boolean {
+  return permissionGranted;
+}
+
+export function startOrientationTracking(handler: OrientationHandler): () => void {
+  if (isNative()) {
+    activeHandler = handler;
+    return () => { activeHandler = null; };
+  }
+
+  const webHandler = (event: DeviceOrientationEvent) => {
+    handler({
+      alpha: event.alpha,
+      beta: event.beta,
+      gamma: event.gamma,
+    });
+  };
+
+  window.addEventListener('deviceorientation', webHandler);
+
+  return () => {
+    window.removeEventListener('deviceorientation', webHandler);
+  };
+}
+
+export function getScreenOrientation(): OrientationType {
+  if (typeof screen !== 'undefined' && screen.orientation) {
+    const type = screen.orientation.type;
+    if (type.includes('portrait')) return 'portrait';
+    if (type === 'landscape-primary') return 'landscape-primary';
+    if (type === 'landscape-secondary') return 'landscape-secondary';
+  }
+  
+  if (typeof window !== 'undefined') {
+    const angle = (window as any).orientation;
+    if (angle === 0 || angle === 180) return 'portrait';
+    if (angle === 90) return 'landscape-primary';
+    if (angle === -90) return 'landscape-secondary';
+  }
+  
+  return 'unknown';
+}
+
+export function isLandscape(): boolean {
+  const orientation = getScreenOrientation();
+  return orientation === 'landscape-primary' || orientation === 'landscape-secondary';
+}
+
+export async function lockOrientation(orientation: 'landscape' | 'portrait'): Promise<boolean> {
+  if (isNative()) {
+    return true;
+  }
+
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock(orientation);
+      return true;
+    }
+  } catch (e) {
+    console.warn('Orientation lock not supported:', e);
+  }
+  
+  return false;
+}
+
+export function unlockOrientation(): void {
+  if (isNative()) {
+    return;
+  }
+
+  try {
+    if (screen.orientation && screen.orientation.unlock) {
+      screen.orientation.unlock();
+    }
+  } catch (e) {
+    // Silently fail
+  }
+}

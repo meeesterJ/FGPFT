@@ -1,3 +1,5 @@
+import { isNative } from './platform';
+
 let audioInitialized = false;
 let audioUnlocked = false;
 let unlockPromise: Promise<void> | null = null;
@@ -38,6 +40,11 @@ function createAudioPool() {
 function unlockAudioSilently(): Promise<void> {
   if (audioUnlocked) return Promise.resolve();
   if (unlockPromise) return unlockPromise;
+  
+  if (isNative()) {
+    audioUnlocked = true;
+    return Promise.resolve();
+  }
   
   const promises: Promise<void>[] = [];
   
