@@ -139,8 +139,8 @@ export default function Summary() {
 
         {/* Right side - Word history and buttons */}
         <div className="flex-1 flex flex-col gap-3 max-h-full">
-          <div className="bg-card rounded-xl border border-border p-3 shadow-xl flex-1 overflow-y-auto min-h-0">
-            <h3 className="text-sm font-bold mb-2 text-left sticky top-0 bg-card z-10 pb-1 border-b border-border">Word History</h3>
+          <div className="bg-card/80 rounded-xl border border-purple-500/30 p-3 shadow-xl flex-1 overflow-y-auto min-h-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)]">
+            <h3 className="text-sm font-bold mb-2 text-left sticky top-0 bg-card/80 z-10 pb-1 border-b border-border">Word History</h3>
             <div className="space-y-1">
               {store.roundResults.map((res, i) => (
                 <div key={i} className="flex items-center justify-between p-1.5 rounded-lg bg-background/50">

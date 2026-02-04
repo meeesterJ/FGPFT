@@ -295,7 +295,7 @@ export default function Categories() {
                     {/* Word list - scrolls with dialog */}
                     <div className="space-y-2 border-t border-border pt-4">
                       <Label>Words ({editListWords.filter(w => w.trim()).length})</Label>
-                      <div className="space-y-2">
+                      <div className="space-y-2 bg-card/80 rounded-xl border border-purple-500/30 p-3 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)]">
                         {editListWords.map((word, index) => (
                           <div key={index} className="flex gap-2">
                             <Input 
