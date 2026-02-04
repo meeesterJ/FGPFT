@@ -9,36 +9,40 @@ function QuickStartDiagram() {
     <section className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 p-6 rounded-2xl border border-purple-500/40" data-testid="quick-start-diagram">
       <h2 className="text-xl font-thin text-purple-300 text-center mb-6">Quick Start</h2>
       
-      <div className="flex items-center justify-center gap-4 mb-6">
-        <div className="flex flex-col items-center gap-2 flex-1">
-          <div className="relative w-16 h-24 bg-gradient-to-b from-gray-700 to-gray-800 rounded-lg border-2 border-gray-600 shadow-lg transform -rotate-[30deg]">
-            <div className="absolute inset-1 bg-gradient-to-b from-green-500/30 to-green-600/30 rounded-md flex items-center justify-center">
-              <Check className="w-6 h-6 text-green-400" />
-            </div>
-            <div className="absolute -top-6 left-1/2 -translate-x-1/2">
-              <svg className="w-4 h-4 text-green-400" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 4l-8 8h16l-8-8z" />
-              </svg>
-            </div>
+      <div className="flex items-center justify-center gap-6 mb-6">
+        <div className="flex flex-col items-center gap-3 flex-1">
+          <div className="relative">
+            <svg className="w-8 h-8 text-green-400 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M12 19V5M12 5l-5 5M12 5l5 5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M5 12a7 7 0 0 1 2-4" strokeLinecap="round" />
+            </svg>
           </div>
-          <span className="text-green-400 font-medium text-sm mt-2">Tilt Forward</span>
+          <div className="relative w-24 h-14 bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg border-2 border-gray-600 shadow-lg transform -rotate-[25deg] origin-bottom">
+            <div className="absolute top-1 bottom-1 left-1 right-3 bg-gradient-to-br from-green-500/40 to-green-600/30 rounded-md flex items-center justify-center">
+              <Check className="w-5 h-5 text-green-400" />
+            </div>
+            <div className="absolute right-1.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-gray-500" />
+          </div>
+          <span className="text-green-400 font-medium text-sm mt-3">Tilt Forward</span>
           <span className="text-green-300/80 text-xs">CORRECT</span>
         </div>
 
-        <div className="w-px h-20 bg-purple-500/30" />
+        <div className="w-px h-28 bg-purple-500/30" />
 
-        <div className="flex flex-col items-center gap-2 flex-1">
-          <div className="relative w-16 h-24 bg-gradient-to-b from-gray-700 to-gray-800 rounded-lg border-2 border-gray-600 shadow-lg transform rotate-[30deg]">
-            <div className="absolute inset-1 bg-gradient-to-b from-yellow-500/30 to-yellow-600/30 rounded-md flex items-center justify-center">
-              <RotateCcw className="w-6 h-6 text-yellow-400" />
-            </div>
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2">
-              <svg className="w-4 h-4 text-yellow-400" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 20l8-8H4l8 8z" />
-              </svg>
-            </div>
+        <div className="flex flex-col items-center gap-3 flex-1">
+          <div className="relative">
+            <svg className="w-8 h-8 text-yellow-400 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M12 5v14M12 19l-5-5M12 19l5-5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M19 12a7 7 0 0 1-2 4" strokeLinecap="round" />
+            </svg>
           </div>
-          <span className="text-yellow-400 font-medium text-sm mt-2">Tilt Back</span>
+          <div className="relative w-24 h-14 bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg border-2 border-gray-600 shadow-lg transform rotate-[25deg] origin-top">
+            <div className="absolute top-1 bottom-1 left-1 right-3 bg-gradient-to-br from-yellow-500/40 to-yellow-600/30 rounded-md flex items-center justify-center">
+              <RotateCcw className="w-5 h-5 text-yellow-400" />
+            </div>
+            <div className="absolute right-1.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-gray-500" />
+          </div>
+          <span className="text-yellow-400 font-medium text-sm mt-3">Tilt Back</span>
           <span className="text-yellow-300/80 text-xs">PASS</span>
         </div>
       </div>
