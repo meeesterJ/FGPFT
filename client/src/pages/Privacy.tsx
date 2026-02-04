@@ -82,7 +82,7 @@ export default function Privacy() {
           <section className="space-y-3">
             <h2 className="text-lg font-thin text-yellow-400">Contact Us</h2>
             <p>
-              If you have questions about this Privacy Policy, please contact us at K Jasken and Associates, LLC.
+              If you have questions about this Privacy Policy, please contact us at K Jasken and Associates, LLC: <a href="mailto:KJaskenAssoc@pm.me" className="text-purple-400 underline hover:text-purple-300">KJaskenAssoc@pm.me</a>
             </p>
           </section>
 
