@@ -48,10 +48,14 @@ export default function HowToPlay() {
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
             <h2 className="text-xl font-thin text-yellow-400">Tips</h2>
             <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
-              <li>• Give creative clues - act it out, describe it, use rhymes!</li>
               <li>• Don't say the word or any part of it</li>
               <li>• Pass quickly if you're stuck to save time</li>
               <li>• Take turns being the guesser</li>
+              <li>• Split into two teams and compete!</li>
+              <li>• Give creative clues - act it out, describe it, use rhymes!</li>
+              <li>• Use accents or impersonation or act out clues</li>
+              <li>• House rules are highly encouraged!</li>
+              <li>• Edit lists or create your own custom lists</li>
             </ul>
           </section>
 
