@@ -29,8 +29,23 @@ export default function About() {
           </section>
 
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
-            <h2 className="text-xl font-thin text-yellow-400">Version</h2>
-            <p className="text-sm text-muted-foreground">1.0.0</p>
+            <h2 className="text-xl font-thin text-yellow-400">Family Guess Party Fun Time</h2>
+            <p className="text-sm text-muted-foreground">Version 1.0.0</p>
+            <p className="text-sm text-muted-foreground">© 2025 K Jasken and Associates LLC</p>
+            <p className="text-sm text-muted-foreground">All rights reserved.</p>
+            <p className="text-sm text-muted-foreground mt-4">This app is intended for fun, group play, and entertainment.</p>
+            <div className="flex gap-4 mt-4">
+              <Link href="/privacy">
+                <span className="text-sm text-muted-foreground underline hover:text-purple-400 transition-colors cursor-pointer">
+                  Privacy Policy
+                </span>
+              </Link>
+              <Link href="/terms">
+                <span className="text-sm text-muted-foreground underline hover:text-purple-400 transition-colors cursor-pointer">
+                  Terms of Use
+                </span>
+              </Link>
+            </div>
           </section>
 
         </div>
