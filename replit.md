@@ -93,3 +93,23 @@ The app includes a platform abstraction layer for future Capacitor/native iOS de
 - **tsx**: TypeScript execution for server
 - **esbuild**: Production server bundling
 - **Tailwind CSS v4**: Styling with `@tailwindcss/vite` plugin
+
+## App Store Preparation
+
+### iOS Assets (Ready)
+- **App Icons**: Full iOS icon set in `ios-assets/AppIcon.appiconset/` (20pt to 1024pt, all scales)
+- **Launch Screens**: iPhone and iPad splash screens in `ios-assets/LaunchImage/`
+- **Capacitor Config**: `capacitor.config.ts` configured for iOS deployment
+
+### Next Steps for App Store
+See `APP_STORE_PREPARATION.md` for detailed instructions including:
+1. Local Xcode project setup with Capacitor
+2. Code signing and provisioning profiles
+3. App Store Connect configuration
+4. Screenshot requirements
+5. App Review guidelines checklist
+
+### Bundle Identifier
+- **App ID**: `com.kjasken.familyguessparty`
+- **App Name**: Family Guess Party Fun Time
+- **Copyright**: © 2025 K Jasken and Associates, LLC

@@ -1,0 +1,44 @@
+{
+  "images": [
+    {
+      "filename": "launch-iphone-640x1136.png",
+      "idiom": "iphone",
+      "scale": "2x",
+      "subtype": "retina4"
+    },
+    {
+      "filename": "launch-iphone-750x1334.png",
+      "idiom": "iphone",
+      "scale": "2x",
+      "subtype": "667h"
+    },
+    {
+      "filename": "launch-iphone-1242x2688.png",
+      "idiom": "iphone",
+      "scale": "3x",
+      "subtype": "2688h"
+    },
+    {
+      "filename": "launch-iphone-1125x2436.png",
+      "idiom": "iphone",
+      "scale": "3x",
+      "subtype": "2436h"
+    },
+    {
+      "filename": "launch-iphone-828x1792.png",
+      "idiom": "iphone",
+      "scale": "2x",
+      "subtype": "1792h"
+    },
+    {
+      "filename": "launch-ipad-2048x2732.png",
+      "idiom": "ipad",
+      "scale": "2x",
+      "subtype": "2732h"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}
