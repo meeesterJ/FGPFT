@@ -1,61 +1,18 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Check, RotateCcw } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSwipeBack } from "@/hooks/use-swipe-back";
 
 function QuickStartDiagram() {
   return (
-    <section className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 p-6 rounded-2xl border border-purple-500/40" data-testid="quick-start-diagram">
+    <section className="flex flex-col items-center" data-testid="quick-start-diagram">
       <h2 className="text-xl font-thin text-purple-300 text-center mb-4">Quick Start</h2>
-      
-      <div className="flex items-end justify-center gap-6 mb-4">
-        <div className="flex flex-col items-center flex-1">
-          <svg className="w-28 h-36" viewBox="0 0 100 130" fill="none">
-            <g className="text-green-400" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="50" cy="18" r="12" fill="none" />
-              <line x1="50" y1="30" x2="50" y2="70" />
-              <line x1="50" y1="45" x2="30" y2="60" />
-              <line x1="50" y1="45" x2="70" y2="35" />
-              <line x1="50" y1="70" x2="35" y2="100" />
-              <line x1="50" y1="70" x2="65" y2="100" />
-              <rect x="62" y="8" width="24" height="14" rx="2" transform="rotate(15 74 15)" fill="none" />
-            </g>
-            <g transform="translate(50, 115)">
-              <circle cx="0" cy="0" r="10" fill="rgba(34, 197, 94, 0.2)" stroke="none" />
-              <path d="M-4 0 L-1 3 L5 -3" stroke="rgb(34, 197, 94)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-            </g>
-          </svg>
-          <span className="text-green-400 font-semibold text-sm mt-1">Tilt Forward</span>
-          <span className="text-green-300/70 text-xs">CORRECT</span>
-        </div>
-
-        <div className="w-px h-36 bg-purple-500/30" />
-
-        <div className="flex flex-col items-center flex-1">
-          <svg className="w-28 h-36" viewBox="0 0 100 130" fill="none">
-            <g className="text-yellow-400" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="50" cy="22" r="12" fill="none" />
-              <line x1="50" y1="34" x2="50" y2="74" />
-              <line x1="50" y1="49" x2="30" y2="39" />
-              <line x1="50" y1="49" x2="70" y2="64" />
-              <line x1="50" y1="74" x2="35" y2="104" />
-              <line x1="50" y1="74" x2="65" y2="104" />
-              <rect x="14" y="12" width="24" height="14" rx="2" transform="rotate(-15 26 19)" fill="none" />
-            </g>
-            <g transform="translate(50, 119)">
-              <circle cx="0" cy="0" r="10" fill="rgba(234, 179, 8, 0.2)" stroke="none" />
-              <path d="M-4 -3 L4 3 M4 -3 L-4 3" stroke="rgb(234, 179, 8)" strokeWidth="2" fill="none" strokeLinecap="round" />
-            </g>
-          </svg>
-          <span className="text-yellow-400 font-semibold text-sm mt-1">Tilt Back</span>
-          <span className="text-yellow-300/70 text-xs">PASS</span>
-        </div>
-      </div>
-
-      <p className="text-center text-sm text-muted-foreground">
-        Hold phone to forehead in landscape mode
-      </p>
+      <img 
+        src="/quick-start-guide.jpg" 
+        alt="Tilt forward for correct, tilt back to pass"
+        className="w-full max-w-sm rounded-2xl"
+      />
     </section>
   );
 }
