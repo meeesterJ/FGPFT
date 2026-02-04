@@ -131,9 +131,15 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.word-container-fixed {
+  width: clamp(280px, 55vw, 600px);
+  height: clamp(180px, 65vh, 320px);
+  flex-shrink: 0;
+}
+
 .word-display {
-  font-size: clamp(2rem, 10vw, 9rem);
-  max-width: 95%;
+  font-size: clamp(1.5rem, 8vw, 7rem);
+  max-width: 100%;
   white-space: nowrap;
   word-break: normal;
   overflow-wrap: normal;

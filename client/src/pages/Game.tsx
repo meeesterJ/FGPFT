@@ -1053,7 +1053,7 @@ export default function Game() {
       <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-6 z-10">
         <div 
           ref={wordContainerRef}
-          className="bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 md:p-8 lg:px-16 shadow-2xl relative group w-auto min-w-[50%] max-w-[95%] h-full"
+          className="word-container-fixed bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 shadow-2xl relative group"
         >
            {/* Card Background Decoration */}
            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
