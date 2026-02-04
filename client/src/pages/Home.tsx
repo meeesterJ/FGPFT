@@ -34,18 +34,18 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
 function MainScreen({ onStart }: { onStart: () => void }) {
   return (
     <motion.div
-      className="h-[100dvh] flex flex-col items-center justify-between pt-10 pb-6 px-4 bg-gradient-to-b from-background to-card overflow-hidden"
+      className="h-[100dvh] flex flex-col items-center px-4 bg-gradient-to-b from-background to-card overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
       <BackgroundGlow />
 
-      <div className="z-10 flex flex-col items-center max-w-md w-full text-center flex-1 justify-center pb-16">
+      <div className="z-10 flex flex-col items-center max-w-md w-full text-center flex-1 justify-center">
         <TitleStack />
       </div>
 
-      <div className="z-10 grid gap-3 w-full max-w-md px-4">
+      <div className="z-10 grid gap-3 w-full max-w-md px-4 pb-6 shrink-0">
         <Button 
           size="lg" 
           className={menuButtonStyles.pink}
