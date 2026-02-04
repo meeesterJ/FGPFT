@@ -10,6 +10,7 @@ import Categories from "@/pages/Categories";
 import Game from "@/pages/Game";
 import Summary from "@/pages/Summary";
 import DeletedCategories from "@/pages/DeletedCategories";
+import About from "@/pages/About";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/settings" component={Settings} />
       <Route path="/categories" component={Categories} />
       <Route path="/settings/deleted" component={DeletedCategories} />
+      <Route path="/about" component={About} />
       <Route path="/game" component={Game} />
       <Route path="/summary" component={Summary} />
       <Route component={NotFound} />

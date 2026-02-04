@@ -86,20 +86,22 @@ export default function Settings() {
             </div>
           </section>
 
-          {/* Haptic Feedback Toggle */}
-          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
-            <div className="flex justify-between items-center">
-              <div className="space-y-1">
-                <h2 className="text-xl font-thin text-green-400">Haptic Feedback</h2>
-                <p className="text-sm text-muted-foreground">Vibrate the phone when correct or pass is registered. Works on Android devices.</p>
+          {/* Haptic Feedback Toggle - only show when installed as PWA */}
+          {isStandalone && (
+            <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
+              <div className="flex justify-between items-center">
+                <div className="space-y-1">
+                  <h2 className="text-xl font-thin text-green-400">Haptic Feedback</h2>
+                  <p className="text-sm text-muted-foreground">Vibrate the phone when correct or pass is registered. Works on Android devices.</p>
+                </div>
+                <Switch 
+                  checked={store.hapticEnabled}
+                  onCheckedChange={store.setHapticEnabled}
+                  data-testid="switch-haptic"
+                />
               </div>
-              <Switch 
-                checked={store.hapticEnabled}
-                onCheckedChange={store.setHapticEnabled}
-                data-testid="switch-haptic"
-              />
-            </div>
-          </section>
+            </section>
+          )}
 
           {/* Sound Feedback Toggle */}
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
@@ -116,13 +118,22 @@ export default function Settings() {
             </div>
           </section>
 
-          {/* iOS hint to add to home screen */}
+          {/* iOS hint to add to home screen - show only in browser */}
           {isIOS && !isStandalone && (
             <section className="bg-card/50 p-4 rounded-2xl border border-border flex items-center gap-3">
               <Share className="w-5 h-5 flex-shrink-0 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">For the best fullscreen experience, tap the share button and "Add to Home Screen"</span>
             </section>
           )}
+
+          {/* About link */}
+          <div className="flex justify-center pt-4">
+            <Link href="/about">
+              <span className="text-sm text-muted-foreground underline hover:text-purple-400 transition-colors cursor-pointer">
+                About
+              </span>
+            </Link>
+          </div>
 
         </div>
       </ScrollArea>
