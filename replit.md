@@ -57,6 +57,14 @@ The tilt detection uses the DeviceOrientation API with gamma axis for landscape 
   - landscape-primary: gamma inverted (-gamma) to maintain consistent forward=positive convention
 - **Return-to-Center**: After a gesture is recognized, user must return phone to center position before the next gesture is processed
 
+### Platform Abstraction Layer (Native-Ready)
+The app includes a platform abstraction layer for future Capacitor/native iOS deployment:
+
+- **platform.ts**: Detects browser vs native (Capacitor) context via `window.Capacitor.isNativePlatform()`, provides `isNative()`, `getPlatform()`, `isIOS()`, `isAndroid()`, `isMobile()` utilities
+- **haptics.ts**: Unified haptic feedback with Capacitor Haptics plugin hooks for native, falls back to `navigator.vibrate()` on web. Exports `hapticCorrect()`, `hapticPass()`, `hapticTick()`
+- **audio.ts**: Skips web audio unlock workarounds in native context (iOS Safari workarounds not needed in native shell)
+- **orientation.ts**: Ready for native Core Motion integration while preserving web DeviceOrientation behavior. Handles permission requests, orientation tracking, and lock/unlock
+
 ### Build Configuration
 - Development: Vite dev server with HMR
 - Production: esbuild bundles server, Vite builds client to `dist/public`
