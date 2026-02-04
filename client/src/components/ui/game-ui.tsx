@@ -113,4 +113,5 @@ export const menuButtonStyles = {
   pink: `${menuButtonBase} bg-pink-500 hover:bg-pink-400 border-pink-400`,
   cyan: `${menuButtonBase} bg-cyan-600 hover:bg-cyan-500 border-cyan-400`,
   purple: `${menuButtonBase} bg-purple-600 hover:bg-purple-500 border-purple-400`,
+  yellow: `${menuButtonBase} bg-yellow-600 hover:bg-yellow-500 border-yellow-400`,
 };

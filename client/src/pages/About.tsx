@@ -28,17 +28,6 @@ export default function About() {
             </p>
           </section>
 
-          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30">
-            <h2 className="text-xl font-thin text-cyan-400">How to Play</h2>
-            <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
-              <li>1. Choose a category and start the game</li>
-              <li>2. Hold your phone to your forehead in landscape mode</li>
-              <li>3. Your friends give you clues without saying the word</li>
-              <li>4. Tilt forward for correct, backward to pass</li>
-              <li>5. Score as many points as you can before time runs out!</li>
-            </ul>
-          </section>
-
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
             <h2 className="text-xl font-thin text-yellow-400">Version</h2>
             <p className="text-sm text-muted-foreground">1.0.0</p>

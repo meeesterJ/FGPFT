@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/lib/store";
 import { initAudioContextAsync } from "@/lib/audio";
-import { Play, Settings as SettingsIcon, List } from "lucide-react";
+import { Play, Settings as SettingsIcon, List, HelpCircle } from "lucide-react";
 import { BackgroundGlow, TitleStack, menuButtonStyles } from "@/components/ui/game-ui";
 
 function SplashScreen({ onTap }: { onTap: () => void }) {
@@ -75,6 +75,17 @@ function MainScreen({ onStart }: { onStart: () => void }) {
           >
             <SettingsIcon className="mr-2 w-5 h-5" />
             Settings
+          </Button>
+        </Link>
+
+        <Link href="/how-to-play">
+          <Button 
+            size="lg" 
+            className={menuButtonStyles.yellow}
+            data-testid="button-how-to-play"
+          >
+            <HelpCircle className="mr-2 w-5 h-5" />
+            How to Play
           </Button>
         </Link>
       </div>

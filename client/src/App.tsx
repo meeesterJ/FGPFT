@@ -11,6 +11,7 @@ import Game from "@/pages/Game";
 import Summary from "@/pages/Summary";
 import DeletedCategories from "@/pages/DeletedCategories";
 import About from "@/pages/About";
+import HowToPlay from "@/pages/HowToPlay";
 
 function Router() {
   return (
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/categories" component={Categories} />
       <Route path="/settings/deleted" component={DeletedCategories} />
       <Route path="/about" component={About} />
+      <Route path="/how-to-play" component={HowToPlay} />
       <Route path="/game" component={Game} />
       <Route path="/summary" component={Summary} />
       <Route component={NotFound} />
