@@ -21,7 +21,7 @@ export default function Privacy() {
       <ScrollArea className="flex-1 p-6 max-w-2xl mx-auto w-full">
         <div className="space-y-6 pb-20 text-sm text-muted-foreground leading-relaxed">
           
-          <p className="text-xs text-muted-foreground" data-testid="text-last-updated">Last updated: January 2025</p>
+          <p className="text-xs text-muted-foreground" data-testid="text-last-updated">Last updated: February 2026</p>
 
           <section className="space-y-3">
             <h2 className="text-lg font-thin text-pink-400">Introduction</h2>
