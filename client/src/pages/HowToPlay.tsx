@@ -24,7 +24,13 @@ export default function HowToPlay() {
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
             <h2 className="text-xl font-thin text-pink-400">Getting Started</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              One player holds the phone to their forehead while others give verbal clues. Tilt forward when you guess correctly, or tilt backward to pass.
+              One player holds the phone to their forehead and guesses while others give clues (verbal, acting, drawing, impersonation, accents, etc).
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Clue givers may not say the word or part of the word.
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Tilt forward when you guess correctly or tilt backward to pass.
             </p>
           </section>
 
