@@ -51,7 +51,6 @@ export default function Settings() {
               step={5}
               className="py-4"
             />
-            <p className="text-sm text-muted-foreground">Adjust how long each guessing round lasts.</p>
           </section>
 
           {/* Rounds Count */}
@@ -68,16 +67,12 @@ export default function Settings() {
               step={1}
               className="py-4"
             />
-            <p className="text-sm text-muted-foreground">How many rounds to play before the game ends.</p>
           </section>
 
-          {/* Sound Feedback Toggle */}
+          {/* Sounds Toggle */}
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
             <div className="flex justify-between items-center">
-              <div className="space-y-1">
-                <h2 className="text-xl font-thin text-purple-400">Sound Feedback</h2>
-                <p className="text-sm text-muted-foreground">Play a short beep when correct or pass is registered. Works on all devices.</p>
-              </div>
+              <h2 className="text-xl font-thin text-purple-400">Sounds</h2>
               <Switch 
                 checked={store.soundEnabled}
                 onCheckedChange={store.setSoundEnabled}
@@ -106,10 +101,7 @@ export default function Settings() {
           {/* Show Buttons Toggle */}
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
             <div className="flex justify-between items-center">
-              <div className="space-y-1">
-                <h2 className="text-xl font-thin text-yellow-400">Show Buttons</h2>
-                <p className="text-sm text-muted-foreground">Display Correct/Pass buttons during gameplay. Disable to use tilt gestures only.</p>
-              </div>
+              <h2 className="text-xl font-thin text-yellow-400">Show Buttons</h2>
               <Switch 
                 checked={store.showButtons}
                 onCheckedChange={store.setShowButtons}
@@ -122,10 +114,7 @@ export default function Settings() {
           {isStandalone && (
             <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
               <div className="flex justify-between items-center">
-                <div className="space-y-1">
-                  <h2 className="text-xl font-thin text-green-400">Haptic Feedback</h2>
-                  <p className="text-sm text-muted-foreground">Vibrate the phone when correct or pass is registered. Works on Android devices.</p>
-                </div>
+                <h2 className="text-xl font-thin text-green-400">Haptic Feedback</h2>
                 <Switch 
                   checked={store.hapticEnabled}
                   onCheckedChange={store.setHapticEnabled}
