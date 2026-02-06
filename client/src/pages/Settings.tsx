@@ -141,14 +141,6 @@ export default function Settings() {
             </section>
           )}
 
-          {/* iOS hint to add to home screen - show only in browser */}
-          {isIOS && !isStandalone && (
-            <section className="bg-card/50 p-4 rounded-2xl border border-border flex items-center gap-3">
-              <Share className="w-5 h-5 flex-shrink-0 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">For the best fullscreen experience, tap the share button and "Add to Home Screen"</span>
-            </section>
-          )}
-
           {/* Show Buttons Toggle */}
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
             <div className="flex justify-between items-center">
@@ -160,6 +152,14 @@ export default function Settings() {
               />
             </div>
           </section>
+
+          {/* iOS hint to add to home screen - show only in browser */}
+          {isIOS && !isStandalone && (
+            <section className="bg-card/50 p-4 rounded-2xl border border-border flex items-center gap-3">
+              <Share className="w-5 h-5 flex-shrink-0 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">For the best fullscreen experience, tap the share button and "Add to Home Screen"</span>
+            </section>
+          )}
 
           {/* About link */}
           <div className="flex justify-center pt-4">
