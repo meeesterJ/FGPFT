@@ -1,27 +1,5 @@
 export const DEFAULT_WORD_LISTS = [
   {
-    id: 'movies',
-    name: 'Blockbuster Movies',
-    words: [
-      'Avatar', 'Titanic', 'Star Wars', 'Jurassic Park', 'The Avengers', 
-      'The Lion King', 'Frozen', 'Harry Potter', 'Black Panther', 'Inception',
-      'The Matrix', 'Forrest Gump', 'Gladiator', 'Interstellar', 'Jaws',
-      'Rocky', 'Alien', 'The Godfather', 'Back to the Future', 'Toy Story',
-      'Frozen 2', 'Moana', 'Coco', 'Encanto', 'Turning Red',
-      'Luca', 'Soul', 'Onward', 'Inside Out', 'Zootopia',
-      'Big Hero 6', 'Tangled', 'Brave', 'Ratatouille', 'WALL-E',
-      'Finding Dory', 'The Incredibles', 'Despicable Me', 'Minions', 'Shrek',
-      'Spider-Man', 'Top Gun Maverick', 'Barbie', 'Oppenheimer', 'Dune',
-      'The Batman', 'Joker', 'Deadpool', 'Wonder Woman', 'Aquaman',
-      'Guardians of the Galaxy', 'Thor', 'Doctor Strange', 'Ant-Man', 'Captain Marvel',
-      'Black Widow', 'Shang-Chi', 'Eternals', 'Wakanda Forever', 'No Way Home',
-      'John Wick', 'Fast and Furious', 'Mission Impossible', 'James Bond', 'Transformers',
-      'Godzilla', 'Kong', 'Pacific Rim', 'Ready Player One', 'Tenet',
-      'A Quiet Place', 'Get Out', 'Us', 'Knives Out', 'Glass Onion',
-      'Everything Everywhere', 'La La Land', 'The Greatest Showman', 'Bohemian Rhapsody', 'Rocketman'
-    ]
-  },
-  {
     id: 'actions',
     name: 'Charades - Actions',
     words: [
@@ -205,15 +183,6 @@ export const DEFAULT_WORD_LISTS = [
       'Fire Truck', 'Police Car', 'Ambulance', 'Tow Truck', 'Dump Truck',
       'Superhero', 'Princess', 'Pirate', 'Cowboy', 'Astronaut',
       'Dinosaur', 'Robot', 'Unicorn', 'Dragon', 'Mermaid'
-    ]
-  },
-  {
-    id: 'brainrot',
-    name: 'Brainrot',
-    words: [
-      'Gyatt', 'Rizzler', '6-7', '4-1', 'Skibidi Toilet',
-      'Mewing', 'Furry', 'Bur-Bur-Patipin', 'Alpha', 'Rizz',
-      'Sus', 'Cap'
     ]
   },
   {
