@@ -60,6 +60,16 @@ export default function HowToPlay() {
             </ul>
           </section>
 
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
+            <h2 className="text-xl font-thin text-green-400">Categories</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">Customize your own lists!</p>
+            <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
+              <li>• Edit existing lists to add or remove words</li>
+              <li>• Add brand new lists with your own themes</li>
+              <li>• Add words one at a time or in bulk separated by commas</li>
+            </ul>
+          </section>
+
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
             <h2 className="text-xl font-thin text-yellow-400">Tips</h2>
             <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
@@ -71,6 +81,7 @@ export default function HowToPlay() {
               <li>• Use accents or impersonation or act out clues</li>
               <li>• House rules are highly encouraged!</li>
               <li>• Edit lists or create your own custom lists</li>
+              <li>• There may be some helpful, possibly fake smart tools out there that could, possibly make a list you could, say, hypothetically copy and paste into, perhaps a category. 😉</li>
             </ul>
           </section>
 
