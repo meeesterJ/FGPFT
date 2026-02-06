@@ -154,10 +154,9 @@ export default function Summary() {
                   <div className="flex items-center justify-center gap-2">
                     <Trophy className="w-5 h-5 text-yellow-400" />
                     <span className="font-bold text-yellow-400">
-                      {store.isGameFinished ? 'Overall Winner: ' : 'Round Winner: '}
                       {isTie 
-                        ? `Tie! ${winners.map(w => `Team ${w.team}`).join(' & ')}`
-                        : `Team ${winners[0].team}`
+                        ? 'Tie!'
+                        : `${store.isGameFinished ? 'Overall Winner: ' : 'Round Winner: '}Team ${winners[0].team}`
                       }
                     </span>
                   </div>
