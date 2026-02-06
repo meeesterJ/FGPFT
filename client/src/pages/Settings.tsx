@@ -71,10 +71,10 @@ export default function Settings() {
           </section>
 
           {/* Rounds Count */}
-          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-orange-500/30">
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-thin text-orange-400">Total Rounds</h2>
-              <span className="text-2xl font-mono text-orange-300">{store.totalRounds}</span>
+              <h2 className="text-xl font-thin text-green-400">Total Rounds</h2>
+              <span className="text-2xl font-mono text-green-300">{store.totalRounds}</span>
             </div>
             <Slider 
               value={[store.totalRounds]} 
@@ -87,9 +87,9 @@ export default function Settings() {
           </section>
 
           {/* Sounds Toggle */}
-          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-thin text-purple-400">Sounds</h2>
+              <h2 className="text-xl font-thin text-yellow-400">Sounds</h2>
               <Switch 
                 checked={store.soundEnabled}
                 onCheckedChange={store.setSoundEnabled}
@@ -100,7 +100,7 @@ export default function Settings() {
               <div className="space-y-2 pt-2">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Volume</span>
-                  <span className="text-sm font-mono text-purple-300">{store.soundVolume}%</span>
+                  <span className="text-sm font-mono text-yellow-300">{store.soundVolume}%</span>
                 </div>
                 <Slider 
                   value={[store.soundVolume]} 
@@ -130,9 +130,9 @@ export default function Settings() {
           )}
 
           {/* Show Buttons Toggle */}
-          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-thin text-yellow-400">Show Buttons</h2>
+              <h2 className="text-xl font-thin text-purple-400">Show Buttons</h2>
               <Switch 
                 checked={store.showButtons}
                 onCheckedChange={store.setShowButtons}
