@@ -37,33 +37,21 @@ export default function Settings() {
       <ScrollArea className="flex-1 p-6 max-w-2xl mx-auto w-full">
         <div className="space-y-8 pb-20">
 
-          {/* Team Mode */}
+          {/* Number of Teams */}
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-thin text-cyan-400">Team Mode</h2>
-              <Switch 
-                checked={store.teamMode}
-                onCheckedChange={store.setTeamMode}
-                data-testid="switch-team-mode"
-              />
+              <h2 className="text-xl font-thin text-cyan-400">Number of Teams</h2>
+              <span className="text-2xl font-mono text-cyan-300">{store.numberOfTeams}</span>
             </div>
-            {store.teamMode && (
-              <div className="space-y-3 pt-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Number of Teams</span>
-                  <span className="text-2xl font-mono text-cyan-300">{store.numberOfTeams}</span>
-                </div>
-                <Slider 
-                  value={[store.numberOfTeams]} 
-                  onValueChange={(v) => store.setNumberOfTeams(v[0])} 
-                  min={1} 
-                  max={5} 
-                  step={1}
-                  className="py-2"
-                  data-testid="slider-number-of-teams"
-                />
-              </div>
-            )}
+            <Slider 
+              value={[store.numberOfTeams]} 
+              onValueChange={(v) => store.setNumberOfTeams(v[0])} 
+              min={1} 
+              max={5} 
+              step={1}
+              className="py-2"
+              data-testid="slider-number-of-teams"
+            />
           </section>
           
           {/* Game Duration */}

@@ -695,16 +695,16 @@ export default function Game() {
   const teamTransitionPendingRef = useRef(false);
   useEffect(() => {
     const freshState = useGameStore.getState();
-    if (freshState.teamMode && !freshState.isPlaying && !freshState.isRoundOver && !freshState.isGameFinished && timeLeft <= 0 && !teamTransitionPendingRef.current) {
+    if (!freshState.isPlaying && !freshState.isRoundOver && !freshState.isGameFinished && timeLeft <= 0 && !teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = true;
       freshState.prepareRound();
     }
-  }, [store.isPlaying, store.isRoundOver, store.teamMode, store.isGameFinished, timeLeft]);
+  }, [store.isPlaying, store.isRoundOver, store.isGameFinished, timeLeft]);
 
   // When currentTeam changes (after prepareRound advances team), reset for next team's turn
   const prevTeamRef = useRef(store.currentTeam);
   useEffect(() => {
-    if (store.teamMode && prevTeamRef.current !== store.currentTeam && teamTransitionPendingRef.current) {
+    if (prevTeamRef.current !== store.currentTeam && teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = false;
       prevTeamRef.current = store.currentTeam;
       setTimeLeft(store.roundDuration);
@@ -714,7 +714,7 @@ export default function Game() {
     } else if (prevTeamRef.current !== store.currentTeam) {
       prevTeamRef.current = store.currentTeam;
     }
-  }, [store.currentTeam, store.teamMode, store.roundDuration]);
+  }, [store.currentTeam, store.roundDuration]);
   
   // Countdown sounds - tick/tock pattern for last 5 seconds and roundEnd at 0
   const lastSoundTimeRef = useRef<number | null>(null);
@@ -957,7 +957,7 @@ export default function Game() {
       {isWaitingForReady && !showRotatePrompt && !waitingForPermission && (
         <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-6 p-8">
           {/* Team indicator */}
-          {store.teamMode && (
+          {store.numberOfTeams > 1 && (
             <div className="animate-bounce-in">
               <h2 className="text-3xl font-bold text-cyan-400 tracking-wide" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-ready">
                 Team {store.currentTeam} Ready?
@@ -967,14 +967,14 @@ export default function Game() {
           
           {/* Round Number */}
           <div className="flex flex-col items-center text-center animate-bounce-in">
-            <h1 className={`${store.teamMode ? 'text-5xl' : 'text-7xl'} font-thin tracking-wide transform -rotate-2 leading-none`}>
+            <h1 className={`${store.numberOfTeams > 1 ? 'text-5xl' : 'text-7xl'} font-thin tracking-wide transform -rotate-2 leading-none`}>
               <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
               <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
               <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
               <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
               <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
             </h1>
-            <span className={`${store.teamMode ? 'text-[6rem]' : 'text-[10rem]'} font-thin text-yellow-400 leading-none mt-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+            <span className={`${store.numberOfTeams > 1 ? 'text-[6rem]' : 'text-[10rem]'} font-thin text-yellow-400 leading-none mt-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
               {store.currentRound || 1}
             </span>
           </div>
