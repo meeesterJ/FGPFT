@@ -8,6 +8,54 @@ import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSwipeBack } from "@/hooks/use-swipe-back";
 
+function TeamNameInput({ index }: { index: number }) {
+  const store = useGameStore();
+  const color = TEAM_THEME_COLORS[index % TEAM_THEME_COLORS.length];
+  const defaultName = `Team ${index + 1}`;
+  const [localValue, setLocalValue] = useState(store.teamNames[index] || defaultName);
+  const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    if (!isFocused) {
+      setLocalValue(store.teamNames[index] || defaultName);
+    }
+  }, [store.teamNames[index], isFocused]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.slice(0, MAX_TEAM_NAME_LENGTH);
+    setLocalValue(val);
+    store.setTeamName(index, val);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    if (localValue.trim() === '') {
+      setLocalValue(defaultName);
+      store.setTeamName(index, defaultName);
+    }
+  };
+
+  return (
+    <div className={`flex items-center gap-3 p-3 rounded-xl ${color.bg} border ${color.border}`}>
+      <div className={`w-3 h-3 rounded-full bg-current ${color.text} flex-shrink-0`} />
+      <input
+        type="text"
+        value={localValue}
+        onChange={handleChange}
+        onFocus={() => setIsFocused(true)}
+        onBlur={handleBlur}
+        maxLength={MAX_TEAM_NAME_LENGTH}
+        placeholder={defaultName}
+        className={`flex-1 bg-transparent border-none outline-none text-sm font-medium ${color.text} placeholder:text-muted-foreground/50`}
+        data-testid={`input-team-name-${index + 1}`}
+      />
+      <span className="text-xs text-muted-foreground">
+        {localValue.length}/{MAX_TEAM_NAME_LENGTH}
+      </span>
+    </div>
+  );
+}
+
 export default function Settings() {
   useSwipeBack({ targetPath: "/" });
   const store = useGameStore();
@@ -66,25 +114,9 @@ export default function Settings() {
 
             {teamsExpanded && (
               <div className="space-y-3 pt-2">
-                {Array.from({ length: store.numberOfTeams }, (_, i) => {
-                  const color = TEAM_THEME_COLORS[i % TEAM_THEME_COLORS.length];
-                  return (
-                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl ${color.bg} border ${color.border}`}>
-                      <div className={`w-3 h-3 rounded-full bg-current ${color.text} flex-shrink-0`} />
-                      <input
-                        type="text"
-                        value={store.teamNames[i] || `Team ${i + 1}`}
-                        onChange={(e) => store.setTeamName(i, e.target.value)}
-                        maxLength={MAX_TEAM_NAME_LENGTH}
-                        className={`flex-1 bg-transparent border-none outline-none text-sm font-medium ${color.text} placeholder:text-muted-foreground`}
-                        data-testid={`input-team-name-${i + 1}`}
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        {(store.teamNames[i] || '').length}/{MAX_TEAM_NAME_LENGTH}
-                      </span>
-                    </div>
-                  );
-                })}
+                {Array.from({ length: store.numberOfTeams }, (_, i) => (
+                  <TeamNameInput key={i} index={i} />
+                ))}
               </div>
             )}
           </section>
