@@ -156,7 +156,7 @@ export default function Summary() {
                     <span className="font-bold text-yellow-400">
                       {isTie 
                         ? 'Tie!'
-                        : `${store.isGameFinished ? 'Overall Winner: ' : 'Round Winner: '}Team ${winners[0].team}`
+                        : `Team ${winners[0].team}!`
                       }
                     </span>
                   </div>
