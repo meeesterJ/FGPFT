@@ -1,8 +1,8 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useGameStore } from "@/lib/store";
-import { ArrowLeft, Share } from "lucide-react";
+import { useGameStore, TEAM_THEME_COLORS, MAX_TEAM_NAME_LENGTH } from "@/lib/store";
+import { ArrowLeft, Share, ChevronDown } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,6 +13,7 @@ export default function Settings() {
   const store = useGameStore();
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
+  const [teamsExpanded, setTeamsExpanded] = useState(false);
 
   useEffect(() => {
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -52,6 +53,40 @@ export default function Settings() {
               className="py-2"
               data-testid="slider-number-of-teams"
             />
+
+            {/* Customize Teams expandable */}
+            <button
+              onClick={() => setTeamsExpanded(!teamsExpanded)}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-cyan-400 transition-colors w-full pt-1"
+              data-testid="button-customize-teams"
+            >
+              <ChevronDown className={`w-4 h-4 transition-transform ${teamsExpanded ? 'rotate-180' : ''}`} />
+              <span>Customize Teams</span>
+            </button>
+
+            {teamsExpanded && (
+              <div className="space-y-3 pt-2">
+                {Array.from({ length: store.numberOfTeams }, (_, i) => {
+                  const color = TEAM_THEME_COLORS[i % TEAM_THEME_COLORS.length];
+                  return (
+                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl ${color.bg} border ${color.border}`}>
+                      <div className={`w-3 h-3 rounded-full bg-current ${color.text} flex-shrink-0`} />
+                      <input
+                        type="text"
+                        value={store.teamNames[i] || `Team ${i + 1}`}
+                        onChange={(e) => store.setTeamName(i, e.target.value)}
+                        maxLength={MAX_TEAM_NAME_LENGTH}
+                        className={`flex-1 bg-transparent border-none outline-none text-sm font-medium ${color.text} placeholder:text-muted-foreground`}
+                        data-testid={`input-team-name-${i + 1}`}
+                      />
+                      <span className="text-xs text-muted-foreground">
+                        {(store.teamNames[i] || '').length}/{MAX_TEAM_NAME_LENGTH}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </section>
           
           {/* Game Duration */}

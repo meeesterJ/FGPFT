@@ -957,13 +957,17 @@ export default function Game() {
       {isWaitingForReady && !showRotatePrompt && !waitingForPermission && (
         <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-6 p-8">
           {/* Team indicator */}
-          {store.numberOfTeams > 1 && (
-            <div className="animate-bounce-in">
-              <h2 className="text-3xl font-bold text-cyan-400 tracking-wide" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-ready">
-                Team {store.currentTeam} Ready?
-              </h2>
-            </div>
-          )}
+          {store.numberOfTeams > 1 && (() => {
+            const teamColor = store.getTeamColor(store.currentTeam);
+            const teamName = store.getTeamName(store.currentTeam);
+            return (
+              <div className="animate-bounce-in">
+                <h2 className={`text-3xl font-bold ${teamColor.text} tracking-wide`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-ready">
+                  {teamName} Ready?
+                </h2>
+              </div>
+            );
+          })()}
           
           {/* Round Number */}
           <div className="flex flex-col items-center text-center animate-bounce-in">

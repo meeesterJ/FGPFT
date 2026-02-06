@@ -14,6 +14,20 @@ export type TeamScore = {
   passed: number;
 };
 
+export const TEAM_THEME_COLORS = [
+  { name: 'pink', text: 'text-pink-400', bg: 'bg-pink-500/20', border: 'border-pink-500/30', accent: 'text-pink-300' },
+  { name: 'cyan', text: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/30', accent: 'text-cyan-300' },
+  { name: 'purple', text: 'text-purple-400', bg: 'bg-purple-500/20', border: 'border-purple-500/30', accent: 'text-purple-300' },
+  { name: 'green', text: 'text-green-400', bg: 'bg-green-500/20', border: 'border-green-500/30', accent: 'text-green-300' },
+  { name: 'yellow', text: 'text-yellow-400', bg: 'bg-yellow-500/20', border: 'border-yellow-500/30', accent: 'text-yellow-300' },
+];
+
+export const MAX_TEAM_NAME_LENGTH = 12;
+
+function defaultTeamNames(count: number): string[] {
+  return Array.from({ length: count }, (_, i) => `Team ${i + 1}`);
+}
+
 interface GameState {
   // Settings
   roundDuration: number;
@@ -30,6 +44,7 @@ interface GameState {
   deletedBuiltInLists: string[];
   permanentlyDeletedBuiltInLists: string[];
   numberOfTeams: number;
+  teamNames: string[];
   
   // Game Session
   currentRound: number;
@@ -67,6 +82,9 @@ interface GameState {
   permanentlyDeleteBuiltInList: (id: string) => void;
   getEffectiveBuiltInLists: () => WordList[];
   setNumberOfTeams: (count: number) => void;
+  setTeamName: (index: number, name: string) => void;
+  getTeamName: (teamNumber: number) => string;
+  getTeamColor: (teamNumber: number) => typeof TEAM_THEME_COLORS[0];
   
   startGame: () => void;
   prepareRound: () => void;
@@ -94,6 +112,7 @@ export const useGameStore = create<GameState>()(
       deletedBuiltInLists: [],
       permanentlyDeletedBuiltInLists: [],
       numberOfTeams: 1,
+      teamNames: defaultTeamNames(1),
       
       currentRound: 0,
       currentScore: 0,
@@ -183,7 +202,28 @@ export const useGameStore = create<GameState>()(
         permanentlyDeletedBuiltInLists: [...state.permanentlyDeletedBuiltInLists, id]
       })),
 
-      setNumberOfTeams: (count) => set({ numberOfTeams: count }),
+      setNumberOfTeams: (count) => set((state) => {
+        const newNames = Array.from({ length: count }, (_, i) => {
+          return state.teamNames[i] || `Team ${i + 1}`;
+        });
+        return { numberOfTeams: count, teamNames: newNames };
+      }),
+
+      setTeamName: (index, name) => set((state) => {
+        const trimmed = name.slice(0, MAX_TEAM_NAME_LENGTH);
+        const newNames = [...state.teamNames];
+        newNames[index] = trimmed;
+        return { teamNames: newNames };
+      }),
+
+      getTeamName: (teamNumber) => {
+        const { teamNames } = get();
+        return teamNames[teamNumber - 1] || `Team ${teamNumber}`;
+      },
+
+      getTeamColor: (teamNumber) => {
+        return TEAM_THEME_COLORS[(teamNumber - 1) % TEAM_THEME_COLORS.length];
+      },
 
       startGame: () => {
         const { selectedListIds, deletedBuiltInLists, permanentlyDeletedBuiltInLists, customLists } = get();
@@ -304,7 +344,7 @@ export const useGameStore = create<GameState>()(
       },
 
       endRound: () => {
-        const { currentTeam, numberOfTeams, teamRoundScores, teamTotalScores, roundResults, teamRoundResults, teamGameResults } = get();
+        const { currentTeam, numberOfTeams, teamRoundScores, teamTotalScores, roundResults, teamGameResults } = get();
         
         const correct = roundResults.filter(r => r.correct).length;
         const passed = roundResults.filter(r => !r.correct).length;
@@ -357,12 +397,13 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'guess-party-storage',
-      version: 2,
+      version: 3,
       partialize: (state) => ({ 
         roundDuration: state.roundDuration,
         totalRounds: state.totalRounds,
         showButtons: state.showButtons,
         numberOfTeams: state.numberOfTeams,
+        teamNames: state.teamNames,
         hapticEnabled: state.hapticEnabled,
         soundEnabled: state.soundEnabled,
         soundVolume: state.soundVolume,
@@ -379,6 +420,10 @@ export const useGameStore = create<GameState>()(
           if (!persistedState.numberOfTeams) {
             persistedState.numberOfTeams = 1;
           }
+        }
+        if (version < 3) {
+          const count = persistedState.numberOfTeams || 1;
+          persistedState.teamNames = defaultTeamNames(count);
         }
         return persistedState;
       },

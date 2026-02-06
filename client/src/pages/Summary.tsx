@@ -1,19 +1,11 @@
 import { useLocation } from "wouter";
-import { useGameStore } from "@/lib/store";
+import { useGameStore, TEAM_THEME_COLORS } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, ArrowRight, Home, Trophy, ListX, CheckCircle2, Crown, X } from "lucide-react";
 import { menuButtonStyles } from "@/components/ui/game-ui";
 import Confetti from "react-confetti";
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { playSound, stopSound } from "@/lib/audio";
-
-const TEAM_COLORS = [
-  { text: 'text-pink-400', bg: 'bg-pink-500/20', border: 'border-pink-500/30' },
-  { text: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/30' },
-  { text: 'text-yellow-400', bg: 'bg-yellow-500/20', border: 'border-yellow-500/30' },
-  { text: 'text-green-400', bg: 'bg-green-500/20', border: 'border-green-500/30' },
-  { text: 'text-purple-400', bg: 'bg-purple-500/20', border: 'border-purple-500/30' },
-];
 
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
@@ -118,8 +110,9 @@ export default function Summary() {
           <div className="space-y-3 animate-bounce-in w-full max-w-sm">
             <div className="space-y-2">
               {scores.map((score, i) => {
+                const color = TEAM_THEME_COLORS[i % TEAM_THEME_COLORS.length];
+                const teamName = store.getTeamName(i + 1);
                 const isWinner = winnerInfo && !winnerInfo.isTie && score.correct === winnerInfo.maxCorrect && store.numberOfTeams > 1;
-                const color = TEAM_COLORS[i % TEAM_COLORS.length];
                 return (
                   <button
                     key={i}
@@ -129,8 +122,8 @@ export default function Summary() {
                   >
                     <div className="flex items-center gap-2">
                       {isWinner && <Crown className="w-5 h-5 text-yellow-400" />}
-                      <span className={`font-bold text-lg ${color.text}`}>
-                        {store.numberOfTeams > 1 ? `Team ${i + 1}` : 'Score'}
+                      <span className={`font-bold text-lg ${color.text} truncate max-w-[8rem]`}>
+                        {store.numberOfTeams > 1 ? teamName : 'Score'}
                       </span>
                     </div>
                     <div className="flex items-center gap-4">
@@ -153,7 +146,7 @@ export default function Summary() {
                 <div className="flex items-center justify-center gap-2">
                   <Trophy className="w-5 h-5 text-yellow-400" />
                   <span className="font-bold text-yellow-400">
-                    {winnerInfo.isTie ? 'Tie!' : `Team ${winnerInfo.winnerTeam}!`}
+                    {winnerInfo.isTie ? 'Tie!' : `${store.getTeamName(winnerInfo.winnerTeam)}!`}
                   </span>
                 </div>
               </div>
@@ -208,35 +201,39 @@ export default function Summary() {
       </div>
 
       {/* Word List Popup */}
-      {selectedTeamIndex !== null && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setSelectedTeamIndex(null)}>
-          <div className="bg-card rounded-2xl border border-purple-500/30 shadow-2xl w-full max-w-xs max-h-[80vh] flex flex-col m-4" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <h3 className="font-bold text-lg">
-                {store.numberOfTeams > 1 ? `Team ${selectedTeamIndex + 1}` : 'Words'} — {store.isGameFinished ? 'All Rounds' : `Round ${store.currentRound}`}
-              </h3>
-              <button onClick={() => setSelectedTeamIndex(null)} className="p-1 rounded-full hover:bg-muted transition-colors" data-testid="button-close-popup">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-3 space-y-1">
-              {wordResults.map((res, i) => (
-                <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/50">
-                  <span className="font-medium text-sm">{res.word}</span>
-                  {res.correct ? (
-                    <CheckCircle2 className="text-green-400 w-5 h-5 flex-shrink-0" />
-                  ) : (
-                    <ListX className="text-red-400 w-5 h-5 flex-shrink-0" />
-                  )}
-                </div>
-              ))}
-              {wordResults.length === 0 && (
-                <p className="text-muted-foreground italic text-sm text-center py-4">No words played yet.</p>
-              )}
+      {selectedTeamIndex !== null && (() => {
+        const popupColor = TEAM_THEME_COLORS[selectedTeamIndex % TEAM_THEME_COLORS.length];
+        const popupTeamName = store.getTeamName(selectedTeamIndex + 1);
+        return (
+          <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setSelectedTeamIndex(null)}>
+            <div className={`bg-card rounded-2xl border ${popupColor.border} shadow-2xl w-full max-w-xs max-h-[80vh] flex flex-col m-4`} onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <h3 className={`font-bold text-lg ${popupColor.text} truncate`}>
+                  {store.numberOfTeams > 1 ? popupTeamName : 'Words'} — {store.isGameFinished ? 'All Rounds' : `Round ${store.currentRound}`}
+                </h3>
+                <button onClick={() => setSelectedTeamIndex(null)} className="p-1 rounded-full hover:bg-muted transition-colors flex-shrink-0" data-testid="button-close-popup">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-3 space-y-1">
+                {wordResults.map((res, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                    <span className="font-medium text-sm">{res.word}</span>
+                    {res.correct ? (
+                      <CheckCircle2 className="text-green-400 w-5 h-5 flex-shrink-0" />
+                    ) : (
+                      <ListX className="text-red-400 w-5 h-5 flex-shrink-0" />
+                    )}
+                  </div>
+                ))}
+                {wordResults.length === 0 && (
+                  <p className="text-muted-foreground italic text-sm text-center py-4">No words played yet.</p>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
