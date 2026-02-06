@@ -167,22 +167,26 @@ export default function Summary() {
             </div>
 
             {/* Right side - Header + Button */}
-            <div className="flex flex-col justify-end items-center pb-2 gap-4">
+            <div className="flex flex-col justify-center items-center gap-6 min-w-[10rem]">
               {store.isGameFinished ? (
-                <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none animate-bounce-in">
-                  <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
-                </h1>
+                <div className="flex flex-col items-center animate-bounce-in">
+                  <h1 className="text-6xl font-thin tracking-wide transform -rotate-2 leading-tight text-center" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+                    <span className="text-yellow-400">Game</span>
+                    <br />
+                    <span className="text-yellow-400">Over!</span>
+                  </h1>
+                </div>
               ) : (
                 <div className="flex flex-col items-center animate-bounce-in">
-                  <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
+                  <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
                     <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
                     <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
                     <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
                     <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
                     <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
-                    <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
                   </h1>
-                  <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
+                  <span className="text-7xl font-thin text-yellow-400 leading-none mt-2" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
+                  <span className="text-base text-muted-foreground uppercase tracking-widest mt-2">Complete</span>
                 </div>
               )}
               <Button 
@@ -252,20 +256,24 @@ export default function Summary() {
               </div>
 
               {store.isGameFinished ? (
-                <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none text-center animate-bounce-in">
-                  <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
-                </h1>
+                <div className="flex flex-col items-center animate-bounce-in">
+                  <h1 className="text-6xl font-thin tracking-wide transform -rotate-2 leading-tight text-center" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+                    <span className="text-yellow-400">Game</span>
+                    <br />
+                    <span className="text-yellow-400">Over!</span>
+                  </h1>
+                </div>
               ) : (
                 <div className="flex flex-col items-center animate-bounce-in">
-                  <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
+                  <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
                     <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
                     <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
                     <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
                     <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
                     <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
-                    <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
                   </h1>
-                  <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
+                  <span className="text-7xl font-thin text-yellow-400 leading-none mt-2" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
+                  <span className="text-base text-muted-foreground uppercase tracking-widest mt-2">Complete</span>
                 </div>
               )}
 

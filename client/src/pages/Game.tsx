@@ -955,50 +955,46 @@ export default function Game() {
 
       {/* Ready Screen Overlay - shown before countdown */}
       {isWaitingForReady && !showRotatePrompt && !waitingForPermission && (
-        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-between p-8">
-          {/* Team indicator at top */}
+        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-6 p-8">
+          {/* Team indicator */}
           {store.teamMode && (
-            <div className="pt-4 animate-bounce-in">
+            <div className="animate-bounce-in">
               <h2 className="text-3xl font-bold text-cyan-400 tracking-wide" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-ready">
                 Team {store.currentTeam} Ready?
               </h2>
             </div>
           )}
-          {!store.teamMode && <div className="flex-1" />}
           
-          {/* Dramatic Round Number - centered */}
+          {/* Round Number */}
           <div className="flex flex-col items-center text-center animate-bounce-in">
-            <h1 className={`${store.teamMode ? 'text-4xl mb-3' : 'text-7xl mb-6'} font-thin tracking-wide transform -rotate-2 leading-none`}>
+            <h1 className={`${store.teamMode ? 'text-5xl' : 'text-7xl'} font-thin tracking-wide transform -rotate-2 leading-none`}>
               <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
               <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
               <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
               <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
               <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
             </h1>
-            <span className={`${store.teamMode ? 'text-8xl' : 'text-[14rem]'} font-thin text-yellow-400 leading-none`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+            <span className={`${store.teamMode ? 'text-[6rem]' : 'text-[10rem]'} font-thin text-yellow-400 leading-none mt-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
               {store.currentRound || 1}
             </span>
           </div>
           
-          {/* Bottom section with instructions and Play button */}
-          <div className="flex-1 flex flex-col items-center justify-end pb-8 space-y-4">
-            {/* Tilt instructions - only on devices with orientation support */}
-            {hasDeviceOrientation && (
-              <div className="flex items-center gap-3 text-muted-foreground">
-                <Smartphone className="w-5 h-5 animate-bounce" style={{ animationDuration: '1.5s' }} />
-                <span className="text-base">Tilt forward to start</span>
-              </div>
-            )}
-            {/* Play button - always available as fallback */}
-            <Button 
-              onClick={onReady}
-              size="lg"
-              className="text-xl px-10 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
-            >
-              <Play className="w-7 h-7 mr-3" />
-              Play
-            </Button>
-          </div>
+          {/* Tilt instructions */}
+          {hasDeviceOrientation && (
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <Smartphone className="w-5 h-5 animate-bounce" style={{ animationDuration: '1.5s' }} />
+              <span className="text-base">Tilt forward to start</span>
+            </div>
+          )}
+          {/* Play button */}
+          <Button 
+            onClick={onReady}
+            size="lg"
+            className="text-xl px-10 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
+          >
+            <Play className="w-7 h-7 mr-3" />
+            Play
+          </Button>
         </div>
       )}
 
