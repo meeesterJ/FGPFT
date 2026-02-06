@@ -16,38 +16,36 @@ export type TeamScore = {
 
 interface GameState {
   // Settings
-  roundDuration: number; // in seconds
+  roundDuration: number;
   totalRounds: number;
-  showButtons: boolean; // Show/hide Correct/Pass buttons during gameplay
-  hapticEnabled: boolean; // Enable haptic vibration feedback
-  soundEnabled: boolean; // Enable sound feedback
-  soundVolume: number; // Sound volume 0-100
-  tiltPermissionGranted: boolean; // iOS device orientation permission granted
-  splashDismissed: boolean; // Track if splash screen has been dismissed this session
+  showButtons: boolean;
+  hapticEnabled: boolean;
+  soundEnabled: boolean;
+  soundVolume: number;
+  tiltPermissionGranted: boolean;
+  splashDismissed: boolean;
   selectedListIds: string[];
   customLists: WordList[];
-  builtInListOverrides: Record<string, { name?: string; words?: string[] }>; // Edits to built-in lists
-  deletedBuiltInLists: string[]; // Track deleted built-in lists
-  permanentlyDeletedBuiltInLists: string[]; // Track permanently deleted built-in lists
+  builtInListOverrides: Record<string, { name?: string; words?: string[] }>;
+  deletedBuiltInLists: string[];
+  permanentlyDeletedBuiltInLists: string[];
   numberOfTeams: number;
   
   // Game Session
   currentRound: number;
   currentScore: number;
-  totalScore: number;
-  roundWords: string[]; // Words processed in current round
   currentWord: string | null;
-  deck: string[]; // Remaining words to guess in current game
-  usedWords: string[]; // Words already shown in this game (for no-repeat until exhausted)
+  deck: string[];
+  usedWords: string[];
   isPlaying: boolean;
   isRoundOver: boolean;
   isGameFinished: boolean;
-  roundResults: { word: string; correct: boolean }[]; // Track history of current team's turn
-  currentTeam: number; // 1-based, which team is currently playing
-  teamRoundScores: TeamScore[]; // scores for each team in the current round
-  teamTotalScores: TeamScore[]; // cumulative scores across all rounds
-  teamRoundResults: { word: string; correct: boolean }[][]; // per-team word results for current round
-  teamGameResults: { word: string; correct: boolean }[][]; // per-team word results accumulated across all rounds
+  roundResults: { word: string; correct: boolean }[];
+  currentTeam: number;
+  teamRoundScores: TeamScore[];
+  teamTotalScores: TeamScore[];
+  teamRoundResults: { word: string; correct: boolean }[][];
+  teamGameResults: { word: string; correct: boolean }[][];
 
   // Actions
   setRoundDuration: (seconds: number) => void;
@@ -73,7 +71,6 @@ interface GameState {
   startGame: () => void;
   prepareRound: () => void;
   beginRound: () => void;
-  startRound: () => void;
   nextWord: (correct: boolean) => void;
   endRound: () => void;
   isAllTeamsPlayed: () => boolean;
@@ -83,7 +80,6 @@ interface GameState {
 export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
-      // Defaults
       roundDuration: 30,
       totalRounds: 3,
       showButtons: false,
@@ -101,8 +97,6 @@ export const useGameStore = create<GameState>()(
       
       currentRound: 0,
       currentScore: 0,
-      totalScore: 0,
-      roundWords: [],
       currentWord: null,
       deck: [],
       usedWords: [],
@@ -216,22 +210,21 @@ export const useGameStore = create<GameState>()(
         const allWords = activeLists.flatMap(l => l.words).sort(() => Math.random() - 0.5);
         
         const { numberOfTeams } = get();
-        const emptyTeamScores = Array.from({ length: numberOfTeams }, () => ({ correct: 0, passed: 0 }));
-        const emptyTeamResults: { word: string; correct: boolean }[][] = Array.from({ length: numberOfTeams }, () => []);
+        const emptyScores = () => Array.from({ length: numberOfTeams }, () => ({ correct: 0, passed: 0 }));
+        const emptyResults = () => Array.from({ length: numberOfTeams }, (): { word: string; correct: boolean }[] => []);
         
         set({
           currentRound: 0,
-          totalScore: 0,
           deck: allWords,
           usedWords: [],
           isGameFinished: false,
           isRoundOver: true,
           isPlaying: false,
           currentTeam: 0,
-          teamRoundScores: Array.from({ length: numberOfTeams }, () => ({ correct: 0, passed: 0 })),
-          teamTotalScores: emptyTeamScores,
-          teamRoundResults: emptyTeamResults,
-          teamGameResults: Array.from({ length: numberOfTeams }, () => []),
+          teamRoundScores: emptyScores(),
+          teamTotalScores: emptyScores(),
+          teamRoundResults: emptyResults(),
+          teamGameResults: emptyResults(),
         });
         get().prepareRound();
       },
@@ -264,7 +257,7 @@ export const useGameStore = create<GameState>()(
           currentScore: 0,
           roundResults: [],
           teamRoundScores: Array.from({ length: numberOfTeams }, () => ({ correct: 0, passed: 0 })),
-          teamRoundResults: Array.from({ length: numberOfTeams }, () => []),
+          teamRoundResults: Array.from({ length: numberOfTeams }, (): { word: string; correct: boolean }[] => []),
           currentWord: deck[0] || "No Words!",
           isPlaying: false,
           isRoundOver: false
@@ -275,16 +268,12 @@ export const useGameStore = create<GameState>()(
         set({ isPlaying: true });
       },
 
-      startRound: () => {
-        get().prepareRound();
-        get().beginRound();
-      },
-
       nextWord: (correct) => {
-        const { deck, currentWord, roundResults, currentScore, usedWords } = get();
+        const { deck, currentWord, roundResults, currentScore, usedWords, currentTeam, teamRoundResults } = get();
         if (!currentWord) return;
 
-        const newResults = [...roundResults, { word: currentWord, correct }];
+        const entry = { word: currentWord, correct };
+        const newResults = [...roundResults, entry];
         const newScore = correct ? currentScore + 1 : currentScore;
         const newUsedWords = [...usedWords, currentWord];
         const newDeck = deck.slice(1);
@@ -300,17 +289,22 @@ export const useGameStore = create<GameState>()(
            finalUsedWords = [];
         }
 
+        const teamIndex = currentTeam - 1;
+        const newTeamRoundResults = [...teamRoundResults];
+        newTeamRoundResults[teamIndex] = [...(newTeamRoundResults[teamIndex] || []), entry];
+
         set({
           currentScore: newScore,
           roundResults: newResults,
           deck: finalDeck,
           usedWords: finalUsedWords,
-          currentWord: nextWordStr
+          currentWord: nextWordStr,
+          teamRoundResults: newTeamRoundResults,
         });
       },
 
       endRound: () => {
-        const { currentScore, totalScore, currentTeam, numberOfTeams, teamRoundScores, teamTotalScores, roundResults, teamRoundResults, teamGameResults } = get();
+        const { currentTeam, numberOfTeams, teamRoundScores, teamTotalScores, roundResults, teamRoundResults, teamGameResults } = get();
         
         const correct = roundResults.filter(r => r.correct).length;
         const passed = roundResults.filter(r => !r.correct).length;
@@ -325,9 +319,6 @@ export const useGameStore = create<GameState>()(
           passed: newTotalScores[teamIndex].passed + passed
         };
         
-        const newTeamRoundResults = [...teamRoundResults];
-        newTeamRoundResults[teamIndex] = [...roundResults];
-        
         const newTeamGameResults = [...teamGameResults];
         newTeamGameResults[teamIndex] = [...(newTeamGameResults[teamIndex] || []), ...roundResults];
         
@@ -336,10 +327,8 @@ export const useGameStore = create<GameState>()(
         set({
           isPlaying: false,
           isRoundOver: allTeamsDone,
-          totalScore: totalScore + currentScore,
           teamRoundScores: newRoundScores,
           teamTotalScores: newTotalScores,
-          teamRoundResults: newTeamRoundResults,
           teamGameResults: newTeamGameResults,
         });
       },
@@ -353,7 +342,6 @@ export const useGameStore = create<GameState>()(
         set({
           currentRound: 0,
           currentScore: 0,
-          totalScore: 0,
           deck: [],
           usedWords: [],
           isPlaying: false,
@@ -369,6 +357,7 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'guess-party-storage',
+      version: 2,
       partialize: (state) => ({ 
         roundDuration: state.roundDuration,
         totalRounds: state.totalRounds,
@@ -384,6 +373,15 @@ export const useGameStore = create<GameState>()(
         deletedBuiltInLists: state.deletedBuiltInLists,
         permanentlyDeletedBuiltInLists: state.permanentlyDeletedBuiltInLists
       }),
+      migrate: (persistedState: any, version: number) => {
+        if (version < 2) {
+          delete persistedState.teamMode;
+          if (!persistedState.numberOfTeams) {
+            persistedState.numberOfTeams = 1;
+          }
+        }
+        return persistedState;
+      },
     }
   )
 );

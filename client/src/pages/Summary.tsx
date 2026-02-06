@@ -1,10 +1,10 @@
 import { useLocation } from "wouter";
-import { useGameStore, type TeamScore } from "@/lib/store";
+import { useGameStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, ArrowRight, Home, Trophy, ListX, CheckCircle2, Crown, X } from "lucide-react";
 import { menuButtonStyles } from "@/components/ui/game-ui";
 import Confetti from "react-confetti";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { playSound, stopSound } from "@/lib/audio";
 
 const TEAM_COLORS = [
@@ -47,6 +47,16 @@ export default function Summary() {
   const [selectedTeamIndex, setSelectedTeamIndex] = useState<number | null>(null);
 
   const isLastRound = store.currentRound >= store.totalRounds && !store.isGameFinished;
+
+  const scores = store.isGameFinished ? store.teamTotalScores : store.teamRoundScores;
+
+  const winnerInfo = useMemo(() => {
+    if (scores.length === 0 || store.numberOfTeams <= 1) return null;
+    const maxCorrect = Math.max(...scores.map(s => s.correct));
+    if (maxCorrect === 0) return null;
+    const winners = scores.map((s, i) => ({ team: i + 1, correct: s.correct })).filter(t => t.correct === maxCorrect);
+    return { isTie: winners.length > 1, winnerTeam: winners[0].team, maxCorrect };
+  }, [scores, store.numberOfTeams]);
 
   useEffect(() => {
     if (store.isGameFinished && !hasPlayedGameEndSound.current) {
@@ -106,12 +116,9 @@ export default function Summary() {
         {/* Left side: Scoreboard */}
         <div className="flex-1 flex flex-col items-center justify-center text-center">
           <div className="space-y-3 animate-bounce-in w-full max-w-sm">
-            {/* Team Scoreboard */}
             <div className="space-y-2">
-              {(store.isGameFinished ? store.teamTotalScores : store.teamRoundScores).map((score, i) => {
-                const scores = store.isGameFinished ? store.teamTotalScores : store.teamRoundScores;
-                const maxCorrect = scores.length > 0 ? Math.max(...scores.map(s => s.correct)) : 0;
-                const isWinner = score.correct === maxCorrect && maxCorrect > 0 && store.numberOfTeams > 1;
+              {scores.map((score, i) => {
+                const isWinner = winnerInfo && !winnerInfo.isTie && score.correct === winnerInfo.maxCorrect && store.numberOfTeams > 1;
                 const color = TEAM_COLORS[i % TEAM_COLORS.length];
                 return (
                   <button
@@ -141,28 +148,16 @@ export default function Summary() {
               })}
             </div>
 
-            {/* Winner declaration - only show with multiple teams */}
-            {store.numberOfTeams > 1 && (() => {
-              const scores = store.isGameFinished ? store.teamTotalScores : store.teamRoundScores;
-              if (scores.length === 0) return null;
-              const maxCorrect = Math.max(...scores.map(s => s.correct));
-              if (maxCorrect === 0) return null;
-              const winners = scores.map((s, i) => ({ team: i + 1, correct: s.correct })).filter(t => t.correct === maxCorrect);
-              const isTie = winners.length > 1;
-              return (
-                <div className="mt-4 p-3 rounded-xl bg-yellow-500/20 border border-yellow-500/30 text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <Trophy className="w-5 h-5 text-yellow-400" />
-                    <span className="font-bold text-yellow-400">
-                      {isTie 
-                        ? 'Tie!'
-                        : `Team ${winners[0].team}!`
-                      }
-                    </span>
-                  </div>
+            {winnerInfo && (
+              <div className="mt-4 p-3 rounded-xl bg-yellow-500/20 border border-yellow-500/30 text-center">
+                <div className="flex items-center justify-center gap-2">
+                  <Trophy className="w-5 h-5 text-yellow-400" />
+                  <span className="font-bold text-yellow-400">
+                    {winnerInfo.isTie ? 'Tie!' : `Team ${winnerInfo.winnerTeam}!`}
+                  </span>
                 </div>
-              );
-            })()}
+              </div>
+            )}
           </div>
         </div>
 
