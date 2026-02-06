@@ -109,27 +109,9 @@ export default function Summary() {
         
         {store.teamMode ? (
           <>
-            {/* Team Mode Layout */}
+            {/* Team Mode Layout - Left side: Scoreboard */}
             <div className="flex-1 flex flex-col items-center justify-center text-center">
               <div className="space-y-3 animate-bounce-in w-full max-w-sm">
-                {store.isGameFinished ? (
-                  <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none mb-4">
-                    <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
-                  </h1>
-                ) : (
-                  <div className="flex flex-col items-center mb-4">
-                    <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
-                      <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
-                      <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
-                      <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
-                      <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
-                      <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
-                      <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
-                    </h1>
-                    <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
-                  </div>
-                )}
-
                 {/* Team Scoreboard */}
                 <div className="space-y-2">
                   {(store.isGameFinished ? store.teamTotalScores : store.teamRoundScores).map((score, i) => {
@@ -184,8 +166,25 @@ export default function Summary() {
               </div>
             </div>
 
-            {/* Right side - Button */}
-            <div className="flex flex-col justify-end pb-2">
+            {/* Right side - Header + Button */}
+            <div className="flex flex-col justify-end items-center pb-2 gap-4">
+              {store.isGameFinished ? (
+                <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none animate-bounce-in">
+                  <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
+                </h1>
+              ) : (
+                <div className="flex flex-col items-center animate-bounce-in">
+                  <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
+                    <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
+                    <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
+                    <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
+                    <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
+                    <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                    <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
+                  </h1>
+                  <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
+                </div>
+              )}
               <Button 
                 size="lg" 
                 className={`${menuButtonStyles.pink} h-12`}
@@ -210,26 +209,9 @@ export default function Summary() {
           </>
         ) : (
           <>
-            {/* Non-team Mode Layout (original) */}
+            {/* Non-team Mode Layout - Left side: Score */}
             <div className="flex-1 flex flex-col items-center justify-center text-center">
               <div className="space-y-2 animate-bounce-in">
-                {store.isGameFinished ? (
-                  <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none">
-                    <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
-                  </h1>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
-                      <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
-                      <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
-                      <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
-                      <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
-                      <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
-                      <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
-                    </h1>
-                    <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
-                  </div>
-                )}
                 <div className="text-[8rem] font-thin text-yellow-400 leading-none" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
                    {store.currentScore}
                 </div>
@@ -248,7 +230,7 @@ export default function Summary() {
               )}
             </div>
 
-            {/* Right side - Word history and buttons */}
+            {/* Right side - Word history, header, and button */}
             <div className="flex-1 flex flex-col gap-3 max-h-full">
               <div className="bg-card/80 rounded-xl border border-purple-500/30 p-3 shadow-xl flex-1 overflow-y-auto min-h-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)]">
                 <h3 className="text-sm font-bold mb-2 text-left sticky top-0 bg-card/80 z-10 pb-1 border-b border-border">Word History</h3>
@@ -268,6 +250,24 @@ export default function Summary() {
                   )}
                 </div>
               </div>
+
+              {store.isGameFinished ? (
+                <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none text-center animate-bounce-in">
+                  <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
+                </h1>
+              ) : (
+                <div className="flex flex-col items-center animate-bounce-in">
+                  <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
+                    <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
+                    <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
+                    <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
+                    <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
+                    <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                    <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
+                  </h1>
+                  <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
+                </div>
+              )}
 
               <Button 
                 size="lg" 
