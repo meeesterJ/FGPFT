@@ -39,7 +39,8 @@ The server uses a storage abstraction pattern (`IStorage` interface) allowing ea
 
 ### Key Game Features
 - Device orientation detection for tilt-based answer input
-- Configurable round duration (timer) and total rounds
+- Configurable round duration (timer) and total rounds (1-5)
+- **Team Mode**: Toggle on/off in settings, supports 1-5 teams. Each round cycles through all teams. Round summary shows per-team correct/passed counts with round winner. Game end shows overall winner (most total correct).
 - Built-in word lists (Movies, Animals, Actions, Household Objects)
 - Custom word list creation with CSV import support
 - Soft-delete and permanent delete for built-in categories

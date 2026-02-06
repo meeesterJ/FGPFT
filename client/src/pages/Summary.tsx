@@ -1,11 +1,19 @@
 import { useLocation } from "wouter";
-import { useGameStore } from "@/lib/store";
+import { useGameStore, type TeamScore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, ArrowRight, Home, Trophy, ListX, CheckCircle2 } from "lucide-react";
+import { RotateCcw, ArrowRight, Home, Trophy, ListX, CheckCircle2, Crown } from "lucide-react";
 import { menuButtonStyles } from "@/components/ui/game-ui";
 import Confetti from "react-confetti";
 import { useState, useEffect, useRef } from 'react';
 import { playSound, stopSound } from "@/lib/audio";
+
+const TEAM_COLORS = [
+  { text: 'text-pink-400', bg: 'bg-pink-500/20', border: 'border-pink-500/30' },
+  { text: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/30' },
+  { text: 'text-yellow-400', bg: 'bg-yellow-500/20', border: 'border-yellow-500/30' },
+  { text: 'text-green-400', bg: 'bg-green-500/20', border: 'border-green-500/30' },
+  { text: 'text-purple-400', bg: 'bg-purple-500/20', border: 'border-purple-500/30' },
+];
 
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
@@ -99,85 +107,191 @@ export default function Summary() {
       
       <div className="w-full h-full max-h-full z-10 flex flex-row gap-4">
         
-        {/* Left side - Score display */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center">
-          <div className="space-y-2 animate-bounce-in">
-            {store.isGameFinished ? (
-              <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none">
-                <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
-              </h1>
-            ) : (
-              <div className="flex flex-col items-center">
-                <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
-                  <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
-                  <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
-                  <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
-                  <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
-                  <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
-                  <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
-                </h1>
-                <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
-              </div>
-            )}
-            <div className="text-[8rem] font-thin text-yellow-400 leading-none" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
-               {store.currentScore}
-            </div>
-            <p className="text-lg font-medium text-foreground">Points this round</p>
-          </div>
+        {store.teamMode ? (
+          <>
+            {/* Team Mode Layout */}
+            <div className="flex-1 flex flex-col items-center justify-center text-center">
+              <div className="space-y-3 animate-bounce-in w-full max-w-sm">
+                {store.isGameFinished ? (
+                  <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none mb-4">
+                    <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
+                  </h1>
+                ) : (
+                  <div className="flex flex-col items-center mb-4">
+                    <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
+                      <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
+                      <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
+                      <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
+                      <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
+                      <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                      <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
+                    </h1>
+                    <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
+                  </div>
+                )}
 
-          {store.isGameFinished && (
-             <div className="bg-cyan-600 p-3 rounded-xl border-2 border-cyan-400 shadow-xl mt-4">
-               <div className="flex items-center justify-center space-x-2">
-                  <Trophy className="w-8 h-8 text-yellow-300 drop-shadow-lg" />
-                  <h3 className="text-2xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-                    Total: <span className="text-yellow-300 font-thin text-3xl" style={{ fontFamily: 'var(--font-display)' }}>{store.totalScore}</span>
-                  </h3>
-               </div>
-             </div>
-          )}
-        </div>
-
-        {/* Right side - Word history and buttons */}
-        <div className="flex-1 flex flex-col gap-3 max-h-full">
-          <div className="bg-card/80 rounded-xl border border-purple-500/30 p-3 shadow-xl flex-1 overflow-y-auto min-h-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)]">
-            <h3 className="text-sm font-bold mb-2 text-left sticky top-0 bg-card/80 z-10 pb-1 border-b border-border">Word History</h3>
-            <div className="space-y-1">
-              {store.roundResults.map((res, i) => (
-                <div key={i} className="flex items-center justify-between p-1.5 rounded-lg bg-background/50">
-                  <span className="font-medium text-sm">{res.word}</span>
-                  {res.correct ? (
-                    <CheckCircle2 className="text-success w-5 h-5" />
-                  ) : (
-                    <ListX className="text-destructive w-5 h-5" />
-                  )}
+                {/* Team Scoreboard */}
+                <div className="space-y-2">
+                  {(store.isGameFinished ? store.teamTotalScores : store.teamRoundScores).map((score, i) => {
+                    const scores = store.isGameFinished ? store.teamTotalScores : store.teamRoundScores;
+                    const maxCorrect = scores.length > 0 ? Math.max(...scores.map(s => s.correct)) : 0;
+                    const isWinner = score.correct === maxCorrect && maxCorrect > 0;
+                    const color = TEAM_COLORS[i % TEAM_COLORS.length];
+                    return (
+                      <div key={i} className={`flex items-center justify-between p-3 rounded-xl ${color.bg} border ${color.border} ${isWinner ? 'ring-2 ring-yellow-400/50' : ''}`} data-testid={`team-score-${i + 1}`}>
+                        <div className="flex items-center gap-2">
+                          {isWinner && <Crown className="w-5 h-5 text-yellow-400" />}
+                          <span className={`font-bold text-lg ${color.text}`}>Team {i + 1}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-1">
+                            <CheckCircle2 className="w-4 h-4 text-green-400" />
+                            <span className="font-mono text-lg text-green-400">{score.correct}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <ListX className="w-4 h-4 text-red-400" />
+                            <span className="font-mono text-lg text-red-400">{score.passed}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-              {store.roundResults.length === 0 && (
-                 <p className="text-muted-foreground italic text-sm">No guesses made this round.</p>
+
+                {/* Winner declaration */}
+                {(() => {
+                  const scores = store.isGameFinished ? store.teamTotalScores : store.teamRoundScores;
+                  if (scores.length === 0) return null;
+                  const maxCorrect = Math.max(...scores.map(s => s.correct));
+                  if (maxCorrect === 0) return null;
+                  const winners = scores.map((s, i) => ({ team: i + 1, correct: s.correct })).filter(t => t.correct === maxCorrect);
+                  const isTie = winners.length > 1;
+                  return (
+                    <div className="mt-4 p-3 rounded-xl bg-yellow-500/20 border border-yellow-500/30 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <Trophy className="w-5 h-5 text-yellow-400" />
+                        <span className="font-bold text-yellow-400">
+                          {store.isGameFinished ? 'Overall Winner: ' : 'Round Winner: '}
+                          {isTie 
+                            ? `Tie! ${winners.map(w => `Team ${w.team}`).join(' & ')}`
+                            : `Team ${winners[0].team}`
+                          }
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+
+            {/* Right side - Button */}
+            <div className="flex flex-col justify-end pb-2">
+              <Button 
+                size="lg" 
+                className={`${menuButtonStyles.pink} h-12`}
+                onClick={handleNext}
+                data-testid="button-next"
+              >
+                {store.isGameFinished ? (
+                  <>
+                    <RotateCcw className="mr-2 w-5 h-5" /> Play Again
+                  </>
+                ) : isLastRound ? (
+                  <>
+                    And the Winner Is... <Trophy className="ml-2 w-5 h-5" />
+                  </>
+                ) : (
+                  <>
+                    Next Round <ArrowRight className="ml-2 w-5 h-5" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Non-team Mode Layout (original) */}
+            <div className="flex-1 flex flex-col items-center justify-center text-center">
+              <div className="space-y-2 animate-bounce-in">
+                {store.isGameFinished ? (
+                  <h1 className="text-4xl font-thin tracking-wide transform -rotate-2 leading-none">
+                    <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Game Over!</span>
+                  </h1>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <h1 className="text-3xl font-thin tracking-wide transform -rotate-2 leading-none">
+                      <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
+                      <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
+                      <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
+                      <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
+                      <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                      <span className="text-yellow-400 ml-2 text-4xl" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
+                    </h1>
+                    <span className="text-sm text-muted-foreground uppercase tracking-widest">Complete</span>
+                  </div>
+                )}
+                <div className="text-[8rem] font-thin text-yellow-400 leading-none" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+                   {store.currentScore}
+                </div>
+                <p className="text-lg font-medium text-foreground">Points this round</p>
+              </div>
+
+              {store.isGameFinished && (
+                 <div className="bg-cyan-600 p-3 rounded-xl border-2 border-cyan-400 shadow-xl mt-4">
+                   <div className="flex items-center justify-center space-x-2">
+                      <Trophy className="w-8 h-8 text-yellow-300 drop-shadow-lg" />
+                      <h3 className="text-2xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                        Total: <span className="text-yellow-300 font-thin text-3xl" style={{ fontFamily: 'var(--font-display)' }}>{store.totalScore}</span>
+                      </h3>
+                   </div>
+                 </div>
               )}
             </div>
-          </div>
 
-          <Button 
-            size="lg" 
-            className={`${menuButtonStyles.pink} h-12`}
-            onClick={handleNext}
-          >
-            {store.isGameFinished ? (
-              <>
-                <RotateCcw className="mr-2 w-5 h-5" /> Play Again
-              </>
-            ) : isLastRound ? (
-              <>
-                And the Winner Is... <Trophy className="ml-2 w-5 h-5" />
-              </>
-            ) : (
-              <>
-                Next Round <ArrowRight className="ml-2 w-5 h-5" />
-              </>
-            )}
-          </Button>
-        </div>
+            {/* Right side - Word history and buttons */}
+            <div className="flex-1 flex flex-col gap-3 max-h-full">
+              <div className="bg-card/80 rounded-xl border border-purple-500/30 p-3 shadow-xl flex-1 overflow-y-auto min-h-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)]">
+                <h3 className="text-sm font-bold mb-2 text-left sticky top-0 bg-card/80 z-10 pb-1 border-b border-border">Word History</h3>
+                <div className="space-y-1">
+                  {store.roundResults.map((res, i) => (
+                    <div key={i} className="flex items-center justify-between p-1.5 rounded-lg bg-background/50">
+                      <span className="font-medium text-sm">{res.word}</span>
+                      {res.correct ? (
+                        <CheckCircle2 className="text-success w-5 h-5" />
+                      ) : (
+                        <ListX className="text-destructive w-5 h-5" />
+                      )}
+                    </div>
+                  ))}
+                  {store.roundResults.length === 0 && (
+                     <p className="text-muted-foreground italic text-sm">No guesses made this round.</p>
+                  )}
+                </div>
+              </div>
+
+              <Button 
+                size="lg" 
+                className={`${menuButtonStyles.pink} h-12`}
+                onClick={handleNext}
+                data-testid="button-next"
+              >
+                {store.isGameFinished ? (
+                  <>
+                    <RotateCcw className="mr-2 w-5 h-5" /> Play Again
+                  </>
+                ) : isLastRound ? (
+                  <>
+                    And the Winner Is... <Trophy className="ml-2 w-5 h-5" />
+                  </>
+                ) : (
+                  <>
+                    Next Round <ArrowRight className="ml-2 w-5 h-5" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

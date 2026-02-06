@@ -36,6 +36,35 @@ export default function Settings() {
 
       <ScrollArea className="flex-1 p-6 max-w-2xl mx-auto w-full">
         <div className="space-y-8 pb-20">
+
+          {/* Team Mode */}
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-thin text-cyan-400">Team Mode</h2>
+              <Switch 
+                checked={store.teamMode}
+                onCheckedChange={store.setTeamMode}
+                data-testid="switch-team-mode"
+              />
+            </div>
+            {store.teamMode && (
+              <div className="space-y-3 pt-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Number of Teams</span>
+                  <span className="text-2xl font-mono text-cyan-300">{store.numberOfTeams}</span>
+                </div>
+                <Slider 
+                  value={[store.numberOfTeams]} 
+                  onValueChange={(v) => store.setNumberOfTeams(v[0])} 
+                  min={1} 
+                  max={5} 
+                  step={1}
+                  className="py-2"
+                  data-testid="slider-number-of-teams"
+                />
+              </div>
+            )}
+          </section>
           
           {/* Game Duration */}
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
@@ -54,16 +83,16 @@ export default function Settings() {
           </section>
 
           {/* Rounds Count */}
-          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30">
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-orange-500/30">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-thin text-cyan-400">Total Rounds</h2>
-              <span className="text-2xl font-mono text-cyan-300">{store.totalRounds}</span>
+              <h2 className="text-xl font-thin text-orange-400">Total Rounds</h2>
+              <span className="text-2xl font-mono text-orange-300">{store.totalRounds}</span>
             </div>
             <Slider 
               value={[store.totalRounds]} 
               onValueChange={(v) => store.setTotalRounds(v[0])} 
               min={1} 
-              max={10} 
+              max={5} 
               step={1}
               className="py-4"
             />
@@ -98,18 +127,6 @@ export default function Settings() {
             )}
           </section>
 
-          {/* Show Buttons Toggle */}
-          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-thin text-yellow-400">Show Buttons</h2>
-              <Switch 
-                checked={store.showButtons}
-                onCheckedChange={store.setShowButtons}
-                data-testid="switch-show-buttons"
-              />
-            </div>
-          </section>
-
           {/* Haptic Feedback Toggle - only show when installed as PWA */}
           {isStandalone && (
             <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
@@ -131,6 +148,18 @@ export default function Settings() {
               <span className="text-sm text-muted-foreground">For the best fullscreen experience, tap the share button and "Add to Home Screen"</span>
             </section>
           )}
+
+          {/* Show Buttons Toggle */}
+          <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-thin text-yellow-400">Show Buttons</h2>
+              <Switch 
+                checked={store.showButtons}
+                onCheckedChange={store.setShowButtons}
+                data-testid="switch-show-buttons"
+              />
+            </div>
+          </section>
 
           {/* About link */}
           <div className="flex justify-center pt-4">

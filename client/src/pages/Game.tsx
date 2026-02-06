@@ -690,6 +690,30 @@ export default function Game() {
       store.endRound();
     }
   }, [timeLeft, store.isPlaying]);
+
+  // Handle team transition in team mode (when not all teams have played yet)
+  const teamTransitionPendingRef = useRef(false);
+  useEffect(() => {
+    if (store.teamMode && !store.isPlaying && !store.isRoundOver && !store.isGameFinished && timeLeft <= 0 && !teamTransitionPendingRef.current) {
+      teamTransitionPendingRef.current = true;
+      store.prepareRound();
+    }
+  }, [store.isPlaying, store.isRoundOver, store.teamMode, store.isGameFinished, timeLeft]);
+
+  // When currentTeam changes (after prepareRound advances team), reset for next team's turn
+  const prevTeamRef = useRef(store.currentTeam);
+  useEffect(() => {
+    if (store.teamMode && prevTeamRef.current !== store.currentTeam && teamTransitionPendingRef.current) {
+      teamTransitionPendingRef.current = false;
+      prevTeamRef.current = store.currentTeam;
+      setTimeLeft(store.roundDuration);
+      isCountdownActiveRef.current = false;
+      hasShownInitialCountdownRef.current = false;
+      setIsWaitingForReady(true);
+    } else if (prevTeamRef.current !== store.currentTeam) {
+      prevTeamRef.current = store.currentTeam;
+    }
+  }, [store.currentTeam, store.teamMode, store.roundDuration]);
   
   // Countdown sounds - tick/tock pattern for last 5 seconds and roundEnd at 0
   const lastSoundTimeRef = useRef<number | null>(null);
@@ -931,8 +955,15 @@ export default function Game() {
       {/* Ready Screen Overlay - shown before countdown */}
       {isWaitingForReady && !showRotatePrompt && !waitingForPermission && (
         <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-between p-8">
-          {/* Top spacer for balance */}
-          <div className="flex-1" />
+          {/* Team indicator at top */}
+          {store.teamMode && (
+            <div className="pt-4 animate-bounce-in">
+              <h2 className="text-4xl font-bold text-cyan-400 tracking-wide" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-ready">
+                Team {store.currentTeam} Ready?
+              </h2>
+            </div>
+          )}
+          {!store.teamMode && <div className="flex-1" />}
           
           {/* Dramatic Round Number - centered and huge */}
           <div className="flex flex-col items-center text-center animate-bounce-in">

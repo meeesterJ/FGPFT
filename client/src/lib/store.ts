@@ -9,6 +9,11 @@ export type WordList = {
   isCustom?: boolean;
 };
 
+export type TeamScore = {
+  correct: number;
+  passed: number;
+};
+
 interface GameState {
   // Settings
   roundDuration: number; // in seconds
@@ -24,6 +29,8 @@ interface GameState {
   builtInListOverrides: Record<string, { name?: string; words?: string[] }>; // Edits to built-in lists
   deletedBuiltInLists: string[]; // Track deleted built-in lists
   permanentlyDeletedBuiltInLists: string[]; // Track permanently deleted built-in lists
+  teamMode: boolean;
+  numberOfTeams: number;
   
   // Game Session
   currentRound: number;
@@ -37,6 +44,9 @@ interface GameState {
   isRoundOver: boolean;
   isGameFinished: boolean;
   roundResults: { word: string; correct: boolean }[]; // Track history of current round
+  currentTeam: number; // 1-based, which team is currently playing
+  teamRoundScores: TeamScore[]; // scores for each team in the current round
+  teamTotalScores: TeamScore[]; // cumulative scores across all rounds
 
   // Actions
   setRoundDuration: (seconds: number) => void;
@@ -57,6 +67,8 @@ interface GameState {
   restoreBuiltInList: (id: string) => void;
   permanentlyDeleteBuiltInList: (id: string) => void;
   getEffectiveBuiltInLists: () => WordList[];
+  setTeamMode: (enabled: boolean) => void;
+  setNumberOfTeams: (count: number) => void;
   
   startGame: () => void;
   prepareRound: () => void;  // Set up deck/word, isPlaying stays false
@@ -64,6 +76,7 @@ interface GameState {
   startRound: () => void;    // Legacy: prepareRound + beginRound
   nextWord: (correct: boolean) => void;
   endRound: () => void;
+  isAllTeamsPlayed: () => boolean;
   resetGame: () => void;
 }
 
@@ -84,6 +97,8 @@ export const useGameStore = create<GameState>()(
       builtInListOverrides: {},
       deletedBuiltInLists: [],
       permanentlyDeletedBuiltInLists: [],
+      teamMode: false,
+      numberOfTeams: 2,
       
       currentRound: 0,
       currentScore: 0,
@@ -96,6 +111,9 @@ export const useGameStore = create<GameState>()(
       isRoundOver: false,
       isGameFinished: false,
       roundResults: [],
+      currentTeam: 1,
+      teamRoundScores: [],
+      teamTotalScores: [],
 
       setRoundDuration: (seconds) => set({ roundDuration: seconds }),
       setTotalRounds: (rounds) => set({ totalRounds: rounds }),
@@ -171,6 +189,9 @@ export const useGameStore = create<GameState>()(
         permanentlyDeletedBuiltInLists: [...state.permanentlyDeletedBuiltInLists, id]
       })),
 
+      setTeamMode: (enabled) => set({ teamMode: enabled }),
+      setNumberOfTeams: (count) => set({ numberOfTeams: count }),
+
       startGame: () => {
         // Ensure at least one category is selected, default to first available if none
         const { selectedListIds, deletedBuiltInLists, permanentlyDeletedBuiltInLists, customLists } = get();
@@ -198,6 +219,11 @@ export const useGameStore = create<GameState>()(
         const activeLists = allAvailableLists.filter(l => activeListIds.includes(l.id));
         const allWords = activeLists.flatMap(l => l.words).sort(() => Math.random() - 0.5);
         
+        const { teamMode, numberOfTeams } = get();
+        const emptyTeamScores = teamMode 
+          ? Array.from({ length: numberOfTeams }, () => ({ correct: 0, passed: 0 }))
+          : [];
+        
         set({
           currentRound: 0,
           totalScore: 0,
@@ -205,28 +231,62 @@ export const useGameStore = create<GameState>()(
           usedWords: [],
           isGameFinished: false,
           isRoundOver: true,
-          isPlaying: false
+          isPlaying: false,
+          currentTeam: 0,
+          teamRoundScores: teamMode ? Array.from({ length: numberOfTeams }, () => ({ correct: 0, passed: 0 })) : [],
+          teamTotalScores: emptyTeamScores,
         });
         get().prepareRound();
       },
 
-      // Set up for next round WITHOUT rebuilding deck - uses existing game deck
       prepareRound: () => {
-        const { currentRound, totalRounds, deck } = get();
+        const { currentRound, totalRounds, deck, teamMode, numberOfTeams, currentTeam } = get();
         
-        if (currentRound >= totalRounds) {
-          set({ isGameFinished: true, isPlaying: false });
-          return;
-        }
+        if (teamMode) {
+          const allTeamsPlayed = currentTeam >= numberOfTeams;
+          
+          if (!allTeamsPlayed && currentTeam > 0) {
+            set({
+              currentTeam: currentTeam + 1,
+              currentScore: 0,
+              roundResults: [],
+              currentWord: deck[0] || "No Words!",
+              isPlaying: false,
+              isRoundOver: false
+            });
+            return;
+          }
+          
+          if (allTeamsPlayed && currentRound >= totalRounds) {
+            set({ isGameFinished: true, isPlaying: false });
+            return;
+          }
 
-        set({
-          currentRound: currentRound + 1,
-          currentScore: 0,
-          roundResults: [],
-          currentWord: deck[0] || "No Words!",
-          isPlaying: false,
-          isRoundOver: false
-        });
+          set({
+            currentRound: currentRound + 1,
+            currentTeam: 1,
+            currentScore: 0,
+            roundResults: [],
+            teamRoundScores: Array.from({ length: numberOfTeams }, () => ({ correct: 0, passed: 0 })),
+            currentWord: deck[0] || "No Words!",
+            isPlaying: false,
+            isRoundOver: false
+          });
+        } else {
+          if (currentRound >= totalRounds) {
+            set({ isGameFinished: true, isPlaying: false });
+            return;
+          }
+
+          set({
+            currentRound: currentRound + 1,
+            currentScore: 0,
+            roundResults: [],
+            currentWord: deck[0] || "No Words!",
+            isPlaying: false,
+            isRoundOver: false
+          });
+        }
       },
 
       // Start playing - called after countdown completes
@@ -271,12 +331,44 @@ export const useGameStore = create<GameState>()(
       },
 
       endRound: () => {
-        const { currentScore, totalScore } = get();
-        set({
-          isPlaying: false,
-          isRoundOver: true,
-          totalScore: totalScore + currentScore
-        });
+        const { currentScore, totalScore, teamMode, currentTeam, numberOfTeams, teamRoundScores, teamTotalScores, roundResults } = get();
+        
+        if (teamMode) {
+          const correct = roundResults.filter(r => r.correct).length;
+          const passed = roundResults.filter(r => !r.correct).length;
+          const teamIndex = currentTeam - 1;
+          
+          const newRoundScores = [...teamRoundScores];
+          newRoundScores[teamIndex] = { correct, passed };
+          
+          const newTotalScores = [...teamTotalScores];
+          newTotalScores[teamIndex] = {
+            correct: newTotalScores[teamIndex].correct + correct,
+            passed: newTotalScores[teamIndex].passed + passed
+          };
+          
+          const allTeamsDone = currentTeam >= numberOfTeams;
+          
+          set({
+            isPlaying: false,
+            isRoundOver: allTeamsDone,
+            totalScore: totalScore + currentScore,
+            teamRoundScores: newRoundScores,
+            teamTotalScores: newTotalScores,
+          });
+        } else {
+          set({
+            isPlaying: false,
+            isRoundOver: true,
+            totalScore: totalScore + currentScore
+          });
+        }
+      },
+
+      isAllTeamsPlayed: () => {
+        const { teamMode, currentTeam, numberOfTeams } = get();
+        if (!teamMode) return true;
+        return currentTeam >= numberOfTeams;
       },
 
       resetGame: () => {
@@ -288,7 +380,10 @@ export const useGameStore = create<GameState>()(
           usedWords: [],
           isPlaying: false,
           isRoundOver: false,
-          isGameFinished: false
+          isGameFinished: false,
+          currentTeam: 1,
+          teamRoundScores: [],
+          teamTotalScores: [],
         });
       }
     }),
@@ -298,6 +393,8 @@ export const useGameStore = create<GameState>()(
         roundDuration: state.roundDuration,
         totalRounds: state.totalRounds,
         showButtons: state.showButtons,
+        teamMode: state.teamMode,
+        numberOfTeams: state.numberOfTeams,
         hapticEnabled: state.hapticEnabled,
         soundEnabled: state.soundEnabled,
         soundVolume: state.soundVolume,
