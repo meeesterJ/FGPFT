@@ -990,35 +990,32 @@ export default function Game() {
         const scorePassed = store.teamRoundScores[teamIdx]?.passed ?? 0;
         return (
           <div 
-            className="absolute inset-0 z-[55] cursor-pointer"
-            style={{ backgroundColor: scoreTeamColor.bgSolid }}
+            className="absolute inset-0 z-[55] bg-background cursor-pointer"
             onClick={handleScoreDismiss}
             data-testid="team-score-screen"
           >
-            <div className="w-full h-full flex items-center justify-center px-8">
-              <div className="flex items-center gap-12 animate-bounce-in">
-                {/* Left: Team name */}
-                <h2 className="text-5xl font-black text-white tracking-wide truncate max-w-[14rem]" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-team-score-name">
+            <div className="w-full h-full flex flex-row items-center justify-center gap-4 p-6">
+              {/* Left: Team name */}
+              <div className="flex-1 flex items-center justify-center animate-bounce-in">
+                <h2 className={`text-6xl font-black ${scoreTeamColor.text} tracking-wide truncate max-w-[14rem]`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-team-score-name">
                   {scoreTeamName}
                 </h2>
-
-                {/* Divider */}
-                <div className="w-px h-24 bg-white/30" />
-
-                {/* Right: Scores */}
-                <div className="flex items-center gap-8">
-                  <div className="flex flex-col items-center">
-                    <CheckCircle2 className="w-8 h-8 text-green-300 mb-1" />
-                    <span className="font-mono text-6xl font-black text-green-300 leading-none" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.3)' }} data-testid="text-team-score-count">{scoreCorrect}</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <ListX className="w-8 h-8 text-red-300 mb-1" />
-                    <span className="font-mono text-6xl font-black text-red-300 leading-none" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>{scorePassed}</span>
-                  </div>
-                </div>
               </div>
 
-              <p className="absolute bottom-6 left-0 right-0 text-center text-sm text-white/60 animate-pulse">Tap to continue</p>
+              {/* Right: Scores */}
+              <div className="flex flex-col items-center justify-center gap-4 min-w-[10rem] animate-bounce-in">
+                <div className="flex items-center gap-6">
+                  <div className="flex flex-col items-center">
+                    <CheckCircle2 className="w-7 h-7 text-green-400 mb-1" />
+                    <span className="font-mono text-6xl font-black text-green-400 leading-none" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.3)' }} data-testid="text-team-score-count">{scoreCorrect}</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <ListX className="w-7 h-7 text-red-400 mb-1" />
+                    <span className="font-mono text-6xl font-black text-red-400 leading-none" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>{scorePassed}</span>
+                  </div>
+                </div>
+                <p className={`text-sm ${scoreTeamColor.accent} animate-pulse`}>Tap to continue</p>
+              </div>
             </div>
           </div>
         );
@@ -1046,55 +1043,54 @@ export default function Game() {
       })()}
 
       {/* Ready Screen Overlay - shown before countdown */}
-      {isWaitingForReady && !showRotatePrompt && !waitingForPermission && !isHandoff && (
-        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-6 p-8">
-          {/* Team indicator */}
-          {store.numberOfTeams > 1 && (() => {
-            const teamColor = store.getTeamColor(store.currentTeam);
-            const teamName = store.getTeamName(store.currentTeam);
-            return (
-              <div className="animate-bounce-in">
-                <h2 className={`text-3xl font-bold ${teamColor.text} tracking-wide`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-ready">
-                  {teamName} Ready?
+      {isWaitingForReady && !showRotatePrompt && !waitingForPermission && !isHandoff && (() => {
+        const readyTeamColor = store.numberOfTeams > 1 ? store.getTeamColor(store.currentTeam) : null;
+        const readyTeamName = store.numberOfTeams > 1 ? store.getTeamName(store.currentTeam) : null;
+        return (
+          <div className="absolute inset-0 z-50 bg-background flex flex-row items-center justify-center gap-4 p-6">
+            {/* Left: Team name (if multi-team) or Round info */}
+            <div className="flex-1 flex flex-col items-center justify-center animate-bounce-in">
+              {readyTeamColor && readyTeamName && (
+                <h2 className={`text-5xl font-black ${readyTeamColor.text} tracking-wide mb-4`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-ready">
+                  {readyTeamName}
                 </h2>
+              )}
+              <div className="flex flex-col items-center text-center">
+                <h1 className={`${store.numberOfTeams > 1 ? 'text-5xl' : 'text-7xl'} font-thin tracking-wide transform -rotate-2 leading-none`}>
+                  <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
+                  <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
+                  <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
+                  <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
+                  <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                </h1>
+                <span className={`${store.numberOfTeams > 1 ? 'text-[6rem]' : 'text-[10rem]'} font-thin text-yellow-400 leading-none mt-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+                  {store.currentRound || 1}
+                </span>
               </div>
-            );
-          })()}
-          
-          {/* Round Number */}
-          <div className="flex flex-col items-center text-center animate-bounce-in">
-            <h1 className={`${store.numberOfTeams > 1 ? 'text-5xl' : 'text-7xl'} font-thin tracking-wide transform -rotate-2 leading-none`}>
-              <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
-              <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
-              <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
-              <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
-              <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
-            </h1>
-            <span className={`${store.numberOfTeams > 1 ? 'text-[6rem]' : 'text-[10rem]'} font-thin text-yellow-400 leading-none mt-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
-              {store.currentRound || 1}
-            </span>
-          </div>
-          
-          {/* Tilt instructions */}
-          {hasDeviceOrientation && (
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <Smartphone className="w-5 h-5 animate-bounce" style={{ animationDuration: '1.5s' }} />
-              <span className="text-base">Tilt forward to start</span>
             </div>
-          )}
-          {/* Play button - only shown when buttons mode is on */}
-          {store.showButtons && (
-            <Button 
-              onClick={onReady}
-              size="lg"
-              className="text-xl px-10 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
-            >
-              <Play className="w-7 h-7 mr-3" />
-              Play
-            </Button>
-          )}
-        </div>
-      )}
+
+            {/* Right: Controls */}
+            <div className="flex flex-col items-center justify-center gap-4 min-w-[10rem]">
+              {hasDeviceOrientation && (
+                <div className="flex items-center gap-3 text-muted-foreground animate-bounce-in">
+                  <Smartphone className="w-5 h-5 animate-bounce" style={{ animationDuration: '1.5s' }} />
+                  <span className="text-base">Tilt forward to start</span>
+                </div>
+              )}
+              {store.showButtons && (
+                <Button 
+                  onClick={onReady}
+                  size="lg"
+                  className="text-xl px-10 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
+                >
+                  <Play className="w-7 h-7 mr-3" />
+                  Play
+                </Button>
+              )}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Countdown Overlay */}
       {countdown !== null && (
