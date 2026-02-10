@@ -987,34 +987,36 @@ export default function Game() {
         const scoreTeamName = store.getTeamName(store.currentTeam);
         const teamIdx = store.currentTeam - 1;
         const scoreCorrect = store.teamRoundScores[teamIdx]?.correct ?? 0;
-        const scorePassed = store.teamRoundScores[teamIdx]?.passed ?? 0;
+        const scoreNameWords = scoreTeamName.split(' ');
         return (
           <div 
             className="absolute inset-0 z-[55] bg-background cursor-pointer"
             onClick={handleScoreDismiss}
             data-testid="team-score-screen"
           >
-            <div className="w-full h-full flex flex-row items-center justify-center gap-4 p-6">
-              {/* Left: Team name */}
-              <div className="flex-1 flex items-center justify-center animate-bounce-in">
-                <h2 className={`text-6xl font-black ${scoreTeamColor.text} tracking-wide truncate max-w-[14rem]`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-team-score-name">
-                  {scoreTeamName}
-                </h2>
-              </div>
-
-              {/* Right: Scores */}
-              <div className="flex flex-col items-center justify-center gap-4 min-w-[10rem] animate-bounce-in">
-                <div className="flex items-center gap-6">
-                  <div className="flex flex-col items-center">
-                    <CheckCircle2 className="w-7 h-7 text-green-400 mb-1" />
-                    <span className="font-mono text-6xl font-black text-green-400 leading-none" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.3)' }} data-testid="text-team-score-count">{scoreCorrect}</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <ListX className="w-7 h-7 text-red-400 mb-1" />
-                    <span className="font-mono text-6xl font-black text-red-400 leading-none" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>{scorePassed}</span>
+            <div className="w-full h-full flex flex-col">
+              <div className="flex-1 flex flex-row items-center justify-center px-8">
+                {/* Left: Team name - one line per word */}
+                <div className="flex-1 flex items-center justify-center animate-bounce-in">
+                  <div className="flex flex-col items-center" data-testid="text-team-score-name">
+                    {scoreNameWords.map((word, i) => (
+                      <span key={i} className={`text-7xl font-black ${scoreTeamColor.text} tracking-wide leading-tight`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
+                        {word}
+                      </span>
+                    ))}
                   </div>
                 </div>
-                <p className={`text-sm ${scoreTeamColor.accent} animate-pulse`}>Tap to continue</p>
+
+                {/* Right: Score */}
+                <div className="flex-1 flex flex-col items-center justify-center animate-bounce-in">
+                  <span className="text-4xl font-thin text-muted-foreground tracking-wide" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Score</span>
+                  <span className="text-[10rem] font-thin text-yellow-400 leading-none" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 12px rgba(0,0,0,0.3)' }} data-testid="text-team-score-count">{scoreCorrect}</span>
+                </div>
+              </div>
+
+              {/* Bottom: Tap to continue */}
+              <div className="pb-6 flex items-center justify-center gap-3 text-muted-foreground">
+                <span className="text-base animate-pulse">Tap to continue</span>
               </div>
             </div>
           </div>
@@ -1046,16 +1048,25 @@ export default function Game() {
       {isWaitingForReady && !showRotatePrompt && !waitingForPermission && !isHandoff && (() => {
         const readyTeamColor = store.numberOfTeams > 1 ? store.getTeamColor(store.currentTeam) : null;
         const readyTeamName = store.numberOfTeams > 1 ? store.getTeamName(store.currentTeam) : null;
+        const readyNameWords = readyTeamName ? readyTeamName.split(' ') : [];
         return (
-          <div className="absolute inset-0 z-50 bg-background flex flex-row items-center justify-center gap-4 p-6">
-            {/* Left: Team name (if multi-team) or Round info */}
-            <div className="flex-1 flex flex-col items-center justify-center animate-bounce-in">
-              {readyTeamColor && readyTeamName && (
-                <h2 className={`text-5xl font-black ${readyTeamColor.text} tracking-wide mb-4`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-ready">
-                  {readyTeamName}
-                </h2>
+          <div className="absolute inset-0 z-50 bg-background flex flex-col">
+            <div className="flex-1 flex flex-row items-center justify-center px-8">
+              {/* Left: Team name - one line per word */}
+              {readyTeamColor && readyNameWords.length > 0 && (
+                <div className="flex-1 flex items-center justify-center animate-bounce-in">
+                  <div className="flex flex-col items-center" data-testid="text-team-ready">
+                    {readyNameWords.map((word, i) => (
+                      <span key={i} className={`text-7xl font-black ${readyTeamColor.text} tracking-wide leading-tight`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
+                        {word}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               )}
-              <div className="flex flex-col items-center text-center">
+
+              {/* Right: Round number */}
+              <div className="flex-1 flex flex-col items-center justify-center animate-bounce-in">
                 <h1 className={`${store.numberOfTeams > 1 ? 'text-5xl' : 'text-7xl'} font-thin tracking-wide transform -rotate-2 leading-none`}>
                   <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
                   <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
@@ -1069,10 +1080,10 @@ export default function Game() {
               </div>
             </div>
 
-            {/* Right: Controls */}
-            <div className="flex flex-col items-center justify-center gap-4 min-w-[10rem]">
+            {/* Bottom: Tilt instructions / Play button */}
+            <div className="pb-6 flex flex-col items-center justify-center gap-3">
               {hasDeviceOrientation && (
-                <div className="flex items-center gap-3 text-muted-foreground animate-bounce-in">
+                <div className="flex items-center gap-3 text-muted-foreground">
                   <Smartphone className="w-5 h-5 animate-bounce" style={{ animationDuration: '1.5s' }} />
                   <span className="text-base">Tilt forward to start</span>
                 </div>
