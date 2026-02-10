@@ -23,6 +23,7 @@ export default function Game() {
   const [isCountingDown, setIsCountingDown] = useState(false); // Start as false, only count after onReady
   const [waitingForPermission, setWaitingForPermission] = useState(false); // Wait for iOS permission before countdown
   const [isWaitingForReady, setIsWaitingForReady] = useState(false); // Wait for user to be ready before countdown
+  const [isHandoff, setIsHandoff] = useState(false); // Handoff screen - tap to confirm team has the phone
   const [calibrationTrigger, setCalibrationTrigger] = useState(0); // Increment to force recalibration
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tiltThresholdRef = useRef(25); // Degrees of tilt delta to trigger (lowered for better sensitivity)
@@ -289,7 +290,7 @@ export default function Game() {
       
       if (!tiltEnabled) return;
       
-      if (Math.abs(tiltDelta) >= readyThreshold) {
+      if (tiltDelta >= readyThreshold) {
         if (holdStartTime === null) {
           holdStartTime = Date.now();
         } else if (Date.now() - holdStartTime >= HOLD_DURATION_MS) {
@@ -662,7 +663,7 @@ export default function Game() {
 
   // Timer logic - pause during countdown, ready screen, and permission prompt
   useEffect(() => {
-    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !waitingForPermission && timeLeft > 0) {
+    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !isHandoff && !waitingForPermission && timeLeft > 0) {
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
@@ -673,7 +674,7 @@ export default function Game() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, waitingForPermission, timeLeft]);
+  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, waitingForPermission, timeLeft]);
 
   // Handle timer expiration
   useEffect(() => {
@@ -701,7 +702,8 @@ export default function Game() {
       setTimeLeft(store.roundDuration);
       isCountdownActiveRef.current = false;
       hasShownInitialCountdownRef.current = false;
-      setIsWaitingForReady(true);
+      setIsWaitingForReady(false);
+      setIsHandoff(true);
     } else if (prevTeamRef.current !== store.currentTeam) {
       prevTeamRef.current = store.currentTeam;
     }
@@ -711,7 +713,7 @@ export default function Game() {
   const lastSoundTimeRef = useRef<number | null>(null);
   useEffect(() => {
     // Only play sounds when playing and not counting down, waiting for ready, waiting for permission, or showing rotate prompt
-    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || waitingForPermission || showRotatePrompt) return;
+    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || isHandoff || waitingForPermission || showRotatePrompt) return;
     
     // Avoid playing the same sound twice for the same timeLeft value
     if (lastSoundTimeRef.current === timeLeft) return;
@@ -729,7 +731,7 @@ export default function Game() {
         soundRoundEnd();
       }
     }
-  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, waitingForPermission, showRotatePrompt, store.currentRound, store.totalRounds]);
+  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, waitingForPermission, showRotatePrompt, store.currentRound, store.totalRounds]);
 
   // Handle Game Over / Round End Redirect
   useEffect(() => {
@@ -840,9 +842,19 @@ export default function Game() {
     }
   };
 
-  // Function to show the ready screen before countdown
-  const showReadyScreen = () => {
+  const showHandoffScreen = () => {
+    setIsWaitingForReady(false);
+    setIsHandoff(true);
+  };
+
+  const handleHandoffConfirm = () => {
+    initAudioContext();
+    setIsHandoff(false);
     setIsWaitingForReady(true);
+  };
+
+  const showReadyScreen = () => {
+    showHandoffScreen();
   };
 
   // Function called when user is ready (tilt or button press)
@@ -944,8 +956,45 @@ export default function Game() {
         </div>
       )}
 
+      {/* Handoff Screen Overlay - tap to confirm team has the phone */}
+      {isHandoff && !showRotatePrompt && !waitingForPermission && (
+        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-8 p-8">
+          {store.numberOfTeams > 1 ? (() => {
+            const teamColor = store.getTeamColor(store.currentTeam);
+            const teamName = store.getTeamName(store.currentTeam);
+            return (
+              <>
+                <h2 className={`text-4xl font-bold ${teamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-handoff-team">
+                  Pass the phone to
+                </h2>
+                <h1 className={`text-6xl font-black ${teamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
+                  {teamName}
+                </h1>
+              </>
+            );
+          })() : (
+            <>
+              <h2 className="text-4xl font-bold text-pink-400 tracking-wide text-center" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+                Get Ready!
+              </h2>
+              <p className="text-xl text-muted-foreground text-center">
+                Round {store.currentRound || 1}
+              </p>
+            </>
+          )}
+          <Button
+            onClick={handleHandoffConfirm}
+            size="lg"
+            className="text-2xl px-12 py-8 rounded-2xl bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
+            data-testid="button-handoff-confirm"
+          >
+            We're Ready!
+          </Button>
+        </div>
+      )}
+
       {/* Ready Screen Overlay - shown before countdown */}
-      {isWaitingForReady && !showRotatePrompt && !waitingForPermission && (
+      {isWaitingForReady && !showRotatePrompt && !waitingForPermission && !isHandoff && (
         <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-6 p-8">
           {/* Team indicator */}
           {store.numberOfTeams > 1 && (() => {
