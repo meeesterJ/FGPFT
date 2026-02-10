@@ -49,13 +49,15 @@ export function BackgroundGlow() {
 
 interface TitleStackProps {
   animated?: boolean;
+  inline?: boolean;
 }
 
-export function TitleStack({ animated = false }: TitleStackProps) {
-  const titleStyle = {
-    fontSize: 'clamp(3rem, 9vh, 4.5rem)',
-    lineHeight: 1.1,
-  };
+export function TitleStack({ animated = false, inline = false }: TitleStackProps) {
+  const titleStyle = inline
+    ? { fontSize: 'clamp(2rem, 6vw, 3.5rem)', lineHeight: 1.1 }
+    : { fontSize: 'clamp(3rem, 9vh, 4.5rem)', lineHeight: 1.1 };
+  
+  const wordDisplay = inline ? 'inline' : 'block';
   
   if (animated) {
     return (
@@ -65,20 +67,20 @@ export function TitleStack({ animated = false }: TitleStackProps) {
         animate="visible"
       >
         <h1 
-          className="font-thin tracking-wide transform -rotate-2"
+          className={`font-thin tracking-wide transform -rotate-2 ${inline ? 'whitespace-nowrap' : ''}`}
           style={titleStyle}
         >
-          {titleWords.map((word) => (
+          {titleWords.map((word, i) => (
             <motion.span
               key={word.text}
-              className={`block ${word.color}`}
+              className={`${word.color}`}
               variants={wordVariants}
               style={{
-                display: 'block',
+                display: wordDisplay,
                 textShadow: '0 4px 8px rgba(0,0,0,0.3)',
               }}
             >
-              {word.text}
+              {word.text}{inline && i < titleWords.length - 1 ? ' ' : ''}
             </motion.span>
           ))}
         </h1>
@@ -88,19 +90,19 @@ export function TitleStack({ animated = false }: TitleStackProps) {
   
   return (
     <h1 
-      className="font-thin tracking-wide transform -rotate-2"
+      className={`font-thin tracking-wide transform -rotate-2 ${inline ? 'whitespace-nowrap' : ''}`}
       style={titleStyle}
     >
-      {titleWords.map((word) => (
+      {titleWords.map((word, i) => (
         <span
           key={word.text}
-          className={`block ${word.color}`}
+          className={`${word.color}`}
           style={{
-            display: 'block',
+            display: wordDisplay,
             textShadow: '0 4px 8px rgba(0,0,0,0.3)',
           }}
         >
-          {word.text}
+          {word.text}{inline && i < titleWords.length - 1 ? ' ' : ''}
         </span>
       ))}
     </h1>

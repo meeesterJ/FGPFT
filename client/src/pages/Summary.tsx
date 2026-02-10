@@ -6,6 +6,7 @@ import { menuButtonStyles } from "@/components/ui/game-ui";
 import Confetti from "react-confetti";
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { playSound, stopSound } from "@/lib/audio";
+import { useIsLandscape } from "@/hooks/use-landscape";
 
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
@@ -37,6 +38,7 @@ export default function Summary() {
   const hasPlayedGameEndSound = useRef(false);
   const hasPlayedDrumroll = useRef(false);
   const [selectedTeamIndex, setSelectedTeamIndex] = useState<number | null>(null);
+  const isLandscape = useIsLandscape();
 
   const isLastRound = store.currentRound >= store.totalRounds && !store.isGameFinished;
 
@@ -49,6 +51,23 @@ export default function Summary() {
     const winners = scores.map((s, i) => ({ team: i + 1, correct: s.correct })).filter(t => t.correct === maxCorrect);
     return { isTie: winners.length > 1, winnerTeam: winners[0].team, maxCorrect };
   }, [scores, store.numberOfTeams]);
+
+  useEffect(() => {
+    const lockOrientation = async () => {
+      try {
+        if (screen.orientation && (screen.orientation as any).lock) {
+          await (screen.orientation as any).lock('landscape-primary');
+        }
+      } catch (e) {
+        try {
+          if (screen.orientation && (screen.orientation as any).lock) {
+            await (screen.orientation as any).lock('landscape');
+          }
+        } catch (e2) {}
+      }
+    };
+    lockOrientation();
+  }, []);
 
   useEffect(() => {
     if (store.isGameFinished && !hasPlayedGameEndSound.current) {
@@ -85,12 +104,27 @@ export default function Summary() {
   const handleHome = () => {
     stopSound('drumroll');
     store.resetGame();
+    try {
+      if (screen.orientation && screen.orientation.unlock) {
+        screen.orientation.unlock();
+      }
+    } catch (e) {}
     setLocation("/");
   };
 
   const wordResults = selectedTeamIndex !== null
     ? (store.isGameFinished ? store.teamGameResults[selectedTeamIndex] : store.teamRoundResults[selectedTeamIndex]) || []
     : [];
+
+  if (!isLandscape) {
+    return (
+      <div className="h-[100dvh] bg-background flex flex-col items-center justify-center space-y-6 p-8">
+        <RotateCcw className="w-24 h-24 text-primary animate-spin" style={{ animationDuration: '3s' }} />
+        <h2 className="text-3xl font-black text-primary text-center">Please Rotate Your Device</h2>
+        <p className="text-muted-foreground text-center text-lg">Turn your phone sideways to view results</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-[100dvh] bg-background flex items-center justify-center p-4 relative overflow-hidden">

@@ -18,6 +18,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Papa from "papaparse";
 import { useToast } from "@/hooks/use-toast";
 import { useSwipeBack } from "@/hooks/use-swipe-back";
+import { useIsLandscape } from "@/hooks/use-landscape";
 
 const ENABLE_CSV_UPLOAD = false;
 
@@ -25,6 +26,7 @@ export default function Categories() {
   useSwipeBack({ targetPath: "/" });
   const { toast } = useToast();
   const store = useGameStore();
+  const isLandscape = useIsLandscape();
   
   const [newListName, setNewListName] = useState("");
   const [newListWords, setNewListWords] = useState("");
@@ -164,228 +166,228 @@ export default function Categories() {
         <h1 className="text-2xl font-thin ml-4 text-cyan-400">Word Categories</h1>
       </header>
 
-      <ScrollArea className="flex-1 p-6 max-w-2xl mx-auto w-full">
-        <div className="space-y-4 pb-20">
-          <div className="flex justify-between items-center">
-            <p className="text-sm text-muted-foreground">Select categories to include in your game</p>
-            
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="bg-pink-500 text-white hover:bg-pink-400 border border-pink-400">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create List
-                </Button>
-              </DialogTrigger>
-              <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
-                <DialogHeader>
-                  <DialogTitle>Create Custom List</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label>List Name</Label>
-                    <Input 
-                      placeholder="e.g. My Family, Inside Jokes" 
-                      value={newListName}
-                      onChange={e => setNewListName(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Words (one per line)</Label>
-                    <Textarea 
-                      placeholder="Word 1&#10;Word 2&#10;Word 3" 
-                      className="h-32"
-                      value={newListWords}
-                      onChange={e => setNewListWords(e.target.value)}
-                    />
-                  </div>
-                  {ENABLE_CSV_UPLOAD && (
-                    <div className="space-y-2">
-                      <Label>Or Upload CSV</Label>
-                      <Input type="file" accept=".csv" onChange={handleFileUpload} />
-                    </div>
-                  )}
-                  <Button className="w-full" onClick={handleCreateList}>Save List</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-
-            {/* Delete Confirmation Dialog */}
-            <Dialog open={deleteConfirmList !== null} onOpenChange={(open) => !open && setDeleteConfirmList(null)}>
-              <DialogContent className="bg-card/95 backdrop-blur-md border-red-500/30 max-w-sm">
-                <DialogHeader>
-                  <DialogTitle className="text-xl font-thin text-red-400">Delete Category?</DialogTitle>
-                </DialogHeader>
-                <div className="py-4 space-y-4">
-                  <p className="text-muted-foreground">
-                    Are you sure you want to delete <span className="text-foreground font-medium">"{deleteConfirmList?.name}"</span>?
-                  </p>
-                  <div className="flex gap-3">
-                    <Button 
-                      variant="outline" 
-                      className="flex-1 border-border hover:bg-muted"
-                      onClick={() => setDeleteConfirmList(null)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      className="flex-1 bg-red-500 hover:bg-red-400 text-white border-red-400"
-                      onClick={() => {
-                        if (deleteConfirmList) {
-                          if (deleteConfirmList.isCustom) {
-                            store.removeCustomList(deleteConfirmList.id);
-                          } else {
-                            store.deleteBuiltInList(deleteConfirmList.id);
-                          }
-                          toast({ title: "Deleted", description: `"${deleteConfirmList.name}" has been removed.` });
-                          setDeleteConfirmList(null);
-                        }
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-
-            <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-              <DialogContent className="max-h-[80vh] flex flex-col p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
-                <DialogHeader className="px-6 pt-6 pb-2">
-                  <DialogTitle>Edit List: {editListName}</DialogTitle>
-                </DialogHeader>
-                <div className="flex-1 overflow-y-auto px-6 pb-6">
-                  <div className="flex flex-col gap-4 py-2">
-                    {/* Controls at top */}
+      <ScrollArea className="flex-1 p-6 w-full">
+        <div className={`pb-20 mx-auto ${isLandscape ? 'max-w-4xl' : 'max-w-2xl'}`}>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <p className="text-sm text-muted-foreground">Select categories to include in your game</p>
+              
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="bg-pink-500 text-white hover:bg-pink-400 border border-pink-400">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create List
+                  </Button>
+                </DialogTrigger>
+                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+                  <DialogHeader>
+                    <DialogTitle>Create Custom List</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
                     <div className="space-y-2">
                       <Label>List Name</Label>
                       <Input 
-                        value={editListName}
-                        onChange={e => setEditListName(e.target.value)}
+                        placeholder="e.g. My Family, Inside Jokes" 
+                        value={newListName}
+                        onChange={e => setNewListName(e.target.value)}
                       />
                     </div>
-                    
-                    <div className="space-y-2 border-t border-border pt-4">
-                      <Label>Bulk Add Words (one per line)</Label>
+                    <div className="space-y-2">
+                      <Label>Words (one per line)</Label>
                       <Textarea 
-                        placeholder={"Word 1\nWord 2\nWord 3"}
-                        className="h-20"
-                        value={bulkAddWords}
-                        onChange={e => setBulkAddWords(e.target.value)}
+                        placeholder="Word 1&#10;Word 2&#10;Word 3" 
+                        className="h-32"
+                        value={newListWords}
+                        onChange={e => setNewListWords(e.target.value)}
                       />
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
-                          className="flex-1"
-                          onClick={handleBulkAdd}
-                        >
-                          <Plus className="w-4 h-4 mr-2" /> Add All Words
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          className="flex-1"
-                          onClick={handleAddWord}
-                        >
-                          <Plus className="w-4 h-4 mr-2" /> Add Empty
-                        </Button>
+                    </div>
+                    {ENABLE_CSV_UPLOAD && (
+                      <div className="space-y-2">
+                        <Label>Or Upload CSV</Label>
+                        <Input type="file" accept=".csv" onChange={handleFileUpload} />
+                      </div>
+                    )}
+                    <Button className="w-full" onClick={handleCreateList}>Save List</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              {/* Delete Confirmation Dialog */}
+              <Dialog open={deleteConfirmList !== null} onOpenChange={(open) => !open && setDeleteConfirmList(null)}>
+                <DialogContent className="bg-card/95 backdrop-blur-md border-red-500/30 max-w-sm">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-thin text-red-400">Delete Category?</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-4 space-y-4">
+                    <p className="text-muted-foreground">
+                      Are you sure you want to delete <span className="text-foreground font-medium">"{deleteConfirmList?.name}"</span>?
+                    </p>
+                    <div className="flex gap-3">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1 border-border hover:bg-muted"
+                        onClick={() => setDeleteConfirmList(null)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        className="flex-1 bg-red-500 hover:bg-red-400 text-white border-red-400"
+                        onClick={() => {
+                          if (deleteConfirmList) {
+                            if (deleteConfirmList.isCustom) {
+                              store.removeCustomList(deleteConfirmList.id);
+                            } else {
+                              store.deleteBuiltInList(deleteConfirmList.id);
+                            }
+                            toast({ title: "Deleted", description: `"${deleteConfirmList.name}" has been removed.` });
+                            setDeleteConfirmList(null);
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                <DialogContent className="max-h-[80vh] flex flex-col p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
+                  <DialogHeader className="px-6 pt-6 pb-2">
+                    <DialogTitle>Edit List: {editListName}</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex-1 overflow-y-auto px-6 pb-6">
+                    <div className="flex flex-col gap-4 py-2">
+                      <div className="space-y-2">
+                        <Label>List Name</Label>
+                        <Input 
+                          value={editListName}
+                          onChange={e => setEditListName(e.target.value)}
+                        />
+                      </div>
+                      
+                      <div className="space-y-2 border-t border-border pt-4">
+                        <Label>Bulk Add Words (one per line)</Label>
+                        <Textarea 
+                          placeholder={"Word 1\nWord 2\nWord 3"}
+                          className="h-20"
+                          value={bulkAddWords}
+                          onChange={e => setBulkAddWords(e.target.value)}
+                        />
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            className="flex-1"
+                            onClick={handleBulkAdd}
+                          >
+                            <Plus className="w-4 h-4 mr-2" /> Add All Words
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            className="flex-1"
+                            onClick={handleAddWord}
+                          >
+                            <Plus className="w-4 h-4 mr-2" /> Add Empty
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <Button className="w-full" onClick={handleSaveEdit}>Save Changes</Button>
+                      
+                      <div className="space-y-2 border-t border-border pt-4">
+                        <Label>Words ({editListWords.filter(w => w.trim()).length})</Label>
+                        <div className="space-y-2 bg-card/80 rounded-xl border border-purple-500/30 p-3 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)]">
+                          {editListWords.map((word, index) => (
+                            <div key={index} className="flex gap-2">
+                              <Input 
+                                value={word}
+                                onChange={e => handleUpdateWord(index, e.target.value)}
+                                placeholder={`Word ${index + 1}`}
+                              />
+                              <Button 
+                                variant="ghost" 
+                                size="icon"
+                                className="text-destructive hover:bg-destructive/10"
+                                onClick={() => handleRemoveWord(index)}
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                    
-                    <Button className="w-full" onClick={handleSaveEdit}>Save Changes</Button>
-                    
-                    {/* Word list - scrolls with dialog */}
-                    <div className="space-y-2 border-t border-border pt-4">
-                      <Label>Words ({editListWords.filter(w => w.trim()).length})</Label>
-                      <div className="space-y-2 bg-card/80 rounded-xl border border-purple-500/30 p-3 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)]">
-                        {editListWords.map((word, index) => (
-                          <div key={index} className="flex gap-2">
-                            <Input 
-                              value={word}
-                              onChange={e => handleUpdateWord(index, e.target.value)}
-                              placeholder={`Word ${index + 1}`}
-                            />
-                            <Button 
-                              variant="ghost" 
-                              size="icon"
-                              className="text-destructive hover:bg-destructive/10"
-                              onClick={() => handleRemoveWord(index)}
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
                   </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          <div className="grid gap-3">
-            {allLists.map(list => {
-              const isSelected = store.selectedListIds.includes(list.id);
-              return (
-                <div 
-                  key={list.id} 
-                  className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                    isSelected 
-                      ? 'border-cyan-400 bg-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.3)]' 
-                      : 'border-border bg-card/50 hover:border-cyan-500/50'
-                  }`}
-                  onClick={() => store.toggleListSelection(list.id)}
-                  data-testid={`category-${list.id}`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-cyan-400 bg-cyan-500' : 'border-muted-foreground'}`}>
-                      {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
-                    </div>
-                    <div>
-                      <h3 className="font-thin">{list.name}</h3>
-                      <p className="text-xs text-muted-foreground">{list.words.length} words {list.isCustom && '(Custom)'}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleStartEdit(list);
-                      }}
-                    >
-                      <Edit2 className="w-5 h-5" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="text-red-400 hover:text-red-300 hover:bg-red-500/20"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setDeleteConfirmList({ id: list.id, name: list.name, isCustom: !!list.isCustom });
-                      }}
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {deletedLists.length > 0 && (
-            <div className="mt-6 pt-6 border-t border-border">
-              <Link href="/settings/deleted">
-                <Button 
-                  variant="outline" 
-                  className="w-full text-muted-foreground hover:text-foreground"
-                  data-testid="link-deleted-categories"
-                >
-                  View Deleted Categories ({deletedLists.length})
-                </Button>
-              </Link>
+                </DialogContent>
+              </Dialog>
             </div>
-          )}
+
+            <div className={`grid gap-3 ${isLandscape ? 'grid-cols-2' : ''}`}>
+              {allLists.map(list => {
+                const isSelected = store.selectedListIds.includes(list.id);
+                return (
+                  <div 
+                    key={list.id} 
+                    className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                      isSelected 
+                        ? 'border-cyan-400 bg-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.3)]' 
+                        : 'border-border bg-card/50 hover:border-cyan-500/50'
+                    }`}
+                    onClick={() => store.toggleListSelection(list.id)}
+                    data-testid={`category-${list.id}`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-cyan-400 bg-cyan-500' : 'border-muted-foreground'}`}>
+                        {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
+                      </div>
+                      <div>
+                        <h3 className="font-thin">{list.name}</h3>
+                        <p className="text-xs text-muted-foreground">{list.words.length} words {list.isCustom && '(Custom)'}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleStartEdit(list);
+                        }}
+                      >
+                        <Edit2 className="w-5 h-5" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeleteConfirmList({ id: list.id, name: list.name, isCustom: !!list.isCustom });
+                        }}
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {deletedLists.length > 0 && (
+              <div className="mt-6 pt-6 border-t border-border">
+                <Link href="/settings/deleted">
+                  <Button 
+                    variant="outline" 
+                    className="w-full text-muted-foreground hover:text-foreground"
+                    data-testid="link-deleted-categories"
+                  >
+                    View Deleted Categories ({deletedLists.length})
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </ScrollArea>
     </div>

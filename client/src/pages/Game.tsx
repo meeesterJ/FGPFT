@@ -321,23 +321,19 @@ export default function Game() {
     // Reset timer
     setTimeLeft(store.roundDuration);
 
-    // Try to lock to current landscape orientation to prevent flipping
-    const lockToCurrentLandscape = async () => {
+    const lockToLandscape = async () => {
       try {
         if (screen.orientation && (screen.orientation as any).lock) {
-          // Get current orientation type to lock to it specifically
-          const currentType = screen.orientation.type;
-          if (currentType === 'landscape-primary' || currentType === 'landscape-secondary') {
-            // Lock to current landscape orientation to prevent flip
-            await (screen.orientation as any).lock(currentType);
-            setShowRotatePrompt(false);
-          } else {
-            // Not in landscape yet, lock to any landscape
-            await (screen.orientation as any).lock('landscape');
-          }
+          await (screen.orientation as any).lock('landscape-primary');
+          setShowRotatePrompt(false);
         }
       } catch (e) {
-        // Screen orientation lock not supported or failed - show prompt instead
+        try {
+          if (screen.orientation && (screen.orientation as any).lock) {
+            await (screen.orientation as any).lock('landscape');
+            setShowRotatePrompt(false);
+          }
+        } catch (e2) {}
       }
     };
 
@@ -350,7 +346,7 @@ export default function Game() {
         wasInPortrait.current = false;
         
         // Lock to current landscape orientation when we enter landscape
-        lockToCurrentLandscape();
+        lockToLandscape();
         
         // Permission handling is done by the dedicated hydration-aware effect
         // Only show ready screen here if permission is already confirmed granted
@@ -378,7 +374,7 @@ export default function Game() {
       if (isLandscape && wasInPortrait.current && hasShownInitialCountdownRef.current) {
         wasInPortrait.current = false;
         setCalibrationTrigger(prev => prev + 1);
-        lockToCurrentLandscape();
+        lockToLandscape();
       }
       
       setShowRotatePrompt(!isLandscape);

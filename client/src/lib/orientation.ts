@@ -94,22 +94,6 @@ export function isLandscape(): boolean {
   return orientation === 'landscape-primary' || orientation === 'landscape-secondary';
 }
 
-export async function lockOrientation(orientation: 'landscape' | 'portrait'): Promise<boolean> {
-  if (isNative()) {
-    return true;
-  }
-
-  try {
-    if (screen.orientation && screen.orientation.lock) {
-      await screen.orientation.lock(orientation);
-      return true;
-    }
-  } catch (e) {
-    console.warn('Orientation lock not supported:', e);
-  }
-  
-  return false;
-}
 
 export function unlockOrientation(): void {
   if (isNative()) {

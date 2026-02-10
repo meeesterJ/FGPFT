@@ -5,8 +5,11 @@ import { useGameStore } from "@/lib/store";
 import { initAudioContextAsync } from "@/lib/audio";
 import { Play, Settings as SettingsIcon, List, HelpCircle } from "lucide-react";
 import { BackgroundGlow, TitleStack, menuButtonStyles } from "@/components/ui/game-ui";
+import { useIsLandscape } from "@/hooks/use-landscape";
 
 function SplashScreen({ onTap }: { onTap: () => void }) {
+  const isLandscape = useIsLandscape();
+
   return (
     <motion.div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-card"
@@ -18,7 +21,7 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
       <BackgroundGlow />
 
       <div className="z-10 flex flex-col items-center justify-center max-w-md w-full text-center gap-8">
-        <TitleStack animated />
+        <TitleStack animated inline={isLandscape} />
 
         <p 
           className="text-xl text-muted-foreground font-light animate-pulse"
@@ -32,6 +35,70 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
 }
 
 function MainScreen({ onStart }: { onStart: () => void }) {
+  const isLandscape = useIsLandscape();
+
+  if (isLandscape) {
+    return (
+      <motion.div
+        className="h-[100dvh] flex flex-row items-center px-8 bg-gradient-to-b from-background to-card overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
+        <BackgroundGlow />
+
+        <div className="z-10 flex-1 flex items-center justify-center">
+          <TitleStack />
+        </div>
+
+        <div className="z-10 grid gap-3 w-full max-w-xs shrink-0">
+          <Button 
+            size="lg" 
+            className={menuButtonStyles.pink}
+            onClick={onStart}
+            data-testid="button-play"
+          >
+            <Play className="mr-2 w-5 h-5 fill-current" />
+            Play Now
+          </Button>
+
+          <Link href="/categories">
+            <Button 
+              size="lg" 
+              className={menuButtonStyles.cyan}
+              data-testid="button-categories"
+            >
+              <List className="mr-2 w-5 h-5" />
+              Categories
+            </Button>
+          </Link>
+
+          <Link href="/settings">
+            <Button 
+              size="lg" 
+              className={menuButtonStyles.purple}
+              data-testid="button-settings"
+            >
+              <SettingsIcon className="mr-2 w-5 h-5" />
+              Settings
+            </Button>
+          </Link>
+
+          <Link href="/how-to-play">
+            <Button 
+              size="lg" 
+              className={menuButtonStyles.yellow}
+              data-testid="button-how-to-play"
+            >
+              <HelpCircle className="mr-2 w-5 h-5" />
+              How to Play
+            </Button>
+          </Link>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       className="h-[100dvh] flex flex-col items-center px-4 bg-gradient-to-b from-background to-card overflow-hidden"
