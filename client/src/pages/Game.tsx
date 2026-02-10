@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useGameStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { Check, X, Home, Play, Smartphone, RotateCcw } from "lucide-react";
+import { Check, X, Home, Play, Smartphone, RotateCcw, CheckCircle2, ListX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getAudioContext, initAudioContext, playSound } from "@/lib/audio";
 import { hapticCorrect, hapticPass } from "@/lib/haptics";
@@ -855,10 +855,7 @@ export default function Game() {
   useEffect(() => {
     if (!showTeamScore) {
       scoreDismissedRef.current = false;
-      return;
     }
-    const timer = setTimeout(handleScoreDismiss, 3000);
-    return () => clearTimeout(timer);
   }, [showTeamScore]);
 
   const showHandoffScreen = () => {
@@ -980,25 +977,53 @@ export default function Game() {
         const scoreTeamColor = store.getTeamColor(store.currentTeam);
         const scoreTeamName = store.getTeamName(store.currentTeam);
         const teamIdx = store.currentTeam - 1;
-        const scoreCorrect = store.teamRoundScores[teamIdx]?.correct ?? store.currentScore;
+        const scoreCorrect = store.teamRoundScores[teamIdx]?.correct ?? 0;
+        const scorePassed = store.teamRoundScores[teamIdx]?.passed ?? 0;
         return (
           <div 
-            className="absolute inset-0 z-[55] bg-background flex flex-col items-center justify-center gap-6 p-8 cursor-pointer"
+            className={`absolute inset-0 z-[55] ${scoreTeamColor.bg} flex items-center justify-center cursor-pointer`}
             onClick={handleScoreDismiss}
             data-testid="team-score-screen"
           >
-            <h2 className={`text-4xl font-bold ${scoreTeamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-score-name">
-              {scoreTeamName}
-            </h2>
-            <div className="flex flex-col items-center gap-2">
-              <span className={`text-[8rem] font-black ${scoreTeamColor.text} leading-none`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-team-score-count">
-                {scoreCorrect}
-              </span>
-              <span className="text-2xl text-muted-foreground font-light">
-                {scoreCorrect === 1 ? 'correct guess' : 'correct guesses'}
-              </span>
+            <div className="w-full h-full flex flex-row gap-4 p-6">
+              {/* Left side: Team name and score counts */}
+              <div className="flex-1 flex flex-col items-center justify-center">
+                <div className="space-y-3 animate-bounce-in w-full max-w-sm">
+                  <div className={`w-full flex items-center justify-between p-4 rounded-xl bg-background/80 border-2 ${scoreTeamColor.border}`}>
+                    <span className={`font-bold text-2xl ${scoreTeamColor.text} truncate max-w-[10rem]`} data-testid="text-team-score-name">
+                      {scoreTeamName}
+                    </span>
+                    <div className="flex items-center gap-5">
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-5 h-5 text-green-400" />
+                        <span className="font-mono text-2xl font-bold text-green-400" data-testid="text-team-score-count">{scoreCorrect}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <ListX className="w-5 h-5 text-red-400" />
+                        <span className="font-mono text-2xl font-bold text-red-400">{scorePassed}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right side: Round info */}
+              <div className="flex flex-col justify-center items-center gap-4 min-w-[10rem]">
+                <div className="flex flex-col items-center animate-bounce-in">
+                  <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
+                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
+                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)', opacity: 0.8 }}>o</span>
+                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)', opacity: 0.9 }}>u</span>
+                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)', opacity: 0.8 }}>n</span>
+                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                  </h1>
+                  <span className={`text-7xl font-thin ${scoreTeamColor.text} leading-none mt-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+                    {store.currentRound || 1}
+                  </span>
+                </div>
+                <p className={`text-sm ${scoreTeamColor.accent} animate-pulse`}>Tap to continue</p>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground/60 mt-4 animate-pulse">Tap to continue</p>
           </div>
         );
       })()}
@@ -1061,15 +1086,17 @@ export default function Game() {
               <span className="text-base">Tilt forward to start</span>
             </div>
           )}
-          {/* Play button */}
-          <Button 
-            onClick={onReady}
-            size="lg"
-            className="text-xl px-10 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
-          >
-            <Play className="w-7 h-7 mr-3" />
-            Play
-          </Button>
+          {/* Play button - only shown when buttons mode is on */}
+          {store.showButtons && (
+            <Button 
+              onClick={onReady}
+              size="lg"
+              className="text-xl px-10 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
+            >
+              <Play className="w-7 h-7 mr-3" />
+              Play
+            </Button>
+          )}
         </div>
       )}
 
