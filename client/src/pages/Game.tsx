@@ -290,7 +290,7 @@ export default function Game() {
       
       if (!tiltEnabled) return;
       
-      if (tiltDelta >= readyThreshold) {
+      if (Math.abs(tiltDelta) >= readyThreshold) {
         if (holdStartTime === null) {
           holdStartTime = Date.now();
         } else if (Date.now() - holdStartTime >= HOLD_DURATION_MS) {
