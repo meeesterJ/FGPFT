@@ -45,8 +45,13 @@ The server uses a storage abstraction pattern (`IStorage` interface) allowing ea
 - Custom word list creation with CSV import support
 - Soft-delete and permanent delete for built-in categories
 
+### Code Organization
+- **useTiltDetection hook** (`client/src/hooks/use-tilt-detection.ts`): Encapsulates all device orientation logic, calibration, gamma unwrapping, and gesture recognition (~364 lines). Game.tsx passes callbacks for tilt events.
+- **game-ui.tsx** (`client/src/components/ui/game-ui.tsx`): Shared game UI components including RainbowText (per-character rainbow coloring) and menuButtonStyles.
+- **CSS utilities** (`client/src/index.css`): `.font-display`, `.text-shadow-sm/md/lg`, `.rainbow-letter` utility classes replace inline styles throughout.
+
 ### Tilt Detection Implementation
-The tilt detection uses the DeviceOrientation API with gamma axis for landscape orientations:
+The tilt detection uses the DeviceOrientation API with gamma axis for landscape orientations (implemented in `useTiltDetection` hook):
 
 - **Calibration**: When entering landscape mode, the app collects tilt samples over 500ms to establish a baseline
 - **Dual Baseline Tracking**: Both mapped (effectiveTilt) and raw gamma baselines are stored
