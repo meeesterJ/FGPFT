@@ -50,15 +50,73 @@ export function BackgroundGlow() {
 interface TitleStackProps {
   animated?: boolean;
   inline?: boolean;
+  twoLine?: boolean;
+  spaced?: boolean;
 }
 
-export function TitleStack({ animated = false, inline = false }: TitleStackProps) {
+export function TitleStack({ animated = false, inline = false, twoLine = false, spaced = false }: TitleStackProps) {
   const titleStyle = inline
     ? { fontSize: 'clamp(2rem, 6vw, 3.5rem)', lineHeight: 1.1 }
     : { fontSize: 'clamp(3rem, 9vh, 4.5rem)', lineHeight: 1.1 };
   
-  const wordDisplay = inline ? 'inline' : 'block';
+  const spacingClass = spaced ? 'tracking-[0.15em]' : 'tracking-wide';
   
+  const renderWords = (MotionOrSpan: any, useVariants: boolean) => {
+    if (twoLine) {
+      const line1 = titleWords.slice(0, 2);
+      const line2 = titleWords.slice(2);
+      return (
+        <>
+          <span className="block whitespace-nowrap">
+            {line1.map((word, i) => (
+              <MotionOrSpan
+                key={word.text}
+                className={word.color}
+                {...(useVariants ? { variants: wordVariants } : {})}
+                style={{
+                  display: 'inline',
+                  textShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                }}
+              >
+                {word.text}{i < line1.length - 1 ? ' ' : ''}
+              </MotionOrSpan>
+            ))}
+          </span>
+          <span className="block whitespace-nowrap">
+            {line2.map((word, i) => (
+              <MotionOrSpan
+                key={word.text}
+                className={word.color}
+                {...(useVariants ? { variants: wordVariants } : {})}
+                style={{
+                  display: 'inline',
+                  textShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                }}
+              >
+                {word.text}{i < line2.length - 1 ? ' ' : ''}
+              </MotionOrSpan>
+            ))}
+          </span>
+        </>
+      );
+    }
+
+    const wordDisplay = inline ? 'inline' : 'block';
+    return titleWords.map((word, i) => (
+      <MotionOrSpan
+        key={word.text}
+        className={word.color}
+        {...(useVariants ? { variants: wordVariants } : {})}
+        style={{
+          display: wordDisplay,
+          textShadow: '0 4px 8px rgba(0,0,0,0.3)',
+        }}
+      >
+        {word.text}{inline && i < titleWords.length - 1 ? ' ' : ''}
+      </MotionOrSpan>
+    ));
+  };
+
   if (animated) {
     return (
       <motion.div
@@ -67,22 +125,10 @@ export function TitleStack({ animated = false, inline = false }: TitleStackProps
         animate="visible"
       >
         <h1 
-          className={`font-thin tracking-wide transform -rotate-2 ${inline ? 'whitespace-nowrap' : ''}`}
+          className={`font-thin ${spacingClass} transform -rotate-2 ${inline ? 'whitespace-nowrap' : ''} ${spaced ? 'text-center' : ''}`}
           style={titleStyle}
         >
-          {titleWords.map((word, i) => (
-            <motion.span
-              key={word.text}
-              className={`${word.color}`}
-              variants={wordVariants}
-              style={{
-                display: wordDisplay,
-                textShadow: '0 4px 8px rgba(0,0,0,0.3)',
-              }}
-            >
-              {word.text}{inline && i < titleWords.length - 1 ? ' ' : ''}
-            </motion.span>
-          ))}
+          {renderWords(motion.span, true)}
         </h1>
       </motion.div>
     );
@@ -90,21 +136,10 @@ export function TitleStack({ animated = false, inline = false }: TitleStackProps
   
   return (
     <h1 
-      className={`font-thin tracking-wide transform -rotate-2 ${inline ? 'whitespace-nowrap' : ''}`}
+      className={`font-thin ${spacingClass} transform -rotate-2 ${inline ? 'whitespace-nowrap' : ''} ${spaced ? 'text-center' : ''}`}
       style={titleStyle}
     >
-      {titleWords.map((word, i) => (
-        <span
-          key={word.text}
-          className={`${word.color}`}
-          style={{
-            display: wordDisplay,
-            textShadow: '0 4px 8px rgba(0,0,0,0.3)',
-          }}
-        >
-          {word.text}{inline && i < titleWords.length - 1 ? ' ' : ''}
-        </span>
-      ))}
+      {renderWords('span', false)}
     </h1>
   );
 }

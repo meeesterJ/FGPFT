@@ -169,12 +169,12 @@ export default function Categories() {
       <ScrollArea className="flex-1 p-6 w-full">
         <div className={`pb-20 mx-auto ${isLandscape ? 'max-w-4xl' : 'max-w-2xl'}`}>
           <div className="space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
               <p className="text-sm text-muted-foreground">Select categories to include in your game</p>
               
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="bg-pink-500 text-white hover:bg-pink-400 border border-pink-400">
+                  <Button size="sm" className="bg-pink-500 text-white hover:bg-pink-400 border border-pink-400 shrink-0">
                     <Plus className="w-4 h-4 mr-2" />
                     Create List
                   </Button>

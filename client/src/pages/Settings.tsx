@@ -228,7 +228,7 @@ export default function Settings() {
       </header>
 
       <ScrollArea className="flex-1 p-6 w-full">
-        <div className={`pb-20 mx-auto ${isLandscape ? 'grid grid-cols-2 gap-6 max-w-4xl' : 'space-y-8 max-w-2xl'}`}>
+        <div className={`pb-20 ${isLandscape ? 'space-y-8 max-w-3xl ml-8' : 'space-y-8 max-w-2xl mx-auto'}`}>
           {settingsSections}
         </div>
       </ScrollArea>

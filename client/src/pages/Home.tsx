@@ -21,7 +21,7 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
       <BackgroundGlow />
 
       <div className="z-10 flex flex-col items-center justify-center max-w-md w-full text-center gap-8">
-        <TitleStack animated inline={isLandscape} />
+        <TitleStack animated twoLine={isLandscape} />
 
         <p 
           className="text-xl text-muted-foreground font-light animate-pulse"
@@ -48,7 +48,7 @@ function MainScreen({ onStart }: { onStart: () => void }) {
         <BackgroundGlow />
 
         <div className="z-10 flex-1 flex items-center justify-center">
-          <TitleStack />
+          <TitleStack spaced />
         </div>
 
         <div className="z-10 grid gap-3 w-full max-w-xs shrink-0">
