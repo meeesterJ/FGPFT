@@ -849,7 +849,16 @@ export default function Game() {
     scoreDismissedRef.current = true;
     setShowTeamScore(false);
     const freshState = useGameStore.getState();
-    freshState.prepareRound();
+    const isLastTeam = freshState.currentTeam >= freshState.numberOfTeams;
+    if (isLastTeam) {
+      if (freshState.currentRound >= freshState.totalRounds) {
+        freshState.prepareRound();
+      } else {
+        useGameStore.setState({ isRoundOver: true });
+      }
+    } else {
+      freshState.prepareRound();
+    }
   };
 
   useEffect(() => {
@@ -981,48 +990,35 @@ export default function Game() {
         const scorePassed = store.teamRoundScores[teamIdx]?.passed ?? 0;
         return (
           <div 
-            className={`absolute inset-0 z-[55] ${scoreTeamColor.bg} flex items-center justify-center cursor-pointer`}
+            className="absolute inset-0 z-[55] cursor-pointer"
+            style={{ backgroundColor: scoreTeamColor.bgSolid }}
             onClick={handleScoreDismiss}
             data-testid="team-score-screen"
           >
-            <div className="w-full h-full flex flex-row gap-4 p-6">
-              {/* Left side: Team name and score counts */}
-              <div className="flex-1 flex flex-col items-center justify-center">
-                <div className="space-y-3 animate-bounce-in w-full max-w-sm">
-                  <div className={`w-full flex items-center justify-between p-4 rounded-xl bg-background/80 border-2 ${scoreTeamColor.border}`}>
-                    <span className={`font-bold text-2xl ${scoreTeamColor.text} truncate max-w-[10rem]`} data-testid="text-team-score-name">
-                      {scoreTeamName}
-                    </span>
-                    <div className="flex items-center gap-5">
-                      <div className="flex items-center gap-1.5">
-                        <CheckCircle2 className="w-5 h-5 text-green-400" />
-                        <span className="font-mono text-2xl font-bold text-green-400" data-testid="text-team-score-count">{scoreCorrect}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <ListX className="w-5 h-5 text-red-400" />
-                        <span className="font-mono text-2xl font-bold text-red-400">{scorePassed}</span>
-                      </div>
-                    </div>
+            <div className="w-full h-full flex items-center justify-center px-8">
+              <div className="flex items-center gap-12 animate-bounce-in">
+                {/* Left: Team name */}
+                <h2 className="text-5xl font-black text-white tracking-wide truncate max-w-[14rem]" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-team-score-name">
+                  {scoreTeamName}
+                </h2>
+
+                {/* Divider */}
+                <div className="w-px h-24 bg-white/30" />
+
+                {/* Right: Scores */}
+                <div className="flex items-center gap-8">
+                  <div className="flex flex-col items-center">
+                    <CheckCircle2 className="w-8 h-8 text-green-300 mb-1" />
+                    <span className="font-mono text-6xl font-black text-green-300 leading-none" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.3)' }} data-testid="text-team-score-count">{scoreCorrect}</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <ListX className="w-8 h-8 text-red-300 mb-1" />
+                    <span className="font-mono text-6xl font-black text-red-300 leading-none" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>{scorePassed}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Right side: Round info */}
-              <div className="flex flex-col justify-center items-center gap-4 min-w-[10rem]">
-                <div className="flex flex-col items-center animate-bounce-in">
-                  <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
-                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
-                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)', opacity: 0.8 }}>o</span>
-                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)', opacity: 0.9 }}>u</span>
-                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)', opacity: 0.8 }}>n</span>
-                    <span className={`${scoreTeamColor.text}`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
-                  </h1>
-                  <span className={`text-7xl font-thin ${scoreTeamColor.text} leading-none mt-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
-                    {store.currentRound || 1}
-                  </span>
-                </div>
-                <p className={`text-sm ${scoreTeamColor.accent} animate-pulse`}>Tap to continue</p>
-              </div>
+              <p className="absolute bottom-6 left-0 right-0 text-center text-sm text-white/60 animate-pulse">Tap to continue</p>
             </div>
           </div>
         );

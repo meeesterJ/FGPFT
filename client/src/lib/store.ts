@@ -15,11 +15,11 @@ export type TeamScore = {
 };
 
 export const TEAM_THEME_COLORS = [
-  { name: 'pink', text: 'text-pink-400', bg: 'bg-pink-500/20', border: 'border-pink-500/30', accent: 'text-pink-300' },
-  { name: 'cyan', text: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/30', accent: 'text-cyan-300' },
-  { name: 'purple', text: 'text-purple-400', bg: 'bg-purple-500/20', border: 'border-purple-500/30', accent: 'text-purple-300' },
-  { name: 'green', text: 'text-green-400', bg: 'bg-green-500/20', border: 'border-green-500/30', accent: 'text-green-300' },
-  { name: 'yellow', text: 'text-yellow-400', bg: 'bg-yellow-500/20', border: 'border-yellow-500/30', accent: 'text-yellow-300' },
+  { name: 'pink', text: 'text-pink-400', bg: 'bg-pink-500/20', bgSolid: '#831843', border: 'border-pink-500/30', accent: 'text-pink-300' },
+  { name: 'cyan', text: 'text-cyan-400', bg: 'bg-cyan-500/20', bgSolid: '#164e63', border: 'border-cyan-500/30', accent: 'text-cyan-300' },
+  { name: 'purple', text: 'text-purple-400', bg: 'bg-purple-500/20', bgSolid: '#581c87', border: 'border-purple-500/30', accent: 'text-purple-300' },
+  { name: 'green', text: 'text-green-400', bg: 'bg-green-500/20', bgSolid: '#14532d', border: 'border-green-500/30', accent: 'text-green-300' },
+  { name: 'yellow', text: 'text-yellow-400', bg: 'bg-yellow-500/20', bgSolid: '#713f12', border: 'border-yellow-500/30', accent: 'text-yellow-300' },
 ];
 
 export const MAX_TEAM_NAME_LENGTH = 12;
@@ -362,11 +362,9 @@ export const useGameStore = create<GameState>()(
         const newTeamGameResults = [...teamGameResults];
         newTeamGameResults[teamIndex] = [...(newTeamGameResults[teamIndex] || []), ...roundResults];
         
-        const allTeamsDone = currentTeam >= numberOfTeams;
-        
         set({
           isPlaying: false,
-          isRoundOver: allTeamsDone,
+          isRoundOver: false,
           teamRoundScores: newRoundScores,
           teamTotalScores: newTotalScores,
           teamGameResults: newTeamGameResults,
