@@ -24,7 +24,7 @@ export default function Game() {
   const [waitingForPermission, setWaitingForPermission] = useState(false); // Wait for iOS permission before countdown
   const [isWaitingForReady, setIsWaitingForReady] = useState(false); // Wait for user to be ready before countdown
   const [isHandoff, setIsHandoff] = useState(false); // Handoff screen - tap to confirm team has the phone
-  const [teamScoreScreen, setTeamScoreScreen] = useState<{ teamNumber: number; correct: number; name: string; color: { text: string; bg: string; border: string } } | null>(null); // Show team score after their turn
+  const [showTeamScore, setShowTeamScore] = useState(false); // Show team score after their turn
   const [calibrationTrigger, setCalibrationTrigger] = useState(0); // Increment to force recalibration
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tiltThresholdRef = useRef(25); // Degrees of tilt delta to trigger (lowered for better sensitivity)
@@ -664,7 +664,7 @@ export default function Game() {
 
   // Timer logic - pause during countdown, ready screen, and permission prompt
   useEffect(() => {
-    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !isHandoff && !teamScoreScreen && !waitingForPermission && timeLeft > 0) {
+    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !isHandoff && !showTeamScore && !waitingForPermission && timeLeft > 0) {
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
@@ -675,7 +675,7 @@ export default function Game() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, teamScoreScreen, waitingForPermission, timeLeft]);
+  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, showTeamScore, waitingForPermission, timeLeft]);
 
   // Handle timer expiration
   useEffect(() => {
@@ -690,12 +690,7 @@ export default function Game() {
     const freshState = useGameStore.getState();
     if (!freshState.isPlaying && !freshState.isRoundOver && !freshState.isGameFinished && timeLeft <= 0 && !teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = true;
-      const finishedTeam = freshState.currentTeam;
-      const teamIndex = finishedTeam - 1;
-      const correct = freshState.teamRoundScores[teamIndex]?.correct ?? 0;
-      const name = freshState.getTeamName(finishedTeam);
-      const color = freshState.getTeamColor(finishedTeam);
-      setTeamScoreScreen({ teamNumber: finishedTeam, correct, name, color });
+      setShowTeamScore(true);
     }
   }, [store.isPlaying, store.isRoundOver, store.isGameFinished, timeLeft]);
 
@@ -719,7 +714,7 @@ export default function Game() {
   const lastSoundTimeRef = useRef<number | null>(null);
   useEffect(() => {
     // Only play sounds when playing and not counting down, waiting for ready, waiting for permission, or showing rotate prompt
-    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || isHandoff || waitingForPermission || showRotatePrompt) return;
+    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || isHandoff || showTeamScore || waitingForPermission || showRotatePrompt) return;
     
     // Avoid playing the same sound twice for the same timeLeft value
     if (lastSoundTimeRef.current === timeLeft) return;
@@ -737,7 +732,7 @@ export default function Game() {
         soundRoundEnd();
       }
     }
-  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, waitingForPermission, showRotatePrompt, store.currentRound, store.totalRounds]);
+  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, showTeamScore, waitingForPermission, showRotatePrompt, store.currentRound, store.totalRounds]);
 
   // Handle Game Over / Round End Redirect
   useEffect(() => {
@@ -852,19 +847,19 @@ export default function Game() {
   const handleScoreDismiss = () => {
     if (scoreDismissedRef.current) return;
     scoreDismissedRef.current = true;
-    setTeamScoreScreen(null);
+    setShowTeamScore(false);
     const freshState = useGameStore.getState();
     freshState.prepareRound();
   };
 
   useEffect(() => {
-    if (!teamScoreScreen) {
+    if (!showTeamScore) {
       scoreDismissedRef.current = false;
       return;
     }
     const timer = setTimeout(handleScoreDismiss, 3000);
     return () => clearTimeout(timer);
-  }, [teamScoreScreen]);
+  }, [showTeamScore]);
 
   const showHandoffScreen = () => {
     setIsWaitingForReady(false);
@@ -981,26 +976,32 @@ export default function Game() {
       )}
 
       {/* Team Score Screen - shown after a team's turn ends */}
-      {teamScoreScreen && !showRotatePrompt && (
-        <div 
-          className="absolute inset-0 z-[55] bg-background flex flex-col items-center justify-center gap-6 p-8 cursor-pointer"
-          onClick={handleScoreDismiss}
-          data-testid="team-score-screen"
-        >
-          <h2 className={`text-4xl font-bold ${teamScoreScreen.color.text} tracking-wide text-center`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-score-name">
-            {teamScoreScreen.name}
-          </h2>
-          <div className="flex flex-col items-center gap-2">
-            <span className={`text-[8rem] font-black ${teamScoreScreen.color.text} leading-none`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-team-score-count">
-              {teamScoreScreen.correct}
-            </span>
-            <span className="text-2xl text-muted-foreground font-light">
-              {teamScoreScreen.correct === 1 ? 'correct guess' : 'correct guesses'}
-            </span>
+      {showTeamScore && !showRotatePrompt && (() => {
+        const scoreTeamColor = store.getTeamColor(store.currentTeam);
+        const scoreTeamName = store.getTeamName(store.currentTeam);
+        const teamIdx = store.currentTeam - 1;
+        const scoreCorrect = store.teamRoundScores[teamIdx]?.correct ?? store.currentScore;
+        return (
+          <div 
+            className="absolute inset-0 z-[55] bg-background flex flex-col items-center justify-center gap-6 p-8 cursor-pointer"
+            onClick={handleScoreDismiss}
+            data-testid="team-score-screen"
+          >
+            <h2 className={`text-4xl font-bold ${scoreTeamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-score-name">
+              {scoreTeamName}
+            </h2>
+            <div className="flex flex-col items-center gap-2">
+              <span className={`text-[8rem] font-black ${scoreTeamColor.text} leading-none`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-team-score-count">
+                {scoreCorrect}
+              </span>
+              <span className="text-2xl text-muted-foreground font-light">
+                {scoreCorrect === 1 ? 'correct guess' : 'correct guesses'}
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground/60 mt-4 animate-pulse">Tap to continue</p>
           </div>
-          <p className="text-sm text-muted-foreground/60 mt-4 animate-pulse">Tap to continue</p>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Handoff Screen Overlay - tap to confirm team has the phone */}
       {isHandoff && !showRotatePrompt && !waitingForPermission && (() => {
