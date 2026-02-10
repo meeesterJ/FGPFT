@@ -1080,7 +1080,7 @@ export default function Game() {
                   <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
                   <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
                 </h1>
-                <span className={`${store.numberOfTeams > 1 ? 'text-[6rem]' : 'text-[10rem]'} font-thin text-yellow-400 leading-none mt-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+                <span className="text-[10rem] font-thin text-yellow-400 leading-none mt-2" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
                   {store.currentRound || 1}
                 </span>
               </div>
