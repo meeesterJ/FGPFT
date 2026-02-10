@@ -24,7 +24,7 @@ export default function Game() {
   const [waitingForPermission, setWaitingForPermission] = useState(false); // Wait for iOS permission before countdown
   const [isWaitingForReady, setIsWaitingForReady] = useState(false); // Wait for user to be ready before countdown
   const [isHandoff, setIsHandoff] = useState(false); // Handoff screen - tap to confirm team has the phone
-  const [teamScoreScreen, setTeamScoreScreen] = useState<{ teamNumber: number; correct: number } | null>(null); // Show team score after their turn
+  const [teamScoreScreen, setTeamScoreScreen] = useState<{ teamNumber: number; correct: number; name: string; color: { text: string; bg: string; border: string } } | null>(null); // Show team score after their turn
   const [calibrationTrigger, setCalibrationTrigger] = useState(0); // Increment to force recalibration
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const tiltThresholdRef = useRef(25); // Degrees of tilt delta to trigger (lowered for better sensitivity)
@@ -693,7 +693,9 @@ export default function Game() {
       const finishedTeam = freshState.currentTeam;
       const teamIndex = finishedTeam - 1;
       const correct = freshState.teamRoundScores[teamIndex]?.correct ?? 0;
-      setTeamScoreScreen({ teamNumber: finishedTeam, correct });
+      const name = freshState.getTeamName(finishedTeam);
+      const color = freshState.getTeamColor(finishedTeam);
+      setTeamScoreScreen({ teamNumber: finishedTeam, correct, name, color });
     }
   }, [store.isPlaying, store.isRoundOver, store.isGameFinished, timeLeft]);
 
@@ -846,11 +848,23 @@ export default function Game() {
     }
   };
 
+  const scoreDismissedRef = useRef(false);
   const handleScoreDismiss = () => {
+    if (scoreDismissedRef.current) return;
+    scoreDismissedRef.current = true;
     setTeamScoreScreen(null);
     const freshState = useGameStore.getState();
     freshState.prepareRound();
   };
+
+  useEffect(() => {
+    if (!teamScoreScreen) {
+      scoreDismissedRef.current = false;
+      return;
+    }
+    const timer = setTimeout(handleScoreDismiss, 3000);
+    return () => clearTimeout(timer);
+  }, [teamScoreScreen]);
 
   const showHandoffScreen = () => {
     setIsWaitingForReady(false);
@@ -967,33 +981,26 @@ export default function Game() {
       )}
 
       {/* Team Score Screen - shown after a team's turn ends */}
-      {teamScoreScreen && !showRotatePrompt && (() => {
-        const teamColor = store.getTeamColor(teamScoreScreen.teamNumber);
-        const teamName = store.getTeamName(teamScoreScreen.teamNumber);
-        return (
-          <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-6 p-8">
-            <h2 className={`text-4xl font-bold ${teamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-score-name">
-              {teamName}
-            </h2>
-            <div className="flex flex-col items-center gap-2">
-              <span className={`text-[8rem] font-black ${teamColor.text} leading-none`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-team-score-count">
-                {teamScoreScreen.correct}
-              </span>
-              <span className="text-2xl text-muted-foreground font-light">
-                {teamScoreScreen.correct === 1 ? 'correct guess' : 'correct guesses'}
-              </span>
-            </div>
-            <Button
-              onClick={handleScoreDismiss}
-              size="lg"
-              className="text-xl px-10 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform mt-4"
-              data-testid="button-score-continue"
-            >
-              Continue
-            </Button>
+      {teamScoreScreen && !showRotatePrompt && (
+        <div 
+          className="absolute inset-0 z-[55] bg-background flex flex-col items-center justify-center gap-6 p-8 cursor-pointer"
+          onClick={handleScoreDismiss}
+          data-testid="team-score-screen"
+        >
+          <h2 className={`text-4xl font-bold ${teamScoreScreen.color.text} tracking-wide text-center`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-team-score-name">
+            {teamScoreScreen.name}
+          </h2>
+          <div className="flex flex-col items-center gap-2">
+            <span className={`text-[8rem] font-black ${teamScoreScreen.color.text} leading-none`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-team-score-count">
+              {teamScoreScreen.correct}
+            </span>
+            <span className="text-2xl text-muted-foreground font-light">
+              {teamScoreScreen.correct === 1 ? 'correct guess' : 'correct guesses'}
+            </span>
           </div>
-        );
-      })()}
+          <p className="text-sm text-muted-foreground/60 mt-4 animate-pulse">Tap to continue</p>
+        </div>
+      )}
 
       {/* Handoff Screen Overlay - tap to confirm team has the phone */}
       {isHandoff && !showRotatePrompt && !waitingForPermission && (() => {
