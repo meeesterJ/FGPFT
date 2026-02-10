@@ -1000,7 +1000,7 @@ export default function Game() {
                 <div className="flex-1 flex items-center justify-center animate-bounce-in">
                   <div className="flex flex-col items-center" data-testid="text-team-score-name">
                     {scoreNameWords.map((word, i) => (
-                      <span key={i} className={`text-7xl font-black ${scoreTeamColor.text} tracking-wide leading-tight`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
+                      <span key={i} className={`text-7xl ${scoreTeamColor.text} tracking-wide leading-tight transform -rotate-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
                         {word}
                       </span>
                     ))}
@@ -1009,8 +1009,14 @@ export default function Game() {
 
                 {/* Right: Score */}
                 <div className="flex-1 flex flex-col items-center justify-center animate-bounce-in">
-                  <span className="text-4xl font-thin text-muted-foreground tracking-wide" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>Score</span>
-                  <span className="text-[10rem] font-thin text-yellow-400 leading-none" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 12px rgba(0,0,0,0.3)' }} data-testid="text-team-score-count">{scoreCorrect}</span>
+                  <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
+                    <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>S</span>
+                    <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>c</span>
+                    <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
+                    <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>r</span>
+                    <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>e</span>
+                  </h1>
+                  <span className="text-[10rem] font-thin text-yellow-400 leading-none mt-2" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 12px rgba(0,0,0,0.3)' }} data-testid="text-team-score-count">{scoreCorrect}</span>
                 </div>
               </div>
 
@@ -1057,7 +1063,7 @@ export default function Game() {
                 <div className="flex-1 flex items-center justify-center animate-bounce-in">
                   <div className="flex flex-col items-center" data-testid="text-team-ready">
                     {readyNameWords.map((word, i) => (
-                      <span key={i} className={`text-7xl font-black ${readyTeamColor.text} tracking-wide leading-tight`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
+                      <span key={i} className={`text-7xl ${readyTeamColor.text} tracking-wide leading-tight transform -rotate-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
                         {word}
                       </span>
                     ))}
