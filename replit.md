@@ -64,12 +64,12 @@ The tilt detection uses the DeviceOrientation API with gamma axis for landscape 
 - **Return-to-Center**: After a gesture is recognized, user must return phone to center position before the next gesture is processed
 
 ### Platform Abstraction Layer (Native-Ready)
-The app includes a platform abstraction layer for future Capacitor/native iOS deployment:
+The app includes a platform abstraction layer for future Capacitor/native iOS deployment. All game code (Game.tsx, useTiltDetection hook) routes through these abstractions rather than using raw browser APIs directly:
 
 - **platform.ts**: Detects browser vs native (Capacitor) context via `window.Capacitor.isNativePlatform()`, provides `isNative()`, `getPlatform()`, `isIOS()`, `isAndroid()`, `isMobile()` utilities
 - **haptics.ts**: Unified haptic feedback with Capacitor Haptics plugin hooks for native, falls back to `navigator.vibrate()` on web. Exports `hapticCorrect()`, `hapticPass()`, `hapticTick()`
 - **audio.ts**: Skips web audio unlock workarounds in native context (iOS Safari workarounds not needed in native shell)
-- **orientation.ts**: Ready for native Core Motion integration while preserving web DeviceOrientation behavior. Handles permission requests, orientation tracking, and lock/unlock
+- **orientation.ts**: Central orientation abstraction. `needsPermissionRequest()` returns false for native (skips iOS Safari permission dance). `requestOrientationPermission()` auto-grants in native. `startOrientationTracking()` provides unified event listener interface used by useTiltDetection hook. `isOrientationSupported()` checks for DeviceOrientationEvent availability
 
 ### Build Configuration
 - Development: Vite dev server with HMR

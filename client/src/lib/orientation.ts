@@ -51,10 +51,7 @@ export function hasOrientationPermission(): boolean {
 }
 
 export function startOrientationTracking(handler: OrientationHandler): () => void {
-  if (isNative()) {
-    activeHandler = handler;
-    return () => { activeHandler = null; };
-  }
+  activeHandler = handler;
 
   const webHandler = (event: DeviceOrientationEvent) => {
     handler({
@@ -67,6 +64,7 @@ export function startOrientationTracking(handler: OrientationHandler): () => voi
   window.addEventListener('deviceorientation', webHandler);
 
   return () => {
+    activeHandler = null;
     window.removeEventListener('deviceorientation', webHandler);
   };
 }

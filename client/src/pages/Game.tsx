@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { initAudioContext, playSound } from "@/lib/audio";
 import { hapticCorrect, hapticPass } from "@/lib/haptics";
 import { useTiltDetection } from "@/hooks/use-tilt-detection";
+import { needsPermissionRequest, requestOrientationPermission, isOrientationSupported } from "@/lib/orientation";
 
 export default function Game() {
   const [, setLocation] = useLocation();
@@ -127,13 +128,8 @@ export default function Game() {
     // Don't run until hydrated
     if (!isHydrated) return;
     
-    // Check if this is iOS 13+ requiring permission
-    if (typeof DeviceOrientationEvent !== "undefined" &&
-        typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-      
-      // Always probe to verify events are actually arriving (iOS may revoke between sessions)
+    if (needsPermissionRequest()) {
       const testHandler = (e: DeviceOrientationEvent) => {
-        // We received an orientation event - permission is active!
         if (permissionProbeTimeoutRef.current) {
           clearTimeout(permissionProbeTimeoutRef.current);
           permissionProbeTimeoutRef.current = null;
@@ -162,15 +158,13 @@ export default function Game() {
         setHasDeviceOrientation(false);
         setWaitingForPermission(true);
       }, 500);
-    } else if (typeof DeviceOrientationEvent !== "undefined") {
-      // Non-iOS - orientation events are available
+    } else if (isOrientationSupported()) {
       setHasDeviceOrientation(true);
       const isLandscape = window.innerWidth > window.innerHeight;
       if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
         showReadyScreen();
       }
     } else {
-      // No DeviceOrientationEvent at all - show ready screen anyway
       const isLandscape = window.innerWidth > window.innerHeight;
       if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
         showReadyScreen();
@@ -245,9 +239,7 @@ export default function Game() {
         // Only show ready screen here if permission is already confirmed granted
         if (useGameStore.getState().tiltPermissionGranted) {
           showReadyScreen();
-        } else if (typeof DeviceOrientationEvent === "undefined" || 
-                   typeof (DeviceOrientationEvent as any).requestPermission !== "function") {
-          // Non-iOS device - orientation events work without permission
+        } else if (!needsPermissionRequest()) {
           showReadyScreen();
         }
         // For iOS without permission, the hydration-aware effect handles showing the permission UI
@@ -457,41 +449,33 @@ export default function Game() {
   };
 
   const requestTiltPermission = async () => {
-    // Initialize audio context on user gesture for iOS compatibility
     initAudioContext();
     
-    if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
-      try {
-        const perm = await (DeviceOrientationEvent as any).requestPermission();
-        if (perm === "granted") {
-          // Record when permission was granted - use for delay before enabling tilt
-          permissionGrantedTimeRef.current = Date.now();
-          // Also set lastTiltTime to prevent immediate tilt detection
-          lastTiltTimeRef.current = Date.now() + 5000; // 5 second grace period after countdown
-          
-          setHasDeviceOrientation(true);
-          setNeedsIOSPermission(false);
-          setWaitingForPermission(false);
-          store.setTiltPermissionGranted(true);
-          
-          // Now show ready screen
-          if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
-            showReadyScreen();
-          }
-        } else {
-          // Permission denied - still show ready screen, just without tilt
-          setWaitingForPermission(false);
-          setNeedsIOSPermission(false);
-          if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
-            showReadyScreen();
-          }
-        }
-      } catch (e) {
-        // Permission denied - still show ready screen
+    try {
+      const granted = await requestOrientationPermission();
+      if (granted) {
+        permissionGrantedTimeRef.current = Date.now();
+        lastTiltTimeRef.current = Date.now() + 5000;
+        
+        setHasDeviceOrientation(true);
+        setNeedsIOSPermission(false);
         setWaitingForPermission(false);
+        store.setTiltPermissionGranted(true);
+        
         if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
           showReadyScreen();
         }
+      } else {
+        setWaitingForPermission(false);
+        setNeedsIOSPermission(false);
+        if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+          showReadyScreen();
+        }
+      }
+    } catch {
+      setWaitingForPermission(false);
+      if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+        showReadyScreen();
       }
     }
   };

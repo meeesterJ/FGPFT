@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { startOrientationTracking, type OrientationData } from "@/lib/orientation";
 
 interface UseTiltDetectionOptions {
   isPlaying: boolean;
@@ -97,10 +98,10 @@ export function useTiltDetection({
       }
     };
 
-    const handleReadyTilt = (event: DeviceOrientationEvent) => {
+    const handleReadyTilt = (data: OrientationData) => {
       if (readyTriggeredRef.current) return;
       
-      const gamma = event.gamma || 0;
+      const gamma = data.gamma || 0;
       
       const isLandscape = window.innerWidth > window.innerHeight;
       if (!isLandscape) {
@@ -169,10 +170,10 @@ export function useTiltDetection({
       }
     };
 
-    window.addEventListener("deviceorientation", handleReadyTilt);
+    const stopTracking = startOrientationTracking(handleReadyTilt);
     return () => {
       if (enableTimerId) clearTimeout(enableTimerId);
-      window.removeEventListener("deviceorientation", handleReadyTilt);
+      stopTracking();
     };
   }, [isWaitingForReady, hasDeviceOrientation]);
 
@@ -233,9 +234,9 @@ export function useTiltDetection({
       }
     };
 
-    const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
-      const beta = event.beta || 0;
-      const gamma = event.gamma || 0;
+    const handleDeviceOrientation = (data: OrientationData) => {
+      const beta = data.beta || 0;
+      const gamma = data.gamma || 0;
       
       let orientationType: string = 'portrait-primary';
       if (screen.orientation && screen.orientation.type) {
@@ -341,11 +342,11 @@ export function useTiltDetection({
       }
     };
 
-    window.addEventListener("deviceorientation", handleDeviceOrientation);
+    const stopTracking = startOrientationTracking(handleDeviceOrientation);
     return () => {
       if (cooldownDeferTimeout) clearTimeout(cooldownDeferTimeout);
       if (graceTimeout) clearTimeout(graceTimeout);
-      window.removeEventListener("deviceorientation", handleDeviceOrientation);
+      stopTracking();
     };
   }, [hasDeviceOrientation, isPlaying, isPaused, isCountingDown, calibrationTrigger]);
 
