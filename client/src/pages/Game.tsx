@@ -1038,14 +1038,13 @@ export default function Game() {
             <h1 className={`text-6xl font-black ${teamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-handoff-team">
               {teamName} Ready?
             </h1>
-            <Button
+            <button
               onClick={handleHandoffConfirm}
-              size="lg"
-              className="text-2xl px-12 py-8 rounded-2xl bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
+              className="px-14 py-6 rounded-2xl bg-cyan-500 hover:bg-cyan-400 active:bg-cyan-600 text-white border-2 border-cyan-400 shadow-lg hover:scale-105 active:scale-95 transition-all"
               data-testid="button-handoff-confirm"
             >
-              Ready!
-            </Button>
+              <span className="text-3xl uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>Ready!</span>
+            </button>
           </div>
         );
       })()}
@@ -1095,14 +1094,13 @@ export default function Game() {
                 </div>
               )}
               {store.showButtons && (
-                <Button 
+                <button 
                   onClick={onReady}
-                  size="lg"
-                  className="text-xl px-10 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
+                  className="px-12 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 active:bg-pink-600 text-white border-2 border-pink-400 shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                 >
-                  <Play className="w-7 h-7 mr-3" />
-                  Play
-                </Button>
+                  <Play className="w-8 h-8 drop-shadow-md" />
+                  <span className="text-2xl uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>Play</span>
+                </button>
               )}
             </div>
           </div>
@@ -1188,19 +1186,19 @@ export default function Game() {
 
       {/* Controls - conditionally rendered based on showButtons setting */}
       {store.showButtons && (
-        <div className="flex flex-col w-auto h-full z-20">
+        <div className="flex flex-col w-auto h-full z-20 gap-2 p-2 justify-center">
           <button 
             onClick={handlePass}
             disabled={isProcessing || !store.isPlaying || isCountingDown}
             data-testid="button-pass"
             className={cn(
-              "flex-1 bg-destructive hover:bg-destructive/90 active:bg-destructive/80 transition-colors flex items-center justify-center group",
-              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
+              "flex-1 bg-red-500 hover:bg-red-400 active:bg-red-600 rounded-2xl border-2 border-red-400 shadow-lg transition-all flex items-center justify-center group hover:scale-[1.02] active:scale-95",
+              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed hover:scale-100"
             )}
           >
-            <div className="flex flex-col items-center">
-              <X className="w-16 h-16 text-white mb-2 group-active:scale-90 transition-transform" />
-              <span className="text-white font-bold text-xl uppercase tracking-widest">Pass</span>
+            <div className="flex flex-col items-center px-6">
+              <X className="w-14 h-14 text-white mb-1 group-active:scale-90 transition-transform drop-shadow-md" />
+              <span className="text-white text-lg uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>Pass</span>
             </div>
           </button>
           <button 
@@ -1208,13 +1206,13 @@ export default function Game() {
             disabled={isProcessing || !store.isPlaying || isCountingDown}
             data-testid="button-correct"
             className={cn(
-              "flex-1 bg-success hover:bg-success/90 active:bg-success/80 transition-colors flex items-center justify-center group",
-              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
+              "flex-1 bg-green-500 hover:bg-green-400 active:bg-green-600 rounded-2xl border-2 border-green-400 shadow-lg transition-all flex items-center justify-center group hover:scale-[1.02] active:scale-95",
+              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed hover:scale-100"
             )}
           >
-            <div className="flex flex-col items-center">
-              <Check className="w-16 h-16 text-black mb-2 group-active:scale-90 transition-transform" />
-              <span className="text-black font-bold text-xl uppercase tracking-widest">Correct</span>
+            <div className="flex flex-col items-center px-6">
+              <Check className="w-14 h-14 text-white mb-1 group-active:scale-90 transition-transform drop-shadow-md" />
+              <span className="text-white text-lg uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>Correct</span>
             </div>
           </button>
         </div>
