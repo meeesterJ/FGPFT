@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useGameStore } from "@/lib/store";
-import { Button } from "@/components/ui/button";
-import { Check, X, Home, Play, Smartphone, RotateCcw, CheckCircle2, ListX } from "lucide-react";
+import { RainbowText } from "@/components/ui/game-ui";
+import { Check, X, Home, Play, Smartphone, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getAudioContext, initAudioContext, playSound } from "@/lib/audio";
+import { initAudioContext, playSound } from "@/lib/audio";
 import { hapticCorrect, hapticPass } from "@/lib/haptics";
+import { useTiltDetection } from "@/hooks/use-tilt-detection";
 
 export default function Game() {
   const [, setLocation] = useLocation();
@@ -13,73 +14,53 @@ export default function Game() {
   
   const [timeLeft, setTimeLeft] = useState(store.roundDuration);
   const [isPaused, setIsPaused] = useState(false);
-  const [tiltFeedback, setTiltFeedback] = useState<"correct" | "pass" | null>(null);
   const [hasDeviceOrientation, setHasDeviceOrientation] = useState(store.tiltPermissionGranted);
   const [isHydrated, setIsHydrated] = useState(useGameStore.persist.hasHydrated());
   const [showRotatePrompt, setShowRotatePrompt] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false); // Debounce button clicks
+  const [isProcessing, setIsProcessing] = useState(false);
   const [needsIOSPermission, setNeedsIOSPermission] = useState(false);
-  const [countdown, setCountdown] = useState<number | "Go!" | null>(null); // Countdown state
-  const [isCountingDown, setIsCountingDown] = useState(false); // Start as false, only count after onReady
-  const [waitingForPermission, setWaitingForPermission] = useState(false); // Wait for iOS permission before countdown
-  const [isWaitingForReady, setIsWaitingForReady] = useState(false); // Wait for user to be ready before countdown
-  const [isHandoff, setIsHandoff] = useState(false); // Handoff screen - tap to confirm team has the phone
-  const [showTeamScore, setShowTeamScore] = useState(false); // Show team score after their turn
-  const [calibrationTrigger, setCalibrationTrigger] = useState(0); // Increment to force recalibration
+  const [countdown, setCountdown] = useState<number | "Go!" | null>(null);
+  const [isCountingDown, setIsCountingDown] = useState(false);
+  const [waitingForPermission, setWaitingForPermission] = useState(false);
+  const [isWaitingForReady, setIsWaitingForReady] = useState(false);
+  const [isHandoff, setIsHandoff] = useState(false);
+  const [showTeamScore, setShowTeamScore] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const tiltThresholdRef = useRef(25); // Degrees of tilt delta to trigger (lowered for better sensitivity)
-  const lastTiltTimeRef = useRef(0);
-  const orientationAngleRef = useRef(0); // Track screen orientation angle
-  const hasStartedRound = useRef(false); // Prevent multiple startRound calls
-  const wasInPortrait = useRef(true); // Track if we were in portrait (for countdown trigger)
-  const countdownTimeoutsRef = useRef<NodeJS.Timeout[]>([]); // Track countdown timeouts
-  const isCountdownActiveRef = useRef(false); // Guard against overlapping countdowns
-  const hasShownInitialCountdownRef = useRef(false); // Track if initial countdown shown
-  const permissionGrantedTimeRef = useRef(0); // Track when permission was granted for delay
-  const baselineBetaRef = useRef<number | null>(null); // Baseline beta for calibrated tilt detection
-  const rawGammaBaselineRef = useRef<number | null>(null); // Raw gamma baseline for wrap detection
-  const calibrationSamplesRef = useRef<number[]>([]); // Samples for averaging baseline
-  const rawGammaSamplesRef = useRef<number[]>([]); // Raw gamma samples for wrap detection baseline
-  const isCalibrating = useRef(false); // Flag to indicate calibration in progress
-  const nextWordRef = useRef(store.nextWord); // Stable ref for nextWord function
-  const pendingGestureRef = useRef<boolean | null>(null); // Pending gesture result (true=correct, false=pass, null=none)
-  const returnThresholdRef = useRef(10); // Degrees from baseline to consider "returned to center"
-  const mustReturnToCenterRef = useRef(false); // After button click, must return to center before new tilt gesture
-  const lastOrientationTypeRef = useRef<string | null>(null); // Track orientation type used during calibration
-  const permissionProbeTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Track permission probe timeout for cancellation
-  const permissionProbeHandlerRef = useRef<((e: DeviceOrientationEvent) => void) | null>(null); // Track permission probe handler
-  const wordDisplayRef = useRef<HTMLHeadingElement>(null); // Ref for auto-scaling word display
-  const wordContainerRef = useRef<HTMLDivElement>(null); // Ref for word container
-  const [wordFontSize, setWordFontSize] = useState<string | null>(null); // Custom font size for long words
+  const orientationAngleRef = useRef(0);
+  const hasStartedRound = useRef(false);
+  const wasInPortrait = useRef(true);
+  const countdownTimeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const isCountdownActiveRef = useRef(false);
+  const hasShownInitialCountdownRef = useRef(false);
+  const permissionGrantedTimeRef = useRef(0);
+  const nextWordRef = useRef(store.nextWord);
+  const permissionProbeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const permissionProbeHandlerRef = useRef<((e: DeviceOrientationEvent) => void) | null>(null);
+  const wordDisplayRef = useRef<HTMLHeadingElement>(null);
+  const wordContainerRef = useRef<HTMLDivElement>(null);
+  const [wordFontSize, setWordFontSize] = useState<string | null>(null);
   
-  // Sound feedback using enhanced audio system
   const soundCorrect = () => {
-    console.log('soundCorrect called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('correct', store.soundVolume);
   };
   
   const soundPass = () => {
-    console.log('soundPass called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('pass', store.soundVolume);
   };
   
-  // Countdown sounds - tick/tock pattern for 3, 2, 1 and roundEnd for round end
   const soundTick = () => {
-    console.log('soundTick called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('tick', store.soundVolume);
   };
   
   const soundTock = () => {
-    console.log('soundTock called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('tock', store.soundVolume);
   };
   
   const soundRoundEnd = () => {
-    console.log('soundRoundEnd called, soundEnabled:', store.soundEnabled);
     if (!store.soundEnabled) return;
     playSound('roundEnd', store.soundVolume);
   };
@@ -94,6 +75,33 @@ export default function Game() {
     if (store.hapticEnabled) hapticPass();
     soundPass();
   };
+
+  const {
+    tiltFeedback,
+    setTiltFeedback,
+    calibrationTrigger,
+    setCalibrationTrigger,
+    lastTiltTimeRef,
+    mustReturnToCenterRef,
+    pendingGestureRef,
+    baselineBetaRef,
+    calibrationSamplesRef,
+    isCalibratingRef,
+  } = useTiltDetection({
+    isPlaying: store.isPlaying,
+    isPaused,
+    isCountingDown,
+    isWaitingForReady,
+    hasDeviceOrientation,
+    onTiltCorrect: feedbackCorrect,
+    onTiltPass: feedbackPass,
+    onTiltReturn: (wasCorrect: boolean) => {
+      nextWordRef.current(wasCorrect);
+    },
+    onReady: () => {
+      onReady();
+    },
+  });
   
   // Keep nextWord ref updated
   useEffect(() => {
@@ -193,123 +201,6 @@ export default function Game() {
     }
   }, [hasDeviceOrientation, waitingForPermission]);
 
-  // Ref to prevent multiple onReady calls
-  const readyTriggeredRef = useRef(false);
-  
-  // Reset ready trigger when waiting for ready screen
-  useEffect(() => {
-    if (isWaitingForReady) {
-      readyTriggeredRef.current = false;
-    }
-  }, [isWaitingForReady]);
-  
-  // Listen for tilt during ready screen to start countdown
-  useEffect(() => {
-    if (!isWaitingForReady || !hasDeviceOrientation) return;
-
-    let readyBaseline: number | null = null;
-    let samples: number[] = [];
-    let lastOrientationType: string = '';
-    const BASELINE_SAMPLE_COUNT = 15;
-    const readyThreshold = 35;
-    const centerTolerance = 10;
-    let phoneSettled = false;
-    let tiltEnabled = false;
-    let enableTimerId: ReturnType<typeof setTimeout> | null = null;
-    let holdStartTime: number | null = null;
-    const HOLD_DURATION_MS = 250;
-
-    const resetState = () => {
-      samples = [];
-      readyBaseline = null;
-      phoneSettled = false;
-      tiltEnabled = false;
-      holdStartTime = null;
-      if (enableTimerId) {
-        clearTimeout(enableTimerId);
-        enableTimerId = null;
-      }
-    };
-
-    const handleReadyTilt = (event: DeviceOrientationEvent) => {
-      if (readyTriggeredRef.current) return;
-      
-      const gamma = event.gamma || 0;
-      
-      const isLandscape = window.innerWidth > window.innerHeight;
-      if (!isLandscape) {
-        resetState();
-        lastOrientationType = '';
-        return;
-      }
-      
-      let orientationType: string = 'landscape-primary';
-      if (screen.orientation && screen.orientation.type) {
-        orientationType = screen.orientation.type;
-      } else if (typeof (window as any).orientation === 'number') {
-        const angle = (window as any).orientation;
-        if (angle === 90) {
-          orientationType = 'landscape-primary';
-        } else if (angle === -90 || angle === 270) {
-          orientationType = 'landscape-secondary';
-        }
-      }
-      
-      if (orientationType !== lastOrientationType) {
-        resetState();
-        lastOrientationType = orientationType;
-      }
-      
-      let effectiveTilt = 0;
-      if (orientationType === 'landscape-secondary') {
-        effectiveTilt = gamma;
-      } else {
-        effectiveTilt = -gamma;
-      }
-      
-      if (samples.length < BASELINE_SAMPLE_COUNT) {
-        samples.push(effectiveTilt);
-        if (samples.length === BASELINE_SAMPLE_COUNT) {
-          readyBaseline = samples.reduce((a, b) => a + b, 0) / samples.length;
-        }
-        return;
-      }
-      
-      if (readyBaseline === null) return;
-      
-      const tiltDelta = effectiveTilt - readyBaseline;
-      
-      if (!phoneSettled) {
-        if (Math.abs(tiltDelta) <= centerTolerance) {
-          phoneSettled = true;
-          enableTimerId = setTimeout(() => {
-            tiltEnabled = true;
-          }, 1200);
-        }
-        return;
-      }
-      
-      if (!tiltEnabled) return;
-      
-      if (Math.abs(tiltDelta) >= readyThreshold) {
-        if (holdStartTime === null) {
-          holdStartTime = Date.now();
-        } else if (Date.now() - holdStartTime >= HOLD_DURATION_MS) {
-          readyTriggeredRef.current = true;
-          onReady();
-        }
-      } else {
-        holdStartTime = null;
-      }
-    };
-
-    window.addEventListener("deviceorientation", handleReadyTilt);
-    return () => {
-      if (enableTimerId) clearTimeout(enableTimerId);
-      window.removeEventListener("deviceorientation", handleReadyTilt);
-    };
-  }, [isWaitingForReady, hasDeviceOrientation]);
-
   // Initialize round when component mounts - prepare deck but don't start playing
   useEffect(() => {
     // Prepare round deck/word if not already done, but don't start playing
@@ -366,7 +257,7 @@ export default function Game() {
           // Was in landscape, now in portrait - mark baseline invalid
           wasInPortrait.current = true;
           baselineBetaRef.current = null;
-          isCalibrating.current = false;
+          isCalibratingRef.current = false;
           calibrationSamplesRef.current = [];
         }
       }
@@ -423,244 +314,6 @@ export default function Game() {
       }
     };
   }, []); // Only on mount
-
-  // Track which calibrationTrigger value we've already calibrated for
-  const lastCalibratedTriggerRef = useRef<number>(-1);
-  
-  // Device orientation listener
-  useEffect(() => {
-    // Disable tilt during countdown or when in portrait
-    const isLandscape = window.innerWidth > window.innerHeight;
-    if (!hasDeviceOrientation || !store.isPlaying || isPaused || isCountingDown || !isLandscape) return;
-    
-    // Only start fresh calibration when calibrationTrigger changes (not on every effect run)
-    const needsCalibration = lastCalibratedTriggerRef.current !== calibrationTrigger;
-    
-    // Track the cooldown defer timeout
-    let cooldownDeferTimeout: NodeJS.Timeout | null = null;
-    
-    if (needsCalibration) {
-      const now = Date.now();
-      const timeSinceLastTilt = now - lastTiltTimeRef.current;
-      const cooldownRemaining = 2000 - timeSinceLastTilt;
-      
-      if (cooldownRemaining > 0) {
-        // Still in cooldown - defer calibration until cooldown expires
-        cooldownDeferTimeout = setTimeout(() => {
-          // Only calibrate if still in landscape when timeout fires
-          const stillLandscape = window.innerWidth > window.innerHeight;
-          if (!stillLandscape) return; // Skip - next landscape entry will trigger recalibration
-          
-          lastCalibratedTriggerRef.current = calibrationTrigger;
-          baselineBetaRef.current = null;
-          rawGammaBaselineRef.current = null;
-          isCalibrating.current = true;
-          calibrationSamplesRef.current = [];
-          rawGammaSamplesRef.current = [];
-          pendingGestureRef.current = null; // Clear any pending gesture on recalibration
-          mustReturnToCenterRef.current = false; // Clear return-to-center guard
-          setTiltFeedback(null);
-        }, cooldownRemaining);
-      } else {
-        // No cooldown - calibrate immediately
-        lastCalibratedTriggerRef.current = calibrationTrigger;
-        baselineBetaRef.current = null;
-        rawGammaBaselineRef.current = null;
-        isCalibrating.current = true;
-        calibrationSamplesRef.current = [];
-        rawGammaSamplesRef.current = [];
-        pendingGestureRef.current = null; // Clear any pending gesture on recalibration
-        mustReturnToCenterRef.current = false; // Clear return-to-center guard
-        setTiltFeedback(null);
-      }
-    }
-    
-    // Grace period timer - finalize calibration 500ms after first sample
-    let graceTimeout: NodeJS.Timeout | null = null;
-    
-    const finalizeCalibration = () => {
-      if (calibrationSamplesRef.current.length > 0) {
-        const sum = calibrationSamplesRef.current.reduce((a, b) => a + b, 0);
-        baselineBetaRef.current = sum / calibrationSamplesRef.current.length;
-        // Also store raw gamma baseline for wrap detection
-        if (rawGammaSamplesRef.current.length > 0) {
-          const rawSum = rawGammaSamplesRef.current.reduce((a, b) => a + b, 0);
-          rawGammaBaselineRef.current = rawSum / rawGammaSamplesRef.current.length;
-        }
-        isCalibrating.current = false;
-        calibrationSamplesRef.current = [];
-        rawGammaSamplesRef.current = [];
-      }
-    };
-
-    const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
-      const eventTime = Date.now();
-      
-      const beta = event.beta || 0;
-      const gamma = event.gamma || 0;
-      
-      // Determine current orientation type on EVERY event (not from cached ref)
-      // This ensures calibration and gesture detection use the same axis
-      let orientationType: string = 'portrait-primary';
-      if (screen.orientation && screen.orientation.type) {
-        orientationType = screen.orientation.type;
-      } else if (typeof (window as any).orientation === 'number') {
-        // Fallback for older browsers
-        const winOrient = (window as any).orientation;
-        if (winOrient === 90) orientationType = 'landscape-primary';
-        else if (winOrient === -90 || winOrient === 270) orientationType = 'landscape-secondary';
-        else orientationType = 'portrait-primary';
-      }
-      
-      // Check if orientation changed since last calibration - if so, trigger recalibration
-      if (lastOrientationTypeRef.current !== null && 
-          lastOrientationTypeRef.current !== orientationType) {
-        // Orientation changed - immediately invalidate baseline to prevent stale data use
-        baselineBetaRef.current = null;
-        rawGammaBaselineRef.current = null;
-        isCalibrating.current = true;
-        calibrationSamplesRef.current = [];
-        rawGammaSamplesRef.current = [];
-        pendingGestureRef.current = null;
-        mustReturnToCenterRef.current = false;
-        setTiltFeedback(null);
-        // Trigger recalibration via state update for proper grace period handling
-        lastOrientationTypeRef.current = orientationType;
-        setCalibrationTrigger(prev => prev + 1);
-        return; // Skip this event, wait for proper recalibration
-      }
-      lastOrientationTypeRef.current = orientationType;
-      
-      // Use gamma for landscape mode (it measures the forward/backward tilt)
-      // gamma ranges from -90 to 90 degrees
-      // 
-      // The key insight: when phone is held vertically (gamma near ±90), tilting
-      // forward causes gamma to wrap across the ±90 boundary. We detect this by
-      // checking if gamma suddenly jumped to the opposite extreme.
-      // 
-      // We use a simple heuristic: if gamma and the previous sample are on opposite
-      // extremes (one > 60, other < -60), we're crossing the wrap boundary.
-      
-      let effectiveTilt = 0;
-      if (orientationType === 'landscape-primary' || orientationType === 'landscape-secondary') {
-        // Apply wrap correction based on RAW gamma baseline (not the mapped one)
-        let unwrappedGamma = gamma;
-        
-        // Check if we need to unwrap based on raw gamma baseline
-        // The raw baseline tells us where "center" is in sensor space
-        const rawBaseline = rawGammaBaselineRef.current;
-        if (rawBaseline !== null) {
-          // Determine if baseline was captured when phone was vertical
-          // For landscape-secondary: vertical = raw gamma near +90
-          // For landscape-primary: vertical = raw gamma near -90
-          const isLandscapeSecondary = orientationType === 'landscape-secondary';
-          
-          if (isLandscapeSecondary) {
-            // landscape-secondary: vertical means raw gamma near +90, wrap happens to -90
-            if (rawBaseline > 60 && gamma < -60) {
-              unwrappedGamma = 180 + gamma; // -85 → 95
-            }
-          } else {
-            // landscape-primary: vertical means raw gamma near -90, wrap happens to +90
-            if (rawBaseline < -60 && gamma > 60) {
-              unwrappedGamma = gamma - 180; // 85 → -95
-            }
-          }
-        }
-        
-        // For both orientations, we want forward tilt = positive delta
-        // User testing in landscape-secondary showed:
-        // - Vertical: gamma ≈ 89
-        // - Forward: gamma wraps to negative (after unwrap: ~95)
-        // - Backward: gamma decreases toward 0 (~80)
-        // So for landscape-secondary: forward gives higher value = positive delta ✓
-        // 
-        // For landscape-primary (opposite rotation):
-        // - Vertical: gamma ≈ -89
-        // - Forward: gamma wraps to positive (after unwrap: ~-95)
-        // - Backward: gamma increases toward 0 (~-80)
-        // So for landscape-primary: forward gives lower value = negative delta
-        // We need to invert to get positive delta for forward
-        
-        if (orientationType === 'landscape-secondary') {
-          effectiveTilt = unwrappedGamma;
-        } else {
-          effectiveTilt = -unwrappedGamma;
-        }
-      } else {
-        // Portrait: use beta
-        effectiveTilt = beta;
-      }
-      
-      // Calibration phase: collect samples to establish baseline
-      if (isCalibrating.current) {
-        calibrationSamplesRef.current.push(effectiveTilt);
-        rawGammaSamplesRef.current.push(gamma); // Also collect raw gamma for wrap detection
-        
-        // Start grace period after first sample - wait 500ms then finalize
-        if (calibrationSamplesRef.current.length === 1 && !graceTimeout) {
-          graceTimeout = setTimeout(finalizeCalibration, 500);
-        }
-        
-        // Also finalize if we hit 10 samples before grace period ends
-        if (calibrationSamplesRef.current.length >= 10) {
-          if (graceTimeout) clearTimeout(graceTimeout);
-          finalizeCalibration();
-        }
-        return;
-      }
-      
-      // Wait for calibration to complete
-      if (baselineBetaRef.current === null) return;
-      
-      // Calculate tilt delta from calibrated baseline
-      const tiltDelta = effectiveTilt - baselineBetaRef.current;
-      const absDelta = Math.abs(tiltDelta);
-      const isAtCenter = absDelta <= returnThresholdRef.current;
-      
-      // If we must return to center first (after button click), wait for that
-      if (mustReturnToCenterRef.current) {
-        if (isAtCenter) {
-          // User returned to center - can now accept new tilt gestures
-          mustReturnToCenterRef.current = false;
-        }
-        return; // Don't process any gestures until centered
-      }
-
-      // If we have a pending gesture, check if user returned to center
-      if (pendingGestureRef.current !== null) {
-        if (isAtCenter) {
-          // User returned to center - advance word now
-          const wasCorrect = pendingGestureRef.current;
-          pendingGestureRef.current = null;
-          lastTiltTimeRef.current = Date.now(); // Update for cooldown logic
-          setTiltFeedback(null);
-          nextWordRef.current(wasCorrect);
-        }
-        return; // Don't process new gestures until return to center
-      }
-
-      // No pending gesture - check for new tilt gesture
-      if (tiltDelta > tiltThresholdRef.current) {
-        // Tilted forward (screen toward user) = CORRECT
-        pendingGestureRef.current = true;
-        setTiltFeedback("correct");
-        feedbackCorrect(); // Haptic + sound feedback for tilt
-      } else if (tiltDelta < -tiltThresholdRef.current) {
-        // Tilted backward (screen away from user) = PASS
-        pendingGestureRef.current = false;
-        setTiltFeedback("pass");
-        feedbackPass(); // Haptic + sound feedback for tilt
-      }
-    };
-
-    window.addEventListener("deviceorientation", handleDeviceOrientation);
-    return () => {
-      if (cooldownDeferTimeout) clearTimeout(cooldownDeferTimeout);
-      if (graceTimeout) clearTimeout(graceTimeout);
-      window.removeEventListener("deviceorientation", handleDeviceOrientation);
-    };
-  }, [hasDeviceOrientation, store.isPlaying, isPaused, isCountingDown, calibrationTrigger]);
 
   // Timer logic - pause during countdown, ready screen, and permission prompt
   useEffect(() => {
@@ -906,7 +559,7 @@ export default function Game() {
     // Reset calibration for new round
     baselineBetaRef.current = null;
     calibrationSamplesRef.current = [];
-    isCalibrating.current = false;
+    isCalibratingRef.current = false;
     
     setIsCountingDown(true);
     setCountdown(3);
@@ -956,28 +609,26 @@ export default function Game() {
           <p className="text-muted-foreground text-center text-lg max-w-md">
             Tap the button below to enable tilt gestures for a hands-free experience
           </p>
-          <Button 
+          <button 
             onClick={requestTiltPermission}
-            size="lg"
-            className="text-xl px-8 py-6 rounded-xl bg-pink-500 hover:bg-pink-400 text-white border-2 border-pink-400 pointer-events-auto"
+            className="text-xl px-10 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 active:bg-pink-600 text-white border-2 border-pink-400 shadow-lg hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center gap-3"
             data-testid="button-enable-tilt"
           >
-            <Smartphone className="w-6 h-6 mr-3" />
-            Enable Tilt Gestures
-          </Button>
-          <Button 
-            variant="ghost"
+            <Smartphone className="w-6 h-6" />
+            <span className="font-display text-shadow-sm">Enable Tilt Gestures</span>
+          </button>
+          <button 
             onClick={() => {
-              initAudioContext(); // Initialize audio on user gesture
+              initAudioContext();
               setWaitingForPermission(false);
               setNeedsIOSPermission(false);
               showReadyScreen();
             }}
-            className="text-muted-foreground pointer-events-auto"
+            className="text-muted-foreground hover:text-foreground transition-colors pointer-events-auto px-6 py-3"
             data-testid="button-skip-tilt"
           >
             Skip (use buttons instead)
-          </Button>
+          </button>
         </div>
       )}
 
@@ -1000,7 +651,7 @@ export default function Game() {
                 <div className="flex-1 flex items-center justify-center animate-bounce-in">
                   <div className="flex flex-col items-center" data-testid="text-team-score-name">
                     {scoreNameWords.map((word, i) => (
-                      <span key={i} className={`text-7xl ${scoreTeamColor.text} tracking-wide leading-tight transform -rotate-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
+                      <span key={i} className={`text-7xl ${scoreTeamColor.text} tracking-wide leading-tight transform -rotate-2 font-display text-shadow-lg`}>
                         {word}
                       </span>
                     ))}
@@ -1010,13 +661,9 @@ export default function Game() {
                 {/* Right: Score */}
                 <div className="flex-1 flex flex-col items-center justify-center animate-bounce-in">
                   <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
-                    <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>S</span>
-                    <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>c</span>
-                    <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
-                    <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>r</span>
-                    <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>e</span>
+                    <RainbowText text="Score" />
                   </h1>
-                  <span className="text-[10rem] font-thin text-yellow-400 leading-none mt-2" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 12px rgba(0,0,0,0.3)' }} data-testid="text-team-score-count">{scoreCorrect}</span>
+                  <span className="text-[10rem] font-thin text-yellow-400 leading-none mt-2 font-display text-shadow-md" data-testid="text-team-score-count">{scoreCorrect}</span>
                 </div>
               </div>
 
@@ -1035,7 +682,7 @@ export default function Game() {
         const teamName = store.getTeamName(store.currentTeam);
         return (
           <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-8 p-8">
-            <h1 className={`text-6xl font-black ${teamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-handoff-team">
+            <h1 className={`text-6xl font-black ${teamColor.text} tracking-wide text-center text-shadow-lg`} data-testid="text-handoff-team">
               {teamName} Ready?
             </h1>
             <button
@@ -1043,7 +690,7 @@ export default function Game() {
               className="px-14 py-6 rounded-2xl bg-cyan-500 hover:bg-cyan-400 active:bg-cyan-600 text-white border-2 border-cyan-400 shadow-lg hover:scale-105 active:scale-95 transition-all"
               data-testid="button-handoff-confirm"
             >
-              <span className="text-3xl uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>Ready!</span>
+              <span className="text-3xl uppercase tracking-widest font-display text-shadow-sm">Ready!</span>
             </button>
           </div>
         );
@@ -1062,7 +709,7 @@ export default function Game() {
                 <div className="flex-1 flex items-center justify-center animate-bounce-in">
                   <div className="flex flex-col items-center" data-testid="text-team-ready">
                     {readyNameWords.map((word, i) => (
-                      <span key={i} className={`text-7xl ${readyTeamColor.text} tracking-wide leading-tight transform -rotate-2`} style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
+                      <span key={i} className={`text-7xl ${readyTeamColor.text} tracking-wide leading-tight transform -rotate-2 font-display text-shadow-lg`}>
                         {word}
                       </span>
                     ))}
@@ -1073,13 +720,9 @@ export default function Game() {
               {/* Right: Round number */}
               <div className="flex-1 flex flex-col items-center justify-center animate-bounce-in">
                 <h1 className={`${store.numberOfTeams > 1 ? 'text-5xl' : 'text-7xl'} font-thin tracking-wide transform -rotate-2 leading-none`}>
-                  <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
-                  <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
-                  <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
-                  <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
-                  <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                  <RainbowText text="Round" />
                 </h1>
-                <span className="text-[10rem] font-thin text-yellow-400 leading-none mt-2" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+                <span className="text-[10rem] font-thin text-yellow-400 leading-none mt-2 font-display text-shadow-md">
                   {store.currentRound || 1}
                 </span>
               </div>
@@ -1099,7 +742,7 @@ export default function Game() {
                   className="px-12 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 active:bg-pink-600 text-white border-2 border-pink-400 shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                 >
                   <Play className="w-8 h-8 drop-shadow-md" />
-                  <span className="text-2xl uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>Play</span>
+                  <span className="text-2xl uppercase tracking-widest font-display text-shadow-sm">Play</span>
                 </button>
               )}
             </div>
@@ -1198,7 +841,7 @@ export default function Game() {
           >
             <div className="flex flex-col items-center px-6">
               <X className="w-14 h-14 text-white mb-1 group-active:scale-90 transition-transform drop-shadow-md" />
-              <span className="text-white text-lg uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>Pass</span>
+              <span className="text-white text-lg uppercase tracking-widest font-display text-shadow-sm">Pass</span>
             </div>
           </button>
           <button 
@@ -1212,7 +855,7 @@ export default function Game() {
           >
             <div className="flex flex-col items-center px-6">
               <Check className="w-14 h-14 text-white mb-1 group-active:scale-90 transition-transform drop-shadow-md" />
-              <span className="text-white text-lg uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>Correct</span>
+              <span className="text-white text-lg uppercase tracking-widest font-display text-shadow-sm">Correct</span>
             </div>
           </button>
         </div>

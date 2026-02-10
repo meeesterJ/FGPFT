@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { useGameStore, TEAM_THEME_COLORS } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, ArrowRight, Home, Trophy, ListX, CheckCircle2, Crown, X } from "lucide-react";
-import { menuButtonStyles } from "@/components/ui/game-ui";
+import { menuButtonStyles, RainbowText } from "@/components/ui/game-ui";
 import Confetti from "react-confetti";
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { playSound, stopSound } from "@/lib/audio";
@@ -192,7 +192,7 @@ export default function Summary() {
         <div className="flex flex-col justify-center items-center gap-6 min-w-[10rem]">
           {store.isGameFinished ? (
             <div className="flex flex-col items-center animate-bounce-in">
-              <h1 className="text-6xl font-thin tracking-wide transform -rotate-2 leading-tight text-center" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+              <h1 className="text-6xl font-thin tracking-wide transform -rotate-2 leading-tight text-center text-shadow-md">
                 <span className="text-yellow-400">Game</span>
                 <br />
                 <span className="text-yellow-400">Over!</span>
@@ -201,13 +201,9 @@ export default function Summary() {
           ) : (
             <div className="flex flex-col items-center animate-bounce-in">
               <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
-                <span className="text-pink-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>R</span>
-                <span className="text-cyan-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>o</span>
-                <span className="text-yellow-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>u</span>
-                <span className="text-green-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>n</span>
-                <span className="text-purple-400" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>d</span>
+                <RainbowText text="Round" />
               </h1>
-              <span className="text-7xl font-thin text-yellow-400 leading-none mt-2" style={{ fontFamily: 'var(--font-display)', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>{store.currentRound}</span>
+              <span className="text-7xl font-thin text-yellow-400 leading-none mt-2 font-display text-shadow-md">{store.currentRound}</span>
               <span className="text-base text-muted-foreground uppercase tracking-widest mt-2">Complete</span>
             </div>
           )}

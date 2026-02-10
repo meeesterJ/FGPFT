@@ -152,3 +152,17 @@ export const menuButtonStyles = {
   purple: `${menuButtonBase} bg-purple-600 hover:bg-purple-500 border-purple-400`,
   yellow: `${menuButtonBase} bg-yellow-600 hover:bg-yellow-500 border-yellow-400`,
 };
+
+export const RAINBOW_COLORS = ['text-pink-400', 'text-cyan-400', 'text-yellow-400', 'text-green-400', 'text-purple-400'];
+
+export function RainbowText({ text, className }: { text: string; className?: string }) {
+  return (
+    <>
+      {text.split('').map((char, i) => (
+        <span key={i} className={`${RAINBOW_COLORS[i % RAINBOW_COLORS.length]} rainbow-letter`}>
+          {char}
+        </span>
+      ))}
+    </>
+  );
+}
