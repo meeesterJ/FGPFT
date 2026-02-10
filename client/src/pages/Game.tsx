@@ -957,41 +957,25 @@ export default function Game() {
       )}
 
       {/* Handoff Screen Overlay - tap to confirm team has the phone */}
-      {isHandoff && !showRotatePrompt && !waitingForPermission && (
-        <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-8 p-8">
-          {store.numberOfTeams > 1 ? (() => {
-            const teamColor = store.getTeamColor(store.currentTeam);
-            const teamName = store.getTeamName(store.currentTeam);
-            return (
-              <>
-                <h2 className={`text-4xl font-bold ${teamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }} data-testid="text-handoff-team">
-                  Pass the phone to
-                </h2>
-                <h1 className={`text-6xl font-black ${teamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
-                  {teamName}
-                </h1>
-              </>
-            );
-          })() : (
-            <>
-              <h2 className="text-4xl font-bold text-pink-400 tracking-wide text-center" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
-                Get Ready!
-              </h2>
-              <p className="text-xl text-muted-foreground text-center">
-                Round {store.currentRound || 1}
-              </p>
-            </>
-          )}
-          <Button
-            onClick={handleHandoffConfirm}
-            size="lg"
-            className="text-2xl px-12 py-8 rounded-2xl bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
-            data-testid="button-handoff-confirm"
-          >
-            We're Ready!
-          </Button>
-        </div>
-      )}
+      {isHandoff && !showRotatePrompt && !waitingForPermission && (() => {
+        const teamColor = store.getTeamColor(store.currentTeam);
+        const teamName = store.getTeamName(store.currentTeam);
+        return (
+          <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-8 p-8">
+            <h1 className={`text-6xl font-black ${teamColor.text} tracking-wide text-center`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4)' }} data-testid="text-handoff-team">
+              {teamName} Ready?
+            </h1>
+            <Button
+              onClick={handleHandoffConfirm}
+              size="lg"
+              className="text-2xl px-12 py-8 rounded-2xl bg-cyan-600 hover:bg-cyan-500 text-white border-2 border-cyan-400 font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform"
+              data-testid="button-handoff-confirm"
+            >
+              Ready!
+            </Button>
+          </div>
+        );
+      })()}
 
       {/* Ready Screen Overlay - shown before countdown */}
       {isWaitingForReady && !showRotatePrompt && !waitingForPermission && !isHandoff && (
