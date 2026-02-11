@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useGameStore } from "@/lib/store";
 import { RainbowText } from "@/components/ui/game-ui";
-import { Check, X, Home, Play, Smartphone, RotateCcw } from "lucide-react";
+import { Check, X, Home, Play, Smartphone, RotateCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { initAudioContext, playSound } from "@/lib/audio";
 import { hapticCorrect, hapticPass } from "@/lib/haptics";
@@ -579,7 +579,7 @@ export default function Game() {
       {/* Rotate Prompt Overlay */}
       {showRotatePrompt && (
         <div className="absolute inset-0 z-50 bg-background/95 backdrop-blur-sm flex flex-col items-center justify-center space-y-6 p-8">
-          <RotateCcw className="w-24 h-24 text-primary animate-spin" style={{ animationDuration: '3s' }} />
+          <RotateCw className="w-24 h-24 text-primary animate-spin" style={{ animationDuration: '3s' }} />
           <h2 className="text-3xl font-black text-primary text-center">Please Rotate Your Device</h2>
           <p className="text-muted-foreground text-center text-lg">Turn your phone sideways to play in landscape mode</p>
         </div>
