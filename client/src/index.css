@@ -167,7 +167,7 @@ h1, h2, h3, h4, h5, h6 {
 .word-container-fixed {
   width: 100%;
   max-width: 100%;
-  height: clamp(200px, 70vh, 500px);
+  height: clamp(200px, 85vh, 600px);
   flex-shrink: 0;
   overflow: hidden;
 }
