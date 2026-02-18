@@ -32,7 +32,6 @@ export default function Categories() {
   const [bulkAddWords, setBulkAddWords] = useState("");
   const [newListIsStudy, setNewListIsStudy] = useState(false);
   const [editListIsStudy, setEditListIsStudy] = useState(false);
-  const [deleteConfirmList, setDeleteConfirmList] = useState<{ id: string; name: string; isCustom: boolean } | null>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -221,7 +220,11 @@ export default function Categories() {
                         className="text-red-400 hover:text-red-300 hover:bg-red-500/20"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setDeleteConfirmList({ id: list.id, name: list.name, isCustom: !!list.isCustom });
+                          if (list.isCustom) {
+                            store.removeCustomList(list.id);
+                          } else {
+                            store.deleteBuiltInList(list.id);
+                          }
                         }}
                       >
                         <Trash2 className="w-5 h-5" />
@@ -314,46 +317,6 @@ export default function Categories() {
               </Button>
             </div>
           </ScrollArea>
-        </div>
-      )}
-
-      {/* Delete Confirmation - Full Screen */}
-      {deleteConfirmList !== null && (
-        <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col items-center justify-center p-8">
-          <div className="max-w-sm w-full space-y-8 text-center">
-            <Trash2 className="w-16 h-16 text-red-400 mx-auto" />
-            <h2 className="text-2xl font-thin text-red-400">Delete Category?</h2>
-            <p className="text-muted-foreground text-lg">
-              Are you sure you want to delete <span className="text-foreground font-medium">"{deleteConfirmList.name}"</span>?
-            </p>
-            <div className="flex gap-4">
-              <Button 
-                variant="outline" 
-                className="flex-1 border-border hover:bg-muted py-6 text-lg"
-                onClick={() => setDeleteConfirmList(null)}
-                data-testid="button-cancel-delete"
-              >
-                Cancel
-              </Button>
-              <Button 
-                className="flex-1 bg-red-500 hover:bg-red-400 text-white border-red-400 py-6 text-lg"
-                onClick={() => {
-                  if (deleteConfirmList) {
-                    if (deleteConfirmList.isCustom) {
-                      store.removeCustomList(deleteConfirmList.id);
-                    } else {
-                      store.deleteBuiltInList(deleteConfirmList.id);
-                    }
-                    toast({ title: "Deleted", description: `"${deleteConfirmList.name}" has been removed.` });
-                    setDeleteConfirmList(null);
-                  }
-                }}
-                data-testid="button-confirm-delete"
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
         </div>
       )}
 
