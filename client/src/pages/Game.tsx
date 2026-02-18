@@ -840,7 +840,7 @@ export default function Game() {
 
       {/* Controls - conditionally rendered based on showButtons setting */}
       {store.showButtons && (
-        <div className="flex flex-col h-full z-20 gap-3 py-3 px-6 justify-center">
+        <div className="flex flex-col h-full z-20 gap-3 py-3 pl-3 pr-2 mr-2 justify-center">
           <button 
             onClick={handleCorrect}
             disabled={isProcessing || !store.isPlaying || isCountingDown}
