@@ -31,6 +31,7 @@ function defaultTeamNames(count: number): string[] {
 
 interface GameState {
   // Settings
+  studyMode: boolean;
   roundDuration: number;
   totalRounds: number;
   showButtons: boolean;
@@ -64,6 +65,7 @@ interface GameState {
   teamGameResults: { word: string; correct: boolean }[][];
 
   // Actions
+  setStudyMode: (enabled: boolean) => void;
   setRoundDuration: (seconds: number) => void;
   setTotalRounds: (rounds: number) => void;
   setShowButtons: (show: boolean) => void;
@@ -99,6 +101,7 @@ interface GameState {
 export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
+      studyMode: false,
       roundDuration: 30,
       totalRounds: 3,
       showButtons: false,
@@ -130,6 +133,7 @@ export const useGameStore = create<GameState>()(
       teamRoundResults: [],
       teamGameResults: [],
 
+      setStudyMode: (enabled) => set({ studyMode: enabled }),
       setRoundDuration: (seconds) => set({ roundDuration: seconds }),
       setTotalRounds: (rounds) => set({ totalRounds: rounds }),
       setShowButtons: (show) => set({ showButtons: show }),
@@ -397,8 +401,9 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'guess-party-storage',
-      version: 4,
+      version: 5,
       partialize: (state) => ({ 
+        studyMode: state.studyMode,
         roundDuration: state.roundDuration,
         totalRounds: state.totalRounds,
         showButtons: state.showButtons,
@@ -432,6 +437,9 @@ export const useGameStore = create<GameState>()(
               isStudy: l.isStudy ?? false
             }));
           }
+        }
+        if (version < 5) {
+          persistedState.studyMode = persistedState.studyMode ?? false;
         }
         return persistedState;
       },

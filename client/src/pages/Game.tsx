@@ -13,7 +13,8 @@ export default function Game() {
   const [, setLocation] = useLocation();
   const store = useGameStore();
   
-  const [timeLeft, setTimeLeft] = useState(store.roundDuration);
+  const isInfiniteTimer = store.roundDuration === 0;
+  const [timeLeft, setTimeLeft] = useState(store.roundDuration === 0 ? 0 : store.roundDuration);
   const [isPaused, setIsPaused] = useState(false);
   const [hasDeviceOrientation, setHasDeviceOrientation] = useState(store.tiltPermissionGranted);
   const [isHydrated, setIsHydrated] = useState(useGameStore.persist.hasHydrated());
@@ -206,7 +207,7 @@ export default function Game() {
     }
     
     // Reset timer
-    setTimeLeft(store.roundDuration);
+    setTimeLeft(store.roundDuration === 0 ? 0 : store.roundDuration);
 
     const lockToLandscape = async () => {
       try {
@@ -309,10 +310,18 @@ export default function Game() {
 
   // Timer logic - pause during countdown, ready screen, and permission prompt
   useEffect(() => {
-    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !isHandoff && !showTeamScore && !waitingForPermission && timeLeft > 0) {
-      timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
+    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !isHandoff && !showTeamScore && !waitingForPermission) {
+      if (isInfiniteTimer) {
+        timerRef.current = setInterval(() => {
+          setTimeLeft((prev) => prev + 1);
+        }, 1000);
+      } else if (timeLeft > 0) {
+        timerRef.current = setInterval(() => {
+          setTimeLeft((prev) => prev - 1);
+        }, 1000);
+      } else {
+        if (timerRef.current) clearInterval(timerRef.current);
+      }
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
     }
@@ -320,20 +329,20 @@ export default function Game() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, showTeamScore, waitingForPermission, timeLeft]);
+  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, showTeamScore, waitingForPermission, timeLeft, isInfiniteTimer]);
 
   // Handle timer expiration
   useEffect(() => {
-    if (timeLeft <= 0 && store.isPlaying) {
+    if (!isInfiniteTimer && timeLeft <= 0 && store.isPlaying) {
       store.endRound();
     }
-  }, [timeLeft, store.isPlaying]);
+  }, [timeLeft, store.isPlaying, isInfiniteTimer]);
 
   // Handle team transition in team mode (when not all teams have played yet)
   const teamTransitionPendingRef = useRef(false);
   useEffect(() => {
     const freshState = useGameStore.getState();
-    if (!freshState.isPlaying && !freshState.isRoundOver && !freshState.isGameFinished && timeLeft <= 0 && !teamTransitionPendingRef.current) {
+    if (!freshState.isPlaying && !freshState.isRoundOver && !freshState.isGameFinished && !isInfiniteTimer && timeLeft <= 0 && !teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = true;
       setShowTeamScore(true);
     }
@@ -345,7 +354,7 @@ export default function Game() {
     if (prevTeamRef.current !== store.currentTeam && teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = false;
       prevTeamRef.current = store.currentTeam;
-      setTimeLeft(store.roundDuration);
+      setTimeLeft(store.roundDuration === 0 ? 0 : store.roundDuration);
       isCountdownActiveRef.current = false;
       hasShownInitialCountdownRef.current = false;
       setIsWaitingForReady(false);

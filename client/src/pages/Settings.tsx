@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameStore, TEAM_THEME_COLORS, MAX_TEAM_NAME_LENGTH } from "@/lib/store";
-import { ArrowLeft, Share, ChevronDown } from "lucide-react";
+import { ArrowLeft, Share, ChevronDown, Gamepad2, BookOpen } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -57,6 +57,18 @@ function TeamNameInput({ index }: { index: number }) {
   );
 }
 
+const STUDY_TIMER_STEPS = [60, 120, 300, 600, 0];
+const STUDY_TIMER_LABELS = ['1 min', '2 min', '5 min', '10 min', '∞'];
+
+function studyTimerToSlider(duration: number): number {
+  const idx = STUDY_TIMER_STEPS.indexOf(duration);
+  return idx >= 0 ? idx : 0;
+}
+
+function sliderToStudyTimer(val: number): number {
+  return STUDY_TIMER_STEPS[val] ?? 60;
+}
+
 export default function Settings() {
   useSwipeBack({ targetPath: "/" });
   const store = useGameStore();
@@ -74,72 +86,147 @@ export default function Settings() {
     setIsStandalone(standalone);
   }, []);
 
+  const handleModeToggle = (study: boolean) => {
+    store.setStudyMode(study);
+    if (study) {
+      store.setNumberOfTeams(1);
+      store.setTotalRounds(1);
+      store.setSoundEnabled(false);
+      store.setShowButtons(true);
+      if (!STUDY_TIMER_STEPS.includes(store.roundDuration)) {
+        store.setRoundDuration(300);
+      }
+    } else {
+      if (STUDY_TIMER_STEPS.includes(store.roundDuration) && store.roundDuration > 60) {
+        store.setRoundDuration(30);
+      } else if (store.roundDuration === 0) {
+        store.setRoundDuration(30);
+      }
+    }
+  };
+
+  const studyMode = store.studyMode;
+
+  const studyTimerLabel = studyMode
+    ? STUDY_TIMER_LABELS[studyTimerToSlider(store.roundDuration)] ?? '5 min'
+    : null;
+
   const settingsSections = (
     <>
+      {/* Study / Game Mode Toggle */}
+      <div className="flex rounded-xl overflow-hidden border border-purple-500/30 h-10" data-testid="toggle-study-game-mode">
+        <button
+          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-all ${
+            !studyMode
+              ? 'bg-gradient-to-r from-pink-500/30 to-purple-500/30 text-pink-300 border-r border-purple-500/30'
+              : 'bg-card/30 text-muted-foreground hover:text-pink-300 border-r border-purple-500/30'
+          }`}
+          onClick={() => handleModeToggle(false)}
+          data-testid="button-game-mode"
+        >
+          <Gamepad2 className="w-4 h-4" />
+          Game Mode
+        </button>
+        <button
+          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-all ${
+            studyMode
+              ? 'bg-gradient-to-r from-purple-500/30 to-cyan-500/30 text-cyan-300'
+              : 'bg-card/30 text-muted-foreground hover:text-cyan-300'
+          }`}
+          onClick={() => handleModeToggle(true)}
+          data-testid="button-study-mode"
+        >
+          <BookOpen className="w-4 h-4" />
+          Study Mode
+        </button>
+      </div>
+
       {/* Number of Teams */}
-      <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30">
+      <section className={`space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30 ${studyMode ? 'opacity-50' : ''}`}>
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-thin text-cyan-400">Number of Teams</h2>
-          <span className="text-2xl font-mono text-cyan-300">{store.numberOfTeams}</span>
+          <span className="text-2xl font-mono text-cyan-300">{studyMode ? 1 : store.numberOfTeams}</span>
         </div>
-        <Slider 
-          value={[store.numberOfTeams]} 
-          onValueChange={(v) => store.setNumberOfTeams(v[0])} 
-          min={1} 
-          max={5} 
-          step={1}
-          className="py-2"
-          data-testid="slider-number-of-teams"
-        />
+        {!studyMode && (
+          <>
+            <Slider 
+              value={[store.numberOfTeams]} 
+              onValueChange={(v) => store.setNumberOfTeams(v[0])} 
+              min={1} 
+              max={5} 
+              step={1}
+              className="py-2"
+              data-testid="slider-number-of-teams"
+            />
 
-        <button
-          onClick={() => setTeamsExpanded(!teamsExpanded)}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-cyan-400 transition-colors w-full pt-1"
-          data-testid="button-customize-teams"
-        >
-          <ChevronDown className={`w-4 h-4 transition-transform ${teamsExpanded ? 'rotate-180' : ''}`} />
-          <span>Customize Teams</span>
-        </button>
+            <button
+              onClick={() => setTeamsExpanded(!teamsExpanded)}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-cyan-400 transition-colors w-full pt-1"
+              data-testid="button-customize-teams"
+            >
+              <ChevronDown className={`w-4 h-4 transition-transform ${teamsExpanded ? 'rotate-180' : ''}`} />
+              <span>Customize Teams</span>
+            </button>
 
-        {teamsExpanded && (
-          <div className="space-y-3 pt-2">
-            {Array.from({ length: store.numberOfTeams }, (_, i) => (
-              <TeamNameInput key={i} index={i} />
-            ))}
-          </div>
+            {teamsExpanded && (
+              <div className="space-y-3 pt-2">
+                {Array.from({ length: store.numberOfTeams }, (_, i) => (
+                  <TeamNameInput key={i} index={i} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </section>
       
-      {/* Game Duration */}
+      {/* Round Timer */}
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-thin text-pink-400">Round Timer</h2>
-          <span className="text-2xl font-mono text-pink-300">{store.roundDuration}s</span>
+          <span className="text-2xl font-mono text-pink-300">
+            {studyMode ? studyTimerLabel : `${store.roundDuration}s`}
+          </span>
         </div>
-        <Slider 
-          value={[store.roundDuration]} 
-          onValueChange={(v) => store.setRoundDuration(v[0])} 
-          min={5} 
-          max={60} 
-          step={5}
-          className="py-4"
-        />
+        {studyMode ? (
+          <Slider 
+            value={[studyTimerToSlider(store.roundDuration)]} 
+            onValueChange={(v) => store.setRoundDuration(sliderToStudyTimer(v[0]))} 
+            min={0} 
+            max={4} 
+            step={1}
+            className="py-4"
+            data-testid="slider-round-timer-study"
+          />
+        ) : (
+          <Slider 
+            value={[store.roundDuration]} 
+            onValueChange={(v) => store.setRoundDuration(v[0])} 
+            min={5} 
+            max={60} 
+            step={5}
+            className="py-4"
+            data-testid="slider-round-timer"
+          />
+        )}
       </section>
 
       {/* Rounds Count */}
-      <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
+      <section className={`space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30 ${studyMode ? 'opacity-50' : ''}`}>
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-thin text-green-400">Total Rounds</h2>
-          <span className="text-2xl font-mono text-green-300">{store.totalRounds}</span>
+          <span className="text-2xl font-mono text-green-300">{studyMode ? 1 : store.totalRounds}</span>
         </div>
-        <Slider 
-          value={[store.totalRounds]} 
-          onValueChange={(v) => store.setTotalRounds(v[0])} 
-          min={1} 
-          max={5} 
-          step={1}
-          className="py-4"
-        />
+        {!studyMode && (
+          <Slider 
+            value={[store.totalRounds]} 
+            onValueChange={(v) => store.setTotalRounds(v[0])} 
+            min={1} 
+            max={5} 
+            step={1}
+            className="py-4"
+            data-testid="slider-total-rounds"
+          />
+        )}
       </section>
 
       {/* Sounds Toggle */}
