@@ -376,6 +376,9 @@ export const useGameStore = create<GameState>()(
         newRoundScores[teamIndex] = { correct, passed };
         
         const newTotalScores = [...teamTotalScores];
+        if (!newTotalScores[teamIndex]) {
+          newTotalScores[teamIndex] = { correct: 0, passed: 0 };
+        }
         newTotalScores[teamIndex] = {
           correct: newTotalScores[teamIndex].correct + correct,
           passed: newTotalScores[teamIndex].passed + passed
