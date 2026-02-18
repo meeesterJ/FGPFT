@@ -152,9 +152,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .word-container-fixed {
-  width: clamp(300px, 75vw, 700px);
+  width: clamp(250px, 65vw, 600px);
   height: clamp(200px, 75vh, 380px);
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 200px;
 }
 
 .word-display {

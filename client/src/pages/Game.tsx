@@ -15,7 +15,7 @@ export default function Game() {
   const store = useGameStore();
   
   const isInfiniteTimer = store.roundDuration === 0;
-  const [timeLeft, setTimeLeft] = useState(store.roundDuration === 0 ? 0 : store.roundDuration);
+  const [timeLeft, setTimeLeft] = useState(store.roundDuration === 0 ? 0 : Math.min(store.roundDuration, 599));
   const [isPaused, setIsPaused] = useState(false);
   const [hasDeviceOrientation, setHasDeviceOrientation] = useState(store.tiltPermissionGranted);
   const [isHydrated, setIsHydrated] = useState(useGameStore.persist.hasHydrated());
@@ -227,7 +227,7 @@ export default function Game() {
     }
     
     // Reset timer
-    setTimeLeft(store.roundDuration === 0 ? 0 : store.roundDuration);
+    setTimeLeft(store.roundDuration === 0 ? 0 : Math.min(store.roundDuration, 599));
 
     const lockToLandscape = async () => {
       try {
@@ -331,7 +331,7 @@ export default function Game() {
   // Re-sync timeLeft when roundDuration changes (e.g. after Zustand hydration)
   useEffect(() => {
     if (!store.isPlaying && !isCountingDown) {
-      setTimeLeft(store.roundDuration === 0 ? 0 : store.roundDuration);
+      setTimeLeft(store.roundDuration === 0 ? 0 : Math.min(store.roundDuration, 599));
     }
   }, [store.roundDuration]);
 
@@ -387,7 +387,7 @@ export default function Game() {
     if (prevTeamRef.current !== store.currentTeam && teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = false;
       prevTeamRef.current = store.currentTeam;
-      setTimeLeft(store.roundDuration === 0 ? 0 : store.roundDuration);
+      setTimeLeft(store.roundDuration === 0 ? 0 : Math.min(store.roundDuration, 599));
       isCountdownActiveRef.current = false;
       hasShownInitialCountdownRef.current = false;
       setIsWaitingForReady(false);
@@ -830,7 +830,7 @@ export default function Game() {
       </button>
 
       {/* Left Bar - Timer & Score */}
-      <div className="flex flex-col w-auto h-full px-4 py-6 gap-4 border-r border-border justify-center items-center z-20">
+      <div className="flex flex-col w-auto h-full px-3 py-6 gap-4 border-r border-border justify-center items-center z-20 shrink-0">
         {isInfiniteTimer ? (
           <div
             className="font-black text-5xl leading-none select-none"
@@ -935,7 +935,7 @@ export default function Game() {
 
       {/* Controls - conditionally rendered based on showButtons setting */}
       {store.showButtons && (
-        <div className="flex flex-col h-full z-20 gap-3 py-3 pl-3 pr-2 mr-4 justify-center">
+        <div className="flex flex-col h-full z-20 gap-3 py-3 pl-3 pr-2 mr-4 justify-center shrink-0">
           <button 
             onClick={handleCorrect}
             disabled={isProcessing || !store.isPlaying || isCountingDown}
