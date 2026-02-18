@@ -845,10 +845,13 @@ export default function Game() {
           </div>
         ) : (
           <div className={cn(
-            "font-black font-mono tracking-tighter text-5xl tabular-nums",
+            "font-black font-mono tracking-tighter tabular-nums",
+            timeLeft >= 60 ? "text-3xl" : "text-5xl",
             timeLeft <= 10 ? "text-destructive animate-pulse" : "text-primary"
           )}>
-            {String(timeLeft).padStart(2, '\u00A0')}s
+            {timeLeft >= 60
+              ? `${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`
+              : `${String(timeLeft).padStart(2, '\u00A0')}s`}
           </div>
         )}
 
