@@ -900,7 +900,7 @@ export default function Game() {
       )}
 
       {/* Game Area */}
-      <div className="flex-1 flex flex-col items-center justify-center p-3 z-10 min-w-0">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-3 z-10 min-w-0 overflow-hidden">
         {(() => {
           const hasAnswer = parsedWord?.answer != null;
           const isTappable = studyMode && hasAnswer && !answerRevealed && isPlaying && !isCountingDown;

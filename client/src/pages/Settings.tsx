@@ -347,8 +347,8 @@ export default function Settings() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-card flex flex-col">
-      <header className="p-4 flex items-center border-b border-purple-500/30 bg-purple-900/20 backdrop-blur-md sticky top-0 z-10">
+    <div className="min-h-screen bg-gradient-to-b from-background to-card flex flex-col safe-area-x">
+      <header className="p-4 flex items-center border-b border-purple-500/30 bg-purple-900/20 backdrop-blur-md sticky top-0 z-10 safe-area-top">
         <Link href="/">
           <Button variant="ghost" size="icon" className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/20">
             <ArrowLeft className="w-6 h-6" />

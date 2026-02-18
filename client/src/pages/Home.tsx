@@ -41,7 +41,7 @@ function MainScreen({ onStart }: { onStart: () => void }) {
   if (isLandscape) {
     return (
       <motion.div
-        className="h-[100dvh] flex flex-row items-center px-8 bg-gradient-to-b from-background to-card overflow-hidden"
+        className="h-[100dvh] flex flex-row items-center px-8 bg-gradient-to-b from-background to-card overflow-hidden safe-area-x"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
