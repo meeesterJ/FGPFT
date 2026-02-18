@@ -7,6 +7,7 @@ export type WordList = {
   name: string;
   words: string[];
   isCustom?: boolean;
+  isStudy?: boolean;
 };
 
 export type TeamScore = {
@@ -40,7 +41,7 @@ interface GameState {
   splashDismissed: boolean;
   selectedListIds: string[];
   customLists: WordList[];
-  builtInListOverrides: Record<string, { name?: string; words?: string[] }>;
+  builtInListOverrides: Record<string, { name?: string; words?: string[]; isStudy?: boolean }>;
   deletedBuiltInLists: string[];
   permanentlyDeletedBuiltInLists: string[];
   numberOfTeams: number;
@@ -75,7 +76,7 @@ interface GameState {
   addCustomList: (list: WordList) => void;
   removeCustomList: (id: string) => void;
   updateCustomList: (id: string, updatedList: WordList) => void;
-  updateBuiltInList: (id: string, name: string, words: string[]) => void;
+  updateBuiltInList: (id: string, name: string, words: string[], isStudy?: boolean) => void;
   resetBuiltInList: (id: string) => void;
   deleteBuiltInList: (id: string) => void;
   restoreBuiltInList: (id: string) => void;
@@ -161,10 +162,10 @@ export const useGameStore = create<GameState>()(
         customLists: state.customLists.map(l => l.id === id ? updatedList : l)
       })),
 
-      updateBuiltInList: (id, name, words) => set((state) => ({
+      updateBuiltInList: (id, name, words, isStudy) => set((state) => ({
         builtInListOverrides: {
           ...state.builtInListOverrides,
-          [id]: { name, words }
+          [id]: { name, words, isStudy }
         }
       })),
 
@@ -181,7 +182,8 @@ export const useGameStore = create<GameState>()(
             return {
               ...list,
               name: override.name ?? list.name,
-              words: override.words ?? list.words
+              words: override.words ?? list.words,
+              isStudy: override.isStudy ?? list.isStudy
             };
           }
           return list;
@@ -395,7 +397,7 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'guess-party-storage',
-      version: 3,
+      version: 4,
       partialize: (state) => ({ 
         roundDuration: state.roundDuration,
         totalRounds: state.totalRounds,
@@ -422,6 +424,14 @@ export const useGameStore = create<GameState>()(
         if (version < 3) {
           const count = persistedState.numberOfTeams || 1;
           persistedState.teamNames = defaultTeamNames(count);
+        }
+        if (version < 4) {
+          if (persistedState.customLists) {
+            persistedState.customLists = persistedState.customLists.map((l: any) => ({
+              ...l,
+              isStudy: l.isStudy ?? false
+            }));
+          }
         }
         return persistedState;
       },

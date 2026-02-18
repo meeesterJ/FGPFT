@@ -1,4 +1,4 @@
-export const DEFAULT_WORD_LISTS = [
+export const DEFAULT_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: boolean }[] = [
   {
     id: 'actions',
     name: 'Charades - Actions',
@@ -273,6 +273,7 @@ export const DEFAULT_WORD_LISTS = [
   {
     id: 'mandarin',
     name: 'Mandarin',
+    isStudy: true,
     words: [
       '爱 (ài)', '不好 (bù hǎo)', '不是 (búshì)', '不 (bù)', '不可以 (bùxíng)',
       '吃 (chī)', '茶 (chá)', '唱 (chàng)', '车 (chē)', '大 (dà)',
@@ -300,6 +301,7 @@ export const DEFAULT_WORD_LISTS = [
   {
     id: 'mandarin-beginner',
     name: 'Mandarin-Beginner',
+    isStudy: true,
     words: [
       '你好 nǐ hǎo [hello]', '谢谢 xièxiè [thank you]', '再见 zàijiàn [goodbye]',
       '请 qǐng [please]', '对不起 duìbùqǐ [sorry]', '是 shì [yes]',
@@ -323,6 +325,7 @@ export const DEFAULT_WORD_LISTS = [
   {
     id: 'mandarin-intermediate',
     name: 'Mandarin-Intermediate',
+    isStudy: true,
     words: [
       '帮忙 bāngmáng [help]', '记得 jìde [remember]', '忘记 wàngjì [forget]',
       '明白 míngbai [understand]', '练习 liànxí [practice]', '问题 wèntí [problem/question]',
@@ -346,6 +349,7 @@ export const DEFAULT_WORD_LISTS = [
   {
     id: 'vietnamese-beginner',
     name: 'Vietnamese-Beginner',
+    isStudy: true,
     words: [
       'xin chào [hello]', 'cảm ơn [thank you]', 'tạm biệt [goodbye]',
       'làm ơn [please]', 'xin lỗi [sorry]', 'vâng [yes]',
@@ -369,6 +373,7 @@ export const DEFAULT_WORD_LISTS = [
   {
     id: 'vietnamese-intermediate',
     name: 'Vietnamese-Intermediate',
+    isStudy: true,
     words: [
       'giúp đỡ [help]', 'nhớ [remember]', 'quên [forget]',
       'hiểu [understand]', 'luyện tập [practice]', 'vấn đề [problem]',
@@ -392,6 +397,7 @@ export const DEFAULT_WORD_LISTS = [
   {
     id: 'spanish-beginner',
     name: 'Spanish-Beginner',
+    isStudy: true,
     words: [
       'hola [hello]', 'gracias [thank you]', 'adiós [goodbye]',
       'por favor [please]', 'lo siento [sorry]', 'sí [yes]',
@@ -415,6 +421,7 @@ export const DEFAULT_WORD_LISTS = [
   {
     id: 'spanish-intermediate',
     name: 'Spanish-Intermediate',
+    isStudy: true,
     words: [
       'ayudar [help]', 'recordar [remember]', 'olvidar [forget]',
       'entender [understand]', 'practicar [practice]', 'problema [problem]',

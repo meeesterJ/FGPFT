@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useGameStore, WordList } from "@/lib/store";
 import { DEFAULT_WORD_LISTS } from "@/lib/words";
-import { ArrowLeft, Plus, Trash2, Edit2, X } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Edit2, X, BookOpen } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Papa from "papaparse";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useSwipeBack } from "@/hooks/use-swipe-back";
 import { useIsLandscape } from "@/hooks/use-landscape";
@@ -36,6 +37,8 @@ export default function Categories() {
   const [editListWords, setEditListWords] = useState<string[]>([]);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [bulkAddWords, setBulkAddWords] = useState("");
+  const [newListIsStudy, setNewListIsStudy] = useState(false);
+  const [editListIsStudy, setEditListIsStudy] = useState(false);
   const [deleteConfirmList, setDeleteConfirmList] = useState<{ id: string; name: string; isCustom: boolean } | null>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,12 +70,14 @@ export default function Categories() {
       id: `custom-${Date.now()}`,
       name: newListName,
       words,
-      isCustom: true
+      isCustom: true,
+      isStudy: newListIsStudy
     };
 
     store.addCustomList(newList);
     setNewListName("");
     setNewListWords("");
+    setNewListIsStudy(false);
     setIsDialogOpen(false);
     toast({ title: "Success", description: "New list created!" });
   };
@@ -81,6 +86,7 @@ export default function Categories() {
     setEditingListId(list.id);
     setEditListName(list.name);
     setEditListWords([...list.words]);
+    setEditListIsStudy(!!list.isStudy);
     setBulkAddWords("");
     setIsEditDialogOpen(true);
   };
@@ -124,14 +130,15 @@ export default function Categories() {
     const isBuiltIn = DEFAULT_WORD_LISTS.some(l => l.id === editingListId);
 
     if (isBuiltIn) {
-      store.updateBuiltInList(editingListId!, editListName, filteredWords);
+      store.updateBuiltInList(editingListId!, editListName, filteredWords, editListIsStudy);
       toast({ title: "Success", description: `"${editListName}" has been updated!` });
     } else {
       const updatedList: WordList = {
         id: editingListId!,
         name: editListName,
         words: filteredWords,
-        isCustom: true
+        isCustom: true,
+        isStudy: editListIsStudy
       };
       store.updateCustomList(editingListId!, updatedList);
       toast({ title: "Success", description: "List updated!" });
@@ -201,6 +208,18 @@ export default function Categories() {
                         onChange={e => setNewListWords(e.target.value)}
                       />
                     </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-4 h-4 text-purple-400" />
+                        <Label htmlFor="new-study-toggle">Study Mode</Label>
+                      </div>
+                      <Switch
+                        id="new-study-toggle"
+                        checked={newListIsStudy}
+                        onCheckedChange={setNewListIsStudy}
+                        data-testid="toggle-study-create"
+                      />
+                    </div>
                     {ENABLE_CSV_UPLOAD && (
                       <div className="space-y-2">
                         <Label>Or Upload CSV</Label>
@@ -263,6 +282,19 @@ export default function Categories() {
                         <Input 
                           value={editListName}
                           onChange={e => setEditListName(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <BookOpen className="w-4 h-4 text-purple-400" />
+                          <Label htmlFor="edit-study-toggle">Study Mode</Label>
+                        </div>
+                        <Switch
+                          id="edit-study-toggle"
+                          checked={editListIsStudy}
+                          onCheckedChange={setEditListIsStudy}
+                          data-testid="toggle-study-edit"
                         />
                       </div>
                       
@@ -342,7 +374,9 @@ export default function Categories() {
                       </div>
                       <div>
                         <h3 className="font-thin">{list.name}</h3>
-                        <p className="text-xs text-muted-foreground">{list.words.length} words {list.isCustom && '(Custom)'}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {list.words.length} words{list.isCustom ? ' (Custom)' : ''}{list.isStudy ? ' · Study' : ''}
+                        </p>
                       </div>
                     </div>
                     <div className="flex gap-2">
