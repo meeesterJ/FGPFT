@@ -41,11 +41,6 @@ function unlockAudioSilently(): Promise<void> {
   if (audioUnlocked) return Promise.resolve();
   if (unlockPromise) return unlockPromise;
   
-  if (isNative()) {
-    audioUnlocked = true;
-    return Promise.resolve();
-  }
-  
   const promises: Promise<void>[] = [];
   
   const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;

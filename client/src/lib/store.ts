@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { DEFAULT_WORD_LISTS } from './words';
+import { initOrientationSync, syncPermissionFromStore } from './orientation';
 
 export type WordList = {
   id: string;
@@ -152,7 +153,10 @@ export const useGameStore = create<GameState>()(
       setHapticEnabled: (enabled) => set({ hapticEnabled: enabled }),
       setSoundEnabled: (enabled) => set({ soundEnabled: enabled }),
       setSoundVolume: (volume) => set({ soundVolume: volume }),
-      setTiltPermissionGranted: (granted) => set({ tiltPermissionGranted: granted }),
+      setTiltPermissionGranted: (granted) => {
+        syncPermissionFromStore(granted);
+        set({ tiltPermissionGranted: granted });
+      },
       setSplashDismissed: (dismissed) => set({ splashDismissed: dismissed }),
       
       toggleListSelection: (id) => set((state) => {
@@ -487,3 +491,13 @@ export const useGameStore = create<GameState>()(
     }
   )
 );
+
+initOrientationSync((granted) => {
+  useGameStore.getState().setTiltPermissionGranted(granted);
+});
+
+useGameStore.persist.onFinishHydration((state) => {
+  if (state.tiltPermissionGranted) {
+    syncPermissionFromStore(true);
+  }
+});

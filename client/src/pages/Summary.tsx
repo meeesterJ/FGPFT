@@ -6,6 +6,7 @@ import { menuButtonStyles, RainbowText } from "@/components/ui/game-ui";
 import Confetti from "react-confetti";
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { playSound, stopSound } from "@/lib/audio";
+import { lockToLandscape, unlockOrientation } from "@/lib/orientation";
 import { useIsLandscape } from "@/hooks/use-landscape";
 
 function useWindowSize() {
@@ -53,20 +54,7 @@ export default function Summary() {
   }, [scores, store.numberOfTeams]);
 
   useEffect(() => {
-    const lockOrientation = async () => {
-      try {
-        if (screen.orientation && (screen.orientation as any).lock) {
-          await (screen.orientation as any).lock('landscape-primary');
-        }
-      } catch (e) {
-        try {
-          if (screen.orientation && (screen.orientation as any).lock) {
-            await (screen.orientation as any).lock('landscape');
-          }
-        } catch (e2) {}
-      }
-    };
-    lockOrientation();
+    lockToLandscape();
   }, []);
 
   useEffect(() => {
@@ -104,11 +92,7 @@ export default function Summary() {
   const handleHome = () => {
     stopSound('drumroll');
     store.resetGame();
-    try {
-      if (screen.orientation && screen.orientation.unlock) {
-        screen.orientation.unlock();
-      }
-    } catch (e) {}
+    unlockOrientation();
     setLocation("/");
   };
 

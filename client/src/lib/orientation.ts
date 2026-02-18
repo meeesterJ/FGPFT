@@ -12,6 +12,15 @@ export type OrientationHandler = (data: OrientationData) => void;
 
 let permissionGranted = false;
 let activeHandler: OrientationHandler | null = null;
+let storePermissionSync: ((granted: boolean) => void) | null = null;
+
+export function initOrientationSync(syncFn: (granted: boolean) => void): void {
+  storePermissionSync = syncFn;
+}
+
+export function syncPermissionFromStore(granted: boolean): void {
+  permissionGranted = granted;
+}
 
 export function isOrientationSupported(): boolean {
   return typeof DeviceOrientationEvent !== 'undefined';
@@ -28,17 +37,22 @@ export function needsPermissionRequest(): boolean {
 export async function requestOrientationPermission(): Promise<boolean> {
   if (isNative()) {
     permissionGranted = true;
+    storePermissionSync?.(true);
     return true;
   }
 
   if (!needsPermissionRequest()) {
     permissionGranted = true;
+    storePermissionSync?.(true);
     return true;
   }
 
   try {
     const permission = await (DeviceOrientationEvent as any).requestPermission();
     permissionGranted = permission === 'granted';
+    if (permissionGranted) {
+      storePermissionSync?.(true);
+    }
     return permissionGranted;
   } catch (e) {
     console.warn('Orientation permission request failed:', e);
@@ -92,6 +106,28 @@ export function isLandscape(): boolean {
   return orientation === 'landscape-primary' || orientation === 'landscape-secondary';
 }
 
+export async function lockToLandscape(): Promise<boolean> {
+  if (isNative()) {
+    return false;
+  }
+
+  try {
+    if (screen.orientation && (screen.orientation as any).lock) {
+      await (screen.orientation as any).lock('landscape-primary');
+      return true;
+    }
+  } catch {
+    try {
+      if (screen.orientation && (screen.orientation as any).lock) {
+        await (screen.orientation as any).lock('landscape');
+        return true;
+      }
+    } catch {
+      // iOS Safari doesn't support screen.orientation.lock — silently fail
+    }
+  }
+  return false;
+}
 
 export function unlockOrientation(): void {
   if (isNative()) {
@@ -102,7 +138,7 @@ export function unlockOrientation(): void {
     if (screen.orientation && screen.orientation.unlock) {
       screen.orientation.unlock();
     }
-  } catch (e) {
+  } catch {
     // Silently fail
   }
 }

@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useLocation } from "wouter";
 import { useGameStore } from "@/lib/store";
+import { useShallow } from 'zustand/react/shallow';
 import { RainbowText } from "@/components/ui/game-ui";
 import { Check, X, Home, Play, Smartphone, RotateCw } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,16 +9,51 @@ import { initAudioContext, playSound } from "@/lib/audio";
 import { hapticCorrect, hapticPass } from "@/lib/haptics";
 import { useTiltDetection } from "@/hooks/use-tilt-detection";
 import { parseWordAnswer } from "@/lib/words";
-import { needsPermissionRequest, requestOrientationPermission, isOrientationSupported } from "@/lib/orientation";
+import { needsPermissionRequest, requestOrientationPermission, isOrientationSupported, lockToLandscape, unlockOrientation } from "@/lib/orientation";
 
 export default function Game() {
   const [, setLocation] = useLocation();
-  const store = useGameStore();
+  const {
+    studyMode, roundDuration, totalRounds, showButtons, tiltEnabled,
+    hapticEnabled, soundEnabled, soundVolume, tiltPermissionGranted, numberOfTeams,
+    currentRound, currentScore, currentWord, isPlaying, isRoundOver, isGameFinished,
+    currentTeam, teamRoundScores,
+    nextWord, endRound, startGame, prepareRound, beginRound, resetGame,
+    setTiltPermissionGranted, getTeamName, getTeamColor,
+  } = useGameStore(useShallow(s => ({
+    studyMode: s.studyMode,
+    roundDuration: s.roundDuration,
+    totalRounds: s.totalRounds,
+    showButtons: s.showButtons,
+    tiltEnabled: s.tiltEnabled,
+    hapticEnabled: s.hapticEnabled,
+    soundEnabled: s.soundEnabled,
+    soundVolume: s.soundVolume,
+    tiltPermissionGranted: s.tiltPermissionGranted,
+    numberOfTeams: s.numberOfTeams,
+    currentRound: s.currentRound,
+    currentScore: s.currentScore,
+    currentWord: s.currentWord,
+    isPlaying: s.isPlaying,
+    isRoundOver: s.isRoundOver,
+    isGameFinished: s.isGameFinished,
+    currentTeam: s.currentTeam,
+    teamRoundScores: s.teamRoundScores,
+    nextWord: s.nextWord,
+    endRound: s.endRound,
+    startGame: s.startGame,
+    prepareRound: s.prepareRound,
+    beginRound: s.beginRound,
+    resetGame: s.resetGame,
+    setTiltPermissionGranted: s.setTiltPermissionGranted,
+    getTeamName: s.getTeamName,
+    getTeamColor: s.getTeamColor,
+  })));
   
-  const isInfiniteTimer = store.roundDuration === 0;
-  const [timeLeft, setTimeLeft] = useState(store.roundDuration === 0 ? 0 : Math.min(store.roundDuration, 599));
+  const isInfiniteTimer = roundDuration === 0;
+  const [timeLeft, setTimeLeft] = useState(roundDuration === 0 ? 0 : Math.min(roundDuration, 599));
   const [isPaused, setIsPaused] = useState(false);
-  const [hasDeviceOrientation, setHasDeviceOrientation] = useState(store.tiltPermissionGranted);
+  const [hasDeviceOrientation, setHasDeviceOrientation] = useState(tiltPermissionGranted);
   const [isHydrated, setIsHydrated] = useState(useGameStore.persist.hasHydrated());
   const [showRotatePrompt, setShowRotatePrompt] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -37,47 +73,46 @@ export default function Game() {
   const isCountdownActiveRef = useRef(false);
   const hasShownInitialCountdownRef = useRef(false);
   const permissionGrantedTimeRef = useRef(0);
-  const nextWordRef = useRef(store.nextWord);
+  const nextWordRef = useRef(nextWord);
   const permissionProbeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const permissionProbeHandlerRef = useRef<((e: DeviceOrientationEvent) => void) | null>(null);
   const roundActiveTimeRef = useRef<number>(0);
   const wordDisplayRef = useRef<HTMLHeadingElement>(null);
   const wordContainerRef = useRef<HTMLDivElement>(null);
-  const [wordFontSize, setWordFontSize] = useState<string | null>(null);
   
   const soundCorrect = () => {
-    if (!store.soundEnabled) return;
-    playSound('correct', store.soundVolume);
+    if (!soundEnabled) return;
+    playSound('correct', soundVolume);
   };
   
   const soundPass = () => {
-    if (!store.soundEnabled) return;
-    playSound('pass', store.soundVolume);
+    if (!soundEnabled) return;
+    playSound('pass', soundVolume);
   };
   
   const soundTick = () => {
-    if (!store.soundEnabled) return;
-    playSound('tick', store.soundVolume);
+    if (!soundEnabled) return;
+    playSound('tick', soundVolume);
   };
   
   const soundTock = () => {
-    if (!store.soundEnabled) return;
-    playSound('tock', store.soundVolume);
+    if (!soundEnabled) return;
+    playSound('tock', soundVolume);
   };
   
   const soundRoundEnd = () => {
-    if (!store.soundEnabled) return;
-    playSound('roundEnd', store.soundVolume);
+    if (!soundEnabled) return;
+    playSound('roundEnd', soundVolume);
   };
   
   // Combined feedback - haptic + sound (haptics now use platform abstraction)
   const feedbackCorrect = () => {
-    if (store.hapticEnabled) hapticCorrect();
+    if (hapticEnabled) hapticCorrect();
     soundCorrect();
   };
   
   const feedbackPass = () => {
-    if (store.hapticEnabled) hapticPass();
+    if (hapticEnabled) hapticPass();
     soundPass();
   };
 
@@ -93,11 +128,11 @@ export default function Game() {
     calibrationSamplesRef,
     isCalibratingRef,
   } = useTiltDetection({
-    isPlaying: store.isPlaying,
+    isPlaying: isPlaying,
     isPaused,
     isCountingDown,
     isWaitingForReady,
-    hasDeviceOrientation: hasDeviceOrientation && store.tiltEnabled,
+    hasDeviceOrientation: hasDeviceOrientation && tiltEnabled,
     onTiltCorrect: feedbackCorrect,
     onTiltPass: feedbackPass,
     onTiltReturn: (wasCorrect: boolean) => {
@@ -110,8 +145,8 @@ export default function Game() {
   
   // Keep nextWord ref updated
   useEffect(() => {
-    nextWordRef.current = store.nextWord;
-  }, [store.nextWord]);
+    nextWordRef.current = nextWord;
+  }, [nextWord]);
 
   // Track Zustand hydration status
   useEffect(() => {
@@ -133,7 +168,7 @@ export default function Game() {
     if (!isHydrated) return;
 
     // If tilt is disabled, skip all permission/orientation checks and go to ready screen
-    if (!store.tiltEnabled) {
+    if (!tiltEnabled) {
       const isLandscape = window.innerWidth > window.innerHeight;
       if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
         showReadyScreen();
@@ -151,7 +186,7 @@ export default function Game() {
         permissionProbeHandlerRef.current = null;
         setHasDeviceOrientation(true);
         setNeedsIOSPermission(false);
-        store.setTiltPermissionGranted(true);
+        setTiltPermissionGranted(true);
         
         // Trigger ready screen if in landscape
         const isLandscape = window.innerWidth > window.innerHeight;
@@ -214,38 +249,21 @@ export default function Game() {
     if (!isHydrated) return;
 
     // Prepare round deck/word if not already done, but don't start playing
-    if (!hasStartedRound.current && !store.currentWord) {
+    if (!hasStartedRound.current && !currentWord) {
       hasStartedRound.current = true;
       setTimeout(() => {
         // If deck is empty (e.g. page refreshed on /game), run startGame to build deck first
-        if (store.deck.length === 0) {
-          store.startGame();
+        if (useGameStore.getState().deck.length === 0) {
+          startGame();
         } else {
-          store.prepareRound();
+          prepareRound();
         }
       }, 0);
     }
     
     // Reset timer
-    setTimeLeft(store.roundDuration === 0 ? 0 : Math.min(store.roundDuration, 599));
+    setTimeLeft(roundDuration === 0 ? 0 : Math.min(roundDuration, 599));
 
-    const lockToLandscape = async () => {
-      try {
-        if (screen.orientation && (screen.orientation as any).lock) {
-          await (screen.orientation as any).lock('landscape-primary');
-          setShowRotatePrompt(false);
-        }
-      } catch (e) {
-        try {
-          if (screen.orientation && (screen.orientation as any).lock) {
-            await (screen.orientation as any).lock('landscape');
-            setShowRotatePrompt(false);
-          }
-        } catch (e2) {}
-      }
-    };
-
-    // Check if device is in landscape and prompt to rotate if not
     const checkOrientation = () => {
       const isLandscape = window.innerWidth > window.innerHeight;
       
@@ -253,8 +271,7 @@ export default function Game() {
       if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
         wasInPortrait.current = false;
         
-        // Lock to current landscape orientation when we enter landscape
-        lockToLandscape();
+        lockToLandscape().then(locked => { if (locked) setShowRotatePrompt(false); });
         
         // Permission handling is done by the dedicated hydration-aware effect
         // Only show ready screen here if permission is already confirmed granted
@@ -280,7 +297,7 @@ export default function Game() {
       if (isLandscape && wasInPortrait.current && hasShownInitialCountdownRef.current) {
         wasInPortrait.current = false;
         setCalibrationTrigger(prev => prev + 1);
-        lockToLandscape();
+        lockToLandscape().then(locked => { if (locked) setShowRotatePrompt(false); });
       }
       
       setShowRotatePrompt(!isLandscape);
@@ -318,26 +335,20 @@ export default function Game() {
       }
       // Clear any countdown timeouts
       countdownTimeoutsRef.current.forEach(t => clearTimeout(t));
-      try {
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock();
-        }
-      } catch (e) {
-        // Ignore unlock errors
-      }
+      unlockOrientation();
     };
   }, [isHydrated]); // Run on mount and when hydration completes
 
   // Re-sync timeLeft when roundDuration changes (e.g. after Zustand hydration)
   useEffect(() => {
-    if (!store.isPlaying && !isCountingDown) {
-      setTimeLeft(store.roundDuration === 0 ? 0 : Math.min(store.roundDuration, 599));
+    if (!isPlaying && !isCountingDown) {
+      setTimeLeft(roundDuration === 0 ? 0 : Math.min(roundDuration, 599));
     }
-  }, [store.roundDuration]);
+  }, [roundDuration]);
 
   // Timer logic - pause during countdown, ready screen, and permission prompt
   useEffect(() => {
-    if (!isInfiniteTimer && store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !isHandoff && !showTeamScore && !waitingForPermission && timeLeft > 0) {
+    if (!isInfiniteTimer && isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !isHandoff && !showTeamScore && !waitingForPermission && timeLeft > 0) {
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
@@ -348,16 +359,16 @@ export default function Game() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, showTeamScore, waitingForPermission, timeLeft, isInfiniteTimer]);
+  }, [isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, showTeamScore, waitingForPermission, timeLeft, isInfiniteTimer]);
 
   // Handle timer expiration — guard against premature firing within first 2 seconds of round
   useEffect(() => {
-    if (!isInfiniteTimer && timeLeft <= 0 && store.isPlaying) {
+    if (!isInfiniteTimer && timeLeft <= 0 && isPlaying) {
       const elapsed = Date.now() - roundActiveTimeRef.current;
       if (elapsed < 2000) return;
-      store.endRound();
+      endRound();
     }
-  }, [timeLeft, store.isPlaying, isInfiniteTimer]);
+  }, [timeLeft, isPlaying, isInfiniteTimer]);
 
   // Handle team transition in team mode (when not all teams have played yet)
   const teamTransitionPendingRef = useRef(false);
@@ -379,29 +390,29 @@ export default function Game() {
         setShowTeamScore(true);
       }
     }
-  }, [store.isPlaying, store.isRoundOver, store.isGameFinished, timeLeft, isInfiniteTimer]);
+  }, [isPlaying, isRoundOver, isGameFinished, timeLeft, isInfiniteTimer]);
 
   // When currentTeam changes (after prepareRound advances team), reset for next team's turn
-  const prevTeamRef = useRef(store.currentTeam);
+  const prevTeamRef = useRef(currentTeam);
   useEffect(() => {
-    if (prevTeamRef.current !== store.currentTeam && teamTransitionPendingRef.current) {
+    if (prevTeamRef.current !== currentTeam && teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = false;
-      prevTeamRef.current = store.currentTeam;
-      setTimeLeft(store.roundDuration === 0 ? 0 : Math.min(store.roundDuration, 599));
+      prevTeamRef.current = currentTeam;
+      setTimeLeft(roundDuration === 0 ? 0 : Math.min(roundDuration, 599));
       isCountdownActiveRef.current = false;
       hasShownInitialCountdownRef.current = false;
       setIsWaitingForReady(false);
       setIsHandoff(true);
-    } else if (prevTeamRef.current !== store.currentTeam) {
-      prevTeamRef.current = store.currentTeam;
+    } else if (prevTeamRef.current !== currentTeam) {
+      prevTeamRef.current = currentTeam;
     }
-  }, [store.currentTeam, store.roundDuration]);
+  }, [currentTeam, roundDuration]);
   
   // Countdown sounds - tick/tock pattern for last 5 seconds and roundEnd at 0
   const lastSoundTimeRef = useRef<number | null>(null);
   useEffect(() => {
     // Only play sounds when playing and not counting down, waiting for ready, waiting for permission, or showing rotate prompt
-    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || isHandoff || showTeamScore || waitingForPermission || showRotatePrompt || isInfiniteTimer) return;
+    if (!isPlaying || isPaused || isCountingDown || isWaitingForReady || isHandoff || showTeamScore || waitingForPermission || showRotatePrompt || isInfiniteTimer) return;
     
     // Avoid playing the same sound twice for the same timeLeft value
     if (lastSoundTimeRef.current === timeLeft) return;
@@ -414,22 +425,21 @@ export default function Game() {
       soundTock();
     } else if (timeLeft === 0) {
       // Skip roundEnd sound on the final round (drumroll plays on summary instead)
-      const isLastRound = store.currentRound >= store.totalRounds;
+      const isLastRound = currentRound >= totalRounds;
       if (!isLastRound) {
         soundRoundEnd();
       }
     }
-  }, [timeLeft, store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, showTeamScore, waitingForPermission, showRotatePrompt, store.currentRound, store.totalRounds]);
+  }, [timeLeft, isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, showTeamScore, waitingForPermission, showRotatePrompt, currentRound, totalRounds]);
 
   // Handle Game Over / Round End Redirect
   useEffect(() => {
-    if (store.isRoundOver || store.isGameFinished) {
+    if (isRoundOver || isGameFinished) {
       setLocation("/summary");
     }
-  }, [store.isRoundOver, store.isGameFinished, setLocation]);
+  }, [isRoundOver, isGameFinished, setLocation]);
 
-  // Get font size based on word length - simpler and faster than canvas measurement
-  const getWordFontSize = (text: string): string | null => {
+  const getWordFontSize = useCallback((text: string): string | null => {
     if (!text) return null;
     
     const words = text.split(' ');
@@ -437,25 +447,26 @@ export default function Game() {
     const longestLen = longestWord.length;
     const totalLen = text.length;
     
+    const sizes = ['clamp(0.9rem, 3vw, 2rem)', 'clamp(1rem, 3.5vw, 2.5rem)', 'clamp(1.1rem, 4vw, 3rem)', 'clamp(1.2rem, 4.5vw, 3.5rem)', 'clamp(1.4rem, 5.5vw, 4rem)'];
+    
     const sizeFromLongest = (): string | null => {
       if (longestLen <= 6) return null;
-      if (longestLen <= 8) return 'clamp(1.4rem, 5.5vw, 4rem)';
-      if (longestLen <= 10) return 'clamp(1.2rem, 4.5vw, 3.5rem)';
-      if (longestLen <= 13) return 'clamp(1.1rem, 4vw, 3rem)';
-      if (longestLen <= 16) return 'clamp(1rem, 3.5vw, 2.5rem)';
-      return 'clamp(0.9rem, 3vw, 2rem)';
+      if (longestLen <= 8) return sizes[4];
+      if (longestLen <= 10) return sizes[3];
+      if (longestLen <= 13) return sizes[2];
+      if (longestLen <= 16) return sizes[1];
+      return sizes[0];
     };
 
     const sizeFromTotal = (): string | null => {
       if (totalLen <= 10) return null;
-      if (totalLen <= 18) return 'clamp(1.4rem, 5.5vw, 4rem)';
-      if (totalLen <= 25) return 'clamp(1.2rem, 4.5vw, 3.5rem)';
-      if (totalLen <= 35) return 'clamp(1.1rem, 4vw, 3rem)';
-      if (totalLen <= 45) return 'clamp(1rem, 3.5vw, 2.5rem)';
-      return 'clamp(0.9rem, 3vw, 2rem)';
+      if (totalLen <= 18) return sizes[4];
+      if (totalLen <= 25) return sizes[3];
+      if (totalLen <= 35) return sizes[2];
+      if (totalLen <= 45) return sizes[1];
+      return sizes[0];
     };
 
-    const sizes = ['clamp(0.9rem, 3vw, 2rem)', 'clamp(1rem, 3.5vw, 2.5rem)', 'clamp(1.1rem, 4vw, 3rem)', 'clamp(1.2rem, 4.5vw, 3.5rem)', 'clamp(1.4rem, 5.5vw, 4rem)'];
     const a = sizeFromLongest();
     const b = sizeFromTotal();
     if (!a && !b) return null;
@@ -464,21 +475,24 @@ export default function Game() {
     const idxA = sizes.indexOf(a);
     const idxB = sizes.indexOf(b);
     return idxA <= idxB ? a : b;
-  };
+  }, []);
 
-  // Update font size and reset answer reveal when word changes
+  const parsedWord = useMemo(() => {
+    if (!currentWord) return null;
+    return parseWordAnswer(currentWord);
+  }, [currentWord]);
+
+  const wordFontSize = useMemo(() => {
+    if (!parsedWord) return null;
+    return getWordFontSize(parsedWord.prompt);
+  }, [parsedWord, getWordFontSize]);
+
   useEffect(() => {
     setAnswerRevealed(false);
-    if (!store.currentWord) {
-      setWordFontSize(null);
-      return;
-    }
-    const { prompt } = parseWordAnswer(store.currentWord);
-    setWordFontSize(getWordFontSize(prompt));
-  }, [store.currentWord]);
+  }, [currentWord]);
 
   const handleCorrect = async () => {
-    if (isProcessing || !store.isPlaying || isCountingDown) return;
+    if (isProcessing || !isPlaying || isCountingDown) return;
     setIsProcessing(true);
     pendingGestureRef.current = null;
     mustReturnToCenterRef.current = true;
@@ -486,14 +500,14 @@ export default function Game() {
     initAudioContext();
     feedbackCorrect();
     setTimeout(() => {
-      store.nextWord(true);
+      nextWord(true);
       setTiltFeedback(null);
       setIsProcessing(false);
     }, 300);
   };
 
   const handlePass = async () => {
-    if (isProcessing || !store.isPlaying || isCountingDown) return;
+    if (isProcessing || !isPlaying || isCountingDown) return;
     setIsProcessing(true);
     pendingGestureRef.current = null;
     mustReturnToCenterRef.current = true;
@@ -501,7 +515,7 @@ export default function Game() {
     initAudioContext();
     feedbackPass();
     setTimeout(() => {
-      store.nextWord(false);
+      nextWord(false);
       setTiltFeedback(null);
       setIsProcessing(false);
     }, 300);
@@ -523,7 +537,7 @@ export default function Game() {
         setHasDeviceOrientation(true);
         setNeedsIOSPermission(false);
         setWaitingForPermission(false);
-        store.setTiltPermissionGranted(true);
+        setTiltPermissionGranted(true);
         
         if (!hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
           showReadyScreen();
@@ -612,8 +626,8 @@ export default function Game() {
     setCountdown(3);
     
     // Play countdown sound at start of countdown sequence
-    if (store.soundEnabled) {
-      playSound('countdown', store.soundVolume);
+    if (soundEnabled) {
+      playSound('countdown', soundVolume);
     }
     
     countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(2), 1000));
@@ -629,14 +643,14 @@ export default function Game() {
       // Trigger recalibration by bumping the trigger state
       setCalibrationTrigger(prev => prev + 1);
       // Countdown complete - now start playing
-      if (!store.isPlaying) {
+      if (!isPlaying) {
         roundActiveTimeRef.current = Date.now();
-        store.beginRound();
+        beginRound();
       }
     }, 4000));
   };
 
-  if (!store.currentWord) return null;
+  if (!currentWord) return null;
 
   return (
     <div className={cn("h-screen w-full flex bg-background overflow-hidden relative", "flex-row")}>
@@ -682,10 +696,10 @@ export default function Game() {
 
       {/* Team Score Screen - shown after a team's turn ends */}
       {showTeamScore && !showRotatePrompt && (() => {
-        const scoreTeamColor = store.getTeamColor(store.currentTeam);
-        const scoreTeamName = store.getTeamName(store.currentTeam);
-        const teamIdx = store.currentTeam - 1;
-        const scoreCorrect = store.teamRoundScores[teamIdx]?.correct ?? 0;
+        const scoreTeamColor = getTeamColor(currentTeam);
+        const scoreTeamName = getTeamName(currentTeam);
+        const teamIdx = currentTeam - 1;
+        const scoreCorrect = teamRoundScores[teamIdx]?.correct ?? 0;
         const scoreNameWords = scoreTeamName.split(' ');
         return (
           <div 
@@ -726,8 +740,8 @@ export default function Game() {
 
       {/* Handoff Screen Overlay - tap to confirm team has the phone */}
       {isHandoff && !showRotatePrompt && !waitingForPermission && (() => {
-        const teamColor = store.getTeamColor(store.currentTeam);
-        const teamName = store.getTeamName(store.currentTeam);
+        const teamColor = getTeamColor(currentTeam);
+        const teamName = getTeamName(currentTeam);
         return (
           <div className="absolute inset-0 z-50 bg-background flex flex-col items-center justify-center gap-8 p-8">
             <h1 className={`text-6xl font-black ${teamColor.text} tracking-wide text-center text-shadow-lg`} data-testid="text-handoff-team">
@@ -746,13 +760,13 @@ export default function Game() {
 
       {/* Ready Screen Overlay - shown before countdown */}
       {isWaitingForReady && !showRotatePrompt && !waitingForPermission && !isHandoff && (() => {
-        const readyTeamColor = store.numberOfTeams > 1 ? store.getTeamColor(store.currentTeam) : null;
-        const readyTeamName = store.numberOfTeams > 1 ? store.getTeamName(store.currentTeam) : null;
+        const readyTeamColor = numberOfTeams > 1 ? getTeamColor(currentTeam) : null;
+        const readyTeamName = numberOfTeams > 1 ? getTeamName(currentTeam) : null;
         const readyNameWords = readyTeamName ? readyTeamName.split(' ') : [];
         return (
           <div 
-            className={cn("absolute inset-0 z-50 bg-background flex flex-col", store.studyMode && "cursor-pointer")}
-            onClick={store.studyMode ? onReady : undefined}
+            className={cn("absolute inset-0 z-50 bg-background flex flex-col", studyMode && "cursor-pointer")}
+            onClick={studyMode ? onReady : undefined}
           >
             <div className="flex-1 flex flex-row items-center justify-center px-8">
               {/* Left: Team name - one line per word */}
@@ -770,29 +784,29 @@ export default function Game() {
 
               {/* Right: Round number */}
               <div className="flex-1 flex flex-col items-center justify-center animate-bounce-in">
-                <h1 className={`${store.numberOfTeams > 1 ? 'text-5xl' : 'text-7xl'} font-thin tracking-wide transform -rotate-2 leading-none`}>
+                <h1 className={`${numberOfTeams > 1 ? 'text-5xl' : 'text-7xl'} font-thin tracking-wide transform -rotate-2 leading-none`}>
                   <RainbowText text="Round" />
                 </h1>
                 <span className="text-[10rem] font-thin text-yellow-400 leading-none mt-2 font-display text-shadow-md">
-                  {store.currentRound || 1}
+                  {currentRound || 1}
                 </span>
               </div>
             </div>
 
             {/* Bottom: Tilt instructions / Play button */}
             <div className="pb-6 flex flex-col items-center justify-center gap-3">
-              {hasDeviceOrientation && store.tiltEnabled && !store.studyMode && (
+              {hasDeviceOrientation && tiltEnabled && !studyMode && (
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Smartphone className="w-5 h-5 animate-bounce" style={{ animationDuration: '1.5s' }} />
                   <span className="text-base">Tilt forward to start</span>
                 </div>
               )}
-              {store.studyMode && (
+              {studyMode && (
                 <div className="flex items-center gap-3 text-muted-foreground animate-pulse">
                   <span className="text-base">Tap anywhere to start</span>
                 </div>
               )}
-              {(store.showButtons || !store.tiltEnabled) && !store.studyMode && (
+              {(showButtons || !tiltEnabled) && !studyMode && (
                 <button 
                   onClick={onReady}
                   className="px-12 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 active:bg-pink-600 text-white border-2 border-pink-400 shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
@@ -820,7 +834,7 @@ export default function Game() {
       {/* Home Button - Top Left Corner */}
       <button 
         onClick={() => {
-          store.resetGame();
+          resetGame();
           setLocation("/");
         }}
         className="absolute top-2 left-2 z-30 p-2 rounded-full bg-card/80 hover:bg-card border border-border shadow-lg hover:scale-110 transition-transform"
@@ -856,7 +870,7 @@ export default function Game() {
         )}
 
         <div className="font-black font-mono text-5xl text-accent tabular-nums">
-          {store.currentScore}
+          {currentScore}
         </div>
       </div>
 
@@ -873,7 +887,7 @@ export default function Game() {
 
       
       {/* Gesture Hint - shown if device orientation not available, tilt is enabled, and not iOS */}
-      {store.tiltEnabled && !hasDeviceOrientation && !needsIOSPermission && !waitingForPermission && (
+      {tiltEnabled && !hasDeviceOrientation && !needsIOSPermission && !waitingForPermission && (
         <div className="absolute top-4 right-4 bg-accent/80 text-accent-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 z-20">
           <Smartphone className="w-4 h-4" />
           Tilt gestures not available on this device
@@ -883,9 +897,9 @@ export default function Game() {
       {/* Game Area */}
       <div className="flex-1 flex flex-col items-center justify-center p-3 z-10 min-w-0">
         {(() => {
-          const parsed = store.currentWord ? parseWordAnswer(store.currentWord) : null;
-          const hasAnswer = parsed?.answer != null;
-          const isTappable = store.studyMode && hasAnswer && !answerRevealed && store.isPlaying && !isCountingDown;
+          const hasAnswer = parsedWord?.answer != null;
+          const isTappable = studyMode && hasAnswer && !answerRevealed && isPlaying && !isCountingDown;
+          const answerFontSize = parsedWord?.answer ? getWordFontSize(parsedWord.answer) : null;
           return (
             <div 
               ref={wordContainerRef}
@@ -899,13 +913,13 @@ export default function Game() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl transform -translate-x-10 translate-y-10"></div>
               
-              {answerRevealed && parsed?.answer ? (
+              {answerRevealed && parsedWord?.answer ? (
                 <h1 
                   className="word-display font-body text-white italic animate-bounce-in"
-                  style={getWordFontSize(parsed.answer) ? { fontSize: getWordFontSize(parsed.answer)! } : undefined}
+                  style={answerFontSize ? { fontSize: answerFontSize } : undefined}
                   data-testid="text-answer"
                 >
-                  {parsed.answer}
+                  {parsedWord.answer}
                 </h1>
               ) : (
                 <div className="flex flex-col items-center justify-center w-full">
@@ -914,14 +928,14 @@ export default function Game() {
                     className="word-display font-body text-white animate-bounce-in"
                     style={wordFontSize ? { fontSize: wordFontSize } : undefined}
                   >
-                    {parsed?.prompt ?? store.currentWord}
+                    {parsedWord?.prompt ?? currentWord}
                   </h1>
-                  {parsed?.parenthetical && (
+                  {parsedWord?.parenthetical && (
                     <p className="text-muted-foreground text-lg md:text-xl font-thin mt-2 animate-bounce-in" data-testid="text-parenthetical">
-                      ({parsed.parenthetical})
+                      ({parsedWord.parenthetical})
                     </p>
                   )}
-                  {store.studyMode && hasAnswer && !answerRevealed && store.isPlaying && !isCountingDown && (
+                  {studyMode && hasAnswer && !answerRevealed && isPlaying && !isCountingDown && (
                     <p className="text-muted-foreground text-xs mt-2 animate-pulse" data-testid="text-tap-hint">
                       Tap to reveal answer
                     </p>
@@ -934,26 +948,26 @@ export default function Game() {
       </div>
 
       {/* Controls - conditionally rendered based on showButtons setting */}
-      {store.showButtons && (
+      {showButtons && (
         <div className="flex flex-col h-full z-20 gap-3 py-3 pl-3 pr-2 mr-4 justify-center shrink-0">
           <button 
             onClick={handleCorrect}
-            disabled={isProcessing || !store.isPlaying || isCountingDown}
+            disabled={isProcessing || !isPlaying || isCountingDown}
             data-testid="button-correct"
             className={cn(
               "flex-1 bg-green-500 hover:bg-green-400 active:bg-green-600 rounded-[1.5rem] border-2 border-green-400 shadow-lg transition-all flex items-center justify-center group active:scale-95 w-20",
-              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
+              (isProcessing || !isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
             )}
           >
             <Check className="w-12 h-12 text-white group-active:scale-90 transition-transform drop-shadow-md" strokeWidth={3} />
           </button>
           <button 
             onClick={handlePass}
-            disabled={isProcessing || !store.isPlaying || isCountingDown}
+            disabled={isProcessing || !isPlaying || isCountingDown}
             data-testid="button-pass"
             className={cn(
               "flex-1 bg-red-500 hover:bg-red-400 active:bg-red-600 rounded-[1.5rem] border-2 border-red-400 shadow-lg transition-all flex items-center justify-center group active:scale-95 w-20",
-              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
+              (isProcessing || !isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
             )}
           >
             <X className="w-12 h-12 text-white group-active:scale-90 transition-transform drop-shadow-md" strokeWidth={3} />

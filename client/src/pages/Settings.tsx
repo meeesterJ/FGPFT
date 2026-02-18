@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
+import { useShallow } from 'zustand/react/shallow';
 import { Button } from "@/components/ui/button";
 import { useGameStore, TEAM_THEME_COLORS, MAX_TEAM_NAME_LENGTH } from "@/lib/store";
 import { ArrowLeft, Share, ChevronDown, Gamepad2, BookOpen } from "lucide-react";
@@ -10,29 +11,30 @@ import { useSwipeBack } from "@/hooks/use-swipe-back";
 import { useIsLandscape } from "@/hooks/use-landscape";
 
 function TeamNameInput({ index }: { index: number }) {
-  const store = useGameStore();
+  const teamName = useGameStore(s => s.teamNames[index]);
+  const setTeamName = useGameStore(s => s.setTeamName);
   const color = TEAM_THEME_COLORS[index % TEAM_THEME_COLORS.length];
   const defaultName = `Team ${index + 1}`;
-  const [localValue, setLocalValue] = useState(store.teamNames[index] || defaultName);
+  const [localValue, setLocalValue] = useState(teamName || defaultName);
   const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     if (!isFocused) {
-      setLocalValue(store.teamNames[index] || defaultName);
+      setLocalValue(teamName || defaultName);
     }
-  }, [store.teamNames[index], isFocused]);
+  }, [teamName, isFocused]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.slice(0, MAX_TEAM_NAME_LENGTH);
     setLocalValue(val);
-    store.setTeamName(index, val);
+    setTeamName(index, val);
   };
 
   const handleBlur = () => {
     setIsFocused(false);
     if (localValue.trim() === '') {
       setLocalValue(defaultName);
-      store.setTeamName(index, defaultName);
+      setTeamName(index, defaultName);
     }
   };
 
@@ -71,7 +73,32 @@ function sliderToStudyTimer(val: number): number {
 
 export default function Settings() {
   useSwipeBack({ targetPath: "/" });
-  const store = useGameStore();
+  const {
+    studyMode, roundDuration, totalRounds, showButtons, tiltEnabled,
+    hapticEnabled, soundEnabled, soundVolume, numberOfTeams,
+    setStudyMode, setRoundDuration, setTotalRounds, setShowButtons,
+    setTiltEnabled, setHapticEnabled, setSoundEnabled, setSoundVolume,
+    setNumberOfTeams,
+  } = useGameStore(useShallow(s => ({
+    studyMode: s.studyMode,
+    roundDuration: s.roundDuration,
+    totalRounds: s.totalRounds,
+    showButtons: s.showButtons,
+    tiltEnabled: s.tiltEnabled,
+    hapticEnabled: s.hapticEnabled,
+    soundEnabled: s.soundEnabled,
+    soundVolume: s.soundVolume,
+    numberOfTeams: s.numberOfTeams,
+    setStudyMode: s.setStudyMode,
+    setRoundDuration: s.setRoundDuration,
+    setTotalRounds: s.setTotalRounds,
+    setShowButtons: s.setShowButtons,
+    setTiltEnabled: s.setTiltEnabled,
+    setHapticEnabled: s.setHapticEnabled,
+    setSoundEnabled: s.setSoundEnabled,
+    setSoundVolume: s.setSoundVolume,
+    setNumberOfTeams: s.setNumberOfTeams,
+  })));
   const isLandscape = useIsLandscape();
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
@@ -87,29 +114,27 @@ export default function Settings() {
   }, []);
 
   const handleModeToggle = (study: boolean) => {
-    store.setStudyMode(study);
+    setStudyMode(study);
     if (study) {
-      store.setNumberOfTeams(1);
-      store.setTotalRounds(1);
-      store.setSoundEnabled(false);
-      store.setTiltEnabled(false);
-      if (!STUDY_TIMER_STEPS.includes(store.roundDuration)) {
-        store.setRoundDuration(300);
+      setNumberOfTeams(1);
+      setTotalRounds(1);
+      setSoundEnabled(false);
+      setTiltEnabled(false);
+      if (!STUDY_TIMER_STEPS.includes(roundDuration)) {
+        setRoundDuration(300);
       }
     } else {
-      store.setTiltEnabled(true);
-      if (STUDY_TIMER_STEPS.includes(store.roundDuration) && store.roundDuration > 60) {
-        store.setRoundDuration(30);
-      } else if (store.roundDuration === 0) {
-        store.setRoundDuration(30);
+      setTiltEnabled(true);
+      if (STUDY_TIMER_STEPS.includes(roundDuration) && roundDuration > 60) {
+        setRoundDuration(30);
+      } else if (roundDuration === 0) {
+        setRoundDuration(30);
       }
     }
   };
 
-  const studyMode = store.studyMode;
-
   const studyTimerLabel = studyMode
-    ? STUDY_TIMER_LABELS[studyTimerToSlider(store.roundDuration)] ?? '5 min'
+    ? STUDY_TIMER_LABELS[studyTimerToSlider(roundDuration)] ?? '5 min'
     : null;
 
   const settingsSections = (
@@ -118,13 +143,13 @@ export default function Settings() {
       <section className={`space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30 ${studyMode ? 'opacity-50' : ''}`}>
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-thin text-cyan-400">Number of Teams</h2>
-          <span className="text-2xl font-mono text-cyan-300">{studyMode ? 1 : store.numberOfTeams}</span>
+          <span className="text-2xl font-mono text-cyan-300">{studyMode ? 1 : numberOfTeams}</span>
         </div>
         {!studyMode && (
           <>
             <Slider 
-              value={[store.numberOfTeams]} 
-              onValueChange={(v) => store.setNumberOfTeams(v[0])} 
+              value={[numberOfTeams]} 
+              onValueChange={(v) => setNumberOfTeams(v[0])} 
               min={1} 
               max={5} 
               step={1}
@@ -143,7 +168,7 @@ export default function Settings() {
 
             {teamsExpanded && (
               <div className="space-y-3 pt-2">
-                {Array.from({ length: store.numberOfTeams }, (_, i) => (
+                {Array.from({ length: numberOfTeams }, (_, i) => (
                   <TeamNameInput key={i} index={i} />
                 ))}
               </div>
@@ -158,14 +183,14 @@ export default function Settings() {
           <h2 className="text-xl font-thin text-pink-400">Round Timer</h2>
           <span className="text-2xl font-mono text-pink-300">
             {studyMode ? (
-              store.roundDuration === 0 ? <span className="text-3xl leading-none font-black">∞</span> : studyTimerLabel
-            ) : `${store.roundDuration}s`}
+              roundDuration === 0 ? <span className="text-3xl leading-none font-black">∞</span> : studyTimerLabel
+            ) : `${roundDuration}s`}
           </span>
         </div>
         {studyMode ? (
           <Slider 
-            value={[studyTimerToSlider(store.roundDuration)]} 
-            onValueChange={(v) => store.setRoundDuration(sliderToStudyTimer(v[0]))} 
+            value={[studyTimerToSlider(roundDuration)]} 
+            onValueChange={(v) => setRoundDuration(sliderToStudyTimer(v[0]))} 
             min={0} 
             max={4} 
             step={1}
@@ -174,8 +199,8 @@ export default function Settings() {
           />
         ) : (
           <Slider 
-            value={[store.roundDuration]} 
-            onValueChange={(v) => store.setRoundDuration(v[0])} 
+            value={[roundDuration]} 
+            onValueChange={(v) => setRoundDuration(v[0])} 
             min={5} 
             max={60} 
             step={5}
@@ -189,12 +214,12 @@ export default function Settings() {
       <section className={`space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30 ${studyMode ? 'opacity-50' : ''}`}>
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-thin text-green-400">Total Rounds</h2>
-          <span className="text-2xl font-mono text-green-300">{studyMode ? 1 : store.totalRounds}</span>
+          <span className="text-2xl font-mono text-green-300">{studyMode ? 1 : totalRounds}</span>
         </div>
         {!studyMode && (
           <Slider 
-            value={[store.totalRounds]} 
-            onValueChange={(v) => store.setTotalRounds(v[0])} 
+            value={[totalRounds]} 
+            onValueChange={(v) => setTotalRounds(v[0])} 
             min={1} 
             max={5} 
             step={1}
@@ -209,20 +234,20 @@ export default function Settings() {
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-thin text-yellow-400">Sounds</h2>
           <Switch 
-            checked={store.soundEnabled}
-            onCheckedChange={store.setSoundEnabled}
+            checked={soundEnabled}
+            onCheckedChange={setSoundEnabled}
             data-testid="switch-sound"
           />
         </div>
-        {store.soundEnabled && (
+        {soundEnabled && (
           <div className="space-y-2 pt-2">
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Volume</span>
-              <span className="text-sm font-mono text-yellow-300">{store.soundVolume}%</span>
+              <span className="text-sm font-mono text-yellow-300">{soundVolume}%</span>
             </div>
             <Slider 
-              value={[store.soundVolume]} 
-              onValueChange={(v) => store.setSoundVolume(v[0])} 
+              value={[soundVolume]} 
+              onValueChange={(v) => setSoundVolume(v[0])} 
               min={0} 
               max={100} 
               step={5}
@@ -239,8 +264,8 @@ export default function Settings() {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-thin text-green-400">Vibration</h2>
             <Switch 
-              checked={store.hapticEnabled}
-              onCheckedChange={store.setHapticEnabled}
+              checked={hapticEnabled}
+              onCheckedChange={setHapticEnabled}
               data-testid="switch-haptic"
             />
           </div>
@@ -253,22 +278,22 @@ export default function Settings() {
         <div className="flex justify-between items-center">
           <span className="text-base text-purple-300">Tilt Gestures</span>
           <Switch 
-            checked={store.tiltEnabled}
-            onCheckedChange={store.setTiltEnabled}
+            checked={tiltEnabled}
+            onCheckedChange={setTiltEnabled}
             data-testid="switch-tilt-enabled"
           />
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <span className="text-base text-purple-300">Show Buttons</span>
-            {!store.tiltEnabled && (
+            {!tiltEnabled && (
               <span className="text-xs text-purple-400/70 italic">Required</span>
             )}
           </div>
           <Switch 
-            checked={store.showButtons}
-            onCheckedChange={store.setShowButtons}
-            disabled={!store.tiltEnabled}
+            checked={showButtons}
+            onCheckedChange={setShowButtons}
+            disabled={!tiltEnabled}
             data-testid="switch-show-buttons"
           />
         </div>
