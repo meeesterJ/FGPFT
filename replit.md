@@ -67,9 +67,9 @@ The tilt detection uses the DeviceOrientation API with gamma axis for landscape 
 The app includes a platform abstraction layer for future Capacitor/native iOS deployment. All game code (Game.tsx, useTiltDetection hook) routes through these abstractions rather than using raw browser APIs directly:
 
 - **platform.ts**: Detects browser vs native (Capacitor) context via `window.Capacitor.isNativePlatform()`, provides `isNative()`, `getPlatform()`, `isIOS()`, `isAndroid()`, `isMobile()` utilities
-- **haptics.ts**: Unified haptic feedback with Capacitor Haptics plugin hooks for native, falls back to `navigator.vibrate()` on web. Exports `hapticCorrect()`, `hapticPass()`, `hapticTick()`
-- **audio.ts**: Skips web audio unlock workarounds in native context (iOS Safari workarounds not needed in native shell)
-- **orientation.ts**: Central orientation abstraction. `needsPermissionRequest()` returns false for native (skips iOS Safari permission dance). `requestOrientationPermission()` auto-grants in native. `startOrientationTracking()` provides unified event listener interface used by useTiltDetection hook. `isOrientationSupported()` checks for DeviceOrientationEvent availability
+- **haptics.ts**: Unified haptic feedback with safer Capacitor Haptics plugin access (`getHapticsPlugin()` with try-catch), falls back to `navigator.vibrate()` on web and when Capacitor plugin unavailable. Exports `hapticCorrect()`, `hapticPass()`, `hapticTick()`
+- **audio.ts**: Full audio unlock flow (WebAudio context + HTML Audio pool) runs in both web and native contexts for consistent initialization
+- **orientation.ts**: Central orientation abstraction. `needsPermissionRequest()` returns false for native. `requestOrientationPermission()` auto-grants in native and syncs permission to Zustand store. `startOrientationTracking()` provides unified event listener interface. `lockToLandscape()` and `unlockOrientation()` centralize screen orientation lock/unlock with platform checks. `initOrientationSync()` and `syncPermissionFromStore()` keep module-level permission state in sync with Zustand store
 
 ### Build Configuration
 - Development: Vite dev server with HMR
@@ -86,7 +86,7 @@ The app includes a platform abstraction layer for future Capacitor/native iOS de
 
 ### Data & State
 - **@tanstack/react-query**: Server state management
-- **Zustand**: Client state management with persistence
+- **Zustand**: Client state management with persistence; Game.tsx and Settings.tsx use `useShallow` selectors to prevent unnecessary re-renders from unrelated state changes
 - **Drizzle ORM**: Database toolkit with Zod schema validation
 - **papaparse**: CSV parsing for word list imports
 
