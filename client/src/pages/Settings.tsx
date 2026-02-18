@@ -247,19 +247,20 @@ export default function Settings() {
         </section>
       )}
 
-      {/* Tilt Gestures Toggle */}
+      {/* Controls */}
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
+        <h2 className="text-xl font-thin text-purple-400">Controls</h2>
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-thin text-purple-400">Tilt Gestures</h2>
+          <span className="text-base text-purple-300">Tilt Gestures</span>
           <Switch 
             checked={store.tiltEnabled}
             onCheckedChange={store.setTiltEnabled}
             data-testid="switch-tilt-enabled"
           />
         </div>
-        <div className="flex justify-between items-center pt-1">
+        <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <h3 className="text-base text-muted-foreground">Show Buttons</h3>
+            <span className="text-base text-purple-300">Show Buttons</span>
             {!store.tiltEnabled && (
               <span className="text-xs text-purple-400/70 italic">Required</span>
             )}
