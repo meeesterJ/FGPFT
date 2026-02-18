@@ -95,7 +95,7 @@ export default function Game() {
     isPaused,
     isCountingDown,
     isWaitingForReady,
-    hasDeviceOrientation,
+    hasDeviceOrientation: hasDeviceOrientation && store.tiltEnabled,
     onTiltCorrect: feedbackCorrect,
     onTiltPass: feedbackPass,
     onTiltReturn: (wasCorrect: boolean) => {
@@ -129,6 +129,15 @@ export default function Game() {
   useEffect(() => {
     // Don't run until hydrated
     if (!isHydrated) return;
+
+    // If tilt is disabled, skip all permission/orientation checks and go to ready screen
+    if (!store.tiltEnabled) {
+      const isLandscape = window.innerWidth > window.innerHeight;
+      if (isLandscape && !hasShownInitialCountdownRef.current && !isCountdownActiveRef.current) {
+        showReadyScreen();
+      }
+      return;
+    }
     
     if (needsPermissionRequest()) {
       const testHandler = (e: DeviceOrientationEvent) => {
@@ -749,7 +758,7 @@ export default function Game() {
 
             {/* Bottom: Tilt instructions / Play button */}
             <div className="pb-6 flex flex-col items-center justify-center gap-3">
-              {hasDeviceOrientation && !store.studyMode && (
+              {hasDeviceOrientation && store.tiltEnabled && !store.studyMode && (
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Smartphone className="w-5 h-5 animate-bounce" style={{ animationDuration: '1.5s' }} />
                   <span className="text-base">Tilt forward to start</span>
@@ -760,7 +769,7 @@ export default function Game() {
                   <span className="text-base">Tap anywhere to start</span>
                 </div>
               )}
-              {store.showButtons && !store.studyMode && (
+              {(store.showButtons || !store.tiltEnabled) && !store.studyMode && (
                 <button 
                   onClick={onReady}
                   className="px-12 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 active:bg-pink-600 text-white border-2 border-pink-400 shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
@@ -837,8 +846,8 @@ export default function Game() {
       )}
 
       
-      {/* Gesture Hint - shown if device orientation not available and not iOS */}
-      {!hasDeviceOrientation && !needsIOSPermission && !waitingForPermission && (
+      {/* Gesture Hint - shown if device orientation not available, tilt is enabled, and not iOS */}
+      {store.tiltEnabled && !hasDeviceOrientation && !needsIOSPermission && !waitingForPermission && (
         <div className="absolute top-4 right-4 bg-accent/80 text-accent-foreground px-4 py-2 rounded-lg text-sm flex items-center gap-2 z-20">
           <Smartphone className="w-4 h-4" />
           Tilt gestures not available on this device

@@ -92,11 +92,12 @@ export default function Settings() {
       store.setNumberOfTeams(1);
       store.setTotalRounds(1);
       store.setSoundEnabled(false);
-      store.setShowButtons(true);
+      store.setTiltEnabled(false);
       if (!STUDY_TIMER_STEPS.includes(store.roundDuration)) {
         store.setRoundDuration(300);
       }
     } else {
+      store.setTiltEnabled(true);
       if (STUDY_TIMER_STEPS.includes(store.roundDuration) && store.roundDuration > 60) {
         store.setRoundDuration(30);
       } else if (store.roundDuration === 0) {
@@ -246,13 +247,27 @@ export default function Settings() {
         </section>
       )}
 
-      {/* Show Buttons Toggle */}
+      {/* Tilt Gestures Toggle */}
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-thin text-purple-400">Show Buttons</h2>
+          <h2 className="text-xl font-thin text-purple-400">Tilt Gestures</h2>
+          <Switch 
+            checked={store.tiltEnabled}
+            onCheckedChange={store.setTiltEnabled}
+            data-testid="switch-tilt-enabled"
+          />
+        </div>
+        <div className="flex justify-between items-center pt-1">
+          <div className="flex items-center gap-2">
+            <h3 className="text-base text-muted-foreground">Show Buttons</h3>
+            {!store.tiltEnabled && (
+              <span className="text-xs text-purple-400/70 italic">Required</span>
+            )}
+          </div>
           <Switch 
             checked={store.showButtons}
             onCheckedChange={store.setShowButtons}
+            disabled={!store.tiltEnabled}
             data-testid="switch-show-buttons"
           />
         </div>

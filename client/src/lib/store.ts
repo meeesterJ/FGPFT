@@ -35,6 +35,7 @@ interface GameState {
   roundDuration: number;
   totalRounds: number;
   showButtons: boolean;
+  tiltEnabled: boolean;
   hapticEnabled: boolean;
   soundEnabled: boolean;
   soundVolume: number;
@@ -69,6 +70,7 @@ interface GameState {
   setRoundDuration: (seconds: number) => void;
   setTotalRounds: (rounds: number) => void;
   setShowButtons: (show: boolean) => void;
+  setTiltEnabled: (enabled: boolean) => void;
   setHapticEnabled: (enabled: boolean) => void;
   setSoundEnabled: (enabled: boolean) => void;
   setSoundVolume: (volume: number) => void;
@@ -105,6 +107,7 @@ export const useGameStore = create<GameState>()(
       roundDuration: 30,
       totalRounds: 3,
       showButtons: false,
+      tiltEnabled: true,
       hapticEnabled: true,
       soundEnabled: true,
       soundVolume: 100,
@@ -136,7 +139,16 @@ export const useGameStore = create<GameState>()(
       setStudyMode: (enabled) => set({ studyMode: enabled }),
       setRoundDuration: (seconds) => set({ roundDuration: seconds }),
       setTotalRounds: (rounds) => set({ totalRounds: rounds }),
-      setShowButtons: (show) => set({ showButtons: show }),
+      setShowButtons: (show) => set((state) => {
+        if (!state.tiltEnabled && !show) return state;
+        return { showButtons: show };
+      }),
+      setTiltEnabled: (enabled) => set((state) => {
+        if (enabled) {
+          return { tiltEnabled: true, showButtons: false };
+        }
+        return { tiltEnabled: false, showButtons: true };
+      }),
       setHapticEnabled: (enabled) => set({ hapticEnabled: enabled }),
       setSoundEnabled: (enabled) => set({ soundEnabled: enabled }),
       setSoundVolume: (volume) => set({ soundVolume: volume }),
@@ -420,12 +432,13 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'guess-party-storage',
-      version: 5,
+      version: 6,
       partialize: (state) => ({ 
         studyMode: state.studyMode,
         roundDuration: state.roundDuration,
         totalRounds: state.totalRounds,
         showButtons: state.showButtons,
+        tiltEnabled: state.tiltEnabled,
         numberOfTeams: state.numberOfTeams,
         teamNames: state.teamNames,
         hapticEnabled: state.hapticEnabled,
@@ -459,6 +472,12 @@ export const useGameStore = create<GameState>()(
         }
         if (version < 5) {
           persistedState.studyMode = persistedState.studyMode ?? false;
+        }
+        if (version < 6) {
+          persistedState.tiltEnabled = persistedState.studyMode ? false : true;
+          if (!persistedState.tiltEnabled) {
+            persistedState.showButtons = true;
+          }
         }
         return persistedState;
       },
