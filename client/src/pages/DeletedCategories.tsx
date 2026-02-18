@@ -25,8 +25,8 @@ export default function DeletedCategories() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col safe-area-x">
-      <header className="p-4 flex items-center border-b border-border bg-card/50 backdrop-blur-md sticky top-0 z-10 safe-area-top">
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="p-4 flex items-center border-b border-border bg-card/50 backdrop-blur-md sticky top-0 z-10 safe-area-top safe-area-x">
         <Link href="/categories">
           <Button variant="ghost" size="icon" data-testid="button-back">
             <ArrowLeft className="w-6 h-6" />
