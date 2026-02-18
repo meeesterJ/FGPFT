@@ -840,34 +840,28 @@ export default function Game() {
 
       {/* Controls - conditionally rendered based on showButtons setting */}
       {store.showButtons && (
-        <div className="flex flex-col w-auto h-full z-20 gap-2 p-2 justify-center">
-          <button 
-            onClick={handlePass}
-            disabled={isProcessing || !store.isPlaying || isCountingDown}
-            data-testid="button-pass"
-            className={cn(
-              "flex-1 bg-red-500 hover:bg-red-400 active:bg-red-600 rounded-2xl border-2 border-red-400 shadow-lg transition-all flex items-center justify-center group hover:scale-[1.02] active:scale-95",
-              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed hover:scale-100"
-            )}
-          >
-            <div className="flex flex-col items-center px-6">
-              <X className="w-14 h-14 text-white mb-1 group-active:scale-90 transition-transform drop-shadow-md" />
-              <span className="text-white text-lg uppercase tracking-widest font-display text-shadow-sm">Pass</span>
-            </div>
-          </button>
+        <div className="flex flex-col h-full z-20 gap-3 p-3 justify-center">
           <button 
             onClick={handleCorrect}
             disabled={isProcessing || !store.isPlaying || isCountingDown}
             data-testid="button-correct"
             className={cn(
-              "flex-1 bg-green-500 hover:bg-green-400 active:bg-green-600 rounded-2xl border-2 border-green-400 shadow-lg transition-all flex items-center justify-center group hover:scale-[1.02] active:scale-95",
-              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed hover:scale-100"
+              "flex-1 bg-green-500 hover:bg-green-400 active:bg-green-600 rounded-[1.5rem] border-2 border-green-400 shadow-lg transition-all flex items-center justify-center group active:scale-95 w-20",
+              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
             )}
           >
-            <div className="flex flex-col items-center px-6">
-              <Check className="w-14 h-14 text-white mb-1 group-active:scale-90 transition-transform drop-shadow-md" />
-              <span className="text-white text-lg uppercase tracking-widest font-display text-shadow-sm">Correct</span>
-            </div>
+            <Check className="w-12 h-12 text-white group-active:scale-90 transition-transform drop-shadow-md" strokeWidth={3} />
+          </button>
+          <button 
+            onClick={handlePass}
+            disabled={isProcessing || !store.isPlaying || isCountingDown}
+            data-testid="button-pass"
+            className={cn(
+              "flex-1 bg-red-500 hover:bg-red-400 active:bg-red-600 rounded-[1.5rem] border-2 border-red-400 shadow-lg transition-all flex items-center justify-center group active:scale-95 w-20",
+              (isProcessing || !store.isPlaying || isCountingDown) && "opacity-50 cursor-not-allowed"
+            )}
+          >
+            <X className="w-12 h-12 text-white group-active:scale-90 transition-transform drop-shadow-md" strokeWidth={3} />
           </button>
         </div>
       )}
