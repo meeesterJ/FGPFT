@@ -651,7 +651,7 @@ export default function Game() {
   if (!currentWord) return null;
 
   return (
-    <div className={cn("h-screen w-full flex bg-background overflow-hidden relative safe-area-x", "flex-row")}>
+    <div className={cn("h-screen w-full flex bg-background overflow-hidden relative", "flex-row")}>
       {/* Rotate Prompt Overlay */}
       {showRotatePrompt && (
         <div className="absolute inset-0 z-50 bg-background/95 backdrop-blur-sm flex flex-col items-center justify-center space-y-6 p-8">
@@ -955,7 +955,7 @@ export default function Game() {
 
       {/* Controls - conditionally rendered based on showButtons setting */}
       {showButtons && (
-        <div className="flex flex-col h-full z-20 gap-3 py-3 pl-3 pr-2 mr-4 justify-center shrink-0">
+        <div className="flex flex-col h-full z-20 gap-3 py-3 pl-3 pr-2 justify-center shrink-0" style={{ marginRight: 'calc(1rem + env(safe-area-inset-right, 0px))' }}>
           <button 
             onClick={handleCorrect}
             disabled={isProcessing || !isPlaying || isCountingDown}
