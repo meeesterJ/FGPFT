@@ -461,10 +461,14 @@ export const DEFAULT_WORD_LISTS: { id: string; name: string; words: string[]; is
   }
 ];
 
-export function parseWordAnswer(word: string): { prompt: string; answer: string | null } {
+export function parseWordAnswer(word: string): { prompt: string; parenthetical: string | null; answer: string | null } {
   const match = word.match(/^(.*?)\s*\[([^\]]+)\]\s*$/);
-  if (!match) {
-    return { prompt: word.trim(), answer: null };
+  const rawPrompt = match ? match[1].trim() : word.trim();
+  const answer = match ? match[2].trim() : null;
+
+  const parenMatch = rawPrompt.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+  if (parenMatch) {
+    return { prompt: parenMatch[1].trim(), parenthetical: parenMatch[2].trim(), answer };
   }
-  return { prompt: match[1].trim(), answer: match[2].trim() };
+  return { prompt: rawPrompt, parenthetical: null, answer };
 }

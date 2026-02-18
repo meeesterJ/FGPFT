@@ -429,22 +429,41 @@ export default function Game() {
   }, [store.isRoundOver, store.isGameFinished, setLocation]);
 
   // Get font size based on word length - simpler and faster than canvas measurement
-  const getWordFontSize = (word: string): string | null => {
-    if (!word) return null;
+  const getWordFontSize = (text: string): string | null => {
+    if (!text) return null;
     
-    // Find the longest single word (for multi-word phrases)
-    const words = word.split(' ');
+    const words = text.split(' ');
     const longestWord = words.reduce((a, b) => a.length > b.length ? a : b, '');
-    const len = longestWord.length;
+    const longestLen = longestWord.length;
+    const totalLen = text.length;
     
-    // Scale font size based on character count
-    // Base size uses clamp(2rem, 10vw, 9rem) from CSS, we override for long words
-    if (len <= 8) return null; // Use default CSS size
-    if (len <= 10) return 'clamp(1.8rem, 8vw, 7rem)'; // ~85% 
-    if (len <= 12) return 'clamp(1.5rem, 7vw, 5.5rem)'; // ~70%
-    if (len <= 14) return 'clamp(1.3rem, 6vw, 4.5rem)'; // ~60%
-    if (len <= 16) return 'clamp(1.1rem, 5vw, 3.5rem)'; // ~50%
-    return 'clamp(1rem, 4vw, 3rem)'; // Very long words ~40%
+    const sizeFromLongest = (): string | null => {
+      if (longestLen <= 8) return null;
+      if (longestLen <= 10) return 'clamp(1.8rem, 8vw, 7rem)';
+      if (longestLen <= 12) return 'clamp(1.5rem, 7vw, 5.5rem)';
+      if (longestLen <= 14) return 'clamp(1.3rem, 6vw, 4.5rem)';
+      if (longestLen <= 16) return 'clamp(1.1rem, 5vw, 3.5rem)';
+      return 'clamp(1rem, 4vw, 3rem)';
+    };
+
+    const sizeFromTotal = (): string | null => {
+      if (totalLen <= 15) return null;
+      if (totalLen <= 25) return 'clamp(1.8rem, 8vw, 7rem)';
+      if (totalLen <= 35) return 'clamp(1.5rem, 7vw, 5.5rem)';
+      if (totalLen <= 45) return 'clamp(1.3rem, 6vw, 4.5rem)';
+      if (totalLen <= 55) return 'clamp(1.1rem, 5vw, 3.5rem)';
+      return 'clamp(1rem, 4vw, 3rem)';
+    };
+
+    const sizes = ['clamp(1rem, 4vw, 3rem)', 'clamp(1.1rem, 5vw, 3.5rem)', 'clamp(1.3rem, 6vw, 4.5rem)', 'clamp(1.5rem, 7vw, 5.5rem)', 'clamp(1.8rem, 8vw, 7rem)'];
+    const a = sizeFromLongest();
+    const b = sizeFromTotal();
+    if (!a && !b) return null;
+    if (!a) return b;
+    if (!b) return a;
+    const idxA = sizes.indexOf(a);
+    const idxB = sizes.indexOf(b);
+    return idxA <= idxB ? a : b;
   };
 
   // Update font size and reset answer reveal when word changes
@@ -886,7 +905,7 @@ export default function Game() {
                   {parsed.answer}
                 </h1>
               ) : (
-                <>
+                <div className="flex flex-col items-center justify-center">
                   <h1 
                     ref={wordDisplayRef}
                     className="word-display font-body text-white animate-bounce-in"
@@ -894,12 +913,17 @@ export default function Game() {
                   >
                     {parsed?.prompt ?? store.currentWord}
                   </h1>
+                  {parsed?.parenthetical && (
+                    <p className="text-muted-foreground text-lg md:text-xl font-thin mt-1 animate-bounce-in" data-testid="text-parenthetical">
+                      ({parsed.parenthetical})
+                    </p>
+                  )}
                   {store.studyMode && hasAnswer && !answerRevealed && store.isPlaying && !isCountingDown && (
                     <p className="absolute bottom-3 text-muted-foreground text-sm animate-pulse" data-testid="text-tap-hint">
                       Tap to reveal answer
                     </p>
                   )}
-                </>
+                </div>
               )}
             </div>
           );
