@@ -48,7 +48,8 @@ The server uses a storage abstraction pattern (`IStorage` interface) allowing ea
 ### Code Organization
 - **useTiltDetection hook** (`client/src/hooks/use-tilt-detection.ts`): Encapsulates all device orientation logic, calibration, gamma unwrapping, and gesture recognition (~364 lines). Game.tsx passes callbacks for tilt events.
 - **game-ui.tsx** (`client/src/components/ui/game-ui.tsx`): Shared game UI components including RainbowText (per-character rainbow coloring) and menuButtonStyles.
-- **CSS utilities** (`client/src/index.css`): `.font-display`, `.text-shadow-sm/md/lg`, `.rainbow-letter` utility classes replace inline styles throughout.
+- **CSS utilities** (`client/src/index.css`): `.font-display`, `.text-shadow-sm/md/lg`, `.rainbow-letter`, `.countdown-step` utility classes replace inline styles throughout.
+- **Countdown**: Pure CSS animation sequence (no intermediate React state changes). All 4 values ("3","2","1","Go!") render simultaneously with staggered `animation-delay`. Single setTimeout at 4s ends countdown and starts round.
 
 ### Tilt Detection Implementation
 The tilt detection uses the DeviceOrientation API with gamma axis for landscape orientations (implemented in `useTiltDetection` hook):
