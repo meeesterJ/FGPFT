@@ -206,7 +206,12 @@ export default function Game() {
     if (!hasStartedRound.current && !store.currentWord) {
       hasStartedRound.current = true;
       setTimeout(() => {
-        store.prepareRound();
+        // If deck is empty (e.g. page refreshed on /game), run startGame to build deck first
+        if (store.deck.length === 0) {
+          store.startGame();
+        } else {
+          store.prepareRound();
+        }
       }, 0);
     }
     
