@@ -152,16 +152,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .word-container-fixed {
-  width: clamp(240px, 75vw, 600px);
-  height: clamp(180px, 40vh, 380px);
+  width: clamp(240px, 70vw, 600px);
+  height: clamp(200px, 50vh, 400px);
   flex-shrink: 0;
   overflow: hidden;
 }
 
 .word-display {
   font-size: clamp(1.5rem, 6vw, 4.5rem);
-  max-width: 90%;
-  padding: 0 0.5rem;
+  max-width: 95%;
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;

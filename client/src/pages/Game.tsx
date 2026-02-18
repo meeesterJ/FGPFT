@@ -890,7 +890,7 @@ export default function Game() {
             <div 
               ref={wordContainerRef}
               className={cn(
-                "word-container-fixed bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 shadow-2xl relative group",
+                "word-container-fixed bg-card rounded-3xl border-4 border-border flex items-center justify-center px-4 py-3 shadow-2xl relative group",
                 isTappable && "cursor-pointer active:scale-[0.98] transition-transform"
               )}
               onClick={isTappable ? () => setAnswerRevealed(true) : undefined}
@@ -908,7 +908,7 @@ export default function Game() {
                   {parsed.answer}
                 </h1>
               ) : (
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center w-full">
                   <h1 
                     ref={wordDisplayRef}
                     className="word-display font-body text-white animate-bounce-in"
@@ -917,12 +917,12 @@ export default function Game() {
                     {parsed?.prompt ?? store.currentWord}
                   </h1>
                   {parsed?.parenthetical && (
-                    <p className="text-muted-foreground text-lg md:text-xl font-thin mt-1 animate-bounce-in" data-testid="text-parenthetical">
+                    <p className="text-muted-foreground text-lg md:text-xl font-thin mt-2 animate-bounce-in" data-testid="text-parenthetical">
                       ({parsed.parenthetical})
                     </p>
                   )}
                   {store.studyMode && hasAnswer && !answerRevealed && store.isPlaying && !isCountingDown && (
-                    <p className="absolute bottom-3 text-muted-foreground text-sm animate-pulse" data-testid="text-tap-hint">
+                    <p className="text-muted-foreground text-xs mt-2 animate-pulse" data-testid="text-tap-hint">
                       Tap to reveal answer
                     </p>
                   )}
