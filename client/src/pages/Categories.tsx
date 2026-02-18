@@ -230,7 +230,7 @@ export default function Categories() {
                     data-testid={`category-${list.id}`}
                   >
                     <div className="flex items-center space-x-3">
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-cyan-400 bg-cyan-500' : 'border-muted-foreground'}`}>
+                      <div className={`w-6 h-6 min-w-6 min-h-6 flex-shrink-0 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-cyan-400 bg-cyan-500' : 'border-muted-foreground'}`}>
                         {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
                       </div>
                       <div>
