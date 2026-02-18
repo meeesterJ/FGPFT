@@ -438,24 +438,24 @@ export default function Game() {
     const totalLen = text.length;
     
     const sizeFromLongest = (): string | null => {
-      if (longestLen <= 8) return null;
-      if (longestLen <= 10) return 'clamp(1.8rem, 8vw, 7rem)';
-      if (longestLen <= 12) return 'clamp(1.5rem, 7vw, 5.5rem)';
-      if (longestLen <= 14) return 'clamp(1.3rem, 6vw, 4.5rem)';
-      if (longestLen <= 16) return 'clamp(1.1rem, 5vw, 3.5rem)';
-      return 'clamp(1rem, 4vw, 3rem)';
+      if (longestLen <= 6) return null;
+      if (longestLen <= 8) return 'clamp(1.4rem, 5.5vw, 4rem)';
+      if (longestLen <= 10) return 'clamp(1.2rem, 4.5vw, 3.5rem)';
+      if (longestLen <= 13) return 'clamp(1.1rem, 4vw, 3rem)';
+      if (longestLen <= 16) return 'clamp(1rem, 3.5vw, 2.5rem)';
+      return 'clamp(0.9rem, 3vw, 2rem)';
     };
 
     const sizeFromTotal = (): string | null => {
-      if (totalLen <= 15) return null;
-      if (totalLen <= 25) return 'clamp(1.8rem, 8vw, 7rem)';
-      if (totalLen <= 35) return 'clamp(1.5rem, 7vw, 5.5rem)';
-      if (totalLen <= 45) return 'clamp(1.3rem, 6vw, 4.5rem)';
-      if (totalLen <= 55) return 'clamp(1.1rem, 5vw, 3.5rem)';
-      return 'clamp(1rem, 4vw, 3rem)';
+      if (totalLen <= 10) return null;
+      if (totalLen <= 18) return 'clamp(1.4rem, 5.5vw, 4rem)';
+      if (totalLen <= 25) return 'clamp(1.2rem, 4.5vw, 3.5rem)';
+      if (totalLen <= 35) return 'clamp(1.1rem, 4vw, 3rem)';
+      if (totalLen <= 45) return 'clamp(1rem, 3.5vw, 2.5rem)';
+      return 'clamp(0.9rem, 3vw, 2rem)';
     };
 
-    const sizes = ['clamp(1rem, 4vw, 3rem)', 'clamp(1.1rem, 5vw, 3.5rem)', 'clamp(1.3rem, 6vw, 4.5rem)', 'clamp(1.5rem, 7vw, 5.5rem)', 'clamp(1.8rem, 8vw, 7rem)'];
+    const sizes = ['clamp(0.9rem, 3vw, 2rem)', 'clamp(1rem, 3.5vw, 2.5rem)', 'clamp(1.1rem, 4vw, 3rem)', 'clamp(1.2rem, 4.5vw, 3.5rem)', 'clamp(1.4rem, 5.5vw, 4rem)'];
     const a = sizeFromLongest();
     const b = sizeFromTotal();
     if (!a && !b) return null;
