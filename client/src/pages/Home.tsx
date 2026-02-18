@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -165,6 +166,15 @@ export default function Home() {
   const startGame = useGameStore(state => state.startGame);
   const splashDismissed = useGameStore(state => state.splashDismissed);
   const setSplashDismissed = useGameStore(state => state.setSplashDismissed);
+  const [isHydrated, setIsHydrated] = useState(useGameStore.persist.hasHydrated());
+
+  useEffect(() => {
+    if (isHydrated) return;
+    const unsubscribe = useGameStore.persist.onFinishHydration(() => {
+      setIsHydrated(true);
+    });
+    return () => unsubscribe();
+  }, [isHydrated]);
 
   const handleSplashTap = async () => {
     await initAudioContextAsync();
@@ -172,6 +182,7 @@ export default function Home() {
   };
 
   const handleStart = () => {
+    if (!isHydrated) return;
     try {
       const elem = document.documentElement;
       if (elem.requestFullscreen) {

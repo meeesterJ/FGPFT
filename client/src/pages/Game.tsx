@@ -38,6 +38,7 @@ export default function Game() {
   const nextWordRef = useRef(store.nextWord);
   const permissionProbeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const permissionProbeHandlerRef = useRef<((e: DeviceOrientationEvent) => void) | null>(null);
+  const roundActiveTimeRef = useRef<number>(0);
   const wordDisplayRef = useRef<HTMLHeadingElement>(null);
   const wordContainerRef = useRef<HTMLDivElement>(null);
   const [wordFontSize, setWordFontSize] = useState<string | null>(null);
@@ -198,6 +199,9 @@ export default function Game() {
 
   // Initialize round when component mounts - prepare deck but don't start playing
   useEffect(() => {
+    // Wait for hydration before initializing to avoid stale default values
+    if (!isHydrated) return;
+
     // Prepare round deck/word if not already done, but don't start playing
     if (!hasStartedRound.current && !store.currentWord) {
       hasStartedRound.current = true;
@@ -306,7 +310,14 @@ export default function Game() {
         // Ignore unlock errors
       }
     };
-  }, []); // Only on mount
+  }, [isHydrated]); // Run on mount and when hydration completes
+
+  // Re-sync timeLeft when roundDuration changes (e.g. after Zustand hydration)
+  useEffect(() => {
+    if (!store.isPlaying && !isCountingDown) {
+      setTimeLeft(store.roundDuration === 0 ? 0 : store.roundDuration);
+    }
+  }, [store.roundDuration]);
 
   // Timer logic - pause during countdown, ready screen, and permission prompt
   useEffect(() => {
@@ -323,9 +334,11 @@ export default function Game() {
     };
   }, [store.isPlaying, isPaused, isCountingDown, isWaitingForReady, isHandoff, showTeamScore, waitingForPermission, timeLeft, isInfiniteTimer]);
 
-  // Handle timer expiration
+  // Handle timer expiration — guard against premature firing within first 2 seconds of round
   useEffect(() => {
     if (!isInfiniteTimer && timeLeft <= 0 && store.isPlaying) {
+      const elapsed = Date.now() - roundActiveTimeRef.current;
+      if (elapsed < 2000) return;
       store.endRound();
     }
   }, [timeLeft, store.isPlaying, isInfiniteTimer]);
@@ -580,6 +593,7 @@ export default function Game() {
       setCalibrationTrigger(prev => prev + 1);
       // Countdown complete - now start playing
       if (!store.isPlaying) {
+        roundActiveTimeRef.current = Date.now();
         store.beginRound();
       }
     }, 4000));

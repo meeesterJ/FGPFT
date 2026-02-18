@@ -316,7 +316,7 @@ export const useGameStore = create<GameState>()(
 
       nextWord: (correct) => {
         const { deck, currentWord, roundResults, currentScore, usedWords, currentTeam, teamRoundResults, roundDuration } = get();
-        if (!currentWord) return;
+        if (!currentWord || currentWord === "No Words!") return;
 
         const entry = { word: currentWord, correct };
         const newResults = [...roundResults, entry];
