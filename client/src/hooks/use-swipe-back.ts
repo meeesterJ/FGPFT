@@ -5,13 +5,16 @@ interface SwipeBackOptions {
   targetPath: string;
   threshold?: number;
   edgeWidth?: number;
+  onSwipe?: () => boolean | void;
 }
 
-export function useSwipeBack({ targetPath, threshold = 100, edgeWidth = 40 }: SwipeBackOptions) {
+export function useSwipeBack({ targetPath, threshold = 100, edgeWidth = 40, onSwipe }: SwipeBackOptions) {
   const [, setLocation] = useLocation();
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const isEdgeSwipe = useRef(false);
+  const onSwipeRef = useRef(onSwipe);
+  useEffect(() => { onSwipeRef.current = onSwipe; }, [onSwipe]);
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
@@ -37,7 +40,10 @@ export function useSwipeBack({ targetPath, threshold = 100, edgeWidth = 40 }: Sw
       const deltaY = Math.abs(touchEndY - touchStartY.current);
 
       if (deltaX > threshold && deltaY < 80) {
-        setLocation(targetPath);
+        const handled = onSwipeRef.current?.();
+        if (!handled) {
+          setLocation(targetPath);
+        }
       }
 
       touchStartX.current = null;

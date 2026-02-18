@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useGameStore, WordList } from "@/lib/store";
@@ -17,7 +17,6 @@ import { useIsLandscape } from "@/hooks/use-landscape";
 const ENABLE_CSV_UPLOAD = false;
 
 export default function Categories() {
-  useSwipeBack({ targetPath: "/" });
   const { toast } = useToast();
   const store = useGameStore();
   const isLandscape = useIsLandscape();
@@ -32,6 +31,20 @@ export default function Categories() {
   const [bulkAddWords, setBulkAddWords] = useState("");
   const [newListIsStudy, setNewListIsStudy] = useState(false);
   const [editListIsStudy, setEditListIsStudy] = useState(false);
+
+  const handleSwipeBack = useCallback(() => {
+    if (isEditDialogOpen) {
+      setIsEditDialogOpen(false);
+      return true;
+    }
+    if (isDialogOpen) {
+      setIsDialogOpen(false);
+      return true;
+    }
+    return false;
+  }, [isDialogOpen, isEditDialogOpen]);
+
+  useSwipeBack({ targetPath: "/", onSwipe: handleSwipeBack });
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
