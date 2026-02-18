@@ -1,4 +1,7 @@
-export const DEFAULT_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: boolean }[] = [
+import { STUDY_WORDS_1 } from './study-words-1';
+import { STUDY_WORDS_2 } from './study-words-2';
+
+const BASE_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: boolean }[] = [
   {
     id: 'actions',
     name: 'Charades - Actions',
@@ -442,23 +445,12 @@ export const DEFAULT_WORD_LISTS: { id: string; name: string; words: string[]; is
       'Día de Muertos [Day of the Dead]', 'Año del Dragón [Year of the Dragon]', 'salud [health]'
     ]
   },
-  {
-    id: 'study-test',
-    name: 'Study Test',
-    isStudy: true,
-    words: [
-      'H₂O (chemical formula) [water]',
-      'Mitochondria (organelle) [powerhouse of the cell]',
-      '1776 (year) [American independence]',
-      'Au (periodic table) [gold]',
-      'Photosynthesis (biology) [plants converting sunlight to energy]',
-      'π (Greek letter) [ratio of circumference to diameter]',
-      'DNA (abbreviation) [deoxyribonucleic acid]',
-      'Newton (scientist) [laws of motion and gravity]',
-      'Habitat (ecology) [natural environment of an organism]',
-      'Sonnet (literature) [14-line poem]'
-    ]
-  }
+];
+
+export const DEFAULT_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: boolean }[] = [
+  ...BASE_WORD_LISTS,
+  ...STUDY_WORDS_1,
+  ...STUDY_WORDS_2,
 ];
 
 export function parseWordAnswer(word: string): { prompt: string; parenthetical: string | null; answer: string | null } {
