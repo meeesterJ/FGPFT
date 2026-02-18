@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import { useGameStore, TEAM_THEME_COLORS } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, ArrowRight, Home, Trophy, ListX, CheckCircle2, Crown, X } from "lucide-react";
+import { RotateCcw, ArrowRight, ArrowLeft, Home, Trophy, ListX, CheckCircle2, Crown, X } from "lucide-react";
 import { menuButtonStyles, RainbowText } from "@/components/ui/game-ui";
 import Confetti from "react-confetti";
 import { useState, useEffect, useRef, useMemo } from 'react';
@@ -230,34 +230,34 @@ export default function Summary() {
         </div>
       </div>
 
-      {/* Word List Popup */}
+      {/* Word List - Full Screen */}
       {selectedTeamIndex !== null && (() => {
         const popupColor = TEAM_THEME_COLORS[selectedTeamIndex % TEAM_THEME_COLORS.length];
         const popupTeamName = store.getTeamName(selectedTeamIndex + 1);
+        const title = store.numberOfTeams > 1 ? popupTeamName : 'Words';
+        const subtitle = store.isGameFinished ? 'All Rounds' : `Round ${store.currentRound}`;
         return (
-          <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setSelectedTeamIndex(null)}>
-            <div className={`bg-card rounded-2xl border ${popupColor.border} shadow-2xl w-full max-w-xs max-h-[80vh] flex flex-col m-4`} onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center justify-between p-4 border-b border-border">
-                <h3 className={`font-bold text-lg ${popupColor.text} truncate`}>
-                  {store.numberOfTeams > 1 ? popupTeamName : 'Words'} — {store.isGameFinished ? 'All Rounds' : `Round ${store.currentRound}`}
-                </h3>
-                <button onClick={() => setSelectedTeamIndex(null)} className="p-1 rounded-full hover:bg-muted transition-colors flex-shrink-0" data-testid="button-close-popup">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="flex-1 overflow-y-auto p-3 space-y-1">
+          <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col">
+            <header className={`p-4 flex items-center border-b ${popupColor.border} backdrop-blur-md`}>
+              <Button variant="ghost" size="icon" className={`${popupColor.text} hover:bg-muted`} onClick={() => setSelectedTeamIndex(null)} data-testid="button-close-popup">
+                <ArrowLeft className="w-6 h-6" />
+              </Button>
+              <h1 className={`text-2xl font-thin ml-4 ${popupColor.text}`}>{title} — {subtitle}</h1>
+            </header>
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="max-w-2xl mx-auto space-y-2">
                 {wordResults.map((res, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/50">
-                    <span className="font-medium text-sm">{res.word}</span>
+                  <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-card/50 border border-border" data-testid={`word-result-${i}`}>
+                    <span className="font-medium">{res.word}</span>
                     {res.correct ? (
-                      <CheckCircle2 className="text-green-400 w-5 h-5 flex-shrink-0" />
+                      <CheckCircle2 className="text-green-400 w-6 h-6 flex-shrink-0" />
                     ) : (
-                      <ListX className="text-red-400 w-5 h-5 flex-shrink-0" />
+                      <ListX className="text-red-400 w-6 h-6 flex-shrink-0" />
                     )}
                   </div>
                 ))}
                 {wordResults.length === 0 && (
-                  <p className="text-muted-foreground italic text-sm text-center py-4">No words played yet.</p>
+                  <p className="text-muted-foreground italic text-center py-8">No words played yet.</p>
                 )}
               </div>
             </div>

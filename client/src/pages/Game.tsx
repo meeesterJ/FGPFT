@@ -461,13 +461,13 @@ export default function Game() {
   const handleCorrect = async () => {
     if (isProcessing || !store.isPlaying || isCountingDown) return;
     setIsProcessing(true);
-    pendingGestureRef.current = null; // Clear any pending tilt gesture
-    mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
+    pendingGestureRef.current = null;
+    mustReturnToCenterRef.current = true;
     setTiltFeedback("correct");
-    initAudioContext(); // Initialize audio on user gesture for iOS
-    feedbackCorrect(); // Haptic + sound feedback
-    store.nextWord(true);
+    initAudioContext();
+    feedbackCorrect();
     setTimeout(() => {
+      store.nextWord(true);
       setTiltFeedback(null);
       setIsProcessing(false);
     }, 300);
@@ -476,13 +476,13 @@ export default function Game() {
   const handlePass = async () => {
     if (isProcessing || !store.isPlaying || isCountingDown) return;
     setIsProcessing(true);
-    pendingGestureRef.current = null; // Clear any pending tilt gesture
-    mustReturnToCenterRef.current = true; // Require return to center before next tilt gesture
+    pendingGestureRef.current = null;
+    mustReturnToCenterRef.current = true;
     setTiltFeedback("pass");
-    initAudioContext(); // Initialize audio on user gesture for iOS
-    feedbackPass(); // Haptic + sound feedback
-    store.nextWord(false);
+    initAudioContext();
+    feedbackPass();
     setTimeout(() => {
+      store.nextWord(false);
       setTiltFeedback(null);
       setIsProcessing(false);
     }, 300);
@@ -868,7 +868,7 @@ export default function Game() {
             <div 
               ref={wordContainerRef}
               className={cn(
-                "word-container-fixed bg-card rounded-3xl border-4 border-border flex flex-col items-center justify-center p-6 shadow-2xl relative group",
+                "word-container-fixed bg-card rounded-3xl border-4 border-border flex items-center justify-center p-6 shadow-2xl relative group",
                 isTappable && "cursor-pointer active:scale-[0.98] transition-transform"
               )}
               onClick={isTappable ? () => setAnswerRevealed(true) : undefined}
@@ -877,26 +877,29 @@ export default function Game() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl transform -translate-x-10 translate-y-10"></div>
               
-              <h1 
-                ref={wordDisplayRef}
-                className="word-display font-body text-white animate-bounce-in"
-                style={wordFontSize ? { fontSize: wordFontSize } : undefined}
-              >
-                {parsed?.prompt ?? store.currentWord}
-              </h1>
-
-              {store.studyMode && hasAnswer && !answerRevealed && store.isPlaying && !isCountingDown && (
-                <p className="text-muted-foreground text-sm mt-3 animate-pulse" data-testid="text-tap-hint">
-                  Tap to reveal answer
-                </p>
-              )}
-
-              {answerRevealed && parsed?.answer && (
-                <div className="mt-4 pt-4 border-t border-border/50 w-full text-center animate-bounce-in" data-testid="text-answer">
-                  <p className="text-cyan-400 font-body text-2xl md:text-3xl">
-                    {parsed.answer}
-                  </p>
-                </div>
+              {answerRevealed && parsed?.answer ? (
+                <h1 
+                  className="word-display font-body text-white italic animate-bounce-in"
+                  style={getWordFontSize(parsed.answer) ? { fontSize: getWordFontSize(parsed.answer)! } : undefined}
+                  data-testid="text-answer"
+                >
+                  {parsed.answer}
+                </h1>
+              ) : (
+                <>
+                  <h1 
+                    ref={wordDisplayRef}
+                    className="word-display font-body text-white animate-bounce-in"
+                    style={wordFontSize ? { fontSize: wordFontSize } : undefined}
+                  >
+                    {parsed?.prompt ?? store.currentWord}
+                  </h1>
+                  {store.studyMode && hasAnswer && !answerRevealed && store.isPlaying && !isCountingDown && (
+                    <p className="absolute bottom-3 text-muted-foreground text-sm animate-pulse" data-testid="text-tap-hint">
+                      Tap to reveal answer
+                    </p>
+                  )}
+                </>
               )}
             </div>
           );

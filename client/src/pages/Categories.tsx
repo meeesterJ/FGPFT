@@ -7,13 +7,6 @@ import { ArrowLeft, Plus, Trash2, Edit2, X, BookOpen } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Papa from "papaparse";
 import { Switch } from "@/components/ui/switch";
@@ -179,179 +172,10 @@ export default function Categories() {
             <div className="flex items-center gap-3">
               <p className="text-sm text-muted-foreground">Select categories to include in your game</p>
               
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button size="sm" className="bg-pink-500 text-white hover:bg-pink-400 border border-pink-400 shrink-0">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create List
-                  </Button>
-                </DialogTrigger>
-                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
-                  <DialogHeader>
-                    <DialogTitle>Create Custom List</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label>List Name</Label>
-                      <Input 
-                        placeholder="e.g. My Family, Inside Jokes" 
-                        value={newListName}
-                        onChange={e => setNewListName(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Words (one per line)</Label>
-                      <Textarea 
-                        placeholder="Word 1&#10;Word 2&#10;Word 3" 
-                        className="h-32"
-                        value={newListWords}
-                        onChange={e => setNewListWords(e.target.value)}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <BookOpen className="w-4 h-4 text-purple-400" />
-                        <Label htmlFor="new-study-toggle">Study Mode</Label>
-                      </div>
-                      <Switch
-                        id="new-study-toggle"
-                        checked={newListIsStudy}
-                        onCheckedChange={setNewListIsStudy}
-                        data-testid="toggle-study-create"
-                      />
-                    </div>
-                    {ENABLE_CSV_UPLOAD && (
-                      <div className="space-y-2">
-                        <Label>Or Upload CSV</Label>
-                        <Input type="file" accept=".csv" onChange={handleFileUpload} />
-                      </div>
-                    )}
-                    <Button className="w-full" onClick={handleCreateList}>Save List</Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-
-              {/* Delete Confirmation Dialog */}
-              <Dialog open={deleteConfirmList !== null} onOpenChange={(open) => !open && setDeleteConfirmList(null)}>
-                <DialogContent className="bg-card/95 backdrop-blur-md border-red-500/30 max-w-sm">
-                  <DialogHeader>
-                    <DialogTitle className="text-xl font-thin text-red-400">Delete Category?</DialogTitle>
-                  </DialogHeader>
-                  <div className="py-4 space-y-4">
-                    <p className="text-muted-foreground">
-                      Are you sure you want to delete <span className="text-foreground font-medium">"{deleteConfirmList?.name}"</span>?
-                    </p>
-                    <div className="flex gap-3">
-                      <Button 
-                        variant="outline" 
-                        className="flex-1 border-border hover:bg-muted"
-                        onClick={() => setDeleteConfirmList(null)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button 
-                        className="flex-1 bg-red-500 hover:bg-red-400 text-white border-red-400"
-                        onClick={() => {
-                          if (deleteConfirmList) {
-                            if (deleteConfirmList.isCustom) {
-                              store.removeCustomList(deleteConfirmList.id);
-                            } else {
-                              store.deleteBuiltInList(deleteConfirmList.id);
-                            }
-                            toast({ title: "Deleted", description: `"${deleteConfirmList.name}" has been removed.` });
-                            setDeleteConfirmList(null);
-                          }
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-
-              <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-                <DialogContent className="max-h-[80vh] flex flex-col p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
-                  <DialogHeader className="px-6 pt-6 pb-2">
-                    <DialogTitle>Edit List: {editListName}</DialogTitle>
-                  </DialogHeader>
-                  <div className="flex-1 overflow-y-auto px-6 pb-6">
-                    <div className="flex flex-col gap-4 py-2">
-                      <div className="space-y-2">
-                        <Label>List Name</Label>
-                        <Input 
-                          value={editListName}
-                          onChange={e => setEditListName(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <BookOpen className="w-4 h-4 text-purple-400" />
-                          <Label htmlFor="edit-study-toggle">Study Mode</Label>
-                        </div>
-                        <Switch
-                          id="edit-study-toggle"
-                          checked={editListIsStudy}
-                          onCheckedChange={setEditListIsStudy}
-                          data-testid="toggle-study-edit"
-                        />
-                      </div>
-                      
-                      <div className="space-y-2 border-t border-border pt-4">
-                        <Label>Bulk Add Words (one per line)</Label>
-                        <Textarea 
-                          placeholder={"Word 1\nWord 2\nWord 3"}
-                          className="h-20"
-                          value={bulkAddWords}
-                          onChange={e => setBulkAddWords(e.target.value)}
-                        />
-                        <div className="flex gap-2">
-                          <Button 
-                            variant="outline" 
-                            className="flex-1"
-                            onClick={handleBulkAdd}
-                          >
-                            <Plus className="w-4 h-4 mr-2" /> Add All Words
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            className="flex-1"
-                            onClick={handleAddWord}
-                          >
-                            <Plus className="w-4 h-4 mr-2" /> Add Empty
-                          </Button>
-                        </div>
-                      </div>
-                      
-                      <Button className="w-full" onClick={handleSaveEdit}>Save Changes</Button>
-                      
-                      <div className="space-y-2 border-t border-border pt-4">
-                        <Label>Words ({editListWords.filter(w => w.trim()).length})</Label>
-                        <div className="space-y-2 bg-card/80 rounded-xl border border-purple-500/30 p-3 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)]">
-                          {editListWords.map((word, index) => (
-                            <div key={index} className="flex gap-2">
-                              <Input 
-                                value={word}
-                                onChange={e => handleUpdateWord(index, e.target.value)}
-                                placeholder={`Word ${index + 1}`}
-                              />
-                              <Button 
-                                variant="ghost" 
-                                size="icon"
-                                className="text-destructive hover:bg-destructive/10"
-                                onClick={() => handleRemoveWord(index)}
-                              >
-                                <X className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <Button size="sm" className="bg-pink-500 text-white hover:bg-pink-400 border border-pink-400 shrink-0" onClick={() => setIsDialogOpen(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                Create List
+              </Button>
             </div>
 
             <div className={`grid gap-3 ${isLandscape ? 'grid-cols-2' : ''}`}>
@@ -424,6 +248,200 @@ export default function Categories() {
           </div>
         </div>
       </ScrollArea>
+
+      {/* Create Custom List - Full Screen */}
+      {isDialogOpen && (
+        <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col">
+          <header className="p-4 flex items-center border-b border-pink-500/30 bg-pink-900/20 backdrop-blur-md">
+            <Button variant="ghost" size="icon" className="text-pink-400 hover:text-pink-300 hover:bg-pink-500/20" onClick={() => setIsDialogOpen(false)}>
+              <ArrowLeft className="w-6 h-6" />
+            </Button>
+            <h1 className="text-2xl font-thin ml-4 text-pink-400">Create Custom List</h1>
+          </header>
+          <ScrollArea className="flex-1 p-6 w-full">
+            <div className="max-w-2xl mx-auto space-y-6">
+              <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
+                <div className="space-y-2">
+                  <Label className="text-pink-300">List Name</Label>
+                  <Input 
+                    placeholder="e.g. My Family, Inside Jokes" 
+                    value={newListName}
+                    onChange={e => setNewListName(e.target.value)}
+                    data-testid="input-new-list-name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-pink-300">Words (one per line)</Label>
+                  <Textarea 
+                    placeholder={"Word 1\nWord 2\nWord 3"} 
+                    className="h-40"
+                    value={newListWords}
+                    onChange={e => setNewListWords(e.target.value)}
+                    data-testid="textarea-new-list-words"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-purple-400" />
+                    <Label htmlFor="new-study-toggle" className="text-pink-300">Study Mode</Label>
+                  </div>
+                  <Switch
+                    id="new-study-toggle"
+                    checked={newListIsStudy}
+                    onCheckedChange={setNewListIsStudy}
+                    data-testid="toggle-study-create"
+                  />
+                </div>
+                {ENABLE_CSV_UPLOAD && (
+                  <div className="space-y-2">
+                    <Label className="text-pink-300">Or Upload CSV</Label>
+                    <Input type="file" accept=".csv" onChange={handleFileUpload} />
+                  </div>
+                )}
+              </section>
+              <Button className="w-full bg-pink-500 hover:bg-pink-400 text-white border border-pink-400" onClick={handleCreateList} data-testid="button-save-new-list">
+                Save List
+              </Button>
+            </div>
+          </ScrollArea>
+        </div>
+      )}
+
+      {/* Delete Confirmation - Full Screen */}
+      {deleteConfirmList !== null && (
+        <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col items-center justify-center p-8">
+          <div className="max-w-sm w-full space-y-8 text-center">
+            <Trash2 className="w-16 h-16 text-red-400 mx-auto" />
+            <h2 className="text-2xl font-thin text-red-400">Delete Category?</h2>
+            <p className="text-muted-foreground text-lg">
+              Are you sure you want to delete <span className="text-foreground font-medium">"{deleteConfirmList.name}"</span>?
+            </p>
+            <div className="flex gap-4">
+              <Button 
+                variant="outline" 
+                className="flex-1 border-border hover:bg-muted py-6 text-lg"
+                onClick={() => setDeleteConfirmList(null)}
+                data-testid="button-cancel-delete"
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="flex-1 bg-red-500 hover:bg-red-400 text-white border-red-400 py-6 text-lg"
+                onClick={() => {
+                  if (deleteConfirmList) {
+                    if (deleteConfirmList.isCustom) {
+                      store.removeCustomList(deleteConfirmList.id);
+                    } else {
+                      store.deleteBuiltInList(deleteConfirmList.id);
+                    }
+                    toast({ title: "Deleted", description: `"${deleteConfirmList.name}" has been removed.` });
+                    setDeleteConfirmList(null);
+                  }
+                }}
+                data-testid="button-confirm-delete"
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit List - Full Screen */}
+      {isEditDialogOpen && (
+        <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col">
+          <header className="p-4 flex items-center border-b border-yellow-500/30 bg-yellow-900/20 backdrop-blur-md">
+            <Button variant="ghost" size="icon" className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20" onClick={() => setIsEditDialogOpen(false)}>
+              <ArrowLeft className="w-6 h-6" />
+            </Button>
+            <h1 className="text-2xl font-thin ml-4 text-yellow-400">Edit List: {editListName}</h1>
+          </header>
+          <ScrollArea className="flex-1 p-6 w-full">
+            <div className="max-w-2xl mx-auto space-y-6">
+              <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
+                <div className="space-y-2">
+                  <Label className="text-yellow-300">List Name</Label>
+                  <Input 
+                    value={editListName}
+                    onChange={e => setEditListName(e.target.value)}
+                    data-testid="input-edit-list-name"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-purple-400" />
+                    <Label htmlFor="edit-study-toggle" className="text-yellow-300">Study Mode</Label>
+                  </div>
+                  <Switch
+                    id="edit-study-toggle"
+                    checked={editListIsStudy}
+                    onCheckedChange={setEditListIsStudy}
+                    data-testid="toggle-study-edit"
+                  />
+                </div>
+              </section>
+
+              <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
+                <Label className="text-yellow-300">Bulk Add Words (one per line)</Label>
+                <Textarea 
+                  placeholder={"Word 1\nWord 2\nWord 3"}
+                  className="h-24"
+                  value={bulkAddWords}
+                  onChange={e => setBulkAddWords(e.target.value)}
+                  data-testid="textarea-bulk-add"
+                />
+                <div className="flex gap-3">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 border-yellow-500/30 hover:bg-yellow-500/10"
+                    onClick={handleBulkAdd}
+                    data-testid="button-bulk-add"
+                  >
+                    <Plus className="w-4 h-4 mr-2" /> Add All Words
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 border-yellow-500/30 hover:bg-yellow-500/10"
+                    onClick={handleAddWord}
+                    data-testid="button-add-empty"
+                  >
+                    <Plus className="w-4 h-4 mr-2" /> Add Empty
+                  </Button>
+                </div>
+              </section>
+
+              <Button className="w-full bg-yellow-500 hover:bg-yellow-400 text-black border border-yellow-400 font-medium" onClick={handleSaveEdit} data-testid="button-save-edit">
+                Save Changes
+              </Button>
+
+              <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
+                <Label className="text-yellow-300">Words ({editListWords.filter(w => w.trim()).length})</Label>
+                <div className="space-y-2">
+                  {editListWords.map((word, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Input 
+                        value={word}
+                        onChange={e => handleUpdateWord(index, e.target.value)}
+                        placeholder={`Word ${index + 1}`}
+                        data-testid={`input-word-${index}`}
+                      />
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="text-destructive hover:bg-destructive/10"
+                        onClick={() => handleRemoveWord(index)}
+                        data-testid={`button-remove-word-${index}`}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </ScrollArea>
+        </div>
+      )}
     </div>
   );
 }
