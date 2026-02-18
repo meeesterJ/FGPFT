@@ -58,7 +58,7 @@ function TeamNameInput({ index }: { index: number }) {
 }
 
 const STUDY_TIMER_STEPS = [60, 120, 300, 600, 0];
-const STUDY_TIMER_LABELS = ['1 min', '2 min', '5 min', '10 min', '∞'];
+const STUDY_TIMER_LABELS = ['1 min', '2 min', '5 min', '10 min', '\u221E'];
 
 function studyTimerToSlider(duration: number): number {
   const idx = STUDY_TIMER_STEPS.indexOf(duration);
@@ -113,34 +113,6 @@ export default function Settings() {
 
   const settingsSections = (
     <>
-      {/* Study / Game Mode Toggle */}
-      <div className="flex rounded-xl overflow-hidden border border-purple-500/30 h-10" data-testid="toggle-study-game-mode">
-        <button
-          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-all ${
-            !studyMode
-              ? 'bg-gradient-to-r from-pink-500/30 to-purple-500/30 text-pink-300 border-r border-purple-500/30'
-              : 'bg-card/30 text-muted-foreground hover:text-pink-300 border-r border-purple-500/30'
-          }`}
-          onClick={() => handleModeToggle(false)}
-          data-testid="button-game-mode"
-        >
-          <Gamepad2 className="w-4 h-4" />
-          Game Mode
-        </button>
-        <button
-          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-all ${
-            studyMode
-              ? 'bg-gradient-to-r from-purple-500/30 to-cyan-500/30 text-cyan-300'
-              : 'bg-card/30 text-muted-foreground hover:text-cyan-300'
-          }`}
-          onClick={() => handleModeToggle(true)}
-          data-testid="button-study-mode"
-        >
-          <BookOpen className="w-4 h-4" />
-          Study Mode
-        </button>
-      </div>
-
       {/* Number of Teams */}
       <section className={`space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30 ${studyMode ? 'opacity-50' : ''}`}>
         <div className="flex justify-between items-center">
@@ -183,9 +155,18 @@ export default function Settings() {
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-thin text-pink-400">Round Timer</h2>
-          <span className="text-2xl font-mono text-pink-300">
-            {studyMode ? studyTimerLabel : `${store.roundDuration}s`}
-          </span>
+          {studyMode && store.roundDuration === 0 ? (
+            <span className="text-4xl font-mono leading-none" style={{
+              background: "linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00cc00, #0088ff, #8800ff, #ff0088)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>∞</span>
+          ) : (
+            <span className="text-2xl font-mono text-pink-300">
+              {studyMode ? studyTimerLabel : `${store.roundDuration}s`}
+            </span>
+          )}
         </div>
         {studyMode ? (
           <Slider 
@@ -283,6 +264,34 @@ export default function Settings() {
           />
         </div>
       </section>
+
+      {/* Study / Game Mode Toggle */}
+      <div className="flex rounded-xl overflow-hidden border border-purple-500/30 h-10" data-testid="toggle-study-game-mode">
+        <button
+          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-all ${
+            !studyMode
+              ? 'bg-gradient-to-r from-pink-500/30 to-purple-500/30 text-pink-300 border-r border-purple-500/30'
+              : 'bg-card/30 text-muted-foreground hover:text-pink-300 border-r border-purple-500/30'
+          }`}
+          onClick={() => handleModeToggle(false)}
+          data-testid="button-game-mode"
+        >
+          <Gamepad2 className="w-4 h-4" />
+          Game Mode
+        </button>
+        <button
+          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-all ${
+            studyMode
+              ? 'bg-gradient-to-r from-purple-500/30 to-cyan-500/30 text-cyan-300'
+              : 'bg-card/30 text-muted-foreground hover:text-cyan-300'
+          }`}
+          onClick={() => handleModeToggle(true)}
+          data-testid="button-study-mode"
+        >
+          <BookOpen className="w-4 h-4" />
+          Study Mode
+        </button>
+      </div>
 
       {/* iOS hint to add to home screen - show only in browser */}
       {isIOS && !isStandalone && (
