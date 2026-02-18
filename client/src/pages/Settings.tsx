@@ -155,18 +155,11 @@ export default function Settings() {
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-thin text-pink-400">Round Timer</h2>
-          {studyMode && store.roundDuration === 0 ? (
-            <span className="text-4xl font-mono leading-none" style={{
-              background: "linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00cc00, #0088ff, #8800ff, #ff0088)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}>∞</span>
-          ) : (
-            <span className="text-2xl font-mono text-pink-300">
-              {studyMode ? studyTimerLabel : `${store.roundDuration}s`}
-            </span>
-          )}
+          <span className="text-2xl font-mono text-pink-300">
+            {studyMode ? (
+              store.roundDuration === 0 ? <span className="text-3xl leading-none font-black">∞</span> : studyTimerLabel
+            ) : `${store.roundDuration}s`}
+          </span>
         </div>
         {studyMode ? (
           <Slider 
