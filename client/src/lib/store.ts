@@ -136,7 +136,7 @@ export const useGameStore = create<GameState>()(
       teamRoundResults: [],
       teamGameResults: [],
 
-      setStudyMode: (enabled) => set({ studyMode: enabled }),
+      setStudyMode: (enabled) => set({ studyMode: enabled, soundEnabled: !enabled }),
       setRoundDuration: (seconds) => set({ roundDuration: seconds }),
       setTotalRounds: (rounds) => set({ totalRounds: rounds }),
       setShowButtons: (show) => set((state) => {
@@ -432,7 +432,7 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'guess-party-storage',
-      version: 6,
+      version: 7,
       partialize: (state) => ({ 
         studyMode: state.studyMode,
         roundDuration: state.roundDuration,
@@ -478,6 +478,9 @@ export const useGameStore = create<GameState>()(
           if (!persistedState.tiltEnabled) {
             persistedState.showButtons = true;
           }
+        }
+        if (version < 7) {
+          persistedState.soundEnabled = persistedState.studyMode ? false : true;
         }
         return persistedState;
       },
