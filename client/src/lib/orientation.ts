@@ -106,8 +106,25 @@ export function isLandscape(): boolean {
   return orientation === 'landscape-primary' || orientation === 'landscape-secondary';
 }
 
+function getScreenOrientationPlugin(): any | null {
+  try {
+    return window.Capacitor?.Plugins?.ScreenOrientation ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function lockToLandscape(): Promise<boolean> {
   if (isNative()) {
+    const plugin = getScreenOrientationPlugin();
+    if (plugin) {
+      try {
+        await plugin.lock({ orientation: 'landscape' });
+        return true;
+      } catch {
+        return false;
+      }
+    }
     return false;
   }
 
@@ -129,8 +146,16 @@ export async function lockToLandscape(): Promise<boolean> {
   return false;
 }
 
-export function unlockOrientation(): void {
+export async function unlockOrientation(): Promise<void> {
   if (isNative()) {
+    const plugin = getScreenOrientationPlugin();
+    if (plugin) {
+      try {
+        await plugin.unlock();
+      } catch {
+        // Silently fail
+      }
+    }
     return;
   }
 

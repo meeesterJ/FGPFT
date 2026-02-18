@@ -9,6 +9,16 @@ declare global {
           notification: (options: { type: string }) => Promise<void>;
           vibrate: () => Promise<void>;
         };
+        ScreenOrientation?: {
+          lock: (options: { orientation: string }) => Promise<void>;
+          unlock: () => Promise<void>;
+        };
+        StatusBar?: {
+          hide: () => Promise<void>;
+          show: () => Promise<void>;
+          setStyle: (options: { style: string }) => Promise<void>;
+          setBackgroundColor: (options: { color: string }) => Promise<void>;
+        };
       };
     };
   }

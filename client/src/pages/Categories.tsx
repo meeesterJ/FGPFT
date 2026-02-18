@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useGameStore, WordList } from "@/lib/store";
+import { useShallow } from "zustand/react/shallow";
 import { DEFAULT_WORD_LISTS } from "@/lib/words";
 import { ArrowLeft, Plus, Trash2, Edit2, X, BookOpen } from "lucide-react";
 import { Label } from "@/components/ui/label";
@@ -18,7 +19,31 @@ const ENABLE_CSV_UPLOAD = false;
 
 export default function Categories() {
   const { toast } = useToast();
-  const store = useGameStore();
+  const {
+    deletedBuiltInLists,
+    permanentlyDeletedBuiltInLists,
+    selectedListIds,
+    customLists,
+    getEffectiveBuiltInLists,
+    toggleListSelection,
+    addCustomList,
+    removeCustomList,
+    deleteBuiltInList,
+    updateBuiltInList,
+    updateCustomList,
+  } = useGameStore(useShallow(s => ({
+    deletedBuiltInLists: s.deletedBuiltInLists,
+    permanentlyDeletedBuiltInLists: s.permanentlyDeletedBuiltInLists,
+    selectedListIds: s.selectedListIds,
+    customLists: s.customLists,
+    getEffectiveBuiltInLists: s.getEffectiveBuiltInLists,
+    toggleListSelection: s.toggleListSelection,
+    addCustomList: s.addCustomList,
+    removeCustomList: s.removeCustomList,
+    deleteBuiltInList: s.deleteBuiltInList,
+    updateBuiltInList: s.updateBuiltInList,
+    updateCustomList: s.updateCustomList,
+  })));
   const isLandscape = useIsLandscape();
   
   const [newListName, setNewListName] = useState("");
@@ -79,7 +104,7 @@ export default function Categories() {
       isStudy: newListIsStudy
     };
 
-    store.addCustomList(newList);
+    addCustomList(newList);
     setNewListName("");
     setNewListWords("");
     setNewListIsStudy(false);
@@ -135,7 +160,7 @@ export default function Categories() {
     const isBuiltIn = DEFAULT_WORD_LISTS.some(l => l.id === editingListId);
 
     if (isBuiltIn) {
-      store.updateBuiltInList(editingListId!, editListName, filteredWords, editListIsStudy);
+      updateBuiltInList(editingListId!, editListName, filteredWords, editListIsStudy);
       toast({ title: "Success", description: `"${editListName}" has been updated!` });
     } else {
       const updatedList: WordList = {
@@ -145,7 +170,7 @@ export default function Categories() {
         isCustom: true,
         isStudy: editListIsStudy
       };
-      store.updateCustomList(editingListId!, updatedList);
+      updateCustomList(editingListId!, updatedList);
       toast({ title: "Success", description: "List updated!" });
     }
 
@@ -153,18 +178,18 @@ export default function Categories() {
     setIsEditDialogOpen(false);
   };
 
-  const effectiveBuiltInLists = store.getEffectiveBuiltInLists();
+  const effectiveBuiltInLists = getEffectiveBuiltInLists();
   const allLists = [
     ...effectiveBuiltInLists.filter(l => 
-      !store.deletedBuiltInLists.includes(l.id) && 
-      !store.permanentlyDeletedBuiltInLists.includes(l.id)
+      !deletedBuiltInLists.includes(l.id) && 
+      !permanentlyDeletedBuiltInLists.includes(l.id)
     ).map(l => ({ ...l, isCustom: false })),
-    ...store.customLists
+    ...customLists
   ];
 
   const deletedLists = DEFAULT_WORD_LISTS.filter(l => 
-    store.deletedBuiltInLists.includes(l.id) && 
-    !store.permanentlyDeletedBuiltInLists.includes(l.id)
+    deletedBuiltInLists.includes(l.id) && 
+    !permanentlyDeletedBuiltInLists.includes(l.id)
   );
 
   return (
@@ -192,7 +217,7 @@ export default function Categories() {
 
             <div className={`grid gap-3 ${isLandscape ? 'grid-cols-2' : ''}`}>
               {allLists.map(list => {
-                const isSelected = store.selectedListIds.includes(list.id);
+                const isSelected = selectedListIds.includes(list.id);
                 return (
                   <div 
                     key={list.id} 
@@ -201,7 +226,7 @@ export default function Categories() {
                         ? 'border-cyan-400 bg-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.3)]' 
                         : 'border-border bg-card/50 hover:border-cyan-500/50'
                     }`}
-                    onClick={() => store.toggleListSelection(list.id)}
+                    onClick={() => toggleListSelection(list.id)}
                     data-testid={`category-${list.id}`}
                   >
                     <div className="flex items-center space-x-3">
@@ -234,9 +259,9 @@ export default function Categories() {
                         onClick={(e) => {
                           e.stopPropagation();
                           if (list.isCustom) {
-                            store.removeCustomList(list.id);
+                            removeCustomList(list.id);
                           } else {
-                            store.deleteBuiltInList(list.id);
+                            deleteBuiltInList(list.id);
                           }
                         }}
                       >

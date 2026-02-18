@@ -9,16 +9,19 @@ import { useSwipeBack } from "@/hooks/use-swipe-back";
 
 export default function DeletedCategories() {
   useSwipeBack({ targetPath: "/categories" });
-  const store = useGameStore();
+  const deletedBuiltInLists = useGameStore(s => s.deletedBuiltInLists);
+  const permanentlyDeletedBuiltInLists = useGameStore(s => s.permanentlyDeletedBuiltInLists);
+  const restoreBuiltInList = useGameStore(s => s.restoreBuiltInList);
+  const permanentlyDeleteBuiltInList = useGameStore(s => s.permanentlyDeleteBuiltInList);
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null);
 
   const deletedLists = DEFAULT_WORD_LISTS.filter(l => 
-    store.deletedBuiltInLists.includes(l.id) &&
-    !store.permanentlyDeletedBuiltInLists.includes(l.id)
+    deletedBuiltInLists.includes(l.id) &&
+    !permanentlyDeletedBuiltInLists.includes(l.id)
   );
 
   const handleRestore = (list: typeof DEFAULT_WORD_LISTS[0]) => {
-    store.restoreBuiltInList(list.id);
+    restoreBuiltInList(list.id);
   };
 
   return (
@@ -107,7 +110,7 @@ export default function DeletedCategories() {
               <Button 
                 className="flex-1 bg-red-500 hover:bg-red-400 text-white border-red-400 py-6 text-lg"
                 onClick={() => {
-                  store.permanentlyDeleteBuiltInList(deleteConfirm.id);
+                  permanentlyDeleteBuiltInList(deleteConfirm.id);
                   setDeleteConfirm(null);
                 }}
                 data-testid="button-confirm-delete"

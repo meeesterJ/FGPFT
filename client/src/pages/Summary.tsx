@@ -1,4 +1,5 @@
 import { useLocation } from "wouter";
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, TEAM_THEME_COLORS } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, ArrowRight, ArrowLeft, Home, Trophy, ListX, CheckCircle2, Crown, X } from "lucide-react";
@@ -34,70 +35,90 @@ function useWindowSize() {
 
 export default function Summary() {
   const [, setLocation] = useLocation();
-  const store = useGameStore();
+  const {
+    currentRound, totalRounds, isGameFinished, numberOfTeams,
+    soundEnabled, soundVolume, teamTotalScores, teamRoundScores,
+    teamRoundResults, teamGameResults,
+    startGame, prepareRound, resetGame, getTeamName,
+  } = useGameStore(useShallow(s => ({
+    currentRound: s.currentRound,
+    totalRounds: s.totalRounds,
+    isGameFinished: s.isGameFinished,
+    numberOfTeams: s.numberOfTeams,
+    soundEnabled: s.soundEnabled,
+    soundVolume: s.soundVolume,
+    teamTotalScores: s.teamTotalScores,
+    teamRoundScores: s.teamRoundScores,
+    teamRoundResults: s.teamRoundResults,
+    teamGameResults: s.teamGameResults,
+    startGame: s.startGame,
+    prepareRound: s.prepareRound,
+    resetGame: s.resetGame,
+    getTeamName: s.getTeamName,
+  })));
   const { width, height } = useWindowSize();
   const hasPlayedGameEndSound = useRef(false);
   const hasPlayedDrumroll = useRef(false);
   const [selectedTeamIndex, setSelectedTeamIndex] = useState<number | null>(null);
   const isLandscape = useIsLandscape();
 
-  const isLastRound = store.currentRound >= store.totalRounds && !store.isGameFinished;
+  const isLastRound = currentRound >= totalRounds && !isGameFinished;
 
-  const scores = store.isGameFinished ? store.teamTotalScores : store.teamRoundScores;
+  const scores = isGameFinished ? teamTotalScores : teamRoundScores;
 
   const winnerInfo = useMemo(() => {
-    if (scores.length === 0 || store.numberOfTeams <= 1) return null;
+    if (scores.length === 0 || numberOfTeams <= 1) return null;
     const maxCorrect = Math.max(...scores.map(s => s.correct));
     if (maxCorrect === 0) return null;
     const winners = scores.map((s, i) => ({ team: i + 1, correct: s.correct })).filter(t => t.correct === maxCorrect);
     return { isTie: winners.length > 1, winnerTeam: winners[0].team, maxCorrect };
-  }, [scores, store.numberOfTeams]);
+  }, [scores, numberOfTeams]);
 
   useEffect(() => {
     lockToLandscape();
   }, []);
 
   useEffect(() => {
-    if (store.isGameFinished && !hasPlayedGameEndSound.current) {
+    if (isGameFinished && !hasPlayedGameEndSound.current) {
       hasPlayedGameEndSound.current = true;
-      if (store.soundEnabled) {
-        playSound('gameEnd', store.soundVolume);
-        playSound('applause', store.soundVolume);
+      if (soundEnabled) {
+        playSound('gameEnd', soundVolume);
+        playSound('applause', soundVolume);
       }
     }
-  }, [store.isGameFinished, store.soundEnabled, store.soundVolume]);
+  }, [isGameFinished, soundEnabled, soundVolume]);
 
   useEffect(() => {
     if (isLastRound && !hasPlayedDrumroll.current) {
       hasPlayedDrumroll.current = true;
-      if (store.soundEnabled) {
-        playSound('drumroll', store.soundVolume);
+      if (soundEnabled) {
+        playSound('drumroll', soundVolume);
       }
     }
-  }, [isLastRound, store.soundEnabled, store.soundVolume]);
+  }, [isLastRound, soundEnabled, soundVolume]);
 
   const handleNext = () => {
-    if (store.isGameFinished) {
-      store.startGame();
+    if (isGameFinished) {
+      startGame();
       setLocation("/game");
     } else if (isLastRound) {
       stopSound('drumroll');
-      store.prepareRound();
+      prepareRound();
     } else {
-      store.prepareRound();
+      prepareRound();
       setLocation("/game");
     }
   };
 
   const handleHome = () => {
     stopSound('drumroll');
-    store.resetGame();
+    resetGame();
     unlockOrientation();
     setLocation("/");
   };
 
   const wordResults = selectedTeamIndex !== null
-    ? (store.isGameFinished ? store.teamGameResults[selectedTeamIndex] : store.teamRoundResults[selectedTeamIndex]) || []
+    ? (isGameFinished ? teamGameResults[selectedTeamIndex] : teamRoundResults[selectedTeamIndex]) || []
     : [];
 
   if (!isLandscape) {
@@ -111,8 +132,8 @@ export default function Summary() {
   }
 
   return (
-    <div className="h-[100dvh] bg-background flex items-center justify-center p-4 relative overflow-hidden">
-      {store.isGameFinished && <Confetti width={width} height={height} recycle={false} numberOfPieces={500} />}
+    <div className="h-[100dvh] bg-background flex items-center justify-center p-4 relative overflow-hidden safe-area-x">
+      {isGameFinished && <Confetti width={width} height={height} recycle={false} numberOfPieces={500} />}
       
       <button 
         onClick={handleHome}
@@ -129,8 +150,8 @@ export default function Summary() {
             <div className="space-y-2">
               {scores.map((score, i) => {
                 const color = TEAM_THEME_COLORS[i % TEAM_THEME_COLORS.length];
-                const teamName = store.getTeamName(i + 1);
-                const isWinner = winnerInfo && !winnerInfo.isTie && score.correct === winnerInfo.maxCorrect && store.numberOfTeams > 1;
+                const teamName = getTeamName(i + 1);
+                const isWinner = winnerInfo && !winnerInfo.isTie && score.correct === winnerInfo.maxCorrect && numberOfTeams > 1;
                 return (
                   <button
                     key={i}
@@ -141,7 +162,7 @@ export default function Summary() {
                     <div className="flex items-center gap-2">
                       {isWinner && <Crown className="w-5 h-5 text-yellow-400" />}
                       <span className={`font-bold text-lg ${color.text} truncate max-w-[8rem]`}>
-                        {store.numberOfTeams > 1 ? teamName : 'Score'}
+                        {numberOfTeams > 1 ? teamName : 'Score'}
                       </span>
                     </div>
                     <div className="flex items-center gap-4">
@@ -164,7 +185,7 @@ export default function Summary() {
                 <div className="flex items-center justify-center gap-2">
                   <Trophy className="w-5 h-5 text-yellow-400" />
                   <span className="font-bold text-yellow-400">
-                    {winnerInfo.isTie ? 'Tie!' : `${store.getTeamName(winnerInfo.winnerTeam)}!`}
+                    {winnerInfo.isTie ? 'Tie!' : `${getTeamName(winnerInfo.winnerTeam)}!`}
                   </span>
                 </div>
               </div>
@@ -174,7 +195,7 @@ export default function Summary() {
 
         {/* Right side - Header + Button */}
         <div className="flex flex-col justify-center items-center gap-6 min-w-[10rem]">
-          {store.isGameFinished ? (
+          {isGameFinished ? (
             <div className="flex flex-col items-center animate-bounce-in">
               <h1 className="text-6xl font-thin tracking-wide transform -rotate-2 leading-tight text-center text-shadow-md">
                 <span className="text-yellow-400">Game</span>
@@ -187,7 +208,7 @@ export default function Summary() {
               <h1 className="text-5xl font-thin tracking-wide transform -rotate-2 leading-none">
                 <RainbowText text="Round" />
               </h1>
-              <span className="text-7xl font-thin text-yellow-400 leading-none mt-2 font-display text-shadow-md">{store.currentRound}</span>
+              <span className="text-7xl font-thin text-yellow-400 leading-none mt-2 font-display text-shadow-md">{currentRound}</span>
               <span className="text-base text-muted-foreground uppercase tracking-widest mt-2">Complete</span>
             </div>
           )}
@@ -197,7 +218,7 @@ export default function Summary() {
             onClick={handleNext}
             data-testid="button-next"
           >
-            {store.isGameFinished ? (
+            {isGameFinished ? (
               <>
                 <RotateCcw className="mr-2 w-5 h-5" /> Play Again
               </>
@@ -217,9 +238,9 @@ export default function Summary() {
       {/* Word List - Full Screen */}
       {selectedTeamIndex !== null && (() => {
         const popupColor = TEAM_THEME_COLORS[selectedTeamIndex % TEAM_THEME_COLORS.length];
-        const popupTeamName = store.getTeamName(selectedTeamIndex + 1);
-        const title = store.numberOfTeams > 1 ? popupTeamName : 'Words';
-        const subtitle = store.isGameFinished ? 'All Rounds' : `Round ${store.currentRound}`;
+        const popupTeamName = getTeamName(selectedTeamIndex + 1);
+        const title = numberOfTeams > 1 ? popupTeamName : 'Words';
+        const subtitle = isGameFinished ? 'All Rounds' : `Round ${currentRound}`;
         return (
           <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col">
             <header className={`p-4 flex items-center border-b ${popupColor.border} backdrop-blur-md`}>

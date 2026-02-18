@@ -10,6 +10,7 @@ import { hapticCorrect, hapticPass } from "@/lib/haptics";
 import { useTiltDetection } from "@/hooks/use-tilt-detection";
 import { parseWordAnswer } from "@/lib/words";
 import { needsPermissionRequest, requestOrientationPermission, isOrientationSupported, lockToLandscape, unlockOrientation } from "@/lib/orientation";
+import { hideStatusBar, showStatusBar } from "@/lib/statusbar";
 
 export default function Game() {
   const [, setLocation] = useLocation();
@@ -272,6 +273,7 @@ export default function Game() {
         wasInPortrait.current = false;
         
         lockToLandscape().then(locked => { if (locked) setShowRotatePrompt(false); });
+        hideStatusBar();
         
         // Permission handling is done by the dedicated hydration-aware effect
         // Only show ready screen here if permission is already confirmed granted
@@ -336,6 +338,7 @@ export default function Game() {
       // Clear any countdown timeouts
       countdownTimeoutsRef.current.forEach(t => clearTimeout(t));
       unlockOrientation();
+      showStatusBar();
     };
   }, [isHydrated]); // Run on mount and when hydration completes
 
@@ -648,7 +651,7 @@ export default function Game() {
   if (!currentWord) return null;
 
   return (
-    <div className={cn("h-screen w-full flex bg-background overflow-hidden relative", "flex-row")}>
+    <div className={cn("h-screen w-full flex bg-background overflow-hidden relative safe-area-x", "flex-row")}>
       {/* Rotate Prompt Overlay */}
       {showRotatePrompt && (
         <div className="absolute inset-0 z-50 bg-background/95 backdrop-blur-sm flex flex-col items-center justify-center space-y-6 p-8">
