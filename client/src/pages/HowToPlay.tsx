@@ -75,7 +75,10 @@ export default function HowToPlay() {
         <h2 className="text-xl font-thin text-purple-400">Study Mode</h2>
         <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
           <li>• Great for language learning, flashcards, and vocabulary practice</li>
-          <li>• Add answers in brackets after the prompt, e.g. "Hola [Hello]"</li>
+          <li>• Format: <span className="text-purple-300">Word (helper text) [answer]</span></li>
+          <li>• Helper text and answers are optional — use what you need</li>
+          <li>• Helper text shows as a hint below the word, e.g. "Hola (greeting)"</li>
+          <li>• Answers in [brackets] are revealed with a tap, e.g. "Hola [Hello]"</li>
           <li>• Tap the card to reveal the answer</li>
           <li>• Tilt is off by default — use the on-screen buttons instead</li>
           <li>• Set the timer to infinite for untimed study sessions</li>

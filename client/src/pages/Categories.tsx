@@ -292,6 +292,16 @@ export default function Categories() {
                     data-testid="toggle-study-create"
                   />
                 </div>
+                {newListIsStudy && (
+                  <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 space-y-2">
+                    <p className="text-purple-300 text-sm font-medium">Formatting Tip</p>
+                    <p className="text-muted-foreground text-sm">
+                      <span className="text-purple-300">Word (helper text) [answer]</span>
+                    </p>
+                    <p className="text-muted-foreground text-xs">Helper text and answers are optional. Use helper text for hints shown below the word, and answers for tap-to-reveal.</p>
+                    <p className="text-muted-foreground text-xs italic">Example: Hola (greeting) [Hello]</p>
+                  </div>
+                )}
                 {ENABLE_CSV_UPLOAD && (
                   <div className="space-y-2">
                     <Label className="text-pink-300">Or Upload CSV</Label>
@@ -379,6 +389,16 @@ export default function Categories() {
                     data-testid="toggle-study-edit"
                   />
                 </div>
+                {editListIsStudy && (
+                  <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 space-y-2">
+                    <p className="text-purple-300 text-sm font-medium">Formatting Tip</p>
+                    <p className="text-muted-foreground text-sm">
+                      <span className="text-purple-300">Word (helper text) [answer]</span>
+                    </p>
+                    <p className="text-muted-foreground text-xs">Helper text and answers are optional. Use helper text for hints shown below the word, and answers for tap-to-reveal.</p>
+                    <p className="text-muted-foreground text-xs italic">Example: Hola (greeting) [Hello]</p>
+                  </div>
+                )}
               </section>
 
               <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
