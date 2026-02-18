@@ -315,7 +315,7 @@ export const useGameStore = create<GameState>()(
       },
 
       nextWord: (correct) => {
-        const { deck, currentWord, roundResults, currentScore, usedWords, currentTeam, teamRoundResults } = get();
+        const { deck, currentWord, roundResults, currentScore, usedWords, currentTeam, teamRoundResults, roundDuration } = get();
         if (!currentWord) return;
 
         const entry = { word: currentWord, correct };
@@ -329,10 +329,26 @@ export const useGameStore = create<GameState>()(
         let finalUsedWords = newUsedWords;
 
         if (newDeck.length === 0) {
-           const reshuffled = [...newUsedWords].sort(() => Math.random() - 0.5);
-           nextWordStr = reshuffled[0];
-           finalDeck = reshuffled;
-           finalUsedWords = [];
+          if (roundDuration === 0) {
+            const teamIndex = currentTeam - 1;
+            const newTeamRoundResults = [...teamRoundResults];
+            newTeamRoundResults[teamIndex] = [...(newTeamRoundResults[teamIndex] || []), entry];
+
+            set({
+              currentScore: newScore,
+              roundResults: newResults,
+              deck: [],
+              usedWords: finalUsedWords,
+              currentWord: null,
+              teamRoundResults: newTeamRoundResults,
+            });
+            get().endRound();
+            return;
+          }
+          const reshuffled = [...newUsedWords].sort(() => Math.random() - 0.5);
+          nextWordStr = reshuffled[0];
+          finalDeck = reshuffled;
+          finalUsedWords = [];
         }
 
         const teamIndex = currentTeam - 1;

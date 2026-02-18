@@ -310,18 +310,10 @@ export default function Game() {
 
   // Timer logic - pause during countdown, ready screen, and permission prompt
   useEffect(() => {
-    if (store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !isHandoff && !showTeamScore && !waitingForPermission) {
-      if (isInfiniteTimer) {
-        timerRef.current = setInterval(() => {
-          setTimeLeft((prev) => prev + 1);
-        }, 1000);
-      } else if (timeLeft > 0) {
-        timerRef.current = setInterval(() => {
-          setTimeLeft((prev) => prev - 1);
-        }, 1000);
-      } else {
-        if (timerRef.current) clearInterval(timerRef.current);
-      }
+    if (!isInfiniteTimer && store.isPlaying && !isPaused && !isCountingDown && !isWaitingForReady && !isHandoff && !showTeamScore && !waitingForPermission && timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
     }
@@ -342,11 +334,13 @@ export default function Game() {
   const teamTransitionPendingRef = useRef(false);
   useEffect(() => {
     const freshState = useGameStore.getState();
-    if (!freshState.isPlaying && !freshState.isRoundOver && !freshState.isGameFinished && !isInfiniteTimer && timeLeft <= 0 && !teamTransitionPendingRef.current) {
+    const timerExpired = !isInfiniteTimer && timeLeft <= 0;
+    const deckExhausted = isInfiniteTimer && !freshState.isPlaying;
+    if (!freshState.isPlaying && !freshState.isRoundOver && !freshState.isGameFinished && (timerExpired || deckExhausted) && !teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = true;
       setShowTeamScore(true);
     }
-  }, [store.isPlaying, store.isRoundOver, store.isGameFinished, timeLeft]);
+  }, [store.isPlaying, store.isRoundOver, store.isGameFinished, timeLeft, isInfiniteTimer]);
 
   // When currentTeam changes (after prepareRound advances team), reset for next team's turn
   const prevTeamRef = useRef(store.currentTeam);
@@ -368,7 +362,7 @@ export default function Game() {
   const lastSoundTimeRef = useRef<number | null>(null);
   useEffect(() => {
     // Only play sounds when playing and not counting down, waiting for ready, waiting for permission, or showing rotate prompt
-    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || isHandoff || showTeamScore || waitingForPermission || showRotatePrompt) return;
+    if (!store.isPlaying || isPaused || isCountingDown || isWaitingForReady || isHandoff || showTeamScore || waitingForPermission || showRotatePrompt || isInfiniteTimer) return;
     
     // Avoid playing the same sound twice for the same timeLeft value
     if (lastSoundTimeRef.current === timeLeft) return;
@@ -768,12 +762,26 @@ export default function Game() {
 
       {/* Left Bar - Timer & Score */}
       <div className="flex flex-col w-auto h-full px-4 py-6 gap-4 border-r border-border justify-center items-center z-20">
-        <div className={cn(
-          "font-black font-mono tracking-tighter text-5xl tabular-nums",
-          timeLeft <= 10 ? "text-destructive animate-pulse" : "text-primary"
-        )}>
-          {String(timeLeft).padStart(2, '\u00A0')}s
-        </div>
+        {isInfiniteTimer ? (
+          <div
+            className="font-black text-5xl leading-none select-none"
+            style={{
+              background: "linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00cc00, #0088ff, #8800ff, #ff0088)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            ∞
+          </div>
+        ) : (
+          <div className={cn(
+            "font-black font-mono tracking-tighter text-5xl tabular-nums",
+            timeLeft <= 10 ? "text-destructive animate-pulse" : "text-primary"
+          )}>
+            {String(timeLeft).padStart(2, '\u00A0')}s
+          </div>
+        )}
 
         <div className="font-black font-mono text-5xl text-accent tabular-nums">
           {store.currentScore}
