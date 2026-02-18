@@ -28,15 +28,11 @@ export default function HowToPlay() {
 
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
         <h2 className="text-xl font-thin text-pink-400">Getting Started</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          One player holds the phone to their forehead and guesses while others give clues (verbal, acting, drawing, impersonation, accents, etc).
-        </p>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Clue givers may not say the word or part of the word.
-        </p>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Tilt forward when you guess correctly or tilt backward to pass.
-        </p>
+        <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
+          <li>• One player holds the phone to their forehead and guesses while others give clues (verbal, acting, drawing, impersonation, accents, etc)</li>
+          <li>• Clue givers may not say the word or part of the word</li>
+          <li>• Tilt forward when you guess correctly or tilt backward to pass</li>
+        </ul>
       </section>
 
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30">
@@ -72,6 +68,18 @@ export default function HowToPlay() {
           <li>• Use accents or impersonation or act out clues</li>
           <li>• House rules are highly encouraged!</li>
           <li>• Edit lists or create your own custom lists</li>
+        </ul>
+      </section>
+
+      <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
+        <h2 className="text-xl font-thin text-purple-400">Study Mode</h2>
+        <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
+          <li>• Great for language learning, flashcards, and vocabulary practice</li>
+          <li>• Add answers in brackets after the prompt, e.g. "Hola [Hello]"</li>
+          <li>• Tap the card to reveal the answer</li>
+          <li>• Tilt is off by default — use the on-screen buttons instead</li>
+          <li>• Set the timer to infinite for untimed study sessions</li>
+          <li>• Mark a category as Study Mode when creating or editing a list</li>
         </ul>
       </section>
     </>
