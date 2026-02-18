@@ -881,7 +881,7 @@ export default function Game() {
       )}
 
       {/* Game Area */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-6 z-10">
+      <div className="flex-1 flex flex-col items-center justify-center p-3 z-10 min-w-0">
         {(() => {
           const parsed = store.currentWord ? parseWordAnswer(store.currentWord) : null;
           const hasAnswer = parsed?.answer != null;
