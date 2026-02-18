@@ -292,8 +292,8 @@ export default function Categories() {
 
       {/* Create Custom List - Full Screen */}
       {isDialogOpen && (
-        <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col">
-          <header className="p-4 flex items-center border-b border-pink-500/30 bg-pink-900/20 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col safe-area-top">
+          <header className="p-4 flex items-center border-b border-pink-500/30 bg-pink-900/20 backdrop-blur-md safe-area-x">
             <Button variant="ghost" size="icon" className="text-pink-400 hover:text-pink-300 hover:bg-pink-500/20" onClick={() => setIsDialogOpen(false)}>
               <ArrowLeft className="w-6 h-6" />
             </Button>
@@ -360,8 +360,8 @@ export default function Categories() {
 
       {/* Edit List - Full Screen */}
       {isEditDialogOpen && (
-        <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col">
-          <header className="p-4 flex items-center border-b border-yellow-500/30 bg-yellow-900/20 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 bg-gradient-to-b from-background to-card flex flex-col safe-area-top">
+          <header className="p-4 flex items-center border-b border-yellow-500/30 bg-yellow-900/20 backdrop-blur-md safe-area-x">
             <Button variant="ghost" size="icon" className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20" onClick={() => setIsEditDialogOpen(false)}>
               <ArrowLeft className="w-6 h-6" />
             </Button>

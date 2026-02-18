@@ -90,13 +90,13 @@ export default function HowToPlay() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-card flex flex-col safe-area-top">
-      <header className="p-4 flex items-center border-b border-cyan-500/30 bg-cyan-900/20 backdrop-blur-md sticky top-0 z-10 safe-area-x">
+      <header className="p-4 flex items-center border-b border-yellow-500/30 bg-yellow-900/20 backdrop-blur-md sticky top-0 z-10 safe-area-x">
         <Link href="/">
-          <Button variant="ghost" size="icon" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/20" data-testid="button-back">
+          <Button variant="ghost" size="icon" className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20" data-testid="button-back">
             <ArrowLeft className="w-6 h-6" />
           </Button>
         </Link>
-        <h1 className="text-2xl font-thin ml-4 text-cyan-400" data-testid="text-title">How to Play</h1>
+        <h1 className="text-2xl font-thin ml-4 text-yellow-400" data-testid="text-title">How to Play</h1>
       </header>
 
       <ScrollArea className="flex-1 p-6 w-full">
