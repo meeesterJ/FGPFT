@@ -41,7 +41,8 @@ function MainScreen({ onStart }: { onStart: () => void }) {
   if (isLandscape) {
     return (
       <motion.div
-        className="h-[100dvh] flex flex-row items-center px-8 bg-gradient-to-b from-background to-card overflow-hidden safe-area-x"
+        className="fixed inset-0 flex flex-row items-center px-8 bg-gradient-to-b from-background to-card overflow-hidden safe-area-x"
+        style={{ touchAction: 'none', overscrollBehavior: 'none' }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
@@ -102,7 +103,8 @@ function MainScreen({ onStart }: { onStart: () => void }) {
 
   return (
     <motion.div
-      className="h-[100dvh] flex flex-col items-center px-4 bg-gradient-to-b from-background to-card overflow-hidden"
+      className="fixed inset-0 flex flex-col items-center px-4 bg-gradient-to-b from-background to-card overflow-hidden"
+      style={{ touchAction: 'none', overscrollBehavior: 'none' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
