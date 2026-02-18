@@ -58,7 +58,7 @@ export default function Game() {
   const [showRotatePrompt, setShowRotatePrompt] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [needsIOSPermission, setNeedsIOSPermission] = useState(false);
-  const [countdown, setCountdown] = useState<number | "Go!" | null>(null);
+  const [countdownKey, setCountdownKey] = useState(0);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [waitingForPermission, setWaitingForPermission] = useState(false);
   const [isWaitingForReady, setIsWaitingForReady] = useState(false);
@@ -487,10 +487,6 @@ export default function Game() {
     return getWordFontSize(parsedWord.prompt);
   }, [parsedWord, getWordFontSize]);
 
-  useEffect(() => {
-    setAnswerRevealed(false);
-  }, [currentWord]);
-
   const handleCorrect = async () => {
     if (isProcessing || !isPlaying || isCountingDown) return;
     setIsProcessing(true);
@@ -500,6 +496,7 @@ export default function Game() {
     initAudioContext();
     feedbackCorrect();
     setTimeout(() => {
+      setAnswerRevealed(false);
       nextWord(true);
       setTiltFeedback(null);
       setIsProcessing(false);
@@ -515,6 +512,7 @@ export default function Game() {
     initAudioContext();
     feedbackPass();
     setTimeout(() => {
+      setAnswerRevealed(false);
       nextWord(false);
       setTiltFeedback(null);
       setIsProcessing(false);
@@ -623,18 +621,15 @@ export default function Game() {
     isCalibratingRef.current = false;
     
     setIsCountingDown(true);
-    setCountdown(3);
+    setCountdownKey(k => k + 1);
     
     // Play countdown sound at start of countdown sequence
     if (soundEnabled) {
       playSound('countdown', soundVolume);
     }
     
-    countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(2), 1000));
-    countdownTimeoutsRef.current.push(setTimeout(() => setCountdown(1), 2000));
-    countdownTimeoutsRef.current.push(setTimeout(() => setCountdown("Go!"), 3000));
+    // Single timeout at the end — the countdown visuals are pure CSS animation (no intermediate state changes)
     countdownTimeoutsRef.current.push(setTimeout(() => {
-      setCountdown(null);
       setIsCountingDown(false);
       isCountdownActiveRef.current = false;
       hasShownInitialCountdownRef.current = true;
@@ -820,14 +815,21 @@ export default function Game() {
         );
       })()}
 
-      {/* Countdown Overlay */}
-      {countdown !== null && (
-        <div className="absolute inset-0 z-50 bg-background flex items-center justify-center">
-          <div className="text-center animate-bounce-in" key={countdown}>
-            <h1 className="text-[14rem] font-thin text-yellow-400 leading-none" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
-              {countdown}
+      {/* Countdown Overlay — pure CSS animation, no intermediate React state changes */}
+      {isCountingDown && (
+        <div className="absolute inset-0 z-50 bg-background flex items-center justify-center" key={countdownKey}>
+          {["3", "2", "1", "Go!"].map((label, i) => (
+            <h1
+              key={label}
+              className="absolute text-[14rem] font-thin text-yellow-400 leading-none countdown-step"
+              style={{
+                textShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                animationDelay: `${i * 1000}ms`,
+              }}
+            >
+              {label}
             </h1>
-          </div>
+          ))}
         </div>
       )}
 

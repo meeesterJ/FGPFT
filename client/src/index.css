@@ -55,6 +55,14 @@
     0% { transform: translateY(20px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
   }
+
+  @keyframes countdown-step {
+    0% { opacity: 0; transform: scale(0.7); }
+    8% { opacity: 1; transform: scale(1.05); }
+    15% { transform: scale(1); }
+    85% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.9); }
+  }
 }
 
 /* High Contrast / Party Theme */
@@ -149,6 +157,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .rainbow-letter {
   text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.countdown-step {
+  opacity: 0;
+  animation: countdown-step 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .word-container-fixed {
