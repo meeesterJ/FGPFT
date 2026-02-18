@@ -699,7 +699,10 @@ export default function Game() {
         const readyTeamName = store.numberOfTeams > 1 ? store.getTeamName(store.currentTeam) : null;
         const readyNameWords = readyTeamName ? readyTeamName.split(' ') : [];
         return (
-          <div className="absolute inset-0 z-50 bg-background flex flex-col">
+          <div 
+            className={cn("absolute inset-0 z-50 bg-background flex flex-col", store.studyMode && "cursor-pointer")}
+            onClick={store.studyMode ? onReady : undefined}
+          >
             <div className="flex-1 flex flex-row items-center justify-center px-8">
               {/* Left: Team name - one line per word */}
               {readyTeamColor && readyNameWords.length > 0 && (
@@ -727,13 +730,18 @@ export default function Game() {
 
             {/* Bottom: Tilt instructions / Play button */}
             <div className="pb-6 flex flex-col items-center justify-center gap-3">
-              {hasDeviceOrientation && (
+              {hasDeviceOrientation && !store.studyMode && (
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Smartphone className="w-5 h-5 animate-bounce" style={{ animationDuration: '1.5s' }} />
                   <span className="text-base">Tilt forward to start</span>
                 </div>
               )}
-              {store.showButtons && (
+              {store.studyMode && (
+                <div className="flex items-center gap-3 text-muted-foreground animate-pulse">
+                  <span className="text-base">Tap anywhere to start</span>
+                </div>
+              )}
+              {store.showButtons && !store.studyMode && (
                 <button 
                   onClick={onReady}
                   className="px-12 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 active:bg-pink-600 text-white border-2 border-pink-400 shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
