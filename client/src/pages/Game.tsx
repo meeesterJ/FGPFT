@@ -338,7 +338,17 @@ export default function Game() {
     const deckExhausted = isInfiniteTimer && !freshState.isPlaying && freshState.roundResults.length > 0;
     if (!freshState.isPlaying && !freshState.isRoundOver && !freshState.isGameFinished && (timerExpired || deckExhausted) && !teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = true;
-      setShowTeamScore(true);
+      if (deckExhausted && freshState.numberOfTeams <= 1) {
+        const isLastRound = freshState.currentRound >= freshState.totalRounds;
+        if (isLastRound) {
+          freshState.prepareRound();
+        } else {
+          useGameStore.setState({ isRoundOver: true });
+        }
+        teamTransitionPendingRef.current = false;
+      } else {
+        setShowTeamScore(true);
+      }
     }
   }, [store.isPlaying, store.isRoundOver, store.isGameFinished, timeLeft, isInfiniteTimer]);
 
