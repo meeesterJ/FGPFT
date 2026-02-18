@@ -364,7 +364,7 @@ export default function Game() {
   useEffect(() => {
     const freshState = useGameStore.getState();
     const timerExpired = !isInfiniteTimer && timeLeft <= 0;
-    const deckExhausted = isInfiniteTimer && !freshState.isPlaying && freshState.roundResults.length > 0;
+    const deckExhausted = (isInfiniteTimer || freshState.studyMode) && !freshState.isPlaying && freshState.roundResults.length > 0;
     if (!freshState.isPlaying && !freshState.isRoundOver && !freshState.isGameFinished && (timerExpired || deckExhausted) && !teamTransitionPendingRef.current) {
       teamTransitionPendingRef.current = true;
       if (deckExhausted && freshState.numberOfTeams <= 1) {

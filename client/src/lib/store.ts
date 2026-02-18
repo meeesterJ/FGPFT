@@ -341,7 +341,7 @@ export const useGameStore = create<GameState>()(
         let finalUsedWords = newUsedWords;
 
         if (newDeck.length === 0) {
-          if (roundDuration === 0) {
+          if (roundDuration === 0 || get().studyMode) {
             const teamIndex = currentTeam - 1;
             const newTeamRoundResults = [...teamRoundResults];
             newTeamRoundResults[teamIndex] = [...(newTeamRoundResults[teamIndex] || []), entry];
