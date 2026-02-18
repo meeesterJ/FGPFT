@@ -441,5 +441,30 @@ export const DEFAULT_WORD_LISTS: { id: string; name: string; words: string[]; is
       'cultura [culture]', 'fiesta [holiday]', 'Año Nuevo [New Year]',
       'Día de Muertos [Day of the Dead]', 'Año del Dragón [Year of the Dragon]', 'salud [health]'
     ]
+  },
+  {
+    id: 'study-test',
+    name: 'Study Test',
+    isStudy: true,
+    words: [
+      'H₂O (chemical formula) [water]',
+      'Mitochondria (organelle) [powerhouse of the cell]',
+      '1776 (year) [American independence]',
+      'Au (periodic table) [gold]',
+      'Photosynthesis (biology) [plants converting sunlight to energy]',
+      'π (Greek letter) [ratio of circumference to diameter]',
+      'DNA (abbreviation) [deoxyribonucleic acid]',
+      'Newton (scientist) [laws of motion and gravity]',
+      'Habitat (ecology) [natural environment of an organism]',
+      'Sonnet (literature) [14-line poem]'
+    ]
   }
 ];
+
+export function parseWordAnswer(word: string): { prompt: string; answer: string | null } {
+  const match = word.match(/^(.*?)\s*\[([^\]]+)\]\s*$/);
+  if (!match) {
+    return { prompt: word.trim(), answer: null };
+  }
+  return { prompt: match[1].trim(), answer: match[2].trim() };
+}
