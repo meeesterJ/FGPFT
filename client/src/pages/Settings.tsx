@@ -237,7 +237,7 @@ export default function Settings() {
       {isStandalone && (
         <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-thin text-green-400">Haptic Feedback</h2>
+            <h2 className="text-xl font-thin text-green-400">Vibration</h2>
             <Switch 
               checked={store.hapticEnabled}
               onCheckedChange={store.setHapticEnabled}
