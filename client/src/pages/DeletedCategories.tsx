@@ -4,12 +4,10 @@ import { useGameStore } from "@/lib/store";
 import { DEFAULT_WORD_LISTS } from "@/lib/words";
 import { ArrowLeft, Trash2, RotateCcw } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useToast } from "@/hooks/use-toast";
 import { useSwipeBack } from "@/hooks/use-swipe-back";
 
 export default function DeletedCategories() {
   useSwipeBack({ targetPath: "/categories" });
-  const { toast } = useToast();
   const store = useGameStore();
 
   const deletedLists = DEFAULT_WORD_LISTS.filter(l => 
@@ -19,18 +17,16 @@ export default function DeletedCategories() {
 
   const handleRestore = (list: typeof DEFAULT_WORD_LISTS[0]) => {
     store.restoreBuiltInList(list.id);
-    toast({ title: "Restored", description: `"${list.name}" has been restored.` });
   };
 
   const handlePermanentDelete = (list: typeof DEFAULT_WORD_LISTS[0]) => {
     store.permanentlyDeleteBuiltInList(list.id);
-    toast({ title: "Permanently Deleted", description: `"${list.name}" has been permanently removed.` });
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="p-4 flex items-center border-b border-border bg-card/50 backdrop-blur-md sticky top-0 z-10">
-        <Link href="/settings">
+        <Link href="/categories">
           <Button variant="ghost" size="icon" data-testid="button-back">
             <ArrowLeft className="w-6 h-6" />
           </Button>
