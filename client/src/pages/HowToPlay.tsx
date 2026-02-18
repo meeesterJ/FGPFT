@@ -48,8 +48,8 @@ export default function HowToPlay() {
 
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
         <h2 className="text-xl font-thin text-green-400">Categories</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">Customize your own lists!</p>
         <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
+          <li>• Customize your own lists!</li>
           <li>• Edit existing lists to add or remove words</li>
           <li>• Add brand new lists with your own themes</li>
           <li>• Add words one at a time or in bulk*</li>
