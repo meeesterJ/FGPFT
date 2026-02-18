@@ -137,8 +137,8 @@ export default function Summary() {
       
       <button 
         onClick={handleHome}
-        className="absolute top-3 z-20 p-2 rounded-full bg-card/80 hover:bg-card border border-border shadow-lg hover:scale-110 transition-transform"
-        style={{ left: 'max(0.75rem, env(safe-area-inset-left, 0.5rem))' }}
+        className="absolute z-20 p-2 rounded-full bg-card/80 hover:bg-card border border-border shadow-lg hover:scale-110 transition-transform"
+        style={{ top: 'calc(1.25rem + env(safe-area-inset-top, 0px))', left: 'calc(1rem + env(safe-area-inset-left, 0px))' }}
         data-testid="button-home"
       >
         <Home className="w-6 h-6 text-foreground" />

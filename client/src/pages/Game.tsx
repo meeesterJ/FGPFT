@@ -842,15 +842,15 @@ export default function Game() {
           resetGame();
           setLocation("/");
         }}
-        className="absolute top-3 z-30 p-2 rounded-full bg-card/80 hover:bg-card border border-border shadow-lg hover:scale-110 transition-transform"
-        style={{ left: 'max(0.75rem, env(safe-area-inset-left, 0.5rem))' }}
+        className="absolute z-30 p-2 rounded-full bg-card/80 hover:bg-card border border-border shadow-lg hover:scale-110 transition-transform"
+        style={{ top: 'calc(1.25rem + env(safe-area-inset-top, 0px))', left: 'calc(1rem + env(safe-area-inset-left, 0px))' }}
         data-testid="button-home"
       >
         <Home className="w-5 h-5 text-foreground" />
       </button>
 
       {/* Left Bar - Timer & Score */}
-      <div className="flex flex-col w-auto h-full pl-3 pr-1 py-6 gap-4 border-r border-border justify-center items-center z-20 shrink-0">
+      <div className="flex flex-col w-auto h-full pl-1 pr-1 py-6 gap-4 border-r border-border justify-center items-center z-20 shrink-0">
         {isInfiniteTimer ? (
           <div
             className="font-black text-5xl leading-none select-none"
