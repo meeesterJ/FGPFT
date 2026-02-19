@@ -14,6 +14,7 @@ function SplashScreen({ onTap }: { onTap: () => void }) {
   return (
     <motion.div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-card"
+      style={{ bottom: 'calc(0px - env(safe-area-inset-bottom, 0px))' }}
       onClick={onTap}
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -42,7 +43,7 @@ function MainScreen({ onStart }: { onStart: () => void }) {
     return (
       <motion.div
         className="fixed inset-0 flex flex-row items-center px-8 bg-gradient-to-b from-background to-card overflow-hidden safe-area-x"
-        style={{ touchAction: 'none', overscrollBehavior: 'none' }}
+        style={{ touchAction: 'none', overscrollBehavior: 'none', bottom: 'calc(0px - env(safe-area-inset-bottom, 0px))' }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
@@ -104,7 +105,7 @@ function MainScreen({ onStart }: { onStart: () => void }) {
   return (
     <motion.div
       className="fixed inset-0 flex flex-col items-center px-4 bg-gradient-to-b from-background to-card overflow-hidden"
-      style={{ touchAction: 'none', overscrollBehavior: 'none' }}
+      style={{ touchAction: 'none', overscrollBehavior: 'none', bottom: 'calc(0px - env(safe-area-inset-bottom, 0px))' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -199,7 +200,7 @@ export default function Home() {
   };
 
   return (
-    <div data-testid="home-container" className="fixed inset-0 bg-card">
+    <div data-testid="home-container" className="fixed inset-0 bg-gradient-to-b from-background to-card" style={{ bottom: 'calc(0px - env(safe-area-inset-bottom, 0px))' }}>
       <AnimatePresence mode="wait">
         {!splashDismissed ? (
           <SplashScreen key="splash" onTap={handleSplashTap} />
