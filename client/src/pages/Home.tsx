@@ -199,7 +199,7 @@ export default function Home() {
   };
 
   return (
-    <div data-testid="home-container">
+    <div data-testid="home-container" className="fixed inset-0 bg-card">
       <AnimatePresence mode="wait">
         {!splashDismissed ? (
           <SplashScreen key="splash" onTap={handleSplashTap} />
