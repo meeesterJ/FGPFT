@@ -2,7 +2,7 @@
 
 ## Overview
 
-Guess Party! is a mobile-friendly party guessing game built as a single-page application. Players take turns guessing words from customizable word lists within a time limit, using device tilt gestures to mark correct/incorrect answers. The game supports multiple rounds, custom word lists, and tracks scores across game sessions.
+Guess Party! is a mobile-friendly party guessing game and study tool built as a single-page application. Players take turns guessing words from customizable word lists within a time limit, using device tilt gestures or on-screen buttons to mark correct/incorrect answers. The game supports multiple rounds, custom word lists, team scoring, and tracks scores across game sessions. Study Mode enables language learning and flashcard-style review with formatted cards featuring helper text and hidden answers. Launched with 27 curated categories (9 game, 18 study) totaling 2,187 words.
 
 ## User Preferences
 
@@ -38,10 +38,12 @@ The server uses a storage abstraction pattern (`IStorage` interface) allowing ea
 - **Current State**: Uses `MemStorage` class for in-memory user data; database can be enabled by implementing `DatabaseStorage`
 
 ### Key Game Features
-- Device orientation detection for tilt-based answer input
+- Device orientation detection for tilt-based answer input, with toggleable on-screen button controls as alternative
 - Configurable round duration (timer) and total rounds (1-5)
 - **Team Mode**: Always active (no toggle). Number of teams configurable 1-5 (default: 1). Each round cycles through all teams. Round summary shows per-team correct/passed counts with clickable word list popup. Winner declaration shown when 2+ teams. Game end shows overall winner (most total correct). Per-team word results tracked via teamRoundResults and teamGameResults.
-- Built-in word lists (Movies, Animals, Actions, Household Objects)
+- **Study Mode**: Dedicated mode for learning/review. Study categories support formatted cards with optional helper text (in parentheses) and hidden answers (in brackets) revealed on tap. Sound defaults OFF in Study Mode, ON in Game Mode, auto-toggling when mode changes.
+- 27 built-in categories: 9 game mode (Movies, Animals, Actions, Household Objects, Landforms, Human Body, Space, Ancient World, Mythology) and 18 study mode (Vietnamese, Chinese, Spanish, Chemistry, US History, World Capitals, Geopolitics, Pioneers, and more)
+- Word data split across `words.ts` (game categories) and `study-words.ts` (study categories), both exporting into DEFAULT_WORD_LISTS
 - Custom word list creation with CSV import support
 - Soft-delete and permanent delete for built-in categories
 

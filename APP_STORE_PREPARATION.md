@@ -8,7 +8,7 @@ This document outlines the steps to publish your app to the Apple App Store.
 ## What's Already Done ✓
 
 ### Code Optimization
-- Removed 26 unused UI component files to reduce bundle size
+- Removed 39 unused UI component and data files to reduce bundle size
 - Platform abstraction layer ready for Capacitor (iOS/Android detection)
 - Native haptics integration hooks prepared
 - iOS orientation permission handling implemented
@@ -75,8 +75,8 @@ npx cap open ios
 2. Create a new app with Bundle ID: `com.kjasken.familyguessparty`
 3. Fill in app information:
    - **Name**: Family Guess Party Fun Time
-   - **Subtitle**: The Ultimate Party Guessing Game
-   - **Category**: Games → Party
+   - **Subtitle**: Party Game & Study Tool with Tilt Controls
+   - **Category**: Games → Party (secondary: Education)
    - **Age Rating**: 4+ (no objectionable content)
    - **Copyright**: © 2025 K Jasken and Associates, LLC
 
@@ -92,17 +92,26 @@ You'll need screenshots for:
 ### 7. App Description (Suggested)
 
 **Short Description:**
-The ultimate party guessing game for families and friends!
+Party guessing game & study tool for families and friends!
 
 **Full Description:**
 Get ready for endless fun with Family Guess Party Fun Time! One player holds the phone to their forehead while others give clues. Tilt forward when you guess correctly, tilt back to pass!
 
+GAME MODE — 9 built-in categories for classic party fun:
+Movies, Animals, Actions, Household Objects, Landforms, Human Body, Space, Ancient World, and Mythology.
+
+STUDY MODE — 18 study categories for learning on the go:
+Vietnamese, Chinese characters, Spanish vocabulary, chemistry, US history, world capitals, geopolitics, pioneering figures, and more. Study cards support helper text and hidden answers for self-quizzing.
+
 Features:
-• Intuitive tilt controls for hands-free gameplay
-• Customizable word lists - create your own or use built-ins
+• Intuitive tilt controls or on-screen buttons — your choice
+• 27 built-in categories with 2,187+ words
+• Study Mode with formatted cards, helper text, and answer reveals
+• Customizable word lists — create your own or import from CSV
 • Adjustable timer and round settings
+• Team mode with score tracking and winner declarations
 • Beautiful, high-contrast display optimized for party environments
-• Sound and haptic feedback
+• Sound and haptic feedback (auto-configured per mode)
 • Works great on iPhone and iPad
 
 Perfect for:
@@ -111,11 +120,14 @@ Perfect for:
 • Road trips
 • Team building events
 • Holiday gatherings
+• Language learning & vocabulary practice
+• Classroom review & study sessions
+• Test prep & flashcard drills
 
-No ads, no in-app purchases - just pure fun!
+No ads, no in-app purchases — just pure fun and learning!
 
 **Keywords:**
-guessing game, party game, family game, charades, heads up, trivia, word game
+guessing game, party game, family game, charades, heads up, trivia, word game, study, flashcards, vocabulary, language learning
 
 ### 8. TestFlight Beta Testing
 1. Archive your app in Xcode (Product → Archive)
