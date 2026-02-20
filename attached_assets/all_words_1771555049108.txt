@@ -1,0 +1,2188 @@
+Word	Category	Study
+Dancing	Charades - Actions	
+Swimming	Charades - Actions	
+Cooking	Charades - Actions	
+Driving	Charades - Actions	
+Fishing	Charades - Actions	
+Skiing	Charades - Actions	
+Typing	Charades - Actions	
+Painting	Charades - Actions	
+Singing	Charades - Actions	
+Sleeping	Charades - Actions	
+Running	Charades - Actions	
+Jumping	Charades - Actions	
+Eating	Charades - Actions	
+Drinking	Charades - Actions	
+Reading	Charades - Actions	
+Writing	Charades - Actions	
+Cleaning	Charades - Actions	
+Shopping	Charades - Actions	
+Crying	Charades - Actions	
+Laughing	Charades - Actions	
+Sneezing	Charades - Actions	
+Yawning	Charades - Actions	
+Stretching	Charades - Actions	
+Whistling	Charades - Actions	
+Clapping	Charades - Actions	
+Waving	Charades - Actions	
+Hugging	Charades - Actions	
+Kissing	Charades - Actions	
+Shaking Hands	Charades - Actions	
+High-Fiving	Charades - Actions	
+Climbing	Charades - Actions	
+Crawling	Charades - Actions	
+Skipping	Charades - Actions	
+Hopping	Charades - Actions	
+Tiptoeing	Charades - Actions	
+Surfing	Charades - Actions	
+Skateboarding	Charades - Actions	
+Bowling	Charades - Actions	
+Golfing	Charades - Actions	
+Boxing	Charades - Actions	
+Wrestling	Charades - Actions	
+Juggling	Charades - Actions	
+Magic Trick	Charades - Actions	
+Blowing Bubbles	Charades - Actions	
+Flying a Kite	Charades - Actions	
+Riding a Bike	Charades - Actions	
+Rowing a Boat	Charades - Actions	
+Paddling a Canoe	Charades - Actions	
+Ice Skating	Charades - Actions	
+Roller Skating	Charades - Actions	
+Snowboarding	Charades - Actions	
+Rock Climbing	Charades - Actions	
+Bungee Jumping	Charades - Actions	
+Parachuting	Charades - Actions	
+Scuba Diving	Charades - Actions	
+Snorkeling	Charades - Actions	
+Horseback Riding	Charades - Actions	
+Weightlifting	Charades - Actions	
+Doing Yoga	Charades - Actions	
+Meditating	Charades - Actions	
+Taking a Selfie	Charades - Actions	
+Texting	Charades - Actions	
+Video Calling	Charades - Actions	
+Playing Video Games	Charades - Actions	
+Knitting	Charades - Actions	
+Sewing	Charades - Actions	
+Ironing	Charades - Actions	
+Vacuuming	Charades - Actions	
+Mopping	Charades - Actions	
+Gardening	Charades - Actions	
+Planting Flowers	Charades - Actions	
+Mowing the Lawn	Charades - Actions	
+Raking Leaves	Charades - Actions	
+Shoveling Snow	Charades - Actions	
+Washing Dishes	Charades - Actions	
+Brushing Teeth	Charades - Actions	
+Combing Hair	Charades - Actions	
+Shaving	Charades - Actions	
+Putting on Makeup	Charades - Actions	
+Tying Shoes	Charades - Actions	
+Pizza	Charades - Food & Snacks	
+Spaghetti	Charades - Food & Snacks	
+Hamburger	Charades - Food & Snacks	
+Hot Dog	Charades - Food & Snacks	
+Taco	Charades - Food & Snacks	
+Burrito	Charades - Food & Snacks	
+Nachos	Charades - Food & Snacks	
+French Fries	Charades - Food & Snacks	
+Chicken Nuggets	Charades - Food & Snacks	
+Popcorn	Charades - Food & Snacks	
+Ice Cream Cone	Charades - Food & Snacks	
+Popsicle	Charades - Food & Snacks	
+Lollipop	Charades - Food & Snacks	
+Cotton Candy	Charades - Food & Snacks	
+Cupcake	Charades - Food & Snacks	
+Birthday Cake	Charades - Food & Snacks	
+Donut	Charades - Food & Snacks	
+Cookie	Charades - Food & Snacks	
+Brownie	Charades - Food & Snacks	
+Candy Bar	Charades - Food & Snacks	
+Gummy Bears	Charades - Food & Snacks	
+Jelly Beans	Charades - Food & Snacks	
+Chocolate	Charades - Food & Snacks	
+Marshmallow	Charades - Food & Snacks	
+S'mores	Charades - Food & Snacks	
+Apple	Charades - Food & Snacks	
+Banana	Charades - Food & Snacks	
+Orange	Charades - Food & Snacks	
+Grapes	Charades - Food & Snacks	
+Watermelon	Charades - Food & Snacks	
+Strawberry	Charades - Food & Snacks	
+Pineapple	Charades - Food & Snacks	
+Cherry	Charades - Food & Snacks	
+Lemon	Charades - Food & Snacks	
+Coconut	Charades - Food & Snacks	
+Corn on the Cob	Charades - Food & Snacks	
+Carrot	Charades - Food & Snacks	
+Broccoli	Charades - Food & Snacks	
+Celery Stick	Charades - Food & Snacks	
+Pickle	Charades - Food & Snacks	
+Sandwich	Charades - Food & Snacks	
+Grilled Cheese	Charades - Food & Snacks	
+PB&J	Charades - Food & Snacks	
+BLT	Charades - Food & Snacks	
+Sub Sandwich	Charades - Food & Snacks	
+Sushi	Charades - Food & Snacks	
+Ramen Noodles	Charades - Food & Snacks	
+Fried Rice	Charades - Food & Snacks	
+Egg Roll	Charades - Food & Snacks	
+Fortune Cookie	Charades - Food & Snacks	
+Pancakes	Charades - Food & Snacks	
+Waffles	Charades - Food & Snacks	
+French Toast	Charades - Food & Snacks	
+Cereal	Charades - Food & Snacks	
+Oatmeal	Charades - Food & Snacks	
+Bacon	Charades - Food & Snacks	
+Scrambled Eggs	Charades - Food & Snacks	
+Fried Egg	Charades - Food & Snacks	
+Toast	Charades - Food & Snacks	
+Bagel	Charades - Food & Snacks	
+Pretzel	Charades - Food & Snacks	
+Soft Pretzel	Charades - Food & Snacks	
+Chips	Charades - Food & Snacks	
+Crackers	Charades - Food & Snacks	
+Cheese Puffs	Charades - Food & Snacks	
+Milkshake	Charades - Food & Snacks	
+Smoothie	Charades - Food & Snacks	
+Slushie	Charades - Food & Snacks	
+Soda Pop	Charades - Food & Snacks	
+Juice Box	Charades - Food & Snacks	
+Lemonade	Charades - Food & Snacks	
+Hot Chocolate	Charades - Food & Snacks	
+Coffee	Charades - Food & Snacks	
+Tea	Charades - Food & Snacks	
+Milk	Charades - Food & Snacks	
+Soup	Charades - Food & Snacks	
+Chili	Charades - Food & Snacks	
+Mac and Cheese	Charades - Food & Snacks	
+Mashed Potatoes	Charades - Food & Snacks	
+Gravy	Charades - Food & Snacks	
+Fried Chicken	Charades - Food & Snacks	
+Chicken Wings	Charades - Food & Snacks	
+Ribs	Charades - Food & Snacks	
+Steak	Charades - Food & Snacks	
+Meatballs	Charades - Food & Snacks	
+Fish Sticks	Charades - Food & Snacks	
+Shrimp	Charades - Food & Snacks	
+Lobster	Charades - Food & Snacks	
+Crab Legs	Charades - Food & Snacks	
+Clam Chowder	Charades - Food & Snacks	
+Cheese	Charades - Food & Snacks	
+String Cheese	Charades - Food & Snacks	
+Cheese Pizza	Charades - Food & Snacks	
+Pepperoni Pizza	Charades - Food & Snacks	
+Cheese Quesadilla	Charades - Food & Snacks	
+Funnel Cake	Charades - Food & Snacks	
+Churro	Charades - Food & Snacks	
+Cinnamon Roll	Charades - Food & Snacks	
+Apple Pie	Charades - Food & Snacks	
+Ice Cream Sundae	Charades - Food & Snacks	
+Dog	Charades - Animals	
+Cat	Charades - Animals	
+Bunny	Charades - Animals	
+Hamster	Charades - Animals	
+Goldfish	Charades - Animals	
+Puppy	Charades - Animals	
+Kitten	Charades - Animals	
+Duckling	Charades - Animals	
+Chick	Charades - Animals	
+Piglet	Charades - Animals	
+Horse	Charades - Animals	
+Pony	Charades - Animals	
+Cow	Charades - Animals	
+Pig	Charades - Animals	
+Sheep	Charades - Animals	
+Goat	Charades - Animals	
+Chicken	Charades - Animals	
+Rooster	Charades - Animals	
+Duck	Charades - Animals	
+Goose	Charades - Animals	
+Frog	Charades - Animals	
+Toad	Charades - Animals	
+Turtle	Charades - Animals	
+Snail	Charades - Animals	
+Caterpillar	Charades - Animals	
+Butterfly	Charades - Animals	
+Ladybug	Charades - Animals	
+Bee	Charades - Animals	
+Ant	Charades - Animals	
+Spider	Charades - Animals	
+Lion	Charades - Animals	
+Tiger	Charades - Animals	
+Bear	Charades - Animals	
+Elephant	Charades - Animals	
+Giraffe	Charades - Animals	
+Zebra	Charades - Animals	
+Hippo	Charades - Animals	
+Rhino	Charades - Animals	
+Gorilla	Charades - Animals	
+Monkey	Charades - Animals	
+Kangaroo	Charades - Animals	
+Koala	Charades - Animals	
+Panda	Charades - Animals	
+Sloth	Charades - Animals	
+Penguin	Charades - Animals	
+Polar Bear	Charades - Animals	
+Seal	Charades - Animals	
+Walrus	Charades - Animals	
+Otter	Charades - Animals	
+Beaver	Charades - Animals	
+Dolphin	Charades - Animals	
+Whale	Charades - Animals	
+Shark	Charades - Animals	
+Octopus	Charades - Animals	
+Jellyfish	Charades - Animals	
+Starfish	Charades - Animals	
+Crab	Charades - Animals	
+Lobster	Charades - Animals	
+Seahorse	Charades - Animals	
+Clownfish	Charades - Animals	
+Eagle	Charades - Animals	
+Owl	Charades - Animals	
+Parrot	Charades - Animals	
+Flamingo	Charades - Animals	
+Peacock	Charades - Animals	
+Toucan	Charades - Animals	
+Hummingbird	Charades - Animals	
+Swan	Charades - Animals	
+Pelican	Charades - Animals	
+Woodpecker	Charades - Animals	
+Snake	Charades - Animals	
+Lizard	Charades - Animals	
+Alligator	Charades - Animals	
+Crocodile	Charades - Animals	
+Chameleon	Charades - Animals	
+T-Rex	Charades - Animals	
+Triceratops	Charades - Animals	
+Pterodactyl	Charades - Animals	
+Brontosaurus	Charades - Animals	
+Velociraptor	Charades - Animals	
+Unicorn	Charades - Animals	
+Dragon	Charades - Animals	
+Pegasus	Charades - Animals	
+Phoenix	Charades - Animals	
+Mermaid	Charades - Animals	
+Wolf	Charades - Animals	
+Fox	Charades - Animals	
+Deer	Charades - Animals	
+Moose	Charades - Animals	
+Reindeer	Charades - Animals	
+Squirrel	Charades - Animals	
+Chipmunk	Charades - Animals	
+Raccoon	Charades - Animals	
+Skunk	Charades - Animals	
+Hedgehog	Charades - Animals	
+Bat	Charades - Animals	
+Mouse	Charades - Animals	
+Cheetah	Charades - Animals	
+Camel	Charades - Animals	
+Llama	Charades - Animals	
+Alligator	Animals - Easy	
+Ant	Animals - Easy	
+Anteater	Animals - Easy	
+Bat	Animals - Easy	
+Bear	Animals - Easy	
+Beaver	Animals - Easy	
+Bee	Animals - Easy	
+Beetle	Animals - Easy	
+Bison	Animals - Easy	
+Butterfly	Animals - Easy	
+Camel	Animals - Easy	
+Capybara	Animals - Easy	
+Cat	Animals - Easy	
+Caterpillar	Animals - Easy	
+Cheetah	Animals - Easy	
+Chicken	Animals - Easy	
+Cow	Animals - Easy	
+Crab	Animals - Easy	
+Deer	Animals - Easy	
+Dog	Animals - Easy	
+Dolphin	Animals - Easy	
+Donkey	Animals - Easy	
+Duck	Animals - Easy	
+Eagle	Animals - Easy	
+Elephant	Animals - Easy	
+Flamingo	Animals - Easy	
+Frog	Animals - Easy	
+Giraffe	Animals - Easy	
+Goat	Animals - Easy	
+Goldfish	Animals - Easy	
+Goose	Animals - Easy	
+Gorilla	Animals - Easy	
+Great White Shark	Animals - Easy	
+Guinea Pig	Animals - Easy	
+Hammerhead Shark	Animals - Easy	
+Hamster	Animals - Easy	
+Hedgehog	Animals - Easy	
+Hippo	Animals - Easy	
+Horse	Animals - Easy	
+Jellyfish	Animals - Easy	
+Kangaroo	Animals - Easy	
+King Cobra	Animals - Easy	
+Koala	Animals - Easy	
+Ladybug	Animals - Easy	
+Leopard	Animals - Easy	
+Lion	Animals - Easy	
+Lizard	Animals - Easy	
+Lobster	Animals - Easy	
+Manatee	Animals - Easy	
+Meerkat	Animals - Easy	
+Monkey	Animals - Easy	
+Moose	Animals - Easy	
+Mouse	Animals - Easy	
+Octopus	Animals - Easy	
+Orca	Animals - Easy	
+Owl	Animals - Easy	
+Panda	Animals - Easy	
+Parrot	Animals - Easy	
+Peacock	Animals - Easy	
+Penguin	Animals - Easy	
+Pig	Animals - Easy	
+Platypus	Animals - Easy	
+Polar Bear	Animals - Easy	
+Porcupine	Animals - Easy	
+Rabbit	Animals - Easy	
+Raccoon	Animals - Easy	
+Rat	Animals - Easy	
+Rattlesnake	Animals - Easy	
+Reindeer	Animals - Easy	
+Rhino	Animals - Easy	
+Salamander	Animals - Easy	
+Scorpion	Animals - Easy	
+Sea Turtle	Animals - Easy	
+Seahorse	Animals - Easy	
+Seal	Animals - Easy	
+Shark	Animals - Easy	
+Sheep	Animals - Easy	
+Sloth	Animals - Easy	
+Snake	Animals - Easy	
+Spider	Animals - Easy	
+Squirrel	Animals - Easy	
+Starfish	Animals - Easy	
+Stingray	Animals - Easy	
+Swan	Animals - Easy	
+Tarantula	Animals - Easy	
+Tiger	Animals - Easy	
+Tortoise	Animals - Easy	
+Toucan	Animals - Easy	
+Turkey	Animals - Easy	
+Turtle	Animals - Easy	
+Walrus	Animals - Easy	
+Whale	Animals - Easy	
+Wolf	Animals - Easy	
+Wolverine	Animals - Easy	
+Woodpecker	Animals - Easy	
+Zebra	Animals - Easy	
+Albatross	Animals - Medium	
+Alpaca	Animals - Medium	
+Anaconda	Animals - Medium	
+Antelope	Animals - Medium	
+Armadillo	Animals - Medium	
+Axolotl	Animals - Medium	
+Barracuda	Animals - Medium	
+Beluga	Animals - Medium	
+Black Bear	Animals - Medium	
+Blue Whale	Animals - Medium	
+Capuchin Monkey	Animals - Medium	
+Caribou	Animals - Medium	
+Chameleon	Animals - Medium	
+Chimpanzee	Animals - Medium	
+Chipmunk	Animals - Medium	
+Coyote	Animals - Medium	
+Crocodile	Animals - Medium	
+Cuttlefish	Animals - Medium	
+Dugong	Animals - Medium	
+Echidna	Animals - Medium	
+Emu	Animals - Medium	
+Fox	Animals - Medium	
+Frilled Lizard	Animals - Medium	
+Gecko	Animals - Medium	
+Gibbon	Animals - Medium	
+Gila Monster	Animals - Medium	
+Grizzly Bear	Animals - Medium	
+Honey Badger	Animals - Medium	
+Horseshoe Crab	Animals - Medium	
+Humpback Whale	Animals - Medium	
+Hyena	Animals - Medium	
+Iguana	Animals - Medium	
+Jaguar	Animals - Medium	
+Komodo Dragon	Animals - Medium	
+Llama	Animals - Medium	
+Manta Ray	Animals - Medium	
+Marine Iguana	Animals - Medium	
+Marmoset	Animals - Medium	
+Marten	Animals - Medium	
+Mink	Animals - Medium	
+Moray Eel	Animals - Medium	
+Musk Ox	Animals - Medium	
+Narwhal	Animals - Medium	
+Newt	Animals - Medium	
+Orangutan	Animals - Medium	
+Otter	Animals - Medium	
+Poison Dart Frog	Animals - Medium	
+Portuguese Man O' War	Animals - Medium	
+Praying Mantis	Animals - Medium	
+Puffin	Animals - Medium	
+Python	Animals - Medium	
+Quokka	Animals - Medium	
+Sailfish	Animals - Medium	
+Scorpion	Animals - Medium	
+Skunk	Animals - Medium	
+Sperm Whale	Animals - Medium	
+Squid	Animals - Medium	
+Stick Insect	Animals - Medium	
+Tasmanian Devil	Animals - Medium	
+Tuna	Animals - Medium	
+Viper	Animals - Medium	
+Weasel	Animals - Medium	
+Whale Shark	Animals - Medium	
+Wombat	Animals - Medium	
+Aye-Aye	Animals - Hard	
+Bearded Dragon	Animals - Hard	
+Black Mamba	Animals - Hard	
+Bonobo	Animals - Hard	
+Box Jellyfish	Animals - Hard	
+Bullet Ant	Animals - Hard	
+Caiman	Animals - Hard	
+Cane Toad	Animals - Hard	
+Cape Buffalo	Animals - Hard	
+Cassowary	Animals - Hard	
+Civet	Animals - Hard	
+Coati	Animals - Hard	
+Fisher	Animals - Hard	
+Howler Monkey	Animals - Hard	
+Kinkajou	Animals - Hard	
+Kookaburra	Animals - Hard	
+Leafcutter Ant	Animals - Hard	
+Mandrill	Animals - Hard	
+Marlin	Animals - Hard	
+Nautilus	Animals - Hard	
+Ocelot	Animals - Hard	
+Okapi	Animals - Hard	
+Pangolin	Animals - Hard	
+Proboscis Monkey	Animals - Hard	
+Serval	Animals - Hard	
+Shoebill	Animals - Hard	
+Star-Nosed Mole	Animals - Hard	
+Stoat	Animals - Hard	
+Takin	Animals - Hard	
+Tamarin	Animals - Hard	
+Tapir	Animals - Hard	
+Zebra Finch	Animals - Hard	
+Toaster	Household Objects	
+Lamp	Household Objects	
+Sofa	Household Objects	
+Fridge	Household Objects	
+Microwave	Household Objects	
+Television	Household Objects	
+Bed	Household Objects	
+Chair	Household Objects	
+Table	Household Objects	
+Mirror	Household Objects	
+Clock	Household Objects	
+Vase	Household Objects	
+Rug	Household Objects	
+Curtain	Household Objects	
+Pillow	Household Objects	
+Blanket	Household Objects	
+Towel	Household Objects	
+Soap	Household Objects	
+Toothbrush	Household Objects	
+Comb	Household Objects	
+Blender	Household Objects	
+Coffee Maker	Household Objects	
+Dishwasher	Household Objects	
+Washing Machine	Household Objects	
+Dryer	Household Objects	
+Iron	Household Objects	
+Vacuum Cleaner	Household Objects	
+Broom	Household Objects	
+Mop	Household Objects	
+Dustpan	Household Objects	
+Trash Can	Household Objects	
+Recycling Bin	Household Objects	
+Bookshelf	Household Objects	
+Dresser	Household Objects	
+Nightstand	Household Objects	
+Desk	Household Objects	
+Filing Cabinet	Household Objects	
+Picture Frame	Household Objects	
+Candle	Household Objects	
+Plant Pot	Household Objects	
+Couch	Household Objects	
+Recliner	Household Objects	
+Ottoman	Household Objects	
+Coffee Table	Household Objects	
+End Table	Household Objects	
+Dining Table	Household Objects	
+Bar Stool	Household Objects	
+Rocking Chair	Household Objects	
+Bean Bag	Household Objects	
+Hammock	Household Objects	
+Chandelier	Household Objects	
+Ceiling Fan	Household Objects	
+Floor Lamp	Household Objects	
+Nightlight	Household Objects	
+Light Switch	Household Objects	
+Door Handle	Household Objects	
+Window Blinds	Household Objects	
+Doormat	Household Objects	
+Coat Rack	Household Objects	
+Shoe Rack	Household Objects	
+Laundry Basket	Household Objects	
+Hamper	Household Objects	
+Shower Curtain	Household Objects	
+Bath Mat	Household Objects	
+Toilet Paper	Household Objects	
+Plunger	Household Objects	
+Toilet Brush	Household Objects	
+Hair Dryer	Household Objects	
+Curling Iron	Household Objects	
+Electric Razor	Household Objects	
+Scale	Household Objects	
+First Aid Kit	Household Objects	
+Fire Extinguisher	Household Objects	
+Smoke Detector	Household Objects	
+Thermostat	Household Objects	
+Santa Claus	Christmas Kids Party	
+Rudolph	Christmas Kids Party	
+Snowman	Christmas Kids Party	
+Elf	Christmas Kids Party	
+Reindeer	Christmas Kids Party	
+Christmas Tree	Christmas Kids Party	
+Candy Cane	Christmas Kids Party	
+Gingerbread Man	Christmas Kids Party	
+Snowflake	Christmas Kids Party	
+Present	Christmas Kids Party	
+Stocking	Christmas Kids Party	
+Jingle Bells	Christmas Kids Party	
+Hot Cocoa	Christmas Kids Party	
+Mittens	Christmas Kids Party	
+Scarf	Christmas Kids Party	
+Snow Angel	Christmas Kids Party	
+Igloo	Christmas Kids Party	
+Penguin	Christmas Kids Party	
+Polar Bear	Christmas Kids Party	
+Sleigh	Christmas Kids Party	
+Wreath	Christmas Kids Party	
+Ornament	Christmas Kids Party	
+Star	Christmas Kids Party	
+Angel	Christmas Kids Party	
+Snowball	Christmas Kids Party	
+Winter Hat	Christmas Kids Party	
+Earmuffs	Christmas Kids Party	
+Boots	Christmas Kids Party	
+Fireplace	Christmas Kids Party	
+Chimney	Christmas Kids Party	
+Cookies	Christmas Kids Party	
+Milk	Christmas Kids Party	
+Gingerbread House	Christmas Kids Party	
+Frosty	Christmas Kids Party	
+North Pole	Christmas Kids Party	
+Toy Workshop	Christmas Kids Party	
+Mrs. Claus	Christmas Kids Party	
+Nutcracker	Christmas Kids Party	
+Drummer Boy	Christmas Kids Party	
+Christmas Lights	Christmas Kids Party	
+Caroling	Christmas Kids Party	
+Mistletoe	Christmas Kids Party	
+Holly	Christmas Kids Party	
+Poinsettia	Christmas Kids Party	
+Snow Globe	Christmas Kids Party	
+Tinsel	Christmas Kids Party	
+Garland	Christmas Kids Party	
+Bow	Christmas Kids Party	
+Ribbon	Christmas Kids Party	
+Gift Wrap	Christmas Kids Party	
+Ice Skating	Christmas Kids Party	
+Sledding	Christmas Kids Party	
+Snowball Fight	Christmas Kids Party	
+Building a Snowman	Christmas Kids Party	
+Hot Chocolate	Christmas Kids Party	
+Marshmallows	Christmas Kids Party	
+Candy	Christmas Kids Party	
+Sugar Plum	Christmas Kids Party	
+Sugarplum Fairy	Christmas Kids Party	
+Toy Soldier	Christmas Kids Party	
+Jack Frost	Christmas Kids Party	
+Winter Wonderland	Christmas Kids Party	
+Icicle	Christmas Kids Party	
+Frozen Pond	Christmas Kids Party	
+Snowy Mountain	Christmas Kids Party	
+Cozy Blanket	Christmas Kids Party	
+Fireplace	Christmas Kids Party	
+Christmas Movie	Christmas Kids Party	
+Christmas Song	Christmas Kids Party	
+Jingle	Christmas Kids Party	
+Festive	Christmas Kids Party	
+Merry	Christmas Kids Party	
+Jolly	Christmas Kids Party	
+Sparkly	Christmas Kids Party	
+Magical	Christmas Kids Party	
+Twinkling Lights	Christmas Kids Party	
+Red Nose	Christmas Kids Party	
+Antlers	Christmas Kids Party	
+Santa Hat	Christmas Kids Party	
+Elf Shoes	Christmas Kids Party	
+Toy Train	Christmas Kids Party	
+Teddy Bear	Christmas Kids Party	
+Doll	Christmas Kids Party	
+Toy Car	Christmas Kids Party	
+Building Blocks	Christmas Kids Party	
+Puzzle	Christmas Kids Party	
+Board Game	Christmas Kids Party	
+Coloring Book	Christmas Kids Party	
+Crayons	Christmas Kids Party	
+Play-Doh	Christmas Kids Party	
+Balloon	Christmas Kids Party	
+Party Hat	Christmas Kids Party	
+Noisemaker	Christmas Kids Party	
+Confetti	Christmas Kids Party	
+Streamers	Christmas Kids Party	
+Cupcake	Christmas Kids Party	
+Birthday Cake	Christmas Kids Party	
+Ice Cream	Christmas Kids Party	
+Lollipop	Christmas Kids Party	
+Chocolate	Christmas Kids Party	
+Pizza	Family Fun	
+Hamburger	Family Fun	
+Ice Cream	Family Fun	
+Popcorn	Family Fun	
+Spaghetti	Family Fun	
+Pancakes	Family Fun	
+Waffles	Family Fun	
+Tacos	Family Fun	
+Sandwich	Family Fun	
+Hot Dog	Family Fun	
+Bicycle	Family Fun	
+Skateboard	Family Fun	
+Scooter	Family Fun	
+Roller Skates	Family Fun	
+Trampoline	Family Fun	
+Swing	Family Fun	
+Slide	Family Fun	
+Seesaw	Family Fun	
+Merry-Go-Round	Family Fun	
+Jungle Gym	Family Fun	
+Beach Ball	Family Fun	
+Frisbee	Family Fun	
+Kite	Family Fun	
+Jump Rope	Family Fun	
+Hula Hoop	Family Fun	
+Bubble Wand	Family Fun	
+Water Balloon	Family Fun	
+Sprinkler	Family Fun	
+Pool Noodle	Family Fun	
+Floatie	Family Fun	
+Camping	Family Fun	
+Tent	Family Fun	
+Campfire	Family Fun	
+Marshmallow	Family Fun	
+Sleeping Bag	Family Fun	
+Flashlight	Family Fun	
+Binoculars	Family Fun	
+Compass	Family Fun	
+Hiking	Family Fun	
+Fishing Rod	Family Fun	
+Treehouse	Family Fun	
+Fort	Family Fun	
+Pillow Fort	Family Fun	
+Blanket Fort	Family Fun	
+Hide and Seek	Family Fun	
+Tag	Family Fun	
+Duck Duck Goose	Family Fun	
+Red Light Green Light	Family Fun	
+Simon Says	Family Fun	
+Musical Chairs	Family Fun	
+Karaoke	Family Fun	
+Dance Party	Family Fun	
+Limbo	Family Fun	
+Freeze Dance	Family Fun	
+Conga Line	Family Fun	
+Magic Show	Family Fun	
+Puppet Show	Family Fun	
+Shadow Puppets	Family Fun	
+Charades	Family Fun	
+Pictionary	Family Fun	
+Bowling	Family Fun	
+Mini Golf	Family Fun	
+Arcade	Family Fun	
+Bumper Cars	Family Fun	
+Ferris Wheel	Family Fun	
+Roller Coaster	Family Fun	
+Cotton Candy	Family Fun	
+Funnel Cake	Family Fun	
+Corn Dog	Family Fun	
+Snow Cone	Family Fun	
+Zoo	Family Fun	
+Aquarium	Family Fun	
+Museum	Family Fun	
+Planetarium	Family Fun	
+Water Park	Family Fun	
+Beach	Family Fun	
+Sandcastle	Family Fun	
+Seashell	Family Fun	
+Surfboard	Family Fun	
+Snorkeling	Family Fun	
+Airplane	Family Fun	
+Hot Air Balloon	Family Fun	
+Helicopter	Family Fun	
+Train	Family Fun	
+School Bus	Family Fun	
+Fire Truck	Family Fun	
+Police Car	Family Fun	
+Ambulance	Family Fun	
+Tow Truck	Family Fun	
+Dump Truck	Family Fun	
+Superhero	Family Fun	
+Princess	Family Fun	
+Pirate	Family Fun	
+Cowboy	Family Fun	
+Astronaut	Family Fun	
+Dinosaur	Family Fun	
+Robot	Family Fun	
+Unicorn	Family Fun	
+Dragon	Family Fun	
+Mermaid	Family Fun	
+Alabama	US Geography	Y
+Montgomery	US Geography	Y
+Alaska	US Geography	Y
+Juneau	US Geography	Y
+Arizona	US Geography	Y
+Phoenix	US Geography	Y
+Arkansas	US Geography	Y
+Little Rock	US Geography	Y
+California	US Geography	Y
+Sacramento	US Geography	Y
+Colorado	US Geography	Y
+Denver	US Geography	Y
+Connecticut	US Geography	Y
+Hartford	US Geography	Y
+Delaware	US Geography	Y
+Dover	US Geography	Y
+Florida	US Geography	Y
+Tallahassee	US Geography	Y
+Georgia	US Geography	Y
+Atlanta	US Geography	Y
+Hawaii	US Geography	Y
+Honolulu	US Geography	Y
+Idaho	US Geography	Y
+Boise	US Geography	Y
+Illinois	US Geography	Y
+Springfield	US Geography	Y
+Indiana	US Geography	Y
+Indianapolis	US Geography	Y
+Iowa	US Geography	Y
+Des Moines	US Geography	Y
+Kansas	US Geography	Y
+Topeka	US Geography	Y
+Kentucky	US Geography	Y
+Frankfort	US Geography	Y
+Louisiana	US Geography	Y
+Baton Rouge	US Geography	Y
+Maine	US Geography	Y
+Augusta	US Geography	Y
+Maryland	US Geography	Y
+Annapolis	US Geography	Y
+Massachusetts	US Geography	Y
+Boston	US Geography	Y
+Michigan	US Geography	Y
+Lansing	US Geography	Y
+Minnesota	US Geography	Y
+Saint Paul	US Geography	Y
+Mississippi	US Geography	Y
+Jackson	US Geography	Y
+Missouri	US Geography	Y
+Jefferson City	US Geography	Y
+Montana	US Geography	Y
+Helena	US Geography	Y
+Nebraska	US Geography	Y
+Lincoln	US Geography	Y
+Nevada	US Geography	Y
+Carson City	US Geography	Y
+New Hampshire	US Geography	Y
+Concord	US Geography	Y
+New Jersey	US Geography	Y
+Trenton	US Geography	Y
+New Mexico	US Geography	Y
+Santa Fe	US Geography	Y
+New York	US Geography	Y
+Albany	US Geography	Y
+North Carolina	US Geography	Y
+Raleigh	US Geography	Y
+North Dakota	US Geography	Y
+Bismarck	US Geography	Y
+Ohio	US Geography	Y
+Columbus	US Geography	Y
+Oklahoma	US Geography	Y
+Oklahoma City	US Geography	Y
+Oregon	US Geography	Y
+Salem	US Geography	Y
+Pennsylvania	US Geography	Y
+Harrisburg	US Geography	Y
+Rhode Island	US Geography	Y
+Providence	US Geography	Y
+South Carolina	US Geography	Y
+Columbia	US Geography	Y
+South Dakota	US Geography	Y
+Pierre	US Geography	Y
+Tennessee	US Geography	Y
+Nashville	US Geography	Y
+Texas	US Geography	Y
+Austin	US Geography	Y
+Utah	US Geography	Y
+Salt Lake City	US Geography	Y
+Vermont	US Geography	Y
+Montpelier	US Geography	Y
+Virginia	US Geography	Y
+Richmond	US Geography	Y
+Washington	US Geography	Y
+Olympia	US Geography	Y
+West Virginia	US Geography	Y
+Charleston	US Geography	Y
+Wisconsin	US Geography	Y
+Madison	US Geography	Y
+Wyoming	US Geography	Y
+Cheyenne	US Geography	Y
+New York City	US Geography	Y
+Los Angeles	US Geography	Y
+Chicago	US Geography	Y
+Houston	US Geography	Y
+Miami	US Geography	Y
+San Francisco	US Geography	Y
+Seattle	US Geography	Y
+Las Vegas	US Geography	Y
+San Diego	US Geography	Y
+Dallas	US Geography	Y
+San Antonio	US Geography	Y
+Philadelphia	US Geography	Y
+Detroit	US Geography	Y
+Portland	US Geography	Y
+Minneapolis	US Geography	Y
+New Orleans	US Geography	Y
+Baltimore	US Geography	Y
+Milwaukee	US Geography	Y
+Cleveland	US Geography	Y
+Pittsburgh	US Geography	Y
+Cincinnati	US Geography	Y
+Kansas City	US Geography	Y
+Tampa	US Geography	Y
+Orlando	US Geography	Y
+Charlotte	US Geography	Y
+Statue of Liberty	US Geography	Y
+Golden Gate Bridge	US Geography	Y
+Mount Rushmore	US Geography	Y
+Hollywood Sign	US Geography	Y
+Empire State Building	US Geography	Y
+White House	US Geography	Y
+Lincoln Memorial	US Geography	Y
+Washington Monument	US Geography	Y
+Space Needle	US Geography	Y
+Gateway Arch	US Geography	Y
+Brooklyn Bridge	US Geography	Y
+Hoover Dam	US Geography	Y
+Freedom Trail	US Geography	Y
+Alcatraz Island	US Geography	Y
+Pearl Harbor	US Geography	Y
+Independence Hall	US Geography	Y
+Liberty Bell	US Geography	Y
+Niagara Falls	US Geography	Y
+Times Square	US Geography	Y
+Central Park	US Geography	Y
+Grand Central Station	US Geography	Y
+Las Vegas Strip	US Geography	Y
+Navy Pier	US Geography	Y
+Fisherman's Wharf	US Geography	Y
+French Quarter	US Geography	Y
+Grand Canyon	US Geography	Y
+Yellowstone	US Geography	Y
+Yosemite	US Geography	Y
+Zion	US Geography	Y
+Glacier Nat'l Park	US Geography	Y
+Rocky Mountain	US Geography	Y
+Great Smoky Mountains	US Geography	Y
+Acadia	US Geography	Y
+Olympic Nat'l Park	US Geography	Y
+Joshua Tree	US Geography	Y
+Death Valley	US Geography	Y
+Everglades	US Geography	Y
+Bryce Canyon	US Geography	Y
+Arches	US Geography	Y
+Sequoia	US Geography	Y
+Redwood	US Geography	Y
+Denali	US Geography	Y
+Hawaii Volcanoes	US Geography	Y
+Crater Lake	US Geography	Y
+Mesa Verde	US Geography	Y
+Badlands	US Geography	Y
+Shenandoah	US Geography	Y
+Big Bend	US Geography	Y
+Canyonlands	US Geography	Y
+Capitol Reef	US Geography	Y
+Mississippi River	US Geography	Y
+Colorado River	US Geography	Y
+Missouri River	US Geography	Y
+Great Lakes	US Geography	Y
+Lake Michigan	US Geography	Y
+Lake Superior	US Geography	Y
+Lake Erie	US Geography	Y
+Lake Tahoe	US Geography	Y
+Chesapeake Bay	US Geography	Y
+Puget Sound	US Geography	Y
+Florida Keys	US Geography	Y
+Cape Cod	US Geography	Y
+Martha's Vineyard	US Geography	Y
+Long Island	US Geography	Y
+Manhattan	US Geography	Y
+Hollywood	US Geography	Y
+Silicon Valley	US Geography	Y
+Wall Street	US Geography	Y
+Broadway	US Geography	Y
+Bourbon Street	US Geography	Y
+Route 66	US Geography	Y
+Pacific Coast Highway	US Geography	Y
+Appalachian Trail	US Geography	Y
+Mount Whitney	US Geography	Y
+Mount Rainier	US Geography	Y
+Canada	World Geography	Y
+Ottawa	World Geography	Y
+Mexico	World Geography	Y
+Mexico City	World Geography	Y
+Brazil	World Geography	Y
+Brasilia	World Geography	Y
+Argentina	World Geography	Y
+Buenos Aires	World Geography	Y
+Chile	World Geography	Y
+Santiago	World Geography	Y
+Peru	World Geography	Y
+Lima	World Geography	Y
+Colombia	World Geography	Y
+Bogota	World Geography	Y
+Venezuela	World Geography	Y
+Caracas	World Geography	Y
+Ecuador	World Geography	Y
+Quito	World Geography	Y
+United Kingdom	World Geography	Y
+London	World Geography	Y
+France	World Geography	Y
+Paris	World Geography	Y
+Germany	World Geography	Y
+Berlin	World Geography	Y
+Italy	World Geography	Y
+Rome	World Geography	Y
+Spain	World Geography	Y
+Madrid	World Geography	Y
+Portugal	World Geography	Y
+Lisbon	World Geography	Y
+Netherlands	World Geography	Y
+Amsterdam	World Geography	Y
+Belgium	World Geography	Y
+Brussels	World Geography	Y
+Switzerland	World Geography	Y
+Bern	World Geography	Y
+Austria	World Geography	Y
+Vienna	World Geography	Y
+Poland	World Geography	Y
+Warsaw	World Geography	Y
+Greece	World Geography	Y
+Athens	World Geography	Y
+Sweden	World Geography	Y
+Stockholm	World Geography	Y
+Norway	World Geography	Y
+Oslo	World Geography	Y
+Denmark	World Geography	Y
+Copenhagen	World Geography	Y
+Finland	World Geography	Y
+Helsinki	World Geography	Y
+Ireland	World Geography	Y
+Dublin	World Geography	Y
+Scotland	World Geography	Y
+Edinburgh	World Geography	Y
+Russia	World Geography	Y
+Moscow	World Geography	Y
+Ukraine	World Geography	Y
+Kyiv	World Geography	Y
+Turkey	World Geography	Y
+Ankara	World Geography	Y
+China	World Geography	Y
+Beijing	World Geography	Y
+Japan	World Geography	Y
+Tokyo	World Geography	Y
+South Korea	World Geography	Y
+Seoul	World Geography	Y
+India	World Geography	Y
+New Delhi	World Geography	Y
+Thailand	World Geography	Y
+Bangkok	World Geography	Y
+Vietnam	World Geography	Y
+Hanoi	World Geography	Y
+Indonesia	World Geography	Y
+Jakarta	World Geography	Y
+Philippines	World Geography	Y
+Manila	World Geography	Y
+Malaysia	World Geography	Y
+Kuala Lumpur	World Geography	Y
+Singapore	World Geography	Y
+Australia	World Geography	Y
+Canberra	World Geography	Y
+New Zealand	World Geography	Y
+Wellington	World Geography	Y
+Egypt	World Geography	Y
+Cairo	World Geography	Y
+South Africa	World Geography	Y
+Pretoria	World Geography	Y
+Morocco	World Geography	Y
+Rabat	World Geography	Y
+Kenya	World Geography	Y
+Nairobi	World Geography	Y
+Nigeria	World Geography	Y
+Abuja	World Geography	Y
+Ethiopia	World Geography	Y
+Addis Ababa	World Geography	Y
+Israel	World Geography	Y
+Jerusalem	World Geography	Y
+Saudi Arabia	World Geography	Y
+Riyadh	World Geography	Y
+United Arab Emirates	World Geography	Y
+Abu Dhabi	World Geography	Y
+Toronto	World Geography	Y
+Vancouver	World Geography	Y
+Montreal	World Geography	Y
+Sydney	World Geography	Y
+Melbourne	World Geography	Y
+Auckland	World Geography	Y
+Rio de Janeiro	World Geography	Y
+Sao Paulo	World Geography	Y
+Barcelona	World Geography	Y
+Milan	World Geography	Y
+Munich	World Geography	Y
+Prague	World Geography	Y
+Budapest	World Geography	Y
+Venice	World Geography	Y
+Florence	World Geography	Y
+Nice	World Geography	Y
+Geneva	World Geography	Y
+Zurich	World Geography	Y
+Hong Kong	World Geography	Y
+Shanghai	World Geography	Y
+Dubai	World Geography	Y
+Mumbai	World Geography	Y
+Bangalore	World Geography	Y
+Cape Town	World Geography	Y
+Marrakech	World Geography	Y
+Istanbul	World Geography	Y
+St. Petersburg	World Geography	Y
+Kyoto	World Geography	Y
+Osaka	World Geography	Y
+Atlantic Ocean	World Geography	Y
+Pacific Ocean	World Geography	Y
+Indian Ocean	World Geography	Y
+Arctic Ocean	World Geography	Y
+Southern Ocean	World Geography	Y
+Mediterranean Sea	World Geography	Y
+Caribbean Sea	World Geography	Y
+Red Sea	World Geography	Y
+Black Sea	World Geography	Y
+Baltic Sea	World Geography	Y
+North Sea	World Geography	Y
+South China Sea	World Geography	Y
+Bay of Bengal	World Geography	Y
+Persian Gulf	World Geography	Y
+Gulf of Mexico	World Geography	Y
+Amazon River	World Geography	Y
+Nile River	World Geography	Y
+Ganges River	World Geography	Y
+Yangtze River	World Geography	Y
+Danube River	World Geography	Y
+Thames River	World Geography	Y
+Seine River	World Geography	Y
+Rhine River	World Geography	Y
+Volga River	World Geography	Y
+Congo River	World Geography	Y
+Dead Sea	World Geography	Y
+Caspian Sea	World Geography	Y
+Lake Victoria	World Geography	Y
+Lake Baikal	World Geography	Y
+Great Barrier Reef	World Geography	Y
+Eiffel Tower	World Geography	Y
+Big Ben	World Geography	Y
+Colosseum	World Geography	Y
+Leaning Tower of Pisa	World Geography	Y
+Stonehenge	World Geography	Y
+Taj Mahal	World Geography	Y
+Great Wall of China	World Geography	Y
+Machu Picchu	World Geography	Y
+Christ the Redeemer	World Geography	Y
+Petra	World Geography	Y
+Pyramids of Giza	World Geography	Y
+Sphinx	World Geography	Y
+Acropolis	World Geography	Y
+Parthenon	World Geography	Y
+Tower of London	World Geography	Y
+Buckingham Palace	World Geography	Y
+Vatican City	World Geography	Y
+Sistine Chapel	World Geography	Y
+Notre Dame	World Geography	Y
+Louvre	World Geography	Y
+Sydney Opera House	World Geography	Y
+Burj Khalifa	World Geography	Y
+Mount Everest	World Geography	Y
+Mount Fuji	World Geography	Y
+Matterhorn	World Geography	Y
+Amazon Rainforest	World Geography	Y
+Sahara Desert	World Geography	Y
+Gobi Desert	World Geography	Y
+Himalayas	World Geography	Y
+Alps	World Geography	Y
+Andes Mountains	World Geography	Y
+Victoria Falls	World Geography	Y
+Angel Falls	World Geography	Y
+Iguazu Falls	World Geography	Y
+Northern Lights	World Geography	Y
+Santorini	World Geography	Y
+Bali	World Geography	Y
+Fiji	World Geography	Y
+Maldives	World Geography	Y
+Galapagos Islands	World Geography	Y
+? (ài)	Mandarin	Y
+?? (bù h?o)	Mandarin	Y
+?? (búshì)	Mandarin	Y
+? (bù)	Mandarin	Y
+??? (bùxíng)	Mandarin	Y
+? (ch?)	Mandarin	Y
+? (chá)	Mandarin	Y
+? (chàng)	Mandarin	Y
+? (ch?)	Mandarin	Y
+? (dà)	Mandarin	Y
+?? (d?k?i)	Mandarin	Y
+? (dú)	Mandarin	Y
+??? (duìbùq?)	Mandarin	Y
+? (fàng)	Mandarin	Y
+? (g?i)	Mandarin	Y
+?? (g?oxìng)	Mandarin	Y
+? (g?)	Mandarin	Y
+? (g?u)	Mandarin	Y
+?? (gu?nshàng)	Mandarin	Y
+? (h?n)	Mandarin	Y
+? (h?o)	Mandarin	Y
+? (h?)	Mandarin	Y
+?? (y?yuàn)	Mandarin	Y
+? (huì)	Mandarin	Y
+? (huà)	Mandarin	Y
+? (ji?)	Mandarin	Y
+?? (j?nti?n)	Mandarin	Y
+? (tiào)	Mandarin	Y
+?? (tiàow?)	Mandarin	Y
+?? (k?f?i)	Mandarin	Y
+? (kàn)	Mandarin	Y
+? (lái)	Mandarin	Y
+? (l?ng)	Mandarin	Y
+?? (l?osh?)	Mandarin	Y
+?? (m?ma)	Mandarin	Y
+? (m?o)	Mandarin	Y
+? (m?i)	Mandarin	Y
+?? (méiy?u)	Mandarin	Y
+?? (míngti?n)	Mandarin	Y
+?? (míngzi)	Mandarin	Y
+?? (m?fàn)	Mandarin	Y
+? (n?)	Mandarin	Y
+?? (niánlíng)	Mandarin	Y
+? (ná)	Mandarin	Y
+?? (n?ge)	Mandarin	Y
+?? (n?l?)	Mandarin	Y
+?? (nánguò)	Mandarin	Y
+?? (niún?i)	Mandarin	Y
+?? (péngy?u)	Mandarin	Y
+?? (pínggu?)	Mandarin	Y
+? (qián)	Mandarin	Y
+? (qù)	Mandarin	Y
+? (rè)	Mandarin	Y
+? (p?o)	Mandarin	Y
+? (q?ng)	Mandarin	Y
+? (zuò)	Mandarin	Y
+?? (xuéxiào)	Mandarin	Y
+? (shéi)	Mandarin	Y
+? (sh?)	Mandarin	Y
+?? (shuìjiào)	Mandarin	Y
+? (shu?)	Mandarin	Y
+?? (t? shu?)	Mandarin	Y
+? (t?)	Mandarin	Y
+? (t?)	Mandarin	Y
+? (t?ng)	Mandarin	Y
+?? (t?men)	Mandarin	Y
+?? (w?men)	Mandarin	Y
+? (w?)	Mandarin	Y
+?? (ch?oshì)	Mandarin	Y
+?? (xi?ngji?o)	Mandarin	Y
+? (xi?o)	Mandarin	Y
+?? (xièxiè)	Mandarin	Y
+? (xi?)	Mandarin	Y
+?? (xuéxí)	Mandarin	Y
+?? (x?yào)	Mandarin	Y
+? (xué)	Mandarin	Y
+?? (zuóti?n)	Mandarin	Y
+?? (zàijiàn)	Mandarin	Y
+? (zhàn)	Mandarin	Y
+?? (zhu?zi)	Mandarin	Y
+?? (y?zi)	Mandarin	Y
+?? (zhège)	Mandarin	Y
+?? (z?nme)	Mandarin	Y
+??? (zuò shénme)	Mandarin	Y
+? (zh?o)	Mandarin	Y
+?? (g?ngyuán)	Mandarin	Y
+?? (g?ngzuò)	Mandarin	Y
+??? (shu? shénme)	Mandarin	Y
+?? (xiànzài)	Mandarin	Y
+??? (x?ngq?y?)	Mandarin	Y
+?? (xuésh?ng)	Mandarin	Y
+?? (shu?huà)	Mandarin	Y
+? (shu?)	Mandarin	Y
+??? (wèishénme)	Mandarin	Y
+???? (shénme shíhou)	Mandarin	Y
+?? (nàl?)	Mandarin	Y
+?? (zhèl?)	Mandarin	Y
+?? (nàge)	Mandarin	Y
+? (mài)	Mandarin	Y
+?? (miàntiáo)	Mandarin	Y
+?? (bàba)	Mandarin	Y
+? (b?)	Mandarin	Y
+? (shì)	Mandarin	Y
+?? (x?huan)	Mandarin	Y
+?? n? h?o [hello]	Mandarin-Beginner	Y
+?? xièxiè [thank you]	Mandarin-Beginner	Y
+?? zàijiàn [goodbye]	Mandarin-Beginner	Y
+? q?ng [please]	Mandarin-Beginner	Y
+??? duìbùq? [sorry]	Mandarin-Beginner	Y
+? shì [yes]	Mandarin-Beginner	Y
+?? búshì [no]	Mandarin-Beginner	Y
+? w? [I]	Mandarin-Beginner	Y
+? n? [you]	Mandarin-Beginner	Y
+? t? [he]	Mandarin-Beginner	Y
+? t? [she]	Mandarin-Beginner	Y
+?? w?men [we]	Mandarin-Beginner	Y
+?? t?men [they]	Mandarin-Beginner	Y
+? ch? [eat]	Mandarin-Beginner	Y
+? h? [drink]	Mandarin-Beginner	Y
+? kàn [look/watch]	Mandarin-Beginner	Y
+? shu? [speak/say]	Mandarin-Beginner	Y
+? t?ng [listen]	Mandarin-Beginner	Y
+?? x?huan [like]	Mandarin-Beginner	Y
+? ài [love]	Mandarin-Beginner	Y
+?? m?fàn [rice]	Mandarin-Beginner	Y
+?? miàntiáo [noodles]	Mandarin-Beginner	Y
+?? pínggu? [apple]	Mandarin-Beginner	Y
+?? xi?ngji?o [banana]	Mandarin-Beginner	Y
+?? niún?i [milk]	Mandarin-Beginner	Y
+? shu? [water]	Mandarin-Beginner	Y
+? chá [tea]	Mandarin-Beginner	Y
+?? k?f?i [coffee]	Mandarin-Beginner	Y
+?? xuéxiào [school]	Mandarin-Beginner	Y
+?? l?osh? [teacher]	Mandarin-Beginner	Y
+?? xuésh?ng [student]	Mandarin-Beginner	Y
+? sh? [book]	Mandarin-Beginner	Y
+? b? [pen]	Mandarin-Beginner	Y
+?? zhu?zi [table]	Mandarin-Beginner	Y
+?? y?zi [chair]	Mandarin-Beginner	Y
+? ji? [home/family]	Mandarin-Beginner	Y
+?? m?ma [mom]	Mandarin-Beginner	Y
+?? bàba [dad]	Mandarin-Beginner	Y
+?? péngy?u [friend]	Mandarin-Beginner	Y
+? g?u [dog]	Mandarin-Beginner	Y
+? m?o [cat]	Mandarin-Beginner	Y
+? ch? [car]	Mandarin-Beginner	Y
+? qián [money]	Mandarin-Beginner	Y
+?? g?ngzuò [work]	Mandarin-Beginner	Y
+?? shuìjiào [sleep]	Mandarin-Beginner	Y
+? z?u [walk]	Mandarin-Beginner	Y
+? lái [come]	Mandarin-Beginner	Y
+? qù [go]	Mandarin-Beginner	Y
+?? ti?nqì [weather]	Mandarin-Beginner	Y
+?? j?nti?n [today]	Mandarin-Beginner	Y
+?? míngti?n [tomorrow]	Mandarin-Beginner	Y
+?? b?ngmáng [help]	Mandarin-Intermediate	Y
+?? jìde [remember]	Mandarin-Intermediate	Y
+?? wàngjì [forget]	Mandarin-Intermediate	Y
+?? míngbai [understand]	Mandarin-Intermediate	Y
+?? liànxí [practice]	Mandarin-Intermediate	Y
+?? wèntí [problem/question]	Mandarin-Intermediate	Y
+?? huídá [answer]	Mandarin-Intermediate	Y
+?? ch?oshì [supermarket]	Mandarin-Intermediate	Y
+?? y?yuàn [hospital]	Mandarin-Intermediate	Y
+??? hu?ch?zhàn [train station]	Mandarin-Intermediate	Y
+?? j?ch?ng [airport]	Mandarin-Intermediate	Y
+??? diàny?ngyuàn [cinema]	Mandarin-Intermediate	Y
+???? sh?ngrì kuàilè [happy birthday]	Mandarin-Intermediate	Y
+??? méi wèntí [no problem]	Mandarin-Intermediate	Y
+??? tài h?o le [great/awesome]	Mandarin-Intermediate	Y
+??? z?nmeyàng [how is it]	Mandarin-Intermediate	Y
+?? j? di?n [what time]	Mandarin-Intermediate	Y
+??? du?sh?o qián [how much]	Mandarin-Intermediate	Y
+?? d?k?i [open]	Mandarin-Intermediate	Y
+?? gu?nshàng [close]	Mandarin-Intermediate	Y
+?? x?z?o [take a shower]	Mandarin-Intermediate	Y
+??? d? diànhuà [make a phone call]	Mandarin-Intermediate	Y
+?? p?izhào [take a photo]	Mandarin-Intermediate	Y
+?? d?ngdeng [wait]	Mandarin-Intermediate	Y
+?? xi?ox?n [be careful]	Mandarin-Intermediate	Y
+?? chéngg?ng [success]	Mandarin-Intermediate	Y
+?? sh?bài [failure]	Mandarin-Intermediate	Y
+?? n?lì [effort/hard work]	Mandarin-Intermediate	Y
+?? mèngxi?ng [dream]	Mandarin-Intermediate	Y
+?? jìhuà [plan]	Mandarin-Intermediate	Y
+???? ti?nqì yùbào [weather forecast]	Mandarin-Intermediate	Y
+??? ji?ot?ngd?ng [traffic light]	Mandarin-Intermediate	Y
+??? sh?nfènzhèng [ID card]	Mandarin-Intermediate	Y
+??? xìnyòngk? [credit card]	Mandarin-Intermediate	Y
+?? càid?n [menu]	Mandarin-Intermediate	Y
+??? fúwùyuán [waiter/waitress]	Mandarin-Intermediate	Y
+?? tu?jiàn [recommend]	Mandarin-Intermediate	Y
+????? wèidào z?nmeyàng [how does it taste]	Mandarin-Intermediate	Y
+??? tài guì le [too expensive]	Mandarin-Intermediate	Y
+?? d?zhé [discount]	Mandarin-Intermediate	Y
+?? k?oshì [exam/test]	Mandarin-Intermediate	Y
+?? fùxí [review]	Mandarin-Intermediate	Y
+?? tíg?o [improve]	Mandarin-Intermediate	Y
+?? f?y?n [pronunciation]	Mandarin-Intermediate	Y
+?? y?f? [grammar]	Mandarin-Intermediate	Y
+?? wénhuà [culture]	Mandarin-Intermediate	Y
+?? jiérì [holiday]	Mandarin-Intermediate	Y
+?? ch?njié [Spring Festival]	Mandarin-Intermediate	Y
+??? zh?ngqi?jié [Mid-Autumn Festival]	Mandarin-Intermediate	Y
+?? lóngnián [Year of the Dragon]	Mandarin-Intermediate	Y
+?? jiànk?ng [health]	Mandarin-Intermediate	Y
+xin chào [hello]	Vietnamese-Beginner	Y
+c?m ?n [thank you]	Vietnamese-Beginner	Y
+t?m bi?t [goodbye]	Vietnamese-Beginner	Y
+làm ?n [please]	Vietnamese-Beginner	Y
+xin l?i [sorry]	Vietnamese-Beginner	Y
+vâng [yes]	Vietnamese-Beginner	Y
+không [no]	Vietnamese-Beginner	Y
+tôi [I]	Vietnamese-Beginner	Y
+b?n [you]	Vietnamese-Beginner	Y
+anh ?y [he]	Vietnamese-Beginner	Y
+cô ?y [she]	Vietnamese-Beginner	Y
+chúng tôi [we]	Vietnamese-Beginner	Y
+h? [they]	Vietnamese-Beginner	Y
+?n [eat]	Vietnamese-Beginner	Y
+u?ng [drink]	Vietnamese-Beginner	Y
+nhìn [look/watch]	Vietnamese-Beginner	Y
+nói [speak/say]	Vietnamese-Beginner	Y
+nghe [listen]	Vietnamese-Beginner	Y
+thích [like]	Vietnamese-Beginner	Y
+yêu [love]	Vietnamese-Beginner	Y
+c?m [rice]	Vietnamese-Beginner	Y
+mì [noodles]	Vietnamese-Beginner	Y
+táo [apple]	Vietnamese-Beginner	Y
+chu?i [banana]	Vietnamese-Beginner	Y
+s?a [milk]	Vietnamese-Beginner	Y
+n??c [water]	Vietnamese-Beginner	Y
+trà [tea]	Vietnamese-Beginner	Y
+cà phê [coffee]	Vietnamese-Beginner	Y
+tr??ng h?c [school]	Vietnamese-Beginner	Y
+giáo viên [teacher]	Vietnamese-Beginner	Y
+h?c sinh [student]	Vietnamese-Beginner	Y
+sách [book]	Vietnamese-Beginner	Y
+bút [pen]	Vietnamese-Beginner	Y
+bàn [table]	Vietnamese-Beginner	Y
+gh? [chair]	Vietnamese-Beginner	Y
+nhà [home]	Vietnamese-Beginner	Y
+m? [mom]	Vietnamese-Beginner	Y
+b? [dad]	Vietnamese-Beginner	Y
+b?n bè [friend]	Vietnamese-Beginner	Y
+chó [dog]	Vietnamese-Beginner	Y
+mèo [cat]	Vietnamese-Beginner	Y
+xe [car]	Vietnamese-Beginner	Y
+ti?n [money]	Vietnamese-Beginner	Y
+công vi?c [work]	Vietnamese-Beginner	Y
+ng? [sleep]	Vietnamese-Beginner	Y
+?i b? [walk]	Vietnamese-Beginner	Y
+??n [come]	Vietnamese-Beginner	Y
+?i [go]	Vietnamese-Beginner	Y
+th?i ti?t [weather]	Vietnamese-Beginner	Y
+hôm nay [today]	Vietnamese-Beginner	Y
+ngày mai [tomorrow]	Vietnamese-Beginner	Y
+giúp ?? [help]	Vietnamese-Intermediate	Y
+nh? [remember]	Vietnamese-Intermediate	Y
+quên [forget]	Vietnamese-Intermediate	Y
+hi?u [understand]	Vietnamese-Intermediate	Y
+luy?n t?p [practice]	Vietnamese-Intermediate	Y
+v?n ?? [problem]	Vietnamese-Intermediate	Y
+câu tr? l?i [answer]	Vietnamese-Intermediate	Y
+siêu th? [supermarket]	Vietnamese-Intermediate	Y
+b?nh vi?n [hospital]	Vietnamese-Intermediate	Y
+ga tàu [train station]	Vietnamese-Intermediate	Y
+sân bay [airport]	Vietnamese-Intermediate	Y
+r?p chi?u phim [cinema]	Vietnamese-Intermediate	Y
+chúc m?ng sinh nh?t [happy birthday]	Vietnamese-Intermediate	Y
+không sao [no problem]	Vietnamese-Intermediate	Y
+tuy?t v?i [great/awesome]	Vietnamese-Intermediate	Y
+th? nào [how is it]	Vietnamese-Intermediate	Y
+m?y gi? [what time]	Vietnamese-Intermediate	Y
+bao nhiêu ti?n [how much]	Vietnamese-Intermediate	Y
+m? [open]	Vietnamese-Intermediate	Y
+?óng [close]	Vietnamese-Intermediate	Y
+t?m [take a shower]	Vietnamese-Intermediate	Y
+g?i ?i?n [make a phone call]	Vietnamese-Intermediate	Y
+ch?p ?nh [take a photo]	Vietnamese-Intermediate	Y
+ch? [wait]	Vietnamese-Intermediate	Y
+c?n th?n [be careful]	Vietnamese-Intermediate	Y
+thành công [success]	Vietnamese-Intermediate	Y
+th?t b?i [failure]	Vietnamese-Intermediate	Y
+n? l?c [effort]	Vietnamese-Intermediate	Y
+gi?c m? [dream]	Vietnamese-Intermediate	Y
+k? ho?ch [plan]	Vietnamese-Intermediate	Y
+d? báo th?i ti?t [weather forecast]	Vietnamese-Intermediate	Y
+?èn giao thông [traffic light]	Vietnamese-Intermediate	Y
+ch?ng minh th? [ID card]	Vietnamese-Intermediate	Y
+th? tín d?ng [credit card]	Vietnamese-Intermediate	Y
+th?c ??n [menu]	Vietnamese-Intermediate	Y
+nhân viên ph?c v? [waiter]	Vietnamese-Intermediate	Y
+g?i ý [recommend]	Vietnamese-Intermediate	Y
+món ?n có ngon không [how does it taste]	Vietnamese-Intermediate	Y
+quá ??t [too expensive]	Vietnamese-Intermediate	Y
+gi?m giá [discount]	Vietnamese-Intermediate	Y
+k? thi [exam]	Vietnamese-Intermediate	Y
+ôn t?p [review]	Vietnamese-Intermediate	Y
+c?i thi?n [improve]	Vietnamese-Intermediate	Y
+phát âm [pronunciation]	Vietnamese-Intermediate	Y
+ng? pháp [grammar]	Vietnamese-Intermediate	Y
+v?n hóa [culture]	Vietnamese-Intermediate	Y
+l? h?i [holiday]	Vietnamese-Intermediate	Y
+T?t Nguyên ?án [Lunar New Year]	Vietnamese-Intermediate	Y
+T?t Trung Thu [Mid-Autumn Festival]	Vietnamese-Intermediate	Y
+N?m R?ng [Year of the Dragon]	Vietnamese-Intermediate	Y
+s?c kh?e [health]	Vietnamese-Intermediate	Y
+hola [hello]	Spanish-Beginner	Y
+gracias [thank you]	Spanish-Beginner	Y
+adiós [goodbye]	Spanish-Beginner	Y
+por favor [please]	Spanish-Beginner	Y
+lo siento [sorry]	Spanish-Beginner	Y
+sí [yes]	Spanish-Beginner	Y
+no [no]	Spanish-Beginner	Y
+yo [I]	Spanish-Beginner	Y
+tú [you]	Spanish-Beginner	Y
+él [he]	Spanish-Beginner	Y
+ella [she]	Spanish-Beginner	Y
+nosotros [we]	Spanish-Beginner	Y
+ellos [they]	Spanish-Beginner	Y
+comer [eat]	Spanish-Beginner	Y
+beber [drink]	Spanish-Beginner	Y
+mirar [look/watch]	Spanish-Beginner	Y
+hablar [speak/say]	Spanish-Beginner	Y
+escuchar [listen]	Spanish-Beginner	Y
+gustar [like]	Spanish-Beginner	Y
+amar [love]	Spanish-Beginner	Y
+arroz [rice]	Spanish-Beginner	Y
+fideos [noodles]	Spanish-Beginner	Y
+manzana [apple]	Spanish-Beginner	Y
+plátano [banana]	Spanish-Beginner	Y
+leche [milk]	Spanish-Beginner	Y
+agua [water]	Spanish-Beginner	Y
+té [tea]	Spanish-Beginner	Y
+café [coffee]	Spanish-Beginner	Y
+escuela [school]	Spanish-Beginner	Y
+maestro [teacher]	Spanish-Beginner	Y
+estudiante [student]	Spanish-Beginner	Y
+libro [book]	Spanish-Beginner	Y
+lápiz [pen]	Spanish-Beginner	Y
+mesa [table]	Spanish-Beginner	Y
+silla [chair]	Spanish-Beginner	Y
+casa [home]	Spanish-Beginner	Y
+madre [mom]	Spanish-Beginner	Y
+padre [dad]	Spanish-Beginner	Y
+amigo [friend]	Spanish-Beginner	Y
+perro [dog]	Spanish-Beginner	Y
+gato [cat]	Spanish-Beginner	Y
+coche [car]	Spanish-Beginner	Y
+dinero [money]	Spanish-Beginner	Y
+trabajo [work]	Spanish-Beginner	Y
+dormir [sleep]	Spanish-Beginner	Y
+caminar [walk]	Spanish-Beginner	Y
+venir [come]	Spanish-Beginner	Y
+ir [go]	Spanish-Beginner	Y
+tiempo [weather]	Spanish-Beginner	Y
+hoy [today]	Spanish-Beginner	Y
+mañana [tomorrow]	Spanish-Beginner	Y
+ayudar [help]	Spanish-Intermediate	Y
+recordar [remember]	Spanish-Intermediate	Y
+olvidar [forget]	Spanish-Intermediate	Y
+entender [understand]	Spanish-Intermediate	Y
+practicar [practice]	Spanish-Intermediate	Y
+problema [problem]	Spanish-Intermediate	Y
+respuesta [answer]	Spanish-Intermediate	Y
+supermercado [supermarket]	Spanish-Intermediate	Y
+hospital [hospital]	Spanish-Intermediate	Y
+estación de tren [train station]	Spanish-Intermediate	Y
+aeropuerto [airport]	Spanish-Intermediate	Y
+cine [cinema]	Spanish-Intermediate	Y
+feliz cumpleaños [happy birthday]	Spanish-Intermediate	Y
+no hay problema [no problem]	Spanish-Intermediate	Y
+genial [great/awesome]	Spanish-Intermediate	Y
+¿cómo está? [how is it]	Spanish-Intermediate	Y
+¿qué hora es? [what time is it]	Spanish-Intermediate	Y
+¿cuánto cuesta? [how much]	Spanish-Intermediate	Y
+abrir [open]	Spanish-Intermediate	Y
+cerrar [close]	Spanish-Intermediate	Y
+ducharse [take a shower]	Spanish-Intermediate	Y
+llamar por teléfono [make a phone call]	Spanish-Intermediate	Y
+tomar foto [take a photo]	Spanish-Intermediate	Y
+esperar [wait]	Spanish-Intermediate	Y
+cuidado [be careful]	Spanish-Intermediate	Y
+éxito [success]	Spanish-Intermediate	Y
+fracaso [failure]	Spanish-Intermediate	Y
+esfuerzo [effort]	Spanish-Intermediate	Y
+sueño [dream]	Spanish-Intermediate	Y
+plan [plan]	Spanish-Intermediate	Y
+pronóstico del tiempo [weather forecast]	Spanish-Intermediate	Y
+semáforo [traffic light]	Spanish-Intermediate	Y
+documento de identidad [ID card]	Spanish-Intermediate	Y
+tarjeta de crédito [credit card]	Spanish-Intermediate	Y
+menú [menu]	Spanish-Intermediate	Y
+camarero [waiter]	Spanish-Intermediate	Y
+recomendar [recommend]	Spanish-Intermediate	Y
+¿qué tal el sabor? [how does it taste]	Spanish-Intermediate	Y
+demasiado caro [too expensive]	Spanish-Intermediate	Y
+descuento [discount]	Spanish-Intermediate	Y
+examen [exam]	Spanish-Intermediate	Y
+repasar [review]	Spanish-Intermediate	Y
+mejorar [improve]	Spanish-Intermediate	Y
+pronunciación [pronunciation]	Spanish-Intermediate	Y
+gramática [grammar]	Spanish-Intermediate	Y
+cultura [culture]	Spanish-Intermediate	Y
+fiesta [holiday]	Spanish-Intermediate	Y
+Año Nuevo [New Year]	Spanish-Intermediate	Y
+Día de Muertos [Day of the Dead]	Spanish-Intermediate	Y
+Año del Dragón [Year of the Dragon]	Spanish-Intermediate	Y
+salud [health]	Spanish-Intermediate	Y
+H?O [water]	Chemistry	Y
+O? [oxygen]	Chemistry	Y
+NaCl [salt]	Chemistry	Y
+CO? [carbon dioxide]	Chemistry	Y
+Fe [iron]	Chemistry	Y
+Au [gold]	Chemistry	Y
+Ag [silver]	Chemistry	Y
+Cu [copper]	Chemistry	Y
+H [hydrogen]	Chemistry	Y
+He [helium]	Chemistry	Y
+N? [nitrogen]	Chemistry	Y
+C [carbon]	Chemistry	Y
+Pb [lead]	Chemistry	Y
+Hg [mercury]	Chemistry	Y
+Sn [tin]	Chemistry	Y
+Al [aluminum]	Chemistry	Y
+Ca [calcium]	Chemistry	Y
+K [potassium]	Chemistry	Y
+Na [sodium]	Chemistry	Y
+Cl [chlorine]	Chemistry	Y
+S [sulfur]	Chemistry	Y
+P [phosphorus]	Chemistry	Y
+Ne [neon]	Chemistry	Y
+Ar [argon]	Chemistry	Y
+Pt [platinum]	Chemistry	Y
+combustion [fire reaction]	Chemistry	Y
+acid [low pH substance]	Chemistry	Y
+base [high pH substance]	Chemistry	Y
+pH [acid-base scale]	Chemistry	Y
+neutral [neither acid nor base]	Chemistry	Y
+density [how compact matter is]	Chemistry	Y
+carbon dioxide [CO?]	Chemistry	Y
+hydrogen peroxide [H?O?]	Chemistry	Y
+ammonia [NH?]	Chemistry	Y
+reactant [before reaction]	Chemistry	Y
+product [after reaction]	Chemistry	Y
+catalyst [reaction helper]	Chemistry	Y
+alkali metals [lithium sodium potassium]	Chemistry	Y
+alkaline earth metals [beryllium magnesium calcium]	Chemistry	Y
+halogens [fluorine chlorine bromine]	Chemistry	Y
+noble gases [helium neon argon]	Chemistry	Y
+transition metals [iron copper zinc]	Chemistry	Y
+metalloids [silicon germanium arsenic]	Chemistry	Y
+lanthanides [cerium europium gadolinium]	Chemistry	Y
+actinides [uranium plutonium thorium]	Chemistry	Y
+ionic bond [metal to nonmetal]	Chemistry	Y
+covalent bond [nonmetal to nonmetal]	Chemistry	Y
+metallic bond [metal to metal]	Chemistry	Y
+hydrogen bond [water cohesion]	Chemistry	Y
+orbital [s p d f]	Chemistry	Y
+Avogadro\'s number [6.022 × 10²³]	Chemistry	Y
+Arrhenius acid [proton donor]	Chemistry	Y
+Arrhenius base [hydroxide donor]	Chemistry	Y
+buffer [weak acid plus salt]	Chemistry	Y
+pH scale [0 to 14 range]	Chemistry	Y
+organic chemistry [hydrocarbon based]	Chemistry	Y
+hydrocarbon [alkane alkene alkyne]	Chemistry	Y
+alkane [saturated hydrocarbon]	Chemistry	Y
+alkene [unsaturated hydrocarbon]	Chemistry	Y
+alkyne [unsaturated hydrocarbon]	Chemistry	Y
+alcohol [OH functional group]	Chemistry	Y
+carboxylic acid [organic acid]	Chemistry	Y
+ester [fruity smell compound]	Chemistry	Y
+amine [NH? functional group]	Chemistry	Y
+synthesis reaction [combination reaction]	Chemistry	Y
+decomposition reaction [breaking apart]	Chemistry	Y
+single replacement [substitution reaction]	Chemistry	Y
+double replacement [metathesis reaction]	Chemistry	Y
+combustion reaction [burning reaction]	Chemistry	Y
+redox reaction [oxidation-reduction]	Chemistry	Y
+oxidation [increase in charge]	Chemistry	Y
+reduction [decrease in charge]	Chemistry	Y
+oxidizing agent [causes oxidation]	Chemistry	Y
+reducing agent [causes reduction]	Chemistry	Y
+Marbury v. Madison [1803 judicial review established]	US History	Y
+McCulloch v. Maryland [1819 upheld implied powers]	US History	Y
+Gibbons v. Ogden [1824 expanded commerce power]	US History	Y
+Dred Scott v. Sandford [1857 denied Black citizenship]	US History	Y
+Plessy v. Ferguson [1896 upheld separate but equal]	US History	Y
+Brown v. Board of Education [1954 ended school segregation]	US History	Y
+Korematsu v. United States [1944 upheld Japanese internment]	US History	Y
+Mapp v. Ohio [1961 exclusionary rule applied]	US History	Y
+Gideon v. Wainwright [1963 right to counsel guaranteed]	US History	Y
+Miranda v. Arizona [1966 Miranda warnings required]	US History	Y
+Tinker v. Des Moines [1969 protected student speech]	US History	Y
+New York Times v. United States [1971 limited prior restraint]	US History	Y
+Roe v. Wade [1973 legalized abortion nationwide]	US History	Y
+United States v. Nixon [1974 limited executive privilege]	US History	Y
+Regents of UC v. Bakke [1978 limited affirmative action]	US History	Y
+Texas v. Johnson [1989 protected flag burning]	US History	Y
+Bush v. Gore [2000 halted Florida recount]	US History	Y
+Citizens United v. FEC [2010 expanded corporate speech]	US History	Y
+Obergefell v. Hodges [2015 legalized same-sex marriage]	US History	Y
+Article I [legislative powers defined]	US History	Y
+Article II [executive powers defined]	US History	Y
+Article III [judicial powers defined]	US History	Y
+Article IV [state relations rules]	US History	Y
+Article V [amendment process outlined]	US History	Y
+Article VI [supremacy of Constitution]	US History	Y
+Article VII [ratification procedure set]	US History	Y
+Commerce Clause [regulates interstate commerce]	US History	Y
+Necessary and Proper Clause [implied powers allowed]	US History	Y
+Supremacy Clause [federal law supreme]	US History	Y
+Full Faith and Credit Clause [states honor other states]	US History	Y
+Privileges and Immunities Clause [protects interstate equality]	US History	Y
+General Welfare Clause [spending for common good]	US History	Y
+Contract Clause [limits state contract interference]	US History	Y
+Takings Clause [just compensation required]	US History	Y
+Establishment Clause [no official religion]	US History	Y
+Free Exercise Clause [protects religious practice]	US History	Y
+Free Speech Clause [protects expression rights]	US History	Y
+Free Press Clause [protects press freedom]	US History	Y
+Assembly Clause [protects peaceful assembly]	US History	Y
+Petition Clause [right to petition government]	US History	Y
+Search and Seizure Clause [bans unreasonable searches]	US History	Y
+Double Jeopardy Clause [no second prosecution]	US History	Y
+Self-Incrimination Clause [protects against self-accusation]	US History	Y
+Due Process Clause (5th) [federal due process guaranteed]	US History	Y
+Due Process Clause (14th) [state due process guaranteed]	US History	Y
+Equal Protection Clause [requires equal treatment]	US History	Y
+Confrontation Clause [face accusers in court]	US History	Y
+Assistance of Counsel Clause [guarantees legal counsel]	US History	Y
+Grand Jury Clause [requires serious-crime indictments]	US History	Y
+Cruel and Unusual Punishment Clause [limits harsh penalties]	US History	Y
+1st Amendment [1791 freedoms of speech and religion]	US History	Y
+2nd Amendment [1791 right to bear arms]	US History	Y
+3rd Amendment [1791 no forced quartering]	US History	Y
+4th Amendment [1791 no unreasonable searches]	US History	Y
+5th Amendment [1791 due process and self-incrimination]	US History	Y
+6th Amendment [1791 fair and speedy criminal trial]	US History	Y
+7th Amendment [1791 jury trial in civil cases]	US History	Y
+8th Amendment [1791 no cruel punishments]	US History	Y
+9th Amendment [1791 unlisted rights protected]	US History	Y
+10th Amendment [1791 powers reserved to states]	US History	Y
+11th Amendment [1795 limits suits against states]	US History	Y
+12th Amendment [1804 revised electoral college]	US History	Y
+13th Amendment [1865 abolished slavery]	US History	Y
+14th Amendment [1868 citizenship and equal protection]	US History	Y
+15th Amendment [1870 protected voting by race]	US History	Y
+16th Amendment [1913 authorized income tax]	US History	Y
+17th Amendment [1913 direct election of senators]	US History	Y
+18th Amendment [1919 prohibition of alcohol]	US History	Y
+19th Amendment [1920 women’s suffrage guaranteed]	US History	Y
+20th Amendment [1933 changed inauguration dates]	US History	Y
+21st Amendment [1933 repealed prohibition]	US History	Y
+22nd Amendment [1951 limited presidential terms]	US History	Y
+23rd Amendment [1961 DC presidential electors]	US History	Y
+24th Amendment [1964 banned poll taxes]	US History	Y
+25th Amendment [1967 presidential succession rules]	US History	Y
+26th Amendment [1971 voting age set to 18]	US History	Y
+27th Amendment [1992 delayed congressional pay raises]	US History	Y
+"Mountain [high, steep land]"	Landforms	Y
+Hill [small raised area of land]	Landforms	Y
+Plain [large flat area of land]	Landforms	Y
+Plateau [high flat land]	Landforms	Y
+Valley [low land between hills or mountains]	Landforms	Y
+"Canyon [deep, narrow valley with steep sides]"	Landforms	Y
+"Cliff [high, steep rock face]"	Landforms	Y
+River [large flowing body of water]	Landforms	Y
+Lake [large body of water surrounded by land]	Landforms	Y
+Delta [triangle-shaped land at a river’s mouth]	Landforms	Y
+Island [land completely surrounded by water]	Landforms	Y
+Peninsula [land almost surrounded by water]	Landforms	Y
+Bay [water partly surrounded by land]	Landforms	Y
+Gulf [large bay-like body of water]	Landforms	Y
+Coast [land along the ocean]	Landforms	Y
+Beach [sandy or pebbly shore]	Landforms	Y
+Dune [hill of sand shaped by wind]	Landforms	Y
+Desert [very dry land with little rain]	Landforms	Y
+Forest [large area covered with trees]	Landforms	Y
+"Jungle [thick, warm, rainy forest]"	Landforms	Y
+"Swamp [wet, spongy land with plants]"	Landforms	Y
+Wetland [land that is often covered with water]	Landforms	Y
+Glacier [slow-moving river of ice]	Landforms	Y
+Volcano [mountain that can erupt lava]	Landforms	Y
+Crater [bowl-shaped hole in the ground]	Landforms	Y
+Fjord [narrow sea inlet between steep cliffs]	Landforms	Y
+Lagoon [shallow water separated from sea]	Landforms	Y
+Harbor [sheltered place for ships]	Landforms	Y
+Oasis [green area in a desert]	Landforms	Y
+Mesa [flat-topped hill with steep sides]	Landforms	Y
+Circulatory system [moves blood around body]	Human Body	Y
+Respiratory system [brings in oxygen to body]	Human Body	Y
+Digestive system [breaks down food for energy]	Human Body	Y
+Nervous system [controls body and senses]	Human Body	Y
+Skeletal system [supports and protects body]	Human Body	Y
+Muscular system [helps body move]	Human Body	Y
+Immune system [defends against germs]	Human Body	Y
+Endocrine system [uses hormones to send signals]	Human Body	Y
+Urinary system [removes liquid waste]	Human Body	Y
+Reproductive system [helps create new life]	Human Body	Y
+Integumentary system [protects body with skin]	Human Body	Y
+Brain [controls thoughts and actions]	Human Body	Y
+Spinal cord [carries messages to and from brain]	Human Body	Y
+Nerves [send signals all over body]	Human Body	Y
+Heart [pumps blood through body]	Human Body	Y
+"Lungs [take in oxygen, release carbon dioxide]"	Human Body	Y
+Stomach [starts breaking down food]	Human Body	Y
+Small intestine [absorbs nutrients from food]	Human Body	Y
+"Large intestine [takes water, forms waste]"	Human Body	Y
+Liver [cleans blood and processes nutrients]	Human Body	Y
+Pancreas [helps digest food and control sugar]	Human Body	Y
+Kidneys [filter waste from blood]	Human Body	Y
+Bladder [stores urine before it leaves body]	Human Body	Y
+Skin [protects body and keeps germs out]	Human Body	Y
+Bones [give body shape and support]	Human Body	Y
+Muscles [pull bones to move body]	Human Body	Y
+Eyes [see light and color]	Human Body	Y
+Ears [hear sounds and help balance]	Human Body	Y
+Nose [smells and helps with taste]	Human Body	Y
+Tongue [tastes and helps with speech]	Human Body	Y
+Teeth [cut and grind food]	Human Body	Y
+Brain [controls body and thinking]	Human Body	Y
+Heart [pumps blood nonstop]	Human Body	Y
+Lungs [swap oxygen and carbon dioxide]	Human Body	Y
+Stomach [mixes food with acids]	Human Body	Y
+Liver [cleans blood and helps digestion]	Human Body	Y
+Kidneys [filter blood and make urine]	Human Body	Y
+"Pancreas [controls blood sugar, aids digestion]"	Human Body	Y
+Small intestine [absorbs tiny food particles]	Human Body	Y
+"Large intestine [removes water, forms stool]"	Human Body	Y
+Bladder [stores urine]	Human Body	Y
+Gallbladder [stores bile for fat digestion]	Human Body	Y
+"Spleen [helps fight germs, filters blood]"	Human Body	Y
+Skin [shields body and controls temperature]	Human Body	Y
+Esophagus [moves food to stomach]	Human Body	Y
+Trachea [carries air to lungs]	Human Body	Y
+Diaphragm [helps lungs move air]	Human Body	Y
+Thyroid [controls how fast body uses energy]	Human Body	Y
+Ovaries [make eggs and hormones]	Human Body	Y
+Testes [make sperm and hormones]	Human Body	Y
+Uterus [holds a growing baby]	Human Body	Y
+Bone marrow [makes blood cells]	Human Body	Y
+Cornea [clear front window of eye]	Human Body	Y
+Retina [senses light in eye]	Human Body	Y
+Eardrum [vibrates to pass along sound]	Human Body	Y
+Sun [star at center of our solar system]	Space	Y
+Mercury [small hot inner planet]	Space	Y
+"Venus [cloudy, very hot planet]"	Space	Y
+"Earth [our home, blue planet]"	Space	Y
+Mars [red planet with thin air]	Space	Y
+Jupiter [largest gas giant planet]	Space	Y
+Saturn [gas giant with bright rings]	Space	Y
+Uranus [tilted ice giant planet]	Space	Y
+"Neptune [far, cold blue planet]"	Space	Y
+Planet [large body orbiting a star]	Space	Y
+Dwarf planet [small round body orbiting sun]	Space	Y
+Moon [natural satellite of a planet]	Space	Y
+Asteroid [rocky object orbiting the sun]	Space	Y
+Comet [icy body with glowing tail]	Space	Y
+Meteoroid [small space rock]	Space	Y
+Meteor [space rock burning in atmosphere]	Space	Y
+Meteorite [space rock that hits the ground]	Space	Y
+Orbit [path an object follows around another]	Space	Y
+Ellipse [oval-shaped orbit path]	Space	Y
+Gravity [force that pulls objects together]	Space	Y
+Satellite [object that orbits a planet]	Space	Y
+Space probe [robot sent to explore space]	Space	Y
+Space station [place where astronauts live in orbit]	Space	Y
+Galaxy [huge group of stars and planets]	Space	Y
+Milky Way [galaxy that holds our solar system]	Space	Y
+Lagrange point [spot where gravity balances orbits]	Space	Y
+L1 point [gravity-balance point between two bodies]	Space	Y
+L2 point [gravity-balance point behind a body]	Space	Y
+L3 point [gravity-balance point opposite side of sun]	Space	Y
+L4 point [stable gravity point ahead in orbit]	Space	Y
+L5 point [stable gravity point behind in orbit]	Space	Y
+Asteroid belt [ring of asteroids between Mars and Jupiter]	Space	Y
+Kuiper Belt [region of icy bodies beyond Neptune]	Space	Y
+Oort Cloud [distant shell of icy objects]	Space	Y
+Ancient Egypt [built pyramids and hieroglyphs]	Ancient World	Y
+Mesopotamia [created first known writing]	Ancient World	Y
+Ancient Sumer [built early cities and ziggurats]	Ancient World	Y
+Babylon [famous law code and hanging gardens]	Ancient World	Y
+Assyria [strong army and iron weapons]	Ancient World	Y
+Ancient Greece [started democracy and philosophy]	Ancient World	Y
+Sparta [military-focused city-state]	Ancient World	Y
+Athens [center of art and learning]	Ancient World	Y
+Ancient Rome [built roads and strong laws]	Ancient World	Y
+Byzantine Empire [kept Roman law and learning alive]	Ancient World	Y
+Ancient China [invented paper and compass]	Ancient World	Y
+Shang Dynasty [early Chinese writing and bronze]	Ancient World	Y
+Zhou Dynasty [Mandate of Heaven idea]	Ancient World	Y
+Qin Dynasty [first united Chinese empire]	Ancient World	Y
+Han Dynasty [expanded trade on Silk Road]	Ancient World	Y
+Indus Valley [planned cities with drains]	Ancient World	Y
+Ancient India (Maurya) [spread Buddhism]	Ancient World	Y
+Gupta Empire [advances in math and medicine]	Ancient World	Y
+Ancient Persia [built huge empire with roads]	Ancient World	Y
+Phoenicia [expert sailors and alphabet]	Ancient World	Y
+Mayan civilization [complex calendar and pyramids]	Ancient World	Y
+Aztec Empire [floating gardens and temples]	Ancient World	Y
+Inca Empire [mountain roads and terraces]	Ancient World	Y
+Ancient Israel [monotheistic faith traditions]	Ancient World	Y
+Carthage [powerful trading sea empire]	Ancient World	Y
+Hittites [early ironworking skills]	Ancient World	Y
+Olmec [giant stone head sculptures]	Ancient World	Y
+Minoan civilization [sea trade and palaces]	Ancient World	Y
+Mycenaean civilization [early Greek warriors]	Ancient World	Y
+Song Dynasty China [gunpowder and printing]	Ancient World	Y
+American Revolution [1775–1783 colonies win independence]	Geopolitics	Y
+French Revolution [1789–1799 overthrew French monarchy]	Geopolitics	Y
+War of 1812 [1812–1815 US vs Britain conflict]	Geopolitics	Y
+Mexican–American War [1846–1848 US gains southwest lands]	Geopolitics	Y
+US Civil War [1861–1865 North vs South over slavery]	Geopolitics	Y
+Spanish–American War [1898 US gains overseas territories]	Geopolitics	Y
+World War I [1914–1918 global war in Europe]	Geopolitics	Y
+"Russian Revolution [1917 tsar overthrown, USSR formed]"	Geopolitics	Y
+Treaty of Versailles [1919 punished Germany after WWI]	Geopolitics	Y
+Great Depression [1929–1939 worldwide economic crisis]	Geopolitics	Y
+World War II [1939–1945 global war against Axis powers]	Geopolitics	Y
+United Nations formed [1945 world group for peace]	Geopolitics	Y
+Marshall Plan [1948–1952 US helps rebuild Europe]	Geopolitics	Y
+Cold War begins [late 1940s US–USSR rivalry]	Geopolitics	Y
+Korean War [1950–1953 North vs South Korea]	Geopolitics	Y
+Cuban Missile Crisis [1962 US–USSR nuclear standoff]	Geopolitics	Y
+Vietnam War [1955–1975 conflict in Southeast Asia]	Geopolitics	Y
+Civil Rights Act [1964 US law banning segregation]	Geopolitics	Y
+Detente period [1970s eased Cold War tensions]	Geopolitics	Y
+Soviet Union collapses [1991 ends Cold War era]	Geopolitics	Y
+Gulf War [1990–1991 US-led force frees Kuwait]	Geopolitics	Y
+Good Friday Agreement [1998 peace in Northern Ireland]	Geopolitics	Y
+9/11 attacks [2001 terror attack on United States]	Geopolitics	Y
+War in Afghanistan [2001–2021 long US-led conflict]	Geopolitics	Y
+Iraq War [2003–2011 US-led invasion of Iraq]	Geopolitics	Y
+Paris Climate Agreement [2015 global climate pledge]	Geopolitics	Y
+Brexit referendum [2016 UK votes to leave EU]	Geopolitics	Y
+Confederation of Canada [1867 provinces unite as nation]	Geopolitics	Y
+Rebellion of 1837 [1837 armed uprising for reform]	Geopolitics	Y
+British North America Act [1867 created Dominion of Canada]	Geopolitics	Y
+Red River Rebellion [1869–1870 Métis resist land loss]	Geopolitics	Y
+Klondike Gold Rush [1896–1899 massive gold migration]	Geopolitics	Y
+Fall of Constantinople [1453 Ottomans end Byzantine Empire]	Geopolitics	Y
+Protestant Reformation [1517 Luther challenges Catholic Church]	Geopolitics	Y
+Peace of Westphalia [1648 ended Thirty Years’ War]	Geopolitics	Y
+Glorious Revolution [1688 limited monarchy in England]	Geopolitics	Y
+Seven Years’ War [1756–1763 global colonial conflict]	Geopolitics	Y
+Napoleonic Wars [1803–1815 Napoleon conquers Europe]	Geopolitics	Y
+Unification of Italy [1861 multiple states form Italy]	Geopolitics	Y
+Unification of Germany [1871 Bismarck creates German Empire]	Geopolitics	Y
+Fall of Berlin Wall [1989 end of Cold War division]	Geopolitics	Y
+Mongol invasion of Rus [1237–1240 Mongols conquer Russia]	Geopolitics	Y
+Time of Troubles [1598–1613 chaos and foreign invasion]	Geopolitics	Y
+Romanov Dynasty begins [1613 ended time of troubles]	Geopolitics	Y
+Decembrist Revolt [1825 nobles tried to end autocracy]	Geopolitics	Y
+Crimean War [1853–1856 Russia vs European powers]	Geopolitics	Y
+October Revolution [1917 Bolsheviks seize power]	Geopolitics	Y
+all of Han Dynasty [220 AD empire splits into warlord states]	Geopolitics	Y
+Tang Dynasty golden age [618–907 poetry and trade peak]	Geopolitics	Y
+Mongol conquest of China [1279 Kublai Khan forms Yuan Dynasty]	Geopolitics	Y
+Ming Dynasty founded [1368 Han Chinese overthrow Mongols]	Geopolitics	Y
+Opium Wars [1839–1860 Britain forces trade openings]	Geopolitics	Y
+Boxer Rebellion [1900 uprising against foreign influence]	Geopolitics	Y
+"Meiji Restoration [1868 ended shogun rule, modernized Japan]"	Geopolitics	Y
+Battle of Sekigahara [1600 unified Japan under Tokugawa]	Geopolitics	Y
+Sino-Japanese War [1894–1895 Japan gains Taiwan]	Geopolitics	Y
+Russo-Japanese War [1904–1905 Japan defeats Russia]	Geopolitics	Y
+Treaty of Kanagawa [1854 US opens Japan to trade]	Geopolitics	Y
+Inca Empire founded [1438 expanded across Andes]	Geopolitics	Y
+Spanish conquest of Inca [1532–1572 Pizarro ends empire]	Geopolitics	Y
+Brazilian independence [1822 Portugal colony becomes empire]	Geopolitics	Y
+War of the Triple Alliance [1864–1870 Paraguay vs neighbors]	Geopolitics	Y
+Chaco War [1932–1935 Bolivia vs Paraguay over land]	Geopolitics	Y
+Battle of Tours [732 stopped Muslim advance in Europe]	Geopolitics	Y
+Seljuk Turks conquer Persia [1037 expanded Islamic empire]	Geopolitics	Y
+Mongol sack of Baghdad [1258 ended Abbasid Caliphate]	Geopolitics	Y
+Ottoman conquest of Constantinople [1453 became Ottoman capital]	Geopolitics	Y
+Arab Revolt [1916 against Ottoman rule in Arabia]	Geopolitics	Y
+"Iranian Revolution [1979 overthrew monarchy, created Islamic Republic]"	Geopolitics	Y
+Rise of Kingdom of Aksum [100 AD powerful Ethiopian trading empire]	Geopolitics	Y
+Ghana Empire peak [800–1100 gold and salt trade]	Geopolitics	Y
+Mali Empire under Mansa Musa [1312–1337 richest king ever]	Geopolitics	Y
+Zulu Kingdom expansion [1816–1879 Shaka’s military reforms]	Geopolitics	Y
+Berlin Conference [1884–1885 Europeans divide Africa]	Geopolitics	Y
+Scramble for Africa [1880s–1914 colonial land grab]	Geopolitics	Y
+Christopher Columbus [voyages linking Europe and Americas]	Pioneers	Y
+Ferdinand Magellan [crew first sailed around world]	Pioneers	Y
+Marco Polo [described travels to Asia]	Pioneers	Y
+Lewis and Clark [explored western United States]	Pioneers	Y
+Sacagawea [guided explorers in the West]	Pioneers	Y
+Neil Armstrong [first person to walk on moon]	Pioneers	Y
+Yuri Gagarin [first human in space]	Pioneers	Y
+Amelia Earhart [pioneering woman pilot]	Pioneers	Y
+Isaac Newton [laws of motion and gravity]	Pioneers	Y
+"Galileo Galilei [improved telescope, studied planets]"	Pioneers	Y
+Albert Einstein [theories of relativity]	Pioneers	Y
+Marie Curie [discovered important radioactive elements]	Pioneers	Y
+Nikola Tesla [pioneered alternating current power]	Pioneers	Y
+Thomas Edison [improved light bulb and devices]	Pioneers	Y
+Alexander Graham Bell [invented practical telephone]	Pioneers	Y
+Charles Darwin [theory of evolution by natural selection]	Pioneers	Y
+Gregor Mendel [discoveries in genetics with peas]	Pioneers	Y
+Rachel Carson [sparked modern environmental movement]	Pioneers	Y
+Leonardo da Vinci [Renaissance art and inventions]	Pioneers	Y
+Michelangelo [famous sculptures and paintings]	Pioneers	Y
+Ludwig van Beethoven [influential classical music]	Pioneers	Y
+Wolfgang Amadeus Mozart [prolific composer]	Pioneers	Y
+Pablo Picasso [pioneered modern art styles]	Pioneers	Y
+Frida Kahlo [iconic self-portraits and identity themes]	Pioneers	Y
+Harriet Tubman [led enslaved people to freedom]	Pioneers	Y
+Frederick Douglass [abolitionist writer and speaker]	Pioneers	Y
+Susan B. Anthony [fought for women’s voting rights]	Pioneers	Y
+Mahatma Gandhi [led nonviolent independence movement]	Pioneers	Y
+Martin Luther King Jr. [led US civil rights movement]	Pioneers	Y
+Rosa Parks [sparked bus boycott for equality]	Pioneers	Y
+"Nelson Mandela [fought apartheid, became president]"	Pioneers	Y
+Cesar Chavez [organized farm workers for rights]	Pioneers	Y
+Malala Yousafzai [stands up for girls’ education]	Pioneers	Y
+"Zeus [Greece king of gods, sky and thunder]"	Mythology	Y
+"Hera [Greece queen of gods, marriage protector]"	Mythology	Y
+Poseidon [Greece god of sea and earthquakes]	Mythology	Y
+Demeter [Greece goddess of agriculture and harvest]	Mythology	Y
+Hades [Greece god of underworld and dead]	Mythology	Y
+Athena [Greece goddess of wisdom and war strategy]	Mythology	Y
+"Apollo [Greece god of sun, music and prophecy]"	Mythology	Y
+Artemis [Greece goddess of hunt and moon]	Mythology	Y
+Ares [Greece god of war and violence]	Mythology	Y
+Aphrodite [Greece goddess of love and beauty]	Mythology	Y
+Hermes [Greece god of travel and messengers]	Mythology	Y
+Hephaestus [Greece god of fire and blacksmiths]	Mythology	Y
+Dionysus [Greece god of wine and parties]	Mythology	Y
+Hestia [Greece goddess of hearth and home]	Mythology	Y
+Cronus [Greece Titan ruler of golden age]	Mythology	Y
+Rhea [Greece Titan mother of Olympians]	Mythology	Y
+Oceanus [Greece Titan god of ocean rivers]	Mythology	Y
+Atlas [Greece Titan holds up the sky]	Mythology	Y
+Prometheus [Greece Titan stole fire for humans]	Mythology	Y
+Gaia [Greece primordial earth mother]	Mythology	Y
+Uranus [Greece primordial sky father]	Mythology	Y
+Typhon [Greece monstrous storm giant]	Mythology	Y
+"Cyclops [Greece one-eyed giants, weapon makers]"	Mythology	Y
+Minotaur [Greece bull-headed man-eating monster]	Mythology	Y
+Medusa [Greece snake-haired monster turns to stone]	Mythology	Y
+Cerberus [Greece three-headed guard dog of underworld]	Mythology	Y
+Pegasus [Greece winged horse from Medusa]	Mythology	Y
+Chimera [Greece fire-breathing lion-goat-snake]	Mythology	Y
+Hydra [Greece multi-headed regenerating serpent]	Mythology	Y
+Sphinx [Greece riddle-asking lion-woman]	Mythology	Y
+Hercules [Greece hero of twelve labors]	Mythology	Y
+Achilles [Greece warrior with invincible heel]	Mythology	Y
+Odysseus [Greece clever king of Ithaca]	Mythology	Y
+Perseus [Greece slayer of Medusa]	Mythology	Y
+Thor [Norse god of thunder and hammer]	Mythology	Y
+"Odin [Norse king of gods, wisdom seeker]"	Mythology	Y
+Loki [Norse trickster god and shapeshifter]	Mythology	Y
+Freyja [Norse goddess of love and war]	Mythology	Y
+Freyr [Norse god of fertility and peace]	Mythology	Y
+Tyr [Norse god of war and justice]	Mythology	Y
+"Fenrir [Norse giant wolf, Ragnarok destroyer]"	Mythology	Y
+Jormungandr [Norse world-encircling serpent]	Mythology	Y
+Valkyries [Norse warrior women choosers of slain]	Mythology	Y
+Yggdrasil [Norse world tree connecting realms]	Mythology	Y
+Ra [Egypt sun god and creator]	Mythology	Y
+Osiris [Egypt god of afterlife and resurrection]	Mythology	Y
+Isis [Egypt goddess of magic and motherhood]	Mythology	Y
+Anubis [Egypt jackal god of embalming]	Mythology	Y
+Horus [Egypt falcon god of kingship]	Mythology	Y
+Set [Egypt god of chaos and storms]	Mythology	Y
+Thoth [Egypt ibis god of writing and knowledge]	Mythology	Y
+Bastet [Egypt cat goddess of protection]	Mythology	Y
+Amun [Egypt hidden god of creation]	Mythology	Y
+Sphinx [Egypt lion-bodied guardian of pyramids]	Mythology	Y
+Anansi [Africa West spider trickster storyteller]	Mythology	Y
+Olorun [Yoruba Nigeria sky creator god]	Mythology	Y
+Shango [Yoruba Nigeria thunder and justice god]	Mythology	Y
+Ogun [Yoruba Nigeria iron and war god]	Mythology	Y
+Mami Wata [Africa water spirit of wealth and beauty]	Mythology	Y
+Amaterasu [Japan sun goddess ancestor]	Mythology	Y
+Susanoo [Japan storm god brother of sun]	Mythology	Y
+Izanagi [Japan creator god of creation]	Mythology	Y
+Izanami [Japan creator goddess of death]	Mythology	Y
+Kitsune [Japan fox spirits shapeshifters]	Mythology	Y
+Kappa [Japan water imp with turtle shell]	Mythology	Y
+Tengu [Japan bird-like mountain demons]	Mythology	Y
+Jade Emperor [China supreme ruler of heaven]	Mythology	Y
+Nuwa [China serpent goddess created humans]	Mythology	Y
+Pangu [China giant separated earth and sky]	Mythology	Y
+Sun Wukong [China Monkey King trickster hero]	Mythology	Y
+Dragons [China wise rain-bringing serpents]	Mythology	Y
+Nine-tailed fox [China seductive shape-shifting spirit]	Mythology	Y
+Yama [India Hindu god of death and justice]	Mythology	Y
+Shiva [India destroyer and transformer god]	Mythology	Y
+Vishnu [India preserver god with avatars]	Mythology	Y
+Lakshmi [India goddess of wealth and prosperity]	Mythology	Y
+Hanuman [India monkey god loyal hero]	Mythology	Y
+Garuda [India eagle mount of Vishnu]	Mythology	Y
+Kali [India fierce goddess of time and destruction]	Mythology	Y
+Tezcatlipoca [Aztec Mexico smoking mirror god]	Mythology	Y
+Quetzalcoatl [Aztec Mexico feathered serpent creator]	Mythology	Y
+Huitzilopochtli [Aztec Mexico war and sun god]	Mythology	Y
+Xipe Totec [Aztec Mexico renewal god flayed skin]	Mythology	Y
+Jaguar warriors [Aztec Mexico elite fighter order]	Mythology	Y
+Inti [Inca Peru sun god emperor ancestor]	Mythology	Y
+Viracocha [Inca Peru creator god of sea]	Mythology	Y
+Mama Quilla [Inca Peru moon goddess]	Mythology	Y
+Thor Heyerdahl [modern explorer of ancient voyages]	Mythology	Y
+Anansi [Caribbean spider folklore hero]	Mythology	Y
+Slenderman [modern creepypasta tall faceless figure]	Mythology	Y
+Thunderbird [Native American massive storm-bringing bird]	Mythology	Y
+Wendigo [Native American cannibalistic ice spirit monster]	Mythology	Y
+Horned Serpent [Native American water guardian serpent]	Mythology	Y
+Skinwalker [Navajo shapeshifting witch]	Mythology	Y
+Piasa Bird [Illinois Native winged cat-like beast]	Mythology	Y
+Water Panther [Ojibwe underwater panther spirit]	Mythology	Y
+Raven [Pacific Northwest trickster creator bird]	Mythology	Y
+Coyote [Native American trickster culture hero]	Mythology	Y
+Spider Woman [Hopi creator weaver of world]	Mythology	Y
+Kokopelli [Hopi fertility flute player]	Mythology	Y
+Iktomi [Lakota spider trickster]	Mythology	Y
+Gluskap [Algonquin culture hero giant]	Mythology	Y
+Nanabozho [Ojibwe rabbit trickster]	Mythology	Y
+Flying Head [Iroquois severed head monster]	Mythology	Y
+Ogopogo [Inuit Canada lake serpent monster]	Mythology	Y
+Pukwudgie [Wampanoag spiky-backed troll]	Mythology	Y
+Gitchie Manitou [Ojibwe great spirit creator]	Mythology	Y
+Estsanatlehi [Navajo changing woman goddess]	Mythology	Y
+Spider Grandmother [Native Southwest creator weaver]	Mythology	Y
+Maheo [Cheyenne all-father creator]	Mythology	Y
+Unktehila [Lakota water serpent monsters]	Mythology	Y
+Awonawilona [Zuni creator of all things]	Mythology	Y
+Lodge Boy [Native twins culture heroes]	Mythology	Y
+Horned Water Snake [Seminole underwater horned beast]	Mythology	Y
+Gitchi Manitou [Algonquin great spirit of life]	Mythology	Y
+Napi [Blackfoot trickster old man]	Mythology	Y
+Tawa [Hopi sun god creator]	Mythology	Y
+White Buffalo Calf Woman [Lakota sacred pipe bringer]	Mythology	Y
+Shango [Yoruba Africa thunder axe god]	Mythology	Y
+Ogun [Yoruba Africa iron war god]	Mythology	Y
+Olorun [Yoruba Africa sky supreme creator]	Mythology	Y
+Eshu [Yoruba Africa trickster messenger]	Mythology	Y
+Yemoja [Yoruba Africa ocean mother goddess]	Mythology	Y
+Oshun [Yoruba Africa river love goddess]	Mythology	Y
+Obatala [Yoruba Africa white cloth creator]	Mythology	Y
+Nyame [Ashanti Africa sky god]	Mythology	Y
+Anansi [Ashanti West Africa spider storyteller]	Mythology	Y
+Grootslang [South Africa elephant-snake treasure guardian]	Mythology	Y
+Impundulu [Zulu South Africa lightning bird vampire]	Mythology	Y
+Sasabonsam [Ghana forest vampire bat demon]	Mythology	Y
+Tokoloshe [Zulu South Africa evil household imp]	Mythology	Y
+Mami Wata [West Africa seductive water spirit]	Mythology	Y
+Adro [Luganda Uganda sky and earth god]	Mythology	Y
+Mulungu [East Africa supreme creator god]	Mythology	Y
+Nyami Nyami [Zambia Zambezi river god serpent]	Mythology	Y
+Amadioha [Igbo Nigeria thunder justice god]	Mythology	Y
+Ala [Igbo Nigeria earth mother goddess]	Mythology	Y
+Legba [Fon Benin crossroads trickster]	Mythology	Y
+Quetzalcoatl [Aztec Mexico feathered serpent creator]?	Mythology	Y
+Tláloc [Aztec Mexico rain thunder god]	Mythology	Y
+Xochiquetzal [Aztec Mexico flowers love goddess]	Mythology	Y
+Coatlicue [Aztec Mexico earth skirt-of-snakes]	Mythology	Y
+Chalchiuhtlicue [Aztec Mexico jade water goddess]	Mythology	Y
+Tlaltecuhtli [Aztec Mexico earth monster alligator]	Mythology	Y
+Cipactli [Aztec Mexico primordial sea monster]	Mythology	Y
+Itzpapalotl [Aztec Mexico obsidian butterfly demon]	Mythology	Y
+Xipe Totec [Aztec Mexico flayed renewal god]	Mythology	Y
+Mictlantecuhtli [Aztec Mexico skeleton death god]	Mythology	Y
+Hunahpu [Maya twin hero ballplayer]?	Mythology	Y
+Xbalanque [Maya twin hero underworld survivor]	Mythology	Y
+Itzamna [Maya creator sky god]	Mythology	Y
+Ix Chel [Maya moon medicine goddess]	Mythology	Y
+Kukulkan [Maya feathered serpent wind god]	Mythology	Y
+Buluc Chabtan [Maya war star demon]	Mythology	Y
+Camazotz [Maya bat death god]	Mythology	Y
+Ah Puch [Maya skull-faced death lord]	Mythology	Y
+Inti [Inca Peru sun god emperor ancestor]	Mythology	Y
+Viracocha [Inca Peru sea creator god]	Mythology	Y
+Pachamama [Inca Peru earth mother goddess]	Mythology	Y
+Supay [Inca Peru underworld demon]	Mythology	Y
+Illapa [Inca Peru thunder lightning god]	Mythology	Y
+Mama Cocha [Inca Peru sea mother goddess]	Mythology	Y
+Apus [Inca Peru sacred mountain spirits]	Mythology	Y
+Amaru [Inca Peru earth serpent dragon]	Mythology	Y
+Maui [Polynesia demigod fisherman island fisher]?	Mythology	Y
+Pele [Hawaii volcano fire goddess]	Mythology	Y
+Kane [Hawaiian life light god]	Mythology	Y
+Ku [Hawaiian war god]	Mythology	Y
+Lono [Hawaiian peace fertility god]	Mythology	Y
+Hi'iaka [Hawaiian Pele's dancer sister]	Mythology	Y
+Ranginui [Maori New Zealand sky father]	Mythology	Y
+Papatuanuku [Maori New Zealand earth mother]	Mythology	Y
+Tane Mahuta [Maori New Zealand forest creator]	Mythology	Y
+Tawhiri [Maori New Zealand storm god]	Mythology	Y
+Hine-nui-te-po [Maori New Zealand death goddess]	Mythology	Y
+Rainbow Serpent [Australian Aboriginal water creator]	Mythology	Y
+Baiame [Australian Aboriginal sky father]	Mythology	Y
+Wandjina [Australian Aboriginal rain cloud spirits]	Mythology	Y
+Bunyip [Australian Aboriginal swamp monster]	Mythology	Y
+Mimi [Australian Aboriginal skinny cave spirits]	Mythology	Y
+Tiddalik [Australian Aboriginal frog caused drought]	Mythology	Y
+Guanyin [China Buddhist mercy goddess]	Mythology	Y
+Houyi [China archer shot down suns]	Mythology	Y
+Chang'e [China moon lady rabbit companion]	Mythology	Y
+Nezha [China child warrior god]	Mythology	Y
+Erlang Shen [China three-eyed thunder deity]	Mythology	Y
+White Tiger [China west guardian constellation]	Mythology	Y
+Azure Dragon [China east guardian constellation]	Mythology	Y
+Vermilion Bird [China south guardian constellation]	Mythology	Y
+Black Tortoise [China north guardian constellation]	Mythology	Y
+Nian [China New Year monster scared by red]	Mythology	Y
+Kitsune [Japanese fox spirit shapeshifter]	Mythology	Y
+Tengu [Japanese bird demon warrior trainer]	Mythology	Y
+Kappa [Japanese river imp cucumber lover]	Mythology	Y
+Oni [Japanese horned demon club wielder]	Mythology	Y
+Yuki-onna [Japanese snow woman spirit]	Mythology	Y
+Tanuki [Japanese raccoon dog trickster]	Mythology	Y
+Nurikabe [Japanese invisible wall spirit]	Mythology	Y
+Amaterasu [Japanese sun goddess cave hider]	Mythology	Y
+Susanoo [Japanese storm sea god slayer]	Mythology	Y
+Izanagi [Japanese creation stirring god]	Mythology	Y
+Izanami [Japanese creation death goddess]	Mythology	Y
+Brahma [India Hindu creator god]?	Mythology	Y
+Shiva [India Hindu destroyer dancer]	Mythology	Y
+Vishnu [India Hindu preserver incarnator]	Mythology	Y
+Lakshmi [India Hindu wealth lotus goddess]	Mythology	Y
+Saraswati [India Hindu knowledge music goddess]	Mythology	Y
+Ganesha [India Hindu elephant-head obstacle remover]	Mythology	Y
+Hanuman [India Hindu monkey strength devotee]	Mythology	Y
+Kali [India Hindu fierce time destroyer]	Mythology	Y
+Krishna [India Hindu avatar playful prince]	Mythology	Y
+Rama [India Hindu ideal king warrior]	Mythology	Y
+Parvati [India Hindu Shiva's devoted wife]	Mythology	Y
+Kartikeya [India Hindu war god peacock rider]	Mythology	Y
+Durga [India Hindu demon-slaying warrior goddess]	Mythology	Y
+Garuda [India Hindu eagle Vishnu mount]	Mythology	Y
+Naga [India serpent people guardians]	Mythology	Y
+Ravana [India demon king Lanka ruler]	Mythology	Y
+Asuras [India powerful anti-gods]	Mythology	Y
+Rakshasas [India shape-shifting demons]	Mythology	Y
+Yama [India Hindu death judge]	Mythology	Y
+Indra [India Vedic king of gods thunder]	Mythology	Y

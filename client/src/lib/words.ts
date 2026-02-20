@@ -1,9 +1,8 @@
-import { STUDY_WORDS_1 } from './study-words-1';
-import { STUDY_WORDS_2 } from './study-words-2';
+import { STUDY_WORD_LISTS } from './study-words';
 
 const BASE_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: boolean }[] = [
   {
-    id: 'actions',
+    id: 'charades-actions',
     name: 'Charades - Actions',
     words: [
       'Dancing', 'Swimming', 'Cooking', 'Driving', 'Fishing',
@@ -25,7 +24,7 @@ const BASE_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: bo
     ]
   },
   {
-    id: 'food-charades',
+    id: 'charades-food-snacks',
     name: 'Charades - Food & Snacks',
     words: [
       'Pizza', 'Spaghetti', 'Hamburger', 'Hot Dog', 'Taco',
@@ -51,7 +50,7 @@ const BASE_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: bo
     ]
   },
   {
-    id: 'animals-kids-charades',
+    id: 'charades-animals',
     name: 'Charades - Animals',
     words: [
       'Dog', 'Cat', 'Bunny', 'Hamster', 'Goldfish',
@@ -80,28 +79,44 @@ const BASE_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: bo
     id: 'animals-easy',
     name: 'Animals - Easy',
     words: [
-      'Alligator', 'Ant', 'Anteater', 'Bat', 'Bear', 'Beaver', 'Bee', 'Beetle', 'Bison', 'Butterfly',
-      'Camel', 'Capybara', 'Cat', 'Caterpillar', 'Cheetah', 'Chicken', 'Cow', 'Crab', 'Deer', 'Dog',
-      'Dolphin', 'Donkey', 'Duck', 'Eagle', 'Elephant', 'Flamingo', 'Frog', 'Giraffe', 'Goat', 'Goldfish',
-      'Goose', 'Gorilla', 'Great White Shark', 'Guinea Pig', 'Hammerhead Shark', 'Hamster', 'Hedgehog', 'Hippo', 'Horse', 'Jellyfish',
-      'Kangaroo', 'King Cobra', 'Koala', 'Ladybug', 'Leopard', 'Lion', 'Lizard', 'Lobster', 'Manatee', 'Meerkat',
-      'Monkey', 'Moose', 'Mouse', 'Octopus', 'Orca', 'Owl', 'Panda', 'Parrot', 'Peacock', 'Penguin',
-      'Pig', 'Platypus', 'Polar Bear', 'Porcupine', 'Rabbit', 'Raccoon', 'Rat', 'Rattlesnake', 'Reindeer', 'Rhino',
-      'Salamander', 'Scorpion', 'Sea Turtle', 'Seahorse', 'Seal', 'Shark', 'Sheep', 'Sloth', 'Snake', 'Spider',
-      'Squirrel', 'Starfish', 'Stingray', 'Swan', 'Tarantula', 'Tiger', 'Tortoise', 'Toucan', 'Turkey', 'Turtle',
-      'Walrus', 'Whale', 'Wolf', 'Wolverine', 'Woodpecker', 'Zebra'
+      'Alligator', 'Ant', 'Anteater', 'Bat', 'Bear',
+      'Beaver', 'Bee', 'Beetle', 'Bison', 'Butterfly',
+      'Camel', 'Capybara', 'Cat', 'Caterpillar', 'Cheetah',
+      'Chicken', 'Cow', 'Crab', 'Deer', 'Dog',
+      'Dolphin', 'Donkey', 'Duck', 'Eagle', 'Elephant',
+      'Flamingo', 'Frog', 'Giraffe', 'Goat', 'Goldfish',
+      'Goose', 'Gorilla', 'Great White Shark', 'Guinea Pig', 'Hammerhead Shark',
+      'Hamster', 'Hedgehog', 'Hippo', 'Horse', 'Jellyfish',
+      'Kangaroo', 'King Cobra', 'Koala', 'Ladybug', 'Leopard',
+      'Lion', 'Lizard', 'Lobster', 'Manatee', 'Meerkat',
+      'Monkey', 'Moose', 'Mouse', 'Octopus', 'Orca',
+      'Owl', 'Panda', 'Parrot', 'Peacock', 'Penguin',
+      'Pig', 'Platypus', 'Polar Bear', 'Porcupine', 'Rabbit',
+      'Raccoon', 'Rat', 'Rattlesnake', 'Reindeer', 'Rhino',
+      'Salamander', 'Scorpion', 'Sea Turtle', 'Seahorse', 'Seal',
+      'Shark', 'Sheep', 'Sloth', 'Snake', 'Spider',
+      'Squirrel', 'Starfish', 'Stingray', 'Swan', 'Tarantula',
+      'Tiger', 'Tortoise', 'Toucan', 'Turkey', 'Turtle',
+      'Walrus', 'Whale', 'Wolf', 'Wolverine', 'Woodpecker',
+      'Zebra'
     ]
   },
   {
     id: 'animals-medium',
     name: 'Animals - Medium',
     words: [
-      'Albatross', 'Alpaca', 'Anaconda', 'Antelope', 'Armadillo', 'Axolotl', 'Barracuda', 'Beluga', 'Black Bear', 'Blue Whale',
-      'Capuchin Monkey', 'Caribou', 'Chameleon', 'Chimpanzee', 'Chipmunk', 'Coyote', 'Crocodile', 'Cuttlefish', 'Dugong', 'Echidna',
-      'Emu', 'Fox', 'Frilled Lizard', 'Gecko', 'Gibbon', 'Gila Monster', 'Grizzly Bear', 'Honey Badger', 'Horseshoe Crab', 'Humpback Whale',
-      'Hyena', 'Iguana', 'Jaguar', 'Komodo Dragon', 'Llama', 'Manta Ray', 'Marine Iguana', 'Marmoset', 'Marten', 'Mink',
-      'Moray Eel', 'Musk Ox', 'Narwhal', 'Newt', 'Orangutan', 'Otter', 'Poison Dart Frog', "Portuguese Man O' War", 'Praying Mantis', 'Puffin',
-      'Python', 'Quokka', 'Sailfish', 'Scorpion', 'Skunk', 'Sperm Whale', 'Squid', 'Stick Insect', 'Tasmanian Devil', 'Tuna',
+      'Albatross', 'Alpaca', 'Anaconda', 'Antelope', 'Armadillo',
+      'Axolotl', 'Barracuda', 'Beluga', 'Black Bear', 'Blue Whale',
+      'Capuchin Monkey', 'Caribou', 'Chameleon', 'Chimpanzee', 'Chipmunk',
+      'Coyote', 'Crocodile', 'Cuttlefish', 'Dugong', 'Echidna',
+      'Emu', 'Fox', 'Frilled Lizard', 'Gecko', 'Gibbon',
+      'Gila Monster', 'Grizzly Bear', 'Honey Badger', 'Horseshoe Crab', 'Humpback Whale',
+      'Hyena', 'Iguana', 'Jaguar', 'Komodo Dragon', 'Llama',
+      'Manta Ray', 'Marine Iguana', 'Marmoset', 'Marten', 'Mink',
+      'Moray Eel', 'Musk Ox', 'Narwhal', 'Newt', 'Orangutan',
+      'Otter', 'Poison Dart Frog', 'Portuguese Man O\' War', 'Praying Mantis', 'Puffin',
+      'Python', 'Quokka', 'Sailfish', 'Scorpion', 'Skunk',
+      'Sperm Whale', 'Squid', 'Stick Insect', 'Tasmanian Devil', 'Tuna',
       'Viper', 'Weasel', 'Whale Shark', 'Wombat'
     ]
   },
@@ -109,14 +124,17 @@ const BASE_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: bo
     id: 'animals-hard',
     name: 'Animals - Hard',
     words: [
-      'Aye-Aye', 'Bearded Dragon', 'Black Mamba', 'Bonobo', 'Box Jellyfish', 'Bullet Ant', 'Caiman', 'Cane Toad', 'Cape Buffalo', 'Cassowary',
-      'Civet', 'Coati', 'Fisher', 'Howler Monkey', 'Kinkajou', 'Kookaburra', 'Leafcutter Ant', 'Mandrill', 'Marlin', 'Nautilus',
-      'Ocelot', 'Okapi', 'Pangolin', 'Proboscis Monkey', 'Serval', 'Shoebill', 'Star-Nosed Mole', 'Stoat', 'Takin', 'Tamarin',
+      'Aye-Aye', 'Bearded Dragon', 'Black Mamba', 'Bonobo', 'Box Jellyfish',
+      'Bullet Ant', 'Caiman', 'Cane Toad', 'Cape Buffalo', 'Cassowary',
+      'Civet', 'Coati', 'Fisher', 'Howler Monkey', 'Kinkajou',
+      'Kookaburra', 'Leafcutter Ant', 'Mandrill', 'Marlin', 'Nautilus',
+      'Ocelot', 'Okapi', 'Pangolin', 'Proboscis Monkey', 'Serval',
+      'Shoebill', 'Star-Nosed Mole', 'Stoat', 'Takin', 'Tamarin',
       'Tapir', 'Zebra Finch'
     ]
   },
   {
-    id: 'objects',
+    id: 'household-objects',
     name: 'Household Objects',
     words: [
       'Toaster', 'Lamp', 'Sofa', 'Fridge', 'Microwave',
@@ -137,7 +155,7 @@ const BASE_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: bo
     ]
   },
   {
-    id: 'christmas-kids',
+    id: 'christmas-kids-party',
     name: 'Christmas Kids Party',
     words: [
       'Santa Claus', 'Rudolph', 'Snowman', 'Elf', 'Reindeer',
@@ -188,269 +206,11 @@ const BASE_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: bo
       'Dinosaur', 'Robot', 'Unicorn', 'Dragon', 'Mermaid'
     ]
   },
-  {
-    id: 'us-geography',
-    name: 'US Geography',
-    words: [
-      'Alabama', 'Montgomery', 'Alaska', 'Juneau', 'Arizona', 'Phoenix',
-      'Arkansas', 'Little Rock', 'California', 'Sacramento', 'Colorado', 'Denver',
-      'Connecticut', 'Hartford', 'Delaware', 'Dover', 'Florida', 'Tallahassee',
-      'Georgia', 'Atlanta', 'Hawaii', 'Honolulu', 'Idaho', 'Boise',
-      'Illinois', 'Springfield', 'Indiana', 'Indianapolis', 'Iowa', 'Des Moines',
-      'Kansas', 'Topeka', 'Kentucky', 'Frankfort', 'Louisiana', 'Baton Rouge',
-      'Maine', 'Augusta', 'Maryland', 'Annapolis', 'Massachusetts', 'Boston',
-      'Michigan', 'Lansing', 'Minnesota', 'Saint Paul', 'Mississippi', 'Jackson',
-      'Missouri', 'Jefferson City', 'Montana', 'Helena', 'Nebraska', 'Lincoln',
-      'Nevada', 'Carson City', 'New Hampshire', 'Concord', 'New Jersey', 'Trenton',
-      'New Mexico', 'Santa Fe', 'New York', 'Albany', 'North Carolina', 'Raleigh',
-      'North Dakota', 'Bismarck', 'Ohio', 'Columbus', 'Oklahoma', 'Oklahoma City',
-      'Oregon', 'Salem', 'Pennsylvania', 'Harrisburg', 'Rhode Island', 'Providence',
-      'South Carolina', 'Columbia', 'South Dakota', 'Pierre', 'Tennessee', 'Nashville',
-      'Texas', 'Austin', 'Utah', 'Salt Lake City', 'Vermont', 'Montpelier',
-      'Virginia', 'Richmond', 'Washington', 'Olympia', 'West Virginia', 'Charleston',
-      'Wisconsin', 'Madison', 'Wyoming', 'Cheyenne',
-      'New York City', 'Los Angeles', 'Chicago', 'Houston', 'Miami',
-      'San Francisco', 'Seattle', 'Las Vegas', 'San Diego', 'Dallas',
-      'San Antonio', 'Philadelphia', 'Detroit', 'Portland', 'Minneapolis',
-      'New Orleans', 'Baltimore', 'Milwaukee', 'Cleveland', 'Pittsburgh',
-      'Cincinnati', 'Kansas City', 'Tampa', 'Orlando', 'Charlotte',
-      'Statue of Liberty', 'Golden Gate Bridge', 'Mount Rushmore', 'Hollywood Sign', 'Empire State Building',
-      'White House', 'Lincoln Memorial', 'Washington Monument', 'Space Needle', 'Gateway Arch',
-      'Brooklyn Bridge', 'Hoover Dam', 'Freedom Trail', 'Alcatraz Island', 'Pearl Harbor',
-      'Independence Hall', 'Liberty Bell', 'Niagara Falls', 'Times Square', 'Central Park',
-      'Grand Central Station', 'Las Vegas Strip', 'Navy Pier', 'Fisherman\'s Wharf', 'French Quarter',
-      'Grand Canyon', 'Yellowstone', 'Yosemite', 'Zion', 'Glacier Nat\'l Park',
-      'Rocky Mountain', 'Great Smoky Mountains', 'Acadia', 'Olympic Nat\'l Park', 'Joshua Tree',
-      'Death Valley', 'Everglades', 'Bryce Canyon', 'Arches', 'Sequoia',
-      'Redwood', 'Denali', 'Hawaii Volcanoes', 'Crater Lake', 'Mesa Verde',
-      'Badlands', 'Shenandoah', 'Big Bend', 'Canyonlands', 'Capitol Reef',
-      'Mississippi River', 'Colorado River', 'Missouri River', 'Great Lakes', 'Lake Michigan',
-      'Lake Superior', 'Lake Erie', 'Lake Tahoe', 'Chesapeake Bay', 'Puget Sound',
-      'Florida Keys', 'Cape Cod', 'Martha\'s Vineyard', 'Long Island', 'Manhattan',
-      'Hollywood', 'Silicon Valley', 'Wall Street', 'Broadway', 'Bourbon Street',
-      'Route 66', 'Pacific Coast Highway', 'Appalachian Trail', 'Mount Whitney', 'Mount Rainier'
-    ]
-  },
-  {
-    id: 'world-geography',
-    name: 'World Geography',
-    words: [
-      'Canada', 'Ottawa', 'Mexico', 'Mexico City', 'Brazil', 'Brasilia',
-      'Argentina', 'Buenos Aires', 'Chile', 'Santiago', 'Peru', 'Lima',
-      'Colombia', 'Bogota', 'Venezuela', 'Caracas', 'Ecuador', 'Quito',
-      'United Kingdom', 'London', 'France', 'Paris', 'Germany', 'Berlin',
-      'Italy', 'Rome', 'Spain', 'Madrid', 'Portugal', 'Lisbon',
-      'Netherlands', 'Amsterdam', 'Belgium', 'Brussels', 'Switzerland', 'Bern',
-      'Austria', 'Vienna', 'Poland', 'Warsaw', 'Greece', 'Athens',
-      'Sweden', 'Stockholm', 'Norway', 'Oslo', 'Denmark', 'Copenhagen',
-      'Finland', 'Helsinki', 'Ireland', 'Dublin', 'Scotland', 'Edinburgh',
-      'Russia', 'Moscow', 'Ukraine', 'Kyiv', 'Turkey', 'Ankara',
-      'China', 'Beijing', 'Japan', 'Tokyo', 'South Korea', 'Seoul',
-      'India', 'New Delhi', 'Thailand', 'Bangkok', 'Vietnam', 'Hanoi',
-      'Indonesia', 'Jakarta', 'Philippines', 'Manila', 'Malaysia', 'Kuala Lumpur',
-      'Singapore', 'Australia', 'Canberra', 'New Zealand', 'Wellington',
-      'Egypt', 'Cairo', 'South Africa', 'Pretoria', 'Morocco', 'Rabat',
-      'Kenya', 'Nairobi', 'Nigeria', 'Abuja', 'Ethiopia', 'Addis Ababa',
-      'Israel', 'Jerusalem', 'Saudi Arabia', 'Riyadh', 'United Arab Emirates', 'Abu Dhabi',
-      'Toronto', 'Vancouver', 'Montreal', 'Sydney', 'Melbourne', 'Auckland',
-      'Rio de Janeiro', 'Sao Paulo', 'Barcelona', 'Milan', 'Munich', 'Prague',
-      'Budapest', 'Venice', 'Florence', 'Nice', 'Geneva', 'Zurich',
-      'Hong Kong', 'Shanghai', 'Dubai', 'Mumbai', 'Bangalore', 'Cape Town',
-      'Marrakech', 'Istanbul', 'St. Petersburg', 'Kyoto', 'Osaka',
-      'Atlantic Ocean', 'Pacific Ocean', 'Indian Ocean', 'Arctic Ocean', 'Southern Ocean',
-      'Mediterranean Sea', 'Caribbean Sea', 'Red Sea', 'Black Sea', 'Baltic Sea',
-      'North Sea', 'South China Sea', 'Bay of Bengal', 'Persian Gulf', 'Gulf of Mexico',
-      'Amazon River', 'Nile River', 'Ganges River', 'Yangtze River', 'Danube River',
-      'Thames River', 'Seine River', 'Rhine River', 'Volga River', 'Congo River',
-      'Dead Sea', 'Caspian Sea', 'Lake Victoria', 'Lake Baikal', 'Great Barrier Reef',
-      'Eiffel Tower', 'Big Ben', 'Colosseum', 'Leaning Tower of Pisa', 'Stonehenge',
-      'Taj Mahal', 'Great Wall of China', 'Machu Picchu', 'Christ the Redeemer', 'Petra',
-      'Pyramids of Giza', 'Sphinx', 'Acropolis', 'Parthenon', 'Tower of London',
-      'Buckingham Palace', 'Vatican City', 'Sistine Chapel', 'Notre Dame', 'Louvre',
-      'Sydney Opera House', 'Burj Khalifa', 'Mount Everest', 'Mount Fuji', 'Matterhorn',
-      'Amazon Rainforest', 'Sahara Desert', 'Gobi Desert', 'Himalayas', 'Alps',
-      'Andes Mountains', 'Victoria Falls', 'Angel Falls', 'Iguazu Falls', 'Northern Lights',
-      'Santorini', 'Bali', 'Fiji', 'Maldives', 'Galapagos Islands'
-    ]
-  },
-  {
-    id: 'mandarin',
-    name: 'Mandarin',
-    isStudy: true,
-    words: [
-      '爱 (ài)', '不好 (bù hǎo)', '不是 (búshì)', '不 (bù)', '不可以 (bùxíng)',
-      '吃 (chī)', '茶 (chá)', '唱 (chàng)', '车 (chē)', '大 (dà)',
-      '打开 (dǎkāi)', '读 (dú)', '对不起 (duìbùqǐ)', '放 (fàng)', '给 (gěi)',
-      '高兴 (gāoxìng)', '歌 (gē)', '狗 (gǒu)', '关上 (guānshàng)', '很 (hěn)',
-      '好 (hǎo)', '喝 (hē)', '医院 (yīyuàn)', '会 (huì)', '画 (huà)',
-      '家 (jiā)', '今天 (jīntiān)', '跳 (tiào)', '跳舞 (tiàowǔ)', '咖啡 (kāfēi)',
-      '看 (kàn)', '来 (lái)', '冷 (lěng)', '老师 (lǎoshī)', '妈妈 (māma)',
-      '猫 (māo)', '买 (mǎi)', '没有 (méiyǒu)', '明天 (míngtiān)', '名字 (míngzi)',
-      '米饭 (mǐfàn)', '你 (nǐ)', '年龄 (niánlíng)', '拿 (ná)', '哪个 (nǎge)',
-      '哪里 (nǎlǐ)', '难过 (nánguò)', '牛奶 (niúnǎi)', '朋友 (péngyǒu)', '苹果 (píngguǒ)',
-      '钱 (qián)', '去 (qù)', '热 (rè)', '跑 (pǎo)', '请 (qǐng)',
-      '坐 (zuò)', '学校 (xuéxiào)', '谁 (shéi)', '书 (shū)', '睡觉 (shuìjiào)',
-      '水 (shuǐ)', '她说 (tā shuō)', '他 (tā)', '她 (tā)', '听 (tīng)',
-      '他们 (tāmen)', '我们 (wǒmen)', '我 (wǒ)', '超市 (chāoshì)', '香蕉 (xiāngjiāo)',
-      '小 (xiǎo)', '谢谢 (xièxiè)', '写 (xiě)', '学习 (xuéxí)', '需要 (xūyào)',
-      '学 (xué)', '昨天 (zuótiān)', '再见 (zàijiàn)', '站 (zhàn)', '桌子 (zhuōzi)',
-      '椅子 (yǐzi)', '这个 (zhège)', '怎么 (zěnme)', '做什么 (zuò shénme)', '找 (zhǎo)',
-      '公园 (gōngyuán)', '工作 (gōngzuò)', '说什么 (shuō shénme)', '现在 (xiànzài)', '星期一 (xīngqīyī)',
-      '学生 (xuéshēng)', '说话 (shuōhuà)', '说 (shuō)', '为什么 (wèishénme)', '什么时候 (shénme shíhou)',
-      '那里 (nàlǐ)', '这里 (zhèlǐ)', '那个 (nàge)', '卖 (mài)', '面条 (miàntiáo)',
-      '爸爸 (bàba)', '笔 (bǐ)', '是 (shì)', '喜欢 (xǐhuan)'
-    ]
-  },
-  {
-    id: 'mandarin-beginner',
-    name: 'Mandarin-Beginner',
-    isStudy: true,
-    words: [
-      '你好 nǐ hǎo [hello]', '谢谢 xièxiè [thank you]', '再见 zàijiàn [goodbye]',
-      '请 qǐng [please]', '对不起 duìbùqǐ [sorry]', '是 shì [yes]',
-      '不是 búshì [no]', '我 wǒ [I]', '你 nǐ [you]',
-      '他 tā [he]', '她 tā [she]', '我们 wǒmen [we]',
-      '他们 tāmen [they]', '吃 chī [eat]', '喝 hē [drink]',
-      '看 kàn [look/watch]', '说 shuō [speak/say]', '听 tīng [listen]',
-      '喜欢 xǐhuan [like]', '爱 ài [love]', '米饭 mǐfàn [rice]',
-      '面条 miàntiáo [noodles]', '苹果 píngguǒ [apple]', '香蕉 xiāngjiāo [banana]',
-      '牛奶 niúnǎi [milk]', '水 shuǐ [water]', '茶 chá [tea]',
-      '咖啡 kāfēi [coffee]', '学校 xuéxiào [school]', '老师 lǎoshī [teacher]',
-      '学生 xuéshēng [student]', '书 shū [book]', '笔 bǐ [pen]',
-      '桌子 zhuōzi [table]', '椅子 yǐzi [chair]', '家 jiā [home/family]',
-      '妈妈 māma [mom]', '爸爸 bàba [dad]', '朋友 péngyǒu [friend]',
-      '狗 gǒu [dog]', '猫 māo [cat]', '车 chē [car]',
-      '钱 qián [money]', '工作 gōngzuò [work]', '睡觉 shuìjiào [sleep]',
-      '走 zǒu [walk]', '来 lái [come]', '去 qù [go]',
-      '天气 tiānqì [weather]', '今天 jīntiān [today]', '明天 míngtiān [tomorrow]'
-    ]
-  },
-  {
-    id: 'mandarin-intermediate',
-    name: 'Mandarin-Intermediate',
-    isStudy: true,
-    words: [
-      '帮忙 bāngmáng [help]', '记得 jìde [remember]', '忘记 wàngjì [forget]',
-      '明白 míngbai [understand]', '练习 liànxí [practice]', '问题 wèntí [problem/question]',
-      '回答 huídá [answer]', '超市 chāoshì [supermarket]', '医院 yīyuàn [hospital]',
-      '火车站 huǒchēzhàn [train station]', '机场 jīchǎng [airport]', '电影院 diànyǐngyuàn [cinema]',
-      '生日快乐 shēngrì kuàilè [happy birthday]', '没问题 méi wèntí [no problem]', '太好了 tài hǎo le [great/awesome]',
-      '怎么样 zěnmeyàng [how is it]', '几点 jǐ diǎn [what time]', '多少钱 duōshǎo qián [how much]',
-      '打开 dǎkāi [open]', '关上 guānshàng [close]', '洗澡 xǐzǎo [take a shower]',
-      '打电话 dǎ diànhuà [make a phone call]', '拍照 pāizhào [take a photo]', '等等 děngdeng [wait]',
-      '小心 xiǎoxīn [be careful]', '成功 chénggōng [success]', '失败 shībài [failure]',
-      '努力 nǔlì [effort/hard work]', '梦想 mèngxiǎng [dream]', '计划 jìhuà [plan]',
-      '天气预报 tiānqì yùbào [weather forecast]', '交通灯 jiāotōngdēng [traffic light]', '身份证 shēnfènzhèng [ID card]',
-      '信用卡 xìnyòngkǎ [credit card]', '菜单 càidān [menu]', '服务员 fúwùyuán [waiter/waitress]',
-      '推荐 tuījiàn [recommend]', '味道怎么样 wèidào zěnmeyàng [how does it taste]', '太贵了 tài guì le [too expensive]',
-      '打折 dǎzhé [discount]', '考试 kǎoshì [exam/test]', '复习 fùxí [review]',
-      '提高 tígāo [improve]', '发音 fāyīn [pronunciation]', '语法 yǔfǎ [grammar]',
-      '文化 wénhuà [culture]', '节日 jiérì [holiday]', '春节 chūnjié [Spring Festival]',
-      '中秋节 zhōngqiūjié [Mid-Autumn Festival]', '龙年 lóngnián [Year of the Dragon]', '健康 jiànkāng [health]'
-    ]
-  },
-  {
-    id: 'vietnamese-beginner',
-    name: 'Vietnamese-Beginner',
-    isStudy: true,
-    words: [
-      'xin chào [hello]', 'cảm ơn [thank you]', 'tạm biệt [goodbye]',
-      'làm ơn [please]', 'xin lỗi [sorry]', 'vâng [yes]',
-      'không [no]', 'tôi [I]', 'bạn [you]',
-      'anh ấy [he]', 'cô ấy [she]', 'chúng tôi [we]',
-      'họ [they]', 'ăn [eat]', 'uống [drink]',
-      'nhìn [look/watch]', 'nói [speak/say]', 'nghe [listen]',
-      'thích [like]', 'yêu [love]', 'cơm [rice]',
-      'mì [noodles]', 'táo [apple]', 'chuối [banana]',
-      'sữa [milk]', 'nước [water]', 'trà [tea]',
-      'cà phê [coffee]', 'trường học [school]', 'giáo viên [teacher]',
-      'học sinh [student]', 'sách [book]', 'bút [pen]',
-      'bàn [table]', 'ghế [chair]', 'nhà [home]',
-      'mẹ [mom]', 'bố [dad]', 'bạn bè [friend]',
-      'chó [dog]', 'mèo [cat]', 'xe [car]',
-      'tiền [money]', 'công việc [work]', 'ngủ [sleep]',
-      'đi bộ [walk]', 'đến [come]', 'đi [go]',
-      'thời tiết [weather]', 'hôm nay [today]', 'ngày mai [tomorrow]'
-    ]
-  },
-  {
-    id: 'vietnamese-intermediate',
-    name: 'Vietnamese-Intermediate',
-    isStudy: true,
-    words: [
-      'giúp đỡ [help]', 'nhớ [remember]', 'quên [forget]',
-      'hiểu [understand]', 'luyện tập [practice]', 'vấn đề [problem]',
-      'câu trả lời [answer]', 'siêu thị [supermarket]', 'bệnh viện [hospital]',
-      'ga tàu [train station]', 'sân bay [airport]', 'rạp chiếu phim [cinema]',
-      'chúc mừng sinh nhật [happy birthday]', 'không sao [no problem]', 'tuyệt vời [great/awesome]',
-      'thế nào [how is it]', 'mấy giờ [what time]', 'bao nhiêu tiền [how much]',
-      'mở [open]', 'đóng [close]', 'tắm [take a shower]',
-      'gọi điện [make a phone call]', 'chụp ảnh [take a photo]', 'chờ [wait]',
-      'cẩn thận [be careful]', 'thành công [success]', 'thất bại [failure]',
-      'nỗ lực [effort]', 'giấc mơ [dream]', 'kế hoạch [plan]',
-      'dự báo thời tiết [weather forecast]', 'đèn giao thông [traffic light]', 'chứng minh thư [ID card]',
-      'thẻ tín dụng [credit card]', 'thực đơn [menu]', 'nhân viên phục vụ [waiter]',
-      'gợi ý [recommend]', 'món ăn có ngon không [how does it taste]', 'quá đắt [too expensive]',
-      'giảm giá [discount]', 'kỳ thi [exam]', 'ôn tập [review]',
-      'cải thiện [improve]', 'phát âm [pronunciation]', 'ngữ pháp [grammar]',
-      'văn hóa [culture]', 'lễ hội [holiday]', 'Tết Nguyên Đán [Lunar New Year]',
-      'Tết Trung Thu [Mid-Autumn Festival]', 'Năm Rồng [Year of the Dragon]', 'sức khỏe [health]'
-    ]
-  },
-  {
-    id: 'spanish-beginner',
-    name: 'Spanish-Beginner',
-    isStudy: true,
-    words: [
-      'hola [hello]', 'gracias [thank you]', 'adiós [goodbye]',
-      'por favor [please]', 'lo siento [sorry]', 'sí [yes]',
-      'no [no]', 'yo [I]', 'tú [you]',
-      'él [he]', 'ella [she]', 'nosotros [we]',
-      'ellos [they]', 'comer [eat]', 'beber [drink]',
-      'mirar [look/watch]', 'hablar [speak/say]', 'escuchar [listen]',
-      'gustar [like]', 'amar [love]', 'arroz [rice]',
-      'fideos [noodles]', 'manzana [apple]', 'plátano [banana]',
-      'leche [milk]', 'agua [water]', 'té [tea]',
-      'café [coffee]', 'escuela [school]', 'maestro [teacher]',
-      'estudiante [student]', 'libro [book]', 'lápiz [pen]',
-      'mesa [table]', 'silla [chair]', 'casa [home]',
-      'madre [mom]', 'padre [dad]', 'amigo [friend]',
-      'perro [dog]', 'gato [cat]', 'coche [car]',
-      'dinero [money]', 'trabajo [work]', 'dormir [sleep]',
-      'caminar [walk]', 'venir [come]', 'ir [go]',
-      'tiempo [weather]', 'hoy [today]', 'mañana [tomorrow]'
-    ]
-  },
-  {
-    id: 'spanish-intermediate',
-    name: 'Spanish-Intermediate',
-    isStudy: true,
-    words: [
-      'ayudar [help]', 'recordar [remember]', 'olvidar [forget]',
-      'entender [understand]', 'practicar [practice]', 'problema [problem]',
-      'respuesta [answer]', 'supermercado [supermarket]', 'hospital [hospital]',
-      'estación de tren [train station]', 'aeropuerto [airport]', 'cine [cinema]',
-      'feliz cumpleaños [happy birthday]', 'no hay problema [no problem]', 'genial [great/awesome]',
-      '¿cómo está? [how is it]', '¿qué hora es? [what time is it]', '¿cuánto cuesta? [how much]',
-      'abrir [open]', 'cerrar [close]', 'ducharse [take a shower]',
-      'llamar por teléfono [make a phone call]', 'tomar foto [take a photo]', 'esperar [wait]',
-      'cuidado [be careful]', 'éxito [success]', 'fracaso [failure]',
-      'esfuerzo [effort]', 'sueño [dream]', 'plan [plan]',
-      'pronóstico del tiempo [weather forecast]', 'semáforo [traffic light]', 'documento de identidad [ID card]',
-      'tarjeta de crédito [credit card]', 'menú [menu]', 'camarero [waiter]',
-      'recomendar [recommend]', '¿qué tal el sabor? [how does it taste]', 'demasiado caro [too expensive]',
-      'descuento [discount]', 'examen [exam]', 'repasar [review]',
-      'mejorar [improve]', 'pronunciación [pronunciation]', 'gramática [grammar]',
-      'cultura [culture]', 'fiesta [holiday]', 'Año Nuevo [New Year]',
-      'Día de Muertos [Day of the Dead]', 'Año del Dragón [Year of the Dragon]', 'salud [health]'
-    ]
-  },
 ];
 
 export const DEFAULT_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: boolean }[] = [
   ...BASE_WORD_LISTS,
-  ...STUDY_WORDS_1,
-  ...STUDY_WORDS_2,
+  ...STUDY_WORD_LISTS,
 ];
 
 export function parseWordAnswer(word: string): { prompt: string; parenthetical: string | null; answer: string | null } {
