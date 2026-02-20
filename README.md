@@ -1,57 +1,69 @@
-Family Guess Party Fun Time (FGPFT) is a web-based party guessing game built on Replit, featuring gestures, timers, and custom word lists for multiplayer fun. 
+Family Guess Party Fun Time (FGPFT) is a mobile-friendly party guessing game and study tool, featuring tilt gestures, customizable word lists, team scoring, and Study Mode for language learning and flashcard review.
 
 ## Project Overview
-FGPFT delivers an interactive guessing game perfect for parties, with support for gestures, timed rounds, and user-defined word lists. The app runs entirely in the browser via a single-page HTML/JS setup hosted on Replit. Target users include party hosts seeking quick, no-install entertainment.
+FGPFT delivers an interactive guessing game and learning tool built with React and TypeScript. Players hold the phone to their forehead while others give clues — tilt forward for correct, tilt back to pass. Study Mode turns the same format into a flashcard-style review tool with helper text and hidden answers. The app launches with 27 curated categories (9 game, 18 study) totaling 2,187 words.
 
 ## Key Features
-- Gesture-based guessing with visual timers for dynamic play.
-- Large, editable built in word lists for families 
-- Customizable word lists to fit any theme or group.
-- Responsive design optimized for mobile and desktop parties.
+- Tilt-based gesture controls or on-screen buttons — your choice
+- 27 built-in categories across Game Mode and Study Mode
+- Study Mode with formatted cards, helper text (in parentheses), and hidden answers (in brackets) revealed on tap
+- Team mode with 1-5 teams, per-round scoring, and winner declarations
+- Customizable word lists with CSV import support
+- Soft-delete and permanent delete for built-in categories
+- Configurable timer and round settings (including untimed mode)
+- Sound and haptic feedback (auto-configured per mode)
+- Responsive design optimized for mobile
+
+## Game Mode Categories (9)
+Movies, Animals, Actions, Household Objects, Landforms, Human Body, Space, Ancient World, Mythology
+
+## Study Mode Categories (18)
+Vietnamese, Chinese (Mandarin), Spanish, Chemistry, US History, World Capitals, Geopolitics, Pioneers, and more — covering language learning, science, history, and geography.
 
 ## Default Settings
+- Mode: Game Mode
 - Timer: 30 seconds per round
 - Rounds: 3 rounds per game
-- Selected Category: Only "Animals - Easy"
+- Teams: 1
+- Selected Category: Animals
 - Show Buttons: Off (tilt-only mode)
 - Haptic Feedback: On
-- Sound: On
+- Sound: On in Game Mode, Off in Study Mode (auto-toggles when switching modes)
 
-## Saved between sessions in browser settings:
+## Saved Between Sessions
 - Timer duration and number of rounds
 - Which categories you have selected
 - Button, haptic, and sound preferences
 - Any custom word lists you create
 - Changes to built-in lists (edits, soft deletes, permanent deletes)
+- Study Mode / Game Mode selection
 
 ## Quick Start
-Visit the live demo at https://familyguesspartyfuntime.replit.app/ to play immediately—no setup required. For self-hosting on Replit, fork the repo, click "Run," and share the generated URL with friends. The app loads assets like fonts and scripts automatically.
+Visit the live app at https://familyguesspartyfuntime.replit.app/ to play immediately — no setup required.
 
 ## Tech Stack
-Built with vanilla HTML, CSS (Outfit and Titan One fonts), and JavaScript modules—no backend or databases needed. Replit handles deployment, serving files from /assets/. View source via browser dev tools for full code inspection.
-
-## Customization
-Edit word lists or themes directly in the JS source (likely in /assets/index-CNkwHaR8.js) and re-run on Replit. Add your favicon at /favicon.png or tweak meta tags for custom sharing previews. Test changes live without local setup.
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS v4, shadcn/ui
+- **State Management**: Zustand with localStorage persistence
+- **Routing**: Wouter
+- **Backend**: Node.js with Express (serves the frontend)
+- **Native-Ready**: Platform abstraction layer for Capacitor/iOS deployment
 
 ## Contributing
-Fork on GitHub or Replit, make changes, and submit a pull request with details on what you fixed or added. Include screenshots of gameplay improvements. Follow standard JS formatting and test on multiple devices.
+Fork on GitHub or Replit, make changes, and submit a pull request with details on what you fixed or added. Include screenshots of gameplay improvements. Test on multiple devices.
 
 ## License
 Licensed under the MIT License (LICENSE.txt)
 
 ## Credits
-- Built on Replit: Instant deployment and sharing powered by Replit: (https://replit.com/)
-- Fonts: 
-    Outfit: (https://fonts.google.com/specimen/Outfit) 
-    Titan One: (https://fonts.google.com/specimen/Titan+One) from Google Fonts under (https://scripts.sil.org/OFL).
+- Built on Replit: Instant deployment and sharing powered by [Replit](https://replit.com/)
+- Fonts:
+    [Outfit](https://fonts.google.com/specimen/Outfit)
+    [Titan One](https://fonts.google.com/specimen/Titan+One) from Google Fonts under [SIL Open Font License](https://scripts.sil.org/OFL)
 - Game Concept: Inspired by classic party guessing games like Charades and Heads Up!
 - Author: Keith Jasken © 2025. Contributions welcome via pull requests.
 
 ## Audio Credits
-Sound effects obtained free for personal and commercial use.from FreeSoundEffects.net: (https://free-sound-effects.net/).
+Sound effects obtained free for personal and commercial use from [FreeSoundEffects.net](https://free-sound-effects.net/).
 
 ## Artwork Credits
-App icon designed with the assistance of Perplexity AI: (https://perplexity.ai/), based on original concept and direction by Keith Jasken.
-
-
-
+App icon designed with the assistance of [Perplexity AI](https://perplexity.ai/), based on original concept and direction by Keith Jasken.
