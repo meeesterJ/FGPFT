@@ -3,7 +3,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.kjasken.familyguessparty',
   appName: 'Family Guess Party Fun Time',
-  webDir: 'dist/public',
+  webDir: 'dist/',
   server: {
     androidScheme: 'https'
   },

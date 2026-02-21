@@ -77,7 +77,7 @@ The app includes a platform abstraction layer for future Capacitor/native iOS de
 
 ### Build Configuration
 - Development: Vite dev server with HMR
-- Production: esbuild bundles server, Vite builds client to `dist/public`
+- Production: esbuild bundles server, Vite builds client to `dist/`
 - Database migrations: `drizzle-kit push` command
 
 ## External Dependencies

@@ -40,7 +40,7 @@ This document outlines the steps to publish your app to the Apple App Store.
 
 npm install -g @capacitor/cli
 npm install @capacitor/core @capacitor/ios @capacitor/haptics @capacitor/status-bar @capacitor/splash-screen
-```
+```/Users/davejasken/Desktop/FGPFT/ios-assets/AppIcon.appiconset
 
 ### 2. Initialize iOS Project
 ```bash
