@@ -7,26 +7,55 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
-		4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 4D22ABE82AF431CB00220026 /* CapApp-SPM */; };
-		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
-		504EC3081FED79650016851F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EC3071FED79650016851F /* AppDelegate.swift */; };
-		504EC30D1FED79650016851F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30B1FED79650016851F /* Main.storyboard */; };
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
-		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
+		6AA100011FED79650016851F /* FGPFTApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100021FED79650016851F /* FGPFTApp.swift */; };
+		6AA100031FED79650016851F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100041FED79650016851F /* ContentView.swift */; };
+		6AA100051FED79650016851F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100061FED79650016851F /* HomeView.swift */; };
+		6AA100071FED79650016851F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100081FED79650016851F /* SettingsView.swift */; };
+		6AA100091FED79650016851F /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1000A1FED79650016851F /* CategoriesView.swift */; };
+		6AA1000B1FED79650016851F /* DeletedCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1000C1FED79650016851F /* DeletedCategoriesView.swift */; };
+		6AA1000D1FED79650016851F /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1000E1FED79650016851F /* AboutView.swift */; };
+		6AA1000F1FED79650016851F /* HowToPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100101FED79650016851F /* HowToPlayView.swift */; };
+		6AA100111FED79650016851F /* PrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100121FED79650016851F /* PrivacyView.swift */; };
+		6AA100131FED79650016851F /* TermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100141FED79650016851F /* TermsView.swift */; };
+		6AA100151FED79650016851F /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100161FED79650016851F /* GameView.swift */; };
+		6AA100171FED79650016851F /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100181FED79650016851F /* SummaryView.swift */; };
+		6AA100191FED79650016851F /* WordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1001A1FED79650016851F /* WordList.swift */; };
+		6AA1001B1FED79650016851F /* TeamScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1001C1FED79650016851F /* TeamScore.swift */; };
+		6AA1001D1FED79650016851F /* GameStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1001E1FED79650016851F /* GameStore.swift */; };
+		6AA1001F1FED79650016851F /* word-lists.json in Resources */ = {isa = PBXBuildFile; fileRef = 6AA100201FED79650016851F /* word-lists.json */; };
+		6AA100251FED79650016851F /* AudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100261FED79650016851F /* AudioService.swift */; };
+		6AA100271FED79650016851F /* HapticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100281FED79650016851F /* HapticService.swift */; };
+		6AA100291FED79650016851F /* MotionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1002A1FED79650016851F /* MotionService.swift */; };
+		6AA1002B1FED79650016851F /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 6AA1002C1FED79650016851F /* Audio */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
-		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* FGPFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FGPFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		504EC3071FED79650016851F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		504EC30C1FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		504EC30E1FED79650016851F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		504EC3111FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		504EC3131FED79650016851F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
+		6AA100021FED79650016851F /* FGPFTApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FGPFTApp.swift; sourceTree = "<group>"; };
+		6AA100041FED79650016851F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		6AA100061FED79650016851F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		6AA100081FED79650016851F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		6AA1000A1FED79650016851F /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
+		6AA1000C1FED79650016851F /* DeletedCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletedCategoriesView.swift; sourceTree = "<group>"; };
+		6AA1000E1FED79650016851F /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		6AA100101FED79650016851F /* HowToPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToPlayView.swift; sourceTree = "<group>"; };
+		6AA100121FED79650016851F /* PrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyView.swift; sourceTree = "<group>"; };
+		6AA100141FED79650016851F /* TermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsView.swift; sourceTree = "<group>"; };
+		6AA100161FED79650016851F /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		6AA100181FED79650016851F /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		6AA1001A1FED79650016851F /* WordList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordList.swift; sourceTree = "<group>"; };
+		6AA1001C1FED79650016851F /* TeamScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamScore.swift; sourceTree = "<group>"; };
+		6AA1001E1FED79650016851F /* GameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStore.swift; sourceTree = "<group>"; };
+		6AA100201FED79650016851F /* word-lists.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "word-lists.json"; sourceTree = "<group>"; };
+		6AA100261FED79650016851F /* AudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioService.swift; sourceTree = "<group>"; };
+		6AA100281FED79650016851F /* HapticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticService.swift; sourceTree = "<group>"; };
+		6AA1002A1FED79650016851F /* MotionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionService.swift; sourceTree = "<group>"; };
+		6AA1002C1FED79650016851F /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -35,7 +64,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,16 +90,71 @@
 		504EC3061FED79650016851F /* App */ = {
 			isa = PBXGroup;
 			children = (
-				50379B222058CBB4000EE86E /* capacitor.config.json */,
-				504EC3071FED79650016851F /* AppDelegate.swift */,
-				504EC30B1FED79650016851F /* Main.storyboard */,
+				6AA100021FED79650016851F /* FGPFTApp.swift */,
+				6AA100211FED79650016851F /* Views */,
+				6AA100221FED79650016851F /* ViewModels */,
+				6AA100231FED79650016851F /* Models */,
+				6AA100241FED79650016851F /* Resources */,
+				6AA1002D1FED79650016851F /* Services */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
 				504EC3131FED79650016851F /* Info.plist */,
-				2FAD9762203C412B000D30F8 /* config.xml */,
-				50B271D01FEDC1A000F3C39B /* public */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		6AA100211FED79650016851F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6AA100041FED79650016851F /* ContentView.swift */,
+				6AA100061FED79650016851F /* HomeView.swift */,
+				6AA100081FED79650016851F /* SettingsView.swift */,
+				6AA1000A1FED79650016851F /* CategoriesView.swift */,
+				6AA1000C1FED79650016851F /* DeletedCategoriesView.swift */,
+				6AA1000E1FED79650016851F /* AboutView.swift */,
+				6AA100101FED79650016851F /* HowToPlayView.swift */,
+				6AA100121FED79650016851F /* PrivacyView.swift */,
+				6AA100141FED79650016851F /* TermsView.swift */,
+				6AA100161FED79650016851F /* GameView.swift */,
+				6AA100181FED79650016851F /* SummaryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6AA100221FED79650016851F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				6AA1001E1FED79650016851F /* GameStore.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		6AA100231FED79650016851F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6AA1001A1FED79650016851F /* WordList.swift */,
+				6AA1001C1FED79650016851F /* TeamScore.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		6AA100241FED79650016851F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6AA100201FED79650016851F /* word-lists.json */,
+				6AA1002C1FED79650016851F /* Audio */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		6AA1002D1FED79650016851F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6AA100261FED79650016851F /* AudioService.swift */,
+				6AA100281FED79650016851F /* HapticService.swift */,
+				6AA1002A1FED79650016851F /* MotionService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -90,10 +173,7 @@
 			dependencies = (
 			);
 			name = FGPFT;
-			packageProductDependencies = (
-				4D22ABE82AF431CB00220026 /* CapApp-SPM */,
-			);
-			productName = App;
+			productName = FGPFT;
 			productReference = 504EC3041FED79650016851F /* FGPFT.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -122,9 +202,6 @@
 				Base,
 			);
 			mainGroup = 504EC2FB1FED79650016851F;
-			packageReferences = (
-				D4C12C0A2AAA248700AAC8A2 /* XCLocalSwiftPackageReference "CapApp-SPM" */,
-			);
 			productRefGroup = 504EC3051FED79650016851F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -140,11 +217,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
-				50B271D11FEDC1A000F3C39B /* public in Resources */,
 				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
-				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
-				504EC30D1FED79650016851F /* Main.storyboard in Resources */,
-				2FAD9763203C412B000D30F8 /* config.xml in Resources */,
+				6AA1001F1FED79650016851F /* word-lists.json in Resources */,
+				6AA1002B1FED79650016851F /* Audio in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,21 +230,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
+				6AA100011FED79650016851F /* FGPFTApp.swift in Sources */,
+				6AA100031FED79650016851F /* ContentView.swift in Sources */,
+				6AA100051FED79650016851F /* HomeView.swift in Sources */,
+				6AA100071FED79650016851F /* SettingsView.swift in Sources */,
+				6AA100091FED79650016851F /* CategoriesView.swift in Sources */,
+				6AA1000B1FED79650016851F /* DeletedCategoriesView.swift in Sources */,
+				6AA1000D1FED79650016851F /* AboutView.swift in Sources */,
+				6AA1000F1FED79650016851F /* HowToPlayView.swift in Sources */,
+				6AA100111FED79650016851F /* PrivacyView.swift in Sources */,
+				6AA100131FED79650016851F /* TermsView.swift in Sources */,
+				6AA100151FED79650016851F /* GameView.swift in Sources */,
+				6AA100171FED79650016851F /* SummaryView.swift in Sources */,
+				6AA100191FED79650016851F /* WordList.swift in Sources */,
+				6AA1001B1FED79650016851F /* TeamScore.swift in Sources */,
+				6AA1001D1FED79650016851F /* GameStore.swift in Sources */,
+				6AA100251FED79650016851F /* AudioService.swift in Sources */,
+				6AA100271FED79650016851F /* HapticService.swift in Sources */,
+				6AA100291FED79650016851F /* MotionService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		504EC30B1FED79650016851F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				504EC30C1FED79650016851F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		504EC3101FED79650016851F /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -235,7 +319,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -292,7 +376,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -314,7 +398,7 @@
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Family Guess Party Fun Time";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.family-games";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -345,7 +429,7 @@
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Family Guess Party Fun Time";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.family-games";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -386,21 +470,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		D4C12C0A2AAA248700AAC8A2 /* XCLocalSwiftPackageReference "CapApp-SPM" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "CapApp-SPM";
-		};
-/* End XCLocalSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		4D22ABE82AF431CB00220026 /* CapApp-SPM */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D4C12C0A2AAA248700AAC8A2 /* XCLocalSwiftPackageReference "CapApp-SPM" */;
-			productName = "CapApp-SPM";
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 504EC2FC1FED79650016851F /* Project object */;
 }
