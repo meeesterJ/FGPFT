@@ -30,7 +30,7 @@ struct SplashView: View {
     
     var body: some View {
         GeometryReader { geo in
-            let titleHeight = geo.size.height * 0.72
+            let titleHeight = geo.size.height * 0.72 * 0.9  // 90% of previous size
             VStack(spacing: 24) {
                 Spacer()
                 TitleStackView(animated: true, availableHeight: titleHeight)
@@ -137,19 +137,19 @@ struct TitleStackView: View {
                     .foregroundStyle(w.1)
                     .font(AppFonts.display(size: fontSize))
                     .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
                     .opacity(animated ? (dropInTrigger ? 1 : 0) : 1)
-                    .offset(y: animated ? (dropInTrigger ? 0 : -50) : 0)
+                    .offset(y: animated ? (dropInTrigger ? 0 : -90) : 0)
                     .animation(
-                        animated ? .spring(response: 0.45, dampingFraction: 0.72)
-                            .delay(Double(index) * 0.12) : .default,
+                        animated ? .spring(response: 0.6, dampingFraction: 0.62)
+                            .delay(Double(index) * 0.16) : .default,
                         value: dropInTrigger
                     )
             }
         }
-        .frame(maxWidth: .infinity)
-        .rotationEffect(.degrees(-2))
+        .frame(maxWidth: .infinity, alignment: .center)
+        .rotationEffect(.degrees(-2), anchor: .center)
         .onAppear {
             guard animated else { return }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
