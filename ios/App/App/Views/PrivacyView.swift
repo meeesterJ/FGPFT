@@ -5,7 +5,7 @@ struct PrivacyView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 Text("Last updated: February 2026")
-                    .font(.caption)
+                    .font(AppFonts.body(size: 12))
                     .foregroundStyle(AppColors.mutedText)
                 
                 section("Introduction", color: AppColors.pink) {
@@ -38,7 +38,7 @@ struct PrivacyView: View {
                     Text("If you have questions about this Privacy Policy, please contact us at K Jasken and Associates, LLC: KJaskenAssoc@pm.me")
                 }
                 Text("© 2025 K Jasken and Associates, LLC. All rights reserved.")
-                    .font(.caption)
+                    .font(AppFonts.body(size: 12))
                     .foregroundStyle(AppColors.mutedText)
             }
             .padding(20)
@@ -62,7 +62,7 @@ struct PrivacyView: View {
                 .font(.headline)
                 .foregroundStyle(color)
             content()
-                .font(.subheadline)
+                .font(AppFonts.body(size: 15))
                 .foregroundStyle(AppColors.mutedText)
         }
     }
