@@ -369,7 +369,7 @@ export default function Settings() {
             <ArrowLeft className="w-6 h-6" />
           </Button>
         </Link>
-        <h1 className="text-7xl font-thin ml-4 text-purple-400 font-display">Settings</h1>
+        <h1 className="text-7xl font-thin ml-4 text-purple-600 font-display">Settings</h1>
       </header>
 
       <ScrollArea className="flex-1 p-6 w-full">
