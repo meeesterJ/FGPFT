@@ -74,13 +74,14 @@ struct CategoriesView: View {
         }
         .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.barTeal, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button { dismiss() } label: { Image(systemName: "chevron.left") }
             }
             ToolbarItem(placement: .principal) {
                 Text("Word Categories")
-                    .font(.title2)
+                    .font(AppFonts.display(size: 22))
                     .foregroundStyle(AppColors.cyan)
             }
         }
@@ -172,11 +173,16 @@ struct AddCategorySheet: View {
                     }
                 }
             }
-            .navigationTitle("Create List")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(AppColors.barTeal, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { onDismiss() }
+                }
+                ToolbarItem(placement: .principal) {
+                    Text("Create List")
+                        .font(AppFonts.display(size: 22))
+                        .foregroundStyle(AppColors.cyan)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") { create() }
@@ -246,11 +252,16 @@ struct EditCategorySheet: View {
                     }
                 }
             }
-            .navigationTitle("Edit List")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(AppColors.barTeal, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { onDismiss() }
+                }
+                ToolbarItem(placement: .principal) {
+                    Text("Edit List")
+                        .font(AppFonts.display(size: 22))
+                        .foregroundStyle(AppColors.cyan)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { save() }

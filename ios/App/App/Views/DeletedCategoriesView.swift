@@ -68,13 +68,15 @@ struct DeletedCategoriesView: View {
         }
         .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.barTeal, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button { dismiss() } label: { Image(systemName: "chevron.left") }
             }
             ToolbarItem(placement: .principal) {
                 Text("Deleted Categories")
-                    .font(.title2)
+                    .font(AppFonts.display(size: 22))
+                    .foregroundStyle(AppColors.cyan)
             }
         }
         .alert("Delete Forever?", isPresented: Binding(
