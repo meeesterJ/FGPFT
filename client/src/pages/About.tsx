@@ -15,15 +15,15 @@ export default function About() {
             <ArrowLeft className="w-6 h-6" />
           </Button>
         </Link>
-        <h1 className="text-2xl font-thin ml-4 text-purple-400 font-display" style={{ fontFamily: "'Titan One', cursive" }}>About</h1>
+        <h1 className="text-2xl font-thin ml-4 text-purple-400 font-display">About</h1>
       </header>
 
       <ScrollArea className="flex-1 p-6 max-w-2xl mx-auto w-full font-body">
         <div className="space-y-8 pb-20">
           
           <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
-            <h2 className="text-xl font-thin text-pink-400 font-display" style={{ fontFamily: "'Titan One', cursive" }}>Family Guess Party Fun Time™</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <h2 className="text-xl font-thin text-pink-400 font-body">Family Guess Party Fun Time™</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
               A fun party guessing game for the whole family! One player holds the phone to their forehead while others give verbal clues. Tilt forward when you guess correctly, or tilt backward to pass.
             </p>
             <p className="text-sm text-muted-foreground mt-4">© 2025 K Jasken and Associates, LLC. All rights reserved.</p>
