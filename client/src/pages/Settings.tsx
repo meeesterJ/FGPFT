@@ -273,7 +273,7 @@ export default function Settings() {
         </section>
       )}
 
-      {/* Controls */}
+      {/* Controls: Tilt and Buttons can both be on. When Tilt is off, Buttons is on and locked. When Tilt is on, Buttons turns off but can be turned back on. */}
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
         <h2 className="text-3xl font-thin text-purple-400 font-display">Controls</h2>
         <div className="flex justify-between items-center">
@@ -298,6 +298,7 @@ export default function Settings() {
             onCheckedChange={setShowButtons}
             disabled={!tiltEnabled}
             data-testid="switch-show-buttons"
+            aria-label={!tiltEnabled ? "Show Buttons (on when Tilt is off, locked)" : "Show Buttons (tap to use with Tilt)"}
           />
         </div>
       </section>

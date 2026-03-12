@@ -140,15 +140,16 @@ export const useGameStore = create<GameState>()(
       setStudyMode: (enabled) => set({ studyMode: enabled, soundEnabled: !enabled }),
       setRoundDuration: (seconds) => set({ roundDuration: seconds }),
       setTotalRounds: (rounds) => set({ totalRounds: rounds }),
+      // When Tilt is off, Buttons must stay on (locked). When Tilt is on, user can toggle Buttons (both can be on).
       setShowButtons: (show) => set((state) => {
-        if (!state.tiltEnabled && !show) return state;
+        if (!state.tiltEnabled && !show) return state; // lock: can't turn Buttons off when Tilt is off
         return { showButtons: show };
       }),
       setTiltEnabled: (enabled) => set((state) => {
         if (enabled) {
-          return { tiltEnabled: true, showButtons: false };
+          return { tiltEnabled: true, showButtons: false }; // Tilt on → Buttons off automatically (user can turn back on)
         }
-        return { tiltEnabled: false, showButtons: true };
+        return { tiltEnabled: false, showButtons: true };   // Tilt off → Buttons on automatically and locked
       }),
       setHapticEnabled: (enabled) => set({ hapticEnabled: enabled }),
       setSoundEnabled: (enabled) => set({ soundEnabled: enabled }),
