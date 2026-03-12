@@ -25,14 +25,14 @@ struct CategoriesView: View {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Text("Select categories to include in your game")
-                        .font(.subheadline)
+                        .font(AppFonts.body(size: 15))
                         .foregroundStyle(AppColors.mutedText)
                     Spacer()
                     Button {
                         showCreate = true
                     } label: {
                         Label("Create List", systemImage: "plus")
-                            .font(.subheadline.weight(.medium))
+                            .font(AppFonts.body(size: 15).weight(.medium))
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(AppColors.pink)
@@ -113,10 +113,10 @@ struct CategoryRow: View {
                     }
                     VStack(alignment: .leading, spacing: 2) {
                         Text(list.name)
-                            .font(.body)
+                            .font(AppFonts.body(size: 17))
                             .foregroundStyle(.primary)
                         Text("\(list.words.count) words\(list.isCustom == true ? " (Custom)" : "")\(list.isStudy == true ? " · Study" : "")")
-                            .font(.caption)
+                            .font(AppFonts.body(size: 12))
                             .foregroundStyle(AppColors.mutedText)
                     }
                     Spacer()
