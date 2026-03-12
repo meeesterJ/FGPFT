@@ -144,7 +144,7 @@ export function TitleStack({ animated = false, inline = false, twoLine = false, 
   );
 }
 
-export const menuButtonBase = "w-full h-14 text-lg font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform text-white border-2";
+export const menuButtonBase = "w-full h-14 text-xl font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform text-white border-2";
 
 export const menuButtonStyles = {
   pink: `${menuButtonBase} bg-pink-500 hover:bg-pink-400 border-pink-400`,

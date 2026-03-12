@@ -311,16 +311,6 @@ export default function Categories() {
                     data-testid="input-new-list-name"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-pink-300">Words (one per line)</Label>
-                  <Textarea 
-                    placeholder={"Word 1\nWord 2\nWord 3"} 
-                    className="h-40"
-                    value={newListWords}
-                    onChange={e => setNewListWords(e.target.value)}
-                    data-testid="textarea-new-list-words"
-                  />
-                </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-purple-400" />
@@ -343,6 +333,16 @@ export default function Categories() {
                     <p className="text-muted-foreground text-xs italic">Example: Hola (greeting) [Hello]</p>
                   </div>
                 )}
+                <div className="space-y-2">
+                  <Label className="text-pink-300">Words (one per line)</Label>
+                  <Textarea 
+                    placeholder={"Word 1\nWord 2\nWord 3"} 
+                    className="h-40"
+                    value={newListWords}
+                    onChange={e => setNewListWords(e.target.value)}
+                    data-testid="textarea-new-list-words"
+                  />
+                </div>
                 {ENABLE_CSV_UPLOAD && (
                   <div className="space-y-2">
                     <Label className="text-pink-300">Or Upload CSV</Label>

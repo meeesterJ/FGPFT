@@ -159,7 +159,7 @@ export default function Settings() {
 
             <button
               onClick={() => setTeamsExpanded(!teamsExpanded)}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-cyan-400 transition-colors w-full pt-1"
+              className="flex items-center gap-2 text-base text-muted-foreground hover:text-cyan-400 transition-colors w-full pt-1"
               data-testid="button-customize-teams"
             >
               <ChevronDown className={`w-4 h-4 transition-transform ${teamsExpanded ? 'rotate-180' : ''}`} />
@@ -302,7 +302,7 @@ export default function Settings() {
       {/* Study / Game Mode Toggle */}
       <div className="flex rounded-xl overflow-hidden border border-purple-500/30 h-10" data-testid="toggle-study-game-mode">
         <button
-          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 text-base font-medium transition-all ${
             !studyMode
               ? 'bg-gradient-to-r from-pink-500/30 to-purple-500/30 text-pink-300 border-r border-purple-500/30'
               : 'bg-card/30 text-muted-foreground hover:text-pink-300 border-r border-purple-500/30'
@@ -314,7 +314,7 @@ export default function Settings() {
           Game Mode
         </button>
         <button
-          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 text-base font-medium transition-all ${
             studyMode
               ? 'bg-gradient-to-r from-purple-500/30 to-cyan-500/30 text-cyan-300'
               : 'bg-card/30 text-muted-foreground hover:text-cyan-300'

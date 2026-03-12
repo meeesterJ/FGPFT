@@ -684,7 +684,7 @@ export default function Game() {
               setNeedsIOSPermission(false);
               showReadyScreen();
             }}
-            className="text-muted-foreground hover:text-foreground transition-colors pointer-events-auto px-6 py-3"
+            className="text-base text-muted-foreground hover:text-foreground transition-colors pointer-events-auto px-6 py-3"
             data-testid="button-skip-tilt"
           >
             Skip (use buttons instead)

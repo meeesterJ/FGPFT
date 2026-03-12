@@ -52,13 +52,14 @@ struct HowToPlayView: View {
         }
         .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.barYellow, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button { dismiss() } label: { Image(systemName: "chevron.left") }
             }
             ToolbarItem(placement: .principal) {
                 Text("How to Play")
-                    .font(.title2)
+                    .font(AppFonts.display(size: 22))
                     .foregroundStyle(AppColors.yellow)
             }
         }

@@ -25,13 +25,14 @@ struct SettingsView: View {
         }
         .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.barPurple, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button { dismiss() } label: { Image(systemName: "chevron.left") }
             }
             ToolbarItem(placement: .principal) {
                 Text("Settings")
-                    .font(AppFonts.body(size: 22))
+                    .font(AppFonts.display(size: 22))
                     .foregroundStyle(AppColors.mutedText)
             }
         }
@@ -338,4 +339,9 @@ enum AppColors {
     static let green = Color(red: 0.29, green: 0.87, blue: 0.5)
     static let yellow = Color(red: 0.98, green: 0.8, blue: 0.09)
     static let mutedText = Color.white.opacity(0.7)
+    /// Nav bar backgrounds matching main menu button colors (exact hex), with transparency
+    static let barTeal = Color(hex: "0891b2").opacity(0.92)
+    static let barPurple = Color(hex: "9333ea").opacity(0.92)
+    static let barYellow = Color(hex: "ca8a04").opacity(0.92)
+    static let barPink = Color(hex: "ec4899").opacity(0.92)
 }
