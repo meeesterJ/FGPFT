@@ -75,7 +75,7 @@ struct HowToPlayView: View {
     private func section<Content: View>(title: String, color: Color, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
-                .font(.title3)
+                .font(AppFonts.display(size: 24))
                 .foregroundStyle(color)
             content()
         }
@@ -89,9 +89,10 @@ struct HowToPlayView: View {
     private func bullet(_ text: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
             Text("•")
+                .font(AppFonts.body(size: 17))
                 .foregroundStyle(AppColors.mutedText)
             Text(text)
-                .font(.subheadline)
+                .font(AppFonts.body(size: 17))
                 .foregroundStyle(AppColors.mutedText)
         }
     }

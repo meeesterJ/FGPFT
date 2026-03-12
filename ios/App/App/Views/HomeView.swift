@@ -57,7 +57,7 @@ struct MainMenuView: View {
             VStack(spacing: 0) {
                 Spacer(minLength: 36)
                 TitleStackView(animated: false, availableHeight: titleHeight)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, height: titleHeight)
                 Spacer(minLength: 20)
                 VStack(spacing: 12) {
                 Button { path.append(AppRoute.game) } label: {
@@ -121,11 +121,12 @@ struct TitleStackView: View {
     
     private var fontSize: CGFloat {
         guard let h = availableHeight, h > 0 else { return 64 }
-        return min(96, max(48, h / 6.5))
+        // Scale so 5 lines + spacing roughly fill the red box (availableHeight)
+        return min(120, max(40, h / 5.4))
     }
     private var lineSpacing: CGFloat {
         guard let h = availableHeight, h > 0 else { return 12 }
-        return max(8, h / 28)
+        return max(6, h / 24)
     }
     
     var body: some View {

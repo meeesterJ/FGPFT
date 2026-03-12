@@ -143,6 +143,10 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
 }
 
+.font-body {
+  font-family: var(--font-body);
+}
+
 .text-shadow-sm {
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }

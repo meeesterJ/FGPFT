@@ -15,23 +15,23 @@ export default function Terms() {
             <ArrowLeft className="w-6 h-6" />
           </Button>
         </Link>
-        <h1 className="text-2xl font-thin ml-4 text-purple-400" data-testid="text-title">Terms of Use</h1>
+        <h1 className="text-2xl font-thin ml-4 text-purple-400 font-display" data-testid="text-title">Terms of Use</h1>
       </header>
 
       <ScrollArea className="flex-1 p-6 max-w-2xl mx-auto w-full">
-        <div className="space-y-6 pb-20 text-sm text-muted-foreground leading-relaxed">
+        <div className="space-y-6 pb-20 text-sm text-muted-foreground leading-relaxed font-body">
           
           <p className="text-xs text-muted-foreground" data-testid="text-last-updated">Last updated: February 2026</p>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-pink-400">Agreement to Terms</h2>
+            <h2 className="text-lg font-thin text-pink-400 font-display">Agreement to Terms</h2>
             <p>
               By accessing or using Family Guess Party Fun Time™ ("the App"), you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use the App.
             </p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-cyan-400">License to Use</h2>
+            <h2 className="text-lg font-thin text-cyan-400 font-display">License to Use</h2>
             <p>
               K Jasken and Associates, LLC grants you a limited, non-exclusive, non-transferable, revocable license to use the App for personal, non-commercial entertainment purposes.
             </p>
@@ -45,14 +45,14 @@ export default function Terms() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-yellow-400">User Content</h2>
+            <h2 className="text-lg font-thin text-yellow-400 font-display">User Content</h2>
             <p>
               The App allows you to create custom word lists. You are solely responsible for any content you create. You agree not to create content that is offensive, harmful, or violates any laws.
             </p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-green-400">Intellectual Property</h2>
+            <h2 className="text-lg font-thin text-green-400 font-display">Intellectual Property</h2>
             <p>
               Family Guess Party Fun Time™ and all associated trademarks, logos, and content are the property of K Jasken and Associates, LLC. All rights reserved.
             </p>
@@ -62,42 +62,42 @@ export default function Terms() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-purple-400">Disclaimer of Warranties</h2>
+            <h2 className="text-lg font-thin text-purple-400 font-display">Disclaimer of Warranties</h2>
             <p>
               THE APP IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED. WE DO NOT WARRANT THAT THE APP WILL BE UNINTERRUPTED, ERROR-FREE, OR FREE OF HARMFUL COMPONENTS.
             </p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-pink-400">Limitation of Liability</h2>
+            <h2 className="text-lg font-thin text-pink-400 font-display">Limitation of Liability</h2>
             <p>
               TO THE MAXIMUM EXTENT PERMITTED BY LAW, K JASKEN AND ASSOCIATES, LLC SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF THE APP.
             </p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-cyan-400">Intended Use</h2>
+            <h2 className="text-lg font-thin text-cyan-400 font-display">Intended Use</h2>
             <p>
               This App is intended for fun, group play, and entertainment purposes only. Please play responsibly and be mindful of your surroundings when using device motion features.
             </p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-yellow-400">Changes to Terms</h2>
+            <h2 className="text-lg font-thin text-yellow-400 font-display">Changes to Terms</h2>
             <p>
               We reserve the right to modify these Terms of Use at any time. Continued use of the App after changes constitutes acceptance of the modified terms.
             </p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-green-400">Governing Law</h2>
+            <h2 className="text-lg font-thin text-green-400 font-display">Governing Law</h2>
             <p>
               These Terms shall be governed by and construed in accordance with the laws of the United States, without regard to conflict of law principles.
             </p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-thin text-purple-400">Contact Us</h2>
+            <h2 className="text-lg font-thin text-purple-400 font-display">Contact Us</h2>
             <p>
               If you have questions about these Terms of Use, please contact us at K Jasken and Associates, LLC: <a href="mailto:KJaskenAssoc@pm.me" className="text-purple-400 underline hover:text-purple-300">KJaskenAssoc@pm.me</a>
             </p>
