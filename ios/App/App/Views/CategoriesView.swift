@@ -150,7 +150,7 @@ struct AddCategorySheet: View {
     @State private var errorMessage: String?
     
     private var createPink: Color { Color(hex: "ec4899") }
-    private var textBoxPurple: Color { AppColors.primaryPurple.opacity(0.45) }
+    private var inputBackground: Color { Color(hex: "140A24") }
     
     var body: some View {
         let navigationStack = NavigationStack {
@@ -159,7 +159,7 @@ struct AddCategorySheet: View {
                     TextField("Name", text: $name)
                         .font(AppFonts.body(size: 17))
                         .foregroundStyle(.white)
-                        .listRowBackground(textBoxPurple)
+                        .listRowBackground(inputBackground)
                 } header: {
                     Text("List name")
                         .font(AppFonts.body(size: 15))
@@ -170,6 +170,7 @@ struct AddCategorySheet: View {
                         .tint(AppColors.primaryPurple)
                         .font(AppFonts.body(size: 17))
                         .foregroundStyle(AppColors.mutedText)
+                        .listRowBackground(inputBackground)
                 }
                 Section {
                     TextEditor(text: $wordsText)
@@ -177,7 +178,7 @@ struct AddCategorySheet: View {
                         .foregroundStyle(.white)
                         .scrollContentBackground(.hidden)
                         .frame(minHeight: 120)
-                        .listRowBackground(textBoxPurple)
+                        .listRowBackground(inputBackground)
                 } header: {
                     Text("Words (one per line)")
                         .font(AppFonts.body(size: 15))
@@ -262,7 +263,7 @@ struct EditCategorySheet: View {
     }
     
     private var editYellow: Color { Color(hex: "ca8a04") }
-    private var textBoxPurple: Color { AppColors.primaryPurple.opacity(0.45) }
+    private var inputBackground: Color { Color(hex: "140A24") }
     
     var body: some View {
         let navigationStack = NavigationStack {
@@ -271,7 +272,7 @@ struct EditCategorySheet: View {
                     TextField("Name", text: $name)
                         .font(AppFonts.body(size: 17))
                         .foregroundStyle(.white)
-                        .listRowBackground(textBoxPurple)
+                        .listRowBackground(inputBackground)
                 } header: {
                     Text("List name")
                         .font(AppFonts.body(size: 15))
@@ -282,6 +283,7 @@ struct EditCategorySheet: View {
                         .tint(AppColors.primaryPurple)
                         .font(AppFonts.body(size: 17))
                         .foregroundStyle(AppColors.mutedText)
+                        .listRowBackground(inputBackground)
                 }
                 Section {
                     TextEditor(text: wordsText)
@@ -289,7 +291,7 @@ struct EditCategorySheet: View {
                         .foregroundStyle(.white)
                         .scrollContentBackground(.hidden)
                         .frame(minHeight: 120)
-                        .listRowBackground(textBoxPurple)
+                        .listRowBackground(inputBackground)
                 } header: {
                     Text("Words (one per line)")
                         .font(AppFonts.body(size: 15))
