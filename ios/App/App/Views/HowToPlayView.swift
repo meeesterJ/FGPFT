@@ -6,6 +6,7 @@ struct HowToPlayView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
+                quickStartImage
                 section(title: "Getting Started", color: AppColors.pink) {
                     bullet("One player holds the phone to their forehead and guesses while others give clues (verbal, acting, drawing, impersonation, accents, etc)")
                     bullet("Clue givers may not say the word or part of the word")
@@ -60,6 +61,18 @@ struct HowToPlayView: View {
                     .font(.title2)
                     .foregroundStyle(AppColors.yellow)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var quickStartImage: some View {
+        if let uiImage = UIImage(named: "Quick Start How To", in: .main, with: nil) {
+            Image(uiImage: uiImage)
+                .resizable()
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.cyan.opacity(0.5), lineWidth: 1))
+                .padding(.horizontal, 4)
         }
     }
     
