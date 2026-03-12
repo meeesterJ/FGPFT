@@ -41,7 +41,8 @@ struct SettingsView: View {
                 handleModeToggle(study: false)
             } label: {
                 Label("Game Mode", systemImage: "gamecontroller")
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .contentShape(Rectangle())
                     .padding(.vertical, 12)
                     .font(AppFonts.body(size: 15))
                     .fontWeight(.medium)
@@ -53,7 +54,8 @@ struct SettingsView: View {
                 handleModeToggle(study: true)
             } label: {
                 Label("Study Mode", systemImage: "book")
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .contentShape(Rectangle())
                     .padding(.vertical, 12)
                     .font(AppFonts.body(size: 15))
                     .fontWeight(.medium)
