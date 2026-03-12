@@ -152,7 +152,7 @@ struct AddCategorySheet: View {
     private var createPink: Color { Color(hex: "ec4899") }
     
     var body: some View {
-        NavigationStack {
+        let navigationStack = NavigationStack {
             Form {
                 Section("List name") {
                     TextField("Name", text: $name)
@@ -193,7 +193,11 @@ struct AddCategorySheet: View {
                 }
             }
         }
-        .presentationBackground(createPink)
+        if #available(iOS 16.4, *) {
+            navigationStack.presentationBackground(createPink)
+        } else {
+            navigationStack
+        }
     }
     
     private func create() {
@@ -240,7 +244,7 @@ struct EditCategorySheet: View {
     private var editYellow: Color { Color(hex: "ca8a04") }
     
     var body: some View {
-        NavigationStack {
+        let navigationStack = NavigationStack {
             Form {
                 Section("List name") {
                     TextField("Name", text: $name)
@@ -281,7 +285,11 @@ struct EditCategorySheet: View {
                 }
             }
         }
-        .presentationBackground(editYellow)
+        if #available(iOS 16.4, *) {
+            navigationStack.presentationBackground(editYellow)
+        } else {
+            navigationStack
+        }
     }
     
     private func save() {
