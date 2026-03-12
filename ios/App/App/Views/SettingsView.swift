@@ -343,4 +343,5 @@ enum AppColors {
     static let barTeal = Color(hex: "0891b2").opacity(0.92)
     static let barPurple = Color(hex: "9333ea").opacity(0.92)
     static let barYellow = Color(hex: "ca8a04").opacity(0.92)
+    static let barPink = Color(hex: "ec4899").opacity(0.92)
 }

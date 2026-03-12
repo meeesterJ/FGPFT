@@ -153,6 +153,8 @@ struct AddCategorySheet: View {
     @State private var isStudy = false
     @State private var errorMessage: String?
     
+    private var createPink: Color { Color(hex: "ec4899") }
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -173,22 +175,29 @@ struct AddCategorySheet: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(createPink)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.barTeal, for: .navigationBar)
+            .toolbarBackground(createPink, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { onDismiss() }
+                        .foregroundStyle(.white)
                 }
                 ToolbarItem(placement: .principal) {
                     Text("Create List")
                         .font(AppFonts.display(size: 22))
-                        .foregroundStyle(AppColors.cyan)
+                        .foregroundStyle(.white)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") { create() }
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
                 }
             }
         }
+        .presentationBackground(createPink)
     }
     
     private func create() {
@@ -232,6 +241,8 @@ struct EditCategorySheet: View {
         )
     }
     
+    private var editYellow: Color { Color(hex: "ca8a04") }
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -252,22 +263,29 @@ struct EditCategorySheet: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(editYellow)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.barTeal, for: .navigationBar)
+            .toolbarBackground(editYellow, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { onDismiss() }
+                        .foregroundStyle(.white)
                 }
                 ToolbarItem(placement: .principal) {
                     Text("Edit List")
                         .font(AppFonts.display(size: 22))
-                        .foregroundStyle(AppColors.cyan)
+                        .foregroundStyle(.white)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { save() }
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
                 }
             }
         }
+        .presentationBackground(editYellow)
     }
     
     private func save() {
