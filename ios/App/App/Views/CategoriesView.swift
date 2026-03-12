@@ -2,7 +2,6 @@ import SwiftUI
 
 struct CategoriesView: View {
     @EnvironmentObject var store: GameStore
-    @Environment(\.dismiss) private var dismiss
     @State private var showCreate = false
     @State private var editingList: WordList?
     
@@ -76,9 +75,6 @@ struct CategoriesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.barTeal, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button { dismiss() } label: { Image(systemName: "chevron.left") }
-            }
             ToolbarItem(placement: .principal) {
                 Text("Word Categories")
                     .font(AppFonts.display(size: 22))

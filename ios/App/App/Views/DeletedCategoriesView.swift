@@ -2,7 +2,6 @@ import SwiftUI
 
 struct DeletedCategoriesView: View {
     @EnvironmentObject var store: GameStore
-    @Environment(\.dismiss) private var dismiss
     @State private var confirmDelete: WordList?
     
     private var deletedLists: [WordList] {
@@ -70,9 +69,6 @@ struct DeletedCategoriesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.barTeal, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button { dismiss() } label: { Image(systemName: "chevron.left") }
-            }
             ToolbarItem(placement: .principal) {
                 Text("Deleted Categories")
                     .font(AppFonts.display(size: 22))

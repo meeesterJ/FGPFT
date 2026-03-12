@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct HowToPlayView: View {
-    @Environment(\.dismiss) private var dismiss
-    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -54,9 +52,6 @@ struct HowToPlayView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.barYellow, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button { dismiss() } label: { Image(systemName: "chevron.left") }
-            }
             ToolbarItem(placement: .principal) {
                 Text("How to Play")
                     .font(AppFonts.display(size: 22))
