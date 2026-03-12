@@ -37,7 +37,7 @@ struct SummaryView: View {
                 }
                 
                 Text("Game Over!")
-                    .font(.system(size: 52, weight: .thin))
+                    .font(AppFonts.display(size: 52))
                     .foregroundStyle(AppColors.yellow)
                 
                 if !scores.isEmpty {
@@ -63,14 +63,14 @@ struct SummaryView: View {
                                                 .foregroundStyle(.green)
                                             Text("\(score.correct)")
                                                 .foregroundStyle(.green)
-                                                .font(.body.monospacedDigit())
+                                                .font(AppFonts.body(size: 17).monospacedDigit())
                                         }
                                         HStack(spacing: 4) {
                                             Image(systemName: "xmark.circle.fill")
                                                 .foregroundStyle(.red)
                                             Text("\(score.passed)")
                                                 .foregroundStyle(.red)
-                                                .font(.body.monospacedDigit())
+                                                .font(AppFonts.body(size: 17).monospacedDigit())
                                         }
                                     }
                                 }
@@ -88,7 +88,8 @@ struct SummaryView: View {
                             Image(systemName: "trophy.fill")
                                 .foregroundStyle(AppColors.yellow)
                             Text(info.isTie ? "Tie!" : "\(store.getTeamName(teamNumber: info.winnerTeam)) wins!")
-                                .font(.headline)
+                                .font(AppFonts.body(size: 18))
+                                .fontWeight(.bold)
                                 .foregroundStyle(AppColors.yellow)
                         }
                         .padding(12)
@@ -108,7 +109,8 @@ struct SummaryView: View {
                         Label("Play Again", systemImage: "arrow.clockwise")
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .font(.headline)
+                            .font(AppFonts.body(size: 18))
+                            .fontWeight(.bold)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(AppColors.pink)
@@ -120,7 +122,8 @@ struct SummaryView: View {
                         Label("Home", systemImage: "house")
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
-                            .font(.headline)
+                            .font(AppFonts.body(size: 18))
+                            .fontWeight(.bold)
                     }
                     .buttonStyle(.bordered)
                     .foregroundStyle(.white)

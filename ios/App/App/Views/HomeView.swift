@@ -1,5 +1,11 @@
 import SwiftUI
 
+/// Fonts matching the web app: Titan One (display/titles), Outfit (body).
+enum AppFonts {
+    static func display(size: CGFloat) -> Font { .custom("Titan One", size: size) }
+    static func body(size: CGFloat) -> Font { .custom("Outfit", size: size) }
+}
+
 struct HomeView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var store: GameStore
@@ -27,7 +33,7 @@ struct SplashView: View {
             Spacer()
             TitleStackView(animated: true)
             Text("Tap anywhere to start")
-                .font(.title2)
+                .font(AppFonts.body(size: 20))
                 .foregroundStyle(.secondary)
             Spacer()
         }
@@ -50,28 +56,32 @@ struct MainMenuView: View {
                     Label("Play Now", systemImage: "play.fill")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .font(.headline)
+                        .font(AppFonts.body(size: 18))
+                            .fontWeight(.bold)
                 }
                 .buttonStyle(MenuButtonStyle(color: .pink))
                 Button { path.append(AppRoute.categories) } label: {
                     Label("Categories", systemImage: "list.bullet")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .font(.headline)
+                        .font(AppFonts.body(size: 18))
+                            .fontWeight(.bold)
                 }
                 .buttonStyle(MenuButtonStyle(color: .cyan))
                 Button { path.append(AppRoute.settings) } label: {
                     Label("Settings", systemImage: "gearshape")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .font(.headline)
+                        .font(AppFonts.body(size: 18))
+                            .fontWeight(.bold)
                 }
                 .buttonStyle(MenuButtonStyle(color: .purple))
                 Button { path.append(AppRoute.howToPlay) } label: {
                     Label("How to Play", systemImage: "questionmark.circle")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .font(.headline)
+                        .font(AppFonts.body(size: 18))
+                            .fontWeight(.bold)
                 }
                 .buttonStyle(MenuButtonStyle(color: .yellow))
             }
@@ -97,7 +107,7 @@ struct TitleStackView: View {
             ForEach(Array(words.enumerated()), id: \.offset) { _, w in
                 Text(w.0)
                     .foregroundStyle(w.1)
-                    .font(.system(size: 36, weight: .bold))
+                    .font(AppFonts.display(size: 36))
             }
         }
         .rotationEffect(.degrees(-2))
@@ -117,11 +127,12 @@ struct MenuButtonStyle: ButtonStyle {
 }
 
 struct BackgroundView: View {
-    private let base = Color(hex: "3A4D63")
+    /// Original web app: --background: 260 30% 12% (deep purple/black)
+    private let base = Color(hex: "1e1a2e")
     
     var body: some View {
         LinearGradient(
-            colors: [base, base.opacity(0.85)],
+            colors: [base, base.opacity(0.92)],
             startPoint: .top,
             endPoint: .bottom
         )

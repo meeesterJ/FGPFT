@@ -31,7 +31,7 @@ struct SettingsView: View {
             }
             ToolbarItem(placement: .principal) {
                 Text("Settings")
-                    .font(.title2)
+                    .font(AppFonts.body(size: 22))
                     .foregroundStyle(AppColors.mutedText)
             }
         }
@@ -45,7 +45,8 @@ struct SettingsView: View {
                 Label("Game Mode", systemImage: "gamecontroller")
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
-                    .font(.subheadline.weight(.medium))
+                    .font(AppFonts.body(size: 15))
+                    .fontWeight(.medium)
             }
             .buttonStyle(.plain)
             .foregroundStyle(store.studyMode ? AppColors.mutedText : AppColors.pink)
@@ -56,7 +57,8 @@ struct SettingsView: View {
                 Label("Study Mode", systemImage: "book")
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
-                    .font(.subheadline.weight(.medium))
+                    .font(AppFonts.body(size: 15))
+                    .fontWeight(.medium)
             }
             .buttonStyle(.plain)
             .foregroundStyle(store.studyMode ? AppColors.cyan : AppColors.mutedText)

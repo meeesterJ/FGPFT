@@ -55,28 +55,28 @@ struct GameView: View {
             Spacer()
             if store.numberOfTeams > 1 {
                 Text(store.getTeamName(teamNumber: store.currentTeam))
-                    .font(.system(size: 56, weight: .bold))
+                    .font(AppFonts.display(size: 56))
                     .foregroundStyle(teamColor(store.currentTeam))
             }
             Text("Round \(store.currentRound)")
-                .font(.largeTitle)
+                .font(AppFonts.display(size: 44))
                 .foregroundStyle(AppColors.yellow)
             Spacer()
             if showTiltToStart {
                 if store.studyMode {
                     Text("Tap anywhere to start")
-                        .font(.title3)
+                        .font(AppFonts.body(size: 20))
                         .foregroundStyle(AppColors.mutedText)
                 } else {
                     Text("Tilt forward to start")
-                        .font(.title3)
+                        .font(AppFonts.body(size: 20))
                         .foregroundStyle(AppColors.mutedText)
                     if store.showButtons || !store.tiltEnabled {
                         Button {
                             triggerCountdown()
                         } label: {
                             Label("Play", systemImage: "play.fill")
-                                .font(.title2)
+                                .font(AppFonts.body(size: 22))
                                 .padding(.horizontal, 32)
                                 .padding(.vertical, 16)
                         }
@@ -87,7 +87,7 @@ struct GameView: View {
                 }
             } else {
                 Text("Hold phone at forehead…")
-                    .font(.title3)
+                    .font(AppFonts.body(size: 20))
                     .foregroundStyle(AppColors.mutedText)
             }
             Spacer()
@@ -103,7 +103,7 @@ struct GameView: View {
     
     private var countdownOverlay: some View {
         Text(countdownSec > 0 ? "\(countdownSec)" : "Go!")
-            .font(.system(size: 120, weight: .thin))
+            .font(AppFonts.display(size: 120))
             .foregroundStyle(AppColors.yellow)
     }
     
@@ -122,7 +122,7 @@ struct GameView: View {
                 Spacer()
                 if store.roundDuration > 0 && store.isPlaying {
                     Text("\(timeLeft)")
-                        .font(.system(size: 32, weight: .thin).monospacedDigit())
+                        .font(AppFonts.body(size: 32).monospacedDigit())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 20)
                 }
@@ -136,13 +136,13 @@ struct GameView: View {
                 let parsed = parseWordAnswer(word)
                 VStack(spacing: 8) {
                     Text(parsed.prompt)
-                        .font(.system(size: wordFontSize(parsed.prompt), weight: .regular))
+                        .font(AppFonts.body(size: wordFontSize(parsed.prompt)))
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 24)
                     if store.studyMode, let ans = parsed.answer {
                         Text("[\(ans)]")
-                            .font(.title3)
+                            .font(AppFonts.body(size: 20))
                             .foregroundStyle(AppColors.mutedText)
                     }
                 }
@@ -155,7 +155,7 @@ struct GameView: View {
                         handlePass()
                     } label: {
                         Label("Pass", systemImage: "xmark")
-                            .font(.title2)
+                            .font(AppFonts.body(size: 22))
                             .frame(width: 120, height: 56)
                     }
                     .buttonStyle(.borderedProminent)
@@ -164,7 +164,7 @@ struct GameView: View {
                         handleCorrect()
                     } label: {
                         Label("Correct", systemImage: "checkmark")
-                            .font(.title2)
+                            .font(AppFonts.body(size: 22))
                             .frame(width: 120, height: 56)
                     }
                     .buttonStyle(.borderedProminent)
@@ -179,18 +179,18 @@ struct GameView: View {
         VStack {
             Spacer()
             Text(store.getTeamName(teamNumber: store.currentTeam))
-                .font(.system(size: 56, weight: .bold))
+                .font(AppFonts.display(size: 56))
                 .foregroundStyle(teamColor(store.currentTeam))
             Text("Score")
-                .font(.largeTitle)
+                .font(AppFonts.body(size: 28))
                 .foregroundStyle(.white)
             let idx = store.currentTeam - 1
             Text("\(store.teamRoundScores.indices.contains(idx) ? store.teamRoundScores[idx].correct : 0)")
-                .font(.system(size: 100, weight: .thin))
+                .font(AppFonts.display(size: 100))
                 .foregroundStyle(AppColors.yellow)
             Spacer()
             Text("Tap to continue")
-                .font(.body)
+                .font(AppFonts.body(size: 17))
                 .foregroundStyle(AppColors.mutedText)
                 .padding(.bottom, 50)
         }
@@ -201,7 +201,7 @@ struct GameView: View {
     private var handoffOverlay: some View {
         VStack(spacing: 32) {
             Text("\(store.getTeamName(teamNumber: store.currentTeam)) Ready?")
-                .font(.system(size: 44, weight: .bold))
+                .font(AppFonts.display(size: 44))
                 .foregroundStyle(teamColor(store.currentTeam))
                 .multilineTextAlignment(.center)
             Button {
@@ -210,7 +210,7 @@ struct GameView: View {
                 motion.startMonitoringForReady()
             } label: {
                 Text("Ready!")
-                    .font(.title)
+                    .font(AppFonts.body(size: 24))
                     .padding(.horizontal, 48)
                     .padding(.vertical, 20)
             }
