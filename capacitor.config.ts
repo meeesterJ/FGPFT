@@ -26,9 +26,7 @@ const config: CapacitorConfig = {
       style: 'dark',
       backgroundColor: '#0c0a1a'
     },
-    Haptics: {
-      enabled: true
-    },
+    // Haptics plugin not included in native iOS SPM build; JS falls back to vibrate when unavailable
     Keyboard: {
       resize: 'body',
       resizeOnFullScreen: true

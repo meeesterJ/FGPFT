@@ -2,15 +2,20 @@ import { isNative } from './platform';
 
 export type HapticStyle = 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error';
 
+/**
+ * Returns the Capacitor Haptics plugin if available. The native iOS build may not
+ * include the Haptics plugin (it's optional in SPM); in that case this returns
+ * null and we fall back to navigator.vibrate (unsupported on iOS WebView).
+ */
 function getHapticsPlugin(): any | null {
   try {
     const capacitor = window.Capacitor;
     if (!capacitor) return null;
-    
+
     if (capacitor.Plugins?.Haptics) {
       return capacitor.Plugins.Haptics;
     }
-    
+
     return null;
   } catch {
     return null;
