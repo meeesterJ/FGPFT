@@ -60,16 +60,13 @@ struct HowToPlayView: View {
         }
     }
     
-    @ViewBuilder
     private var quickStartImage: some View {
-        if let uiImage = UIImage(named: "Quick Start How To", in: .main, with: nil) {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.cyan.opacity(0.5), lineWidth: 1))
-                .padding(.horizontal, 4)
-        }
+        Image("QuickStartHowTo")
+            .resizable()
+            .scaledToFit()
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.cyan.opacity(0.5), lineWidth: 1))
+            .padding(.horizontal, 4)
     }
     
     private func section<Content: View>(title: String, color: Color, @ViewBuilder content: () -> Content) -> some View {
