@@ -5,7 +5,6 @@ private let studyTimerLabels = ["1 min", "2 min", "5 min", "10 min", "∞"]
 
 struct SettingsView: View {
     @EnvironmentObject var store: GameStore
-    @Environment(\.dismiss) private var dismiss
     @State private var teamsExpanded = false
     
     var body: some View {
@@ -27,9 +26,6 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.barPurple, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button { dismiss() } label: { Image(systemName: "chevron.left") }
-            }
             ToolbarItem(placement: .principal) {
                 Text("Settings")
                     .font(AppFonts.display(size: 22))
