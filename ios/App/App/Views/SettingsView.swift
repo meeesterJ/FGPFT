@@ -81,9 +81,10 @@ struct SettingsView: View {
                     HStack {
                         Image(systemName: "chevron.down")
                             .rotationEffect(.degrees(teamsExpanded ? 180 : 0))
+                            .font(.system(size: 12))
                         Text("Customize Teams")
+                            .font(.custom("Outfit", size: 12))
                     }
-                    .font(AppFonts.body(size: 12))
                     .foregroundStyle(AppColors.mutedText)
                 }
                 .buttonStyle(.plain)
