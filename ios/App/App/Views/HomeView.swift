@@ -175,8 +175,8 @@ struct MenuButtonStyle: ButtonStyle {
 }
 
 struct BackgroundView: View {
-    /// Original web app: --background: 260 30% 12% (deep purple/black) = #1e1a2e
-    private let base = Color(hex: "1e1a2e")
+    /// Sampled from Quick Start art: dark purplish-blue = #140A24
+    private let base = Color(hex: "140A24")
     
     var body: some View {
         LinearGradient(

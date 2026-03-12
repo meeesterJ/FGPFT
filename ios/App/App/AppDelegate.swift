@@ -8,7 +8,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Default nav bar for Game/Summary; other screens set their own via SwiftUI .toolbarBackground
-        let basePurple = UIColor(red: 30/255, green: 26/255, blue: 46/255, alpha: 0.92)  // #1e1a2e – web app --background: 260 30% 12%
+        let basePurple = UIColor(red: 20/255, green: 10/255, blue: 36/255, alpha: 0.92)  // #140A24 – main background (Quick Start art)
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
         appearance.backgroundColor = basePurple
