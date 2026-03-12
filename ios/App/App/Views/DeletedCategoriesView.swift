@@ -14,17 +14,17 @@ struct DeletedCategoriesView: View {
                 if deletedLists.isEmpty {
                     VStack(spacing: 8) {
                         Text("No deleted categories")
-                            .font(.title2)
+                            .font(AppFonts.body(size: 20))
                             .foregroundStyle(AppColors.mutedText)
                         Text("Categories you delete will appear here.")
-                            .font(.subheadline)
+                            .font(AppFonts.body(size: 15))
                             .foregroundStyle(AppColors.mutedText)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 60)
                 } else {
                     Text("Restore categories to make them available again, or permanently delete them.")
-                        .font(.subheadline)
+                        .font(AppFonts.body(size: 15))
                         .foregroundStyle(AppColors.mutedText)
                     
                     LazyVStack(spacing: 12) {
@@ -32,9 +32,9 @@ struct DeletedCategoriesView: View {
                             VStack(alignment: .leading, spacing: 12) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(list.name)
-                                        .font(.title3)
+                                        .font(AppFonts.body(size: 17).weight(.semibold))
                                     Text("\(list.words.count) words")
-                                        .font(.caption)
+                                        .font(AppFonts.body(size: 12))
                                         .foregroundStyle(AppColors.mutedText)
                                 }
                                 HStack(spacing: 12) {
@@ -43,14 +43,17 @@ struct DeletedCategoriesView: View {
                                     } label: {
                                         Label("Restore", systemImage: "arrow.uturn.backward")
                                             .frame(maxWidth: .infinity)
+                                            .font(AppFonts.body(size: 17))
                                     }
-                                    .buttonStyle(.bordered)
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(AppColors.cyan)
                                     Button {
                                         confirmDelete = list
                                     } label: {
                                         Label("Delete Forever", systemImage: "trash")
                                             .frame(maxWidth: .infinity)
-                                            .foregroundStyle(.red)
+                                            .font(AppFonts.body(size: 17))
+                                            .foregroundStyle(AppColors.destructive)
                                     }
                                     .buttonStyle(.bordered)
                                 }

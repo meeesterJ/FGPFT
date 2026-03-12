@@ -456,6 +456,8 @@ enum AppColors {
     static let purple = Color(red: 0.65, green: 0.55, blue: 0.98)
     static let green = Color(red: 0.29, green: 0.87, blue: 0.5)
     static let yellow = Color(red: 0.98, green: 0.8, blue: 0.09)
+    /// Destructive actions (e.g. delete); matches web --destructive: 350 85% 60%
+    static let destructive = Color(hex: "e84a6f")
     static let mutedText = Color.white.opacity(0.7)
     /// Web app primary purple (--primary: 270 90% 65%) for sliders and accents
     static let primaryPurple = Color(hex: "9333ea")
