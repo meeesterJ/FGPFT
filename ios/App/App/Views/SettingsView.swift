@@ -30,7 +30,7 @@ struct SettingsView: View {
             ToolbarItem(placement: .principal) {
                 Text("Settings")
                     .font(AppFonts.display(size: 22))
-                    .foregroundStyle(AppColors.mutedText)
+                    .foregroundStyle(AppColors.primaryPurple)
             }
         }
     }
