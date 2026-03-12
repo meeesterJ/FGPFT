@@ -157,12 +157,12 @@ struct AddCategorySheet: View {
                 Section("List name") {
                     TextField("Name", text: $name)
                 }
+                Section {
+                    Toggle("Study mode", isOn: $isStudy)
+                }
                 Section("Words (one per line)") {
                     TextEditor(text: $wordsText)
                         .frame(minHeight: 120)
-                }
-                Section {
-                    Toggle("Study mode", isOn: $isStudy)
                 }
                 if let err = errorMessage {
                     Section {
@@ -249,12 +249,12 @@ struct EditCategorySheet: View {
                 Section("List name") {
                     TextField("Name", text: $name)
                 }
+                Section {
+                    Toggle("Study mode", isOn: $isStudy)
+                }
                 Section("Words (one per line)") {
                     TextEditor(text: wordsText)
                         .frame(minHeight: 120)
-                }
-                Section {
-                    Toggle("Study mode", isOn: $isStudy)
                 }
                 if let err = errorMessage {
                     Section {
