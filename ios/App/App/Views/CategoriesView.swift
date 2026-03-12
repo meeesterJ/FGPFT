@@ -76,7 +76,7 @@ struct CategoriesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Back") { dismiss() }
+                Button { dismiss() } label: { Image(systemName: "chevron.left") }
             }
             ToolbarItem(placement: .principal) {
                 Text("Word Categories")
