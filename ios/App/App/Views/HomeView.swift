@@ -29,13 +29,17 @@ struct SplashView: View {
     let onTap: () -> Void
     
     var body: some View {
-        VStack(spacing: 32) {
-            Spacer()
-            TitleStackView(animated: true)
-            Text("Tap anywhere to start")
-                .font(AppFonts.body(size: 20))
-                .foregroundStyle(.secondary)
-            Spacer()
+        GeometryReader { geo in
+            let titleHeight = geo.size.height * 0.72
+            VStack(spacing: 24) {
+                Spacer()
+                TitleStackView(animated: true, availableHeight: titleHeight)
+                    .frame(maxHeight: .infinity)
+                Text("Tap anywhere to start")
+                    .font(AppFonts.body(size: 20))
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }
         }
         .contentShape(Rectangle())
         .onTapGesture(perform: onTap)
@@ -47,11 +51,14 @@ struct MainMenuView: View {
     @EnvironmentObject var store: GameStore
     
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
-            TitleStackView(animated: false)
-            Spacer()
-            VStack(spacing: 12) {
+        GeometryReader { geo in
+            let titleHeight = geo.size.height * 0.55
+            VStack(spacing: 24) {
+                Spacer()
+                TitleStackView(animated: false, availableHeight: titleHeight)
+                    .frame(maxHeight: .infinity)
+                Spacer()
+                VStack(spacing: 12) {
                 Button { path.append(AppRoute.game) } label: {
                     Label("Play Now", systemImage: "play.fill")
                         .frame(maxWidth: .infinity)
@@ -85,8 +92,9 @@ struct MainMenuView: View {
                 }
                 .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "ca8a04"), borderColor: Color(hex: "facc15"))) // yellow-600, yellow-400
             }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 32)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 32)
+            }
         }
         .safeAreaInset(edge: .top) { Color.clear.frame(height: 0) }
     }
@@ -103,13 +111,24 @@ private let titleWordColors: [(String, Color)] = [
 
 struct TitleStackView: View {
     let animated: Bool
+    /// When set, font and spacing scale so the title uses most of this height.
+    var availableHeight: CGFloat? = nil
+    
+    private var fontSize: CGFloat {
+        guard let h = availableHeight, h > 0 else { return 64 }
+        return min(96, max(48, h / 6.5))
+    }
+    private var lineSpacing: CGFloat {
+        guard let h = availableHeight, h > 0 else { return 12 }
+        return max(8, h / 28)
+    }
     
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: lineSpacing) {
             ForEach(Array(titleWordColors.enumerated()), id: \.offset) { _, w in
                 Text(w.0)
                     .foregroundStyle(w.1)
-                    .font(AppFonts.display(size: 52))
+                    .font(AppFonts.display(size: fontSize))
                     .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
             }
         }
