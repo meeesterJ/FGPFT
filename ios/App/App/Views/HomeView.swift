@@ -57,7 +57,8 @@ struct MainMenuView: View {
             VStack(spacing: 0) {
                 Spacer(minLength: 36)
                 TitleStackView(animated: false, availableHeight: titleHeight)
-                    .frame(maxWidth: .infinity, height: titleHeight)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: titleHeight)
                 Spacer(minLength: 20)
                 VStack(spacing: 12) {
                 Button { path.append(AppRoute.game) } label: {

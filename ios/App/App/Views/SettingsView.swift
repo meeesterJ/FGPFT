@@ -422,7 +422,10 @@ struct TeamNameRow: View {
         }
         .onChange(of: localName) { new in
             let trimmed = String(new.prefix(MAX_TEAM_NAME_LENGTH))
-            if trimmed != new { return }
+            if trimmed != new {
+                localName = trimmed
+                return
+            }
             store.setTeamName(index: index, name: trimmed)
         }
         .onChange(of: store.teamNames) { _ in
