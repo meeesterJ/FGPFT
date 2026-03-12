@@ -87,7 +87,7 @@ struct SettingsView: View {
                         Text("Customize Teams")
                             .font(AppFonts.body(size: 12))
                     }
-                    .foregroundStyle(AppColors.mutedText)
+                    .foregroundStyle(AppColors.cyan)
                 }
                 .buttonStyle(.plain)
                 if teamsExpanded {
@@ -147,14 +147,15 @@ struct SettingsView: View {
                 set: { store.setSoundEnabled($0) }
             ))
             .labelsHidden()
+            .tint(AppColors.primaryPurple)
             if store.soundEnabled {
                 HStack {
                     Text("Volume")
-                        .font(.caption)
-                        .foregroundStyle(AppColors.mutedText)
+                        .font(AppFonts.body(size: 14))
+                        .foregroundStyle(AppColors.yellow)
                     Spacer()
                     Text("\(store.soundVolume)%")
-                        .font(.caption.monospacedDigit())
+                        .font(AppFonts.body(size: 14).monospacedDigit())
                         .foregroundStyle(AppColors.yellow)
                 }
                 Slider(value: Binding(
@@ -167,36 +168,40 @@ struct SettingsView: View {
     }
     
     private var hapticSection: some View {
-        SettingsSection(title: "Vibration", color: AppColors.green) {
+        SettingsSection(title: "Vibration", color: AppColors.cyan) {
             Toggle("", isOn: Binding(
                 get: { store.hapticEnabled },
                 set: { store.setHapticEnabled($0) }
             ))
             .labelsHidden()
+            .tint(AppColors.primaryPurple)
         }
     }
     
     private var controlsSection: some View {
-        SettingsSection(title: "Controls", color: AppColors.purple) {
+        SettingsSection(title: "Controls", color: AppColors.pink) {
             HStack {
                 Text("Tilt Gestures")
-                    .foregroundStyle(AppColors.purple.opacity(0.9))
+                    .font(AppFonts.body(size: 17))
+                    .foregroundStyle(AppColors.pink)
                 Spacer()
                 Toggle("", isOn: Binding(
                     get: { store.tiltEnabled },
                     set: { store.setTiltEnabled($0) }
                 ))
                 .labelsHidden()
+                .tint(AppColors.primaryPurple)
             }
             HStack {
                 HStack(spacing: 4) {
                     Text("Show Buttons")
-                        .foregroundStyle(AppColors.purple.opacity(0.9))
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(AppColors.pink)
                     if !store.tiltEnabled {
                         Text("Required")
-                            .font(.caption2)
+                            .font(AppFonts.body(size: 12))
                             .italic()
-                            .foregroundStyle(AppColors.purple.opacity(0.7))
+                            .foregroundStyle(AppColors.pink.opacity(0.7))
                     }
                 }
                 Spacer()
@@ -205,6 +210,7 @@ struct SettingsView: View {
                     set: { store.setShowButtons($0) }
                 ))
                 .labelsHidden()
+                .tint(AppColors.primaryPurple)
                 .disabled(store.tiltEnabled)
             }
         }
@@ -270,13 +276,12 @@ struct SettingsSection<Content: View>: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text(title)
-                    .font(.title3)
-                    .fontWeight(.light)
+                    .font(AppFonts.display(size: 20))
                     .foregroundStyle(color)
                 Spacer()
                 if let value = value {
                     Text(value)
-                        .font(.title2.monospacedDigit())
+                        .font(AppFonts.body(size: 18).monospacedDigit())
                         .foregroundStyle(color.opacity(0.9))
                 }
             }
@@ -322,7 +327,7 @@ private struct SelectAllTeamNameField: UIViewRepresentable {
         field.delegate = context.coordinator
         field.placeholder = placeholder
         field.textColor = Self.uiColor(fromHex: textColorHex)
-        field.font = .systemFont(ofSize: 17, weight: .regular)
+        field.font = UIFont(name: "Outfit", size: 17) ?? .systemFont(ofSize: 17, weight: .regular)
         field.autocorrectionType = .no
         field.returnKeyType = .done
         field.text = text
@@ -340,6 +345,7 @@ private struct SelectAllTeamNameField: UIViewRepresentable {
         }
         uiView.placeholder = placeholder
         uiView.textColor = Self.uiColor(fromHex: textColorHex)
+        uiView.font = UIFont(name: "Outfit", size: 17) ?? .systemFont(ofSize: 17, weight: .regular)
     }
 
     class Coordinator: NSObject, UITextFieldDelegate {
@@ -413,7 +419,7 @@ struct TeamNameRow: View {
                 }
             }
             Text("\(localName.count)/\(MAX_TEAM_NAME_LENGTH)")
-                .font(.caption2)
+                .font(AppFonts.body(size: 12))
                 .foregroundStyle(AppColors.mutedText)
         }
         .padding(12)
