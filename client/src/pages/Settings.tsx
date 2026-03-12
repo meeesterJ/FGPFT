@@ -362,13 +362,13 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-card flex flex-col safe-area-top font-display">
-      <header className="p-4 flex items-center border-b border-purple-500/30 bg-background/60 backdrop-blur-sm sticky top-0 z-10 safe-area-x">
+      <header className="p-4 flex items-center border-b border-purple-500/30 bg-[hsl(var(--background)_/_0.4)] backdrop-blur-md sticky top-0 z-10 safe-area-x">
         <Link href="/">
           <Button variant="ghost" size="icon" className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/20">
             <ArrowLeft className="w-6 h-6" />
           </Button>
         </Link>
-        <h1 className="text-6xl font-thin ml-4 text-purple-400 font-display">Settings</h1>
+        <h1 className="text-7xl font-thin ml-4 text-purple-400 font-display">Settings</h1>
       </header>
 
       <ScrollArea className="flex-1 p-6 w-full">
