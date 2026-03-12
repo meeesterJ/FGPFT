@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 private let studyTimerSteps = [60, 120, 300, 600, 0]
 private let studyTimerLabels = ["1 min", "2 min", "5 min", "10 min", "∞"]
@@ -73,6 +74,7 @@ struct SettingsView: View {
                     get: { Double(store.numberOfTeams) },
                     set: { store.setNumberOfTeams(Int($0)) }
                 ), in: 1...5, step: 1)
+                .tint(AppColors.primaryPurple)
                 Button {
                     teamsExpanded.toggle()
                 } label: {
@@ -81,7 +83,7 @@ struct SettingsView: View {
                             .rotationEffect(.degrees(teamsExpanded ? 180 : 0))
                         Text("Customize Teams")
                     }
-                    .font(.caption)
+                    .font(AppFonts.body(size: 12))
                     .foregroundStyle(AppColors.mutedText)
                 }
                 .buttonStyle(.plain)
@@ -111,11 +113,13 @@ struct SettingsView: View {
                     get: { Double(studyTimerToSlider(store.roundDuration)) },
                     set: { store.setRoundDuration(sliderToStudyTimer(Int($0))) }
                 ), in: 0...4, step: 1)
+                .tint(AppColors.primaryPurple)
             } else {
                 Slider(value: Binding(
                     get: { Double(store.roundDuration) },
                     set: { store.setRoundDuration(Int($0)) }
                 ), in: 5...60, step: 5)
+                .tint(AppColors.primaryPurple)
             }
         }
     }
@@ -127,6 +131,7 @@ struct SettingsView: View {
                     get: { Double(store.totalRounds) },
                     set: { store.setTotalRounds(Int($0)) }
                 ), in: 1...5, step: 1)
+                .tint(AppColors.primaryPurple)
             }
         }
         .opacity(store.studyMode ? 0.6 : 1)
@@ -153,6 +158,7 @@ struct SettingsView: View {
                     get: { Double(store.soundVolume) },
                     set: { store.setSoundVolume(Int($0)) }
                 ), in: 0...100, step: 5)
+                .tint(AppColors.primaryPurple)
             }
         }
     }
@@ -280,11 +286,107 @@ struct SettingsSection<Content: View>: View {
     }
 }
 
+// Wraps UITextField so double-tap selects the whole team name for easy editing.
+private struct SelectAllTeamNameField: UIViewRepresentable {
+    @Binding var text: String
+    var placeholder: String
+    var textColorHex: String
+    var maxLength: Int
+    var onSubmit: () -> Void
+
+    private static func uiColor(fromHex hex: String) -> UIColor {
+        let hex = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let r, g, b: CGFloat
+        switch hex.count {
+        case 6:
+            r = CGFloat((int >> 16) & 0xFF) / 255
+            g = CGFloat((int >> 8) & 0xFF) / 255
+            b = CGFloat(int & 0xFF) / 255
+        default:
+            (r, g, b) = (1, 1, 1)
+        }
+        return UIColor(red: r, green: g, blue: b, alpha: 1)
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    func makeUIView(context: Context) -> UITextField {
+        let field = UITextField()
+        field.delegate = context.coordinator
+        field.placeholder = placeholder
+        field.textColor = Self.uiColor(fromHex: textColorHex)
+        field.font = .systemFont(ofSize: 17, weight: .regular)
+        field.autocorrectionType = .no
+        field.returnKeyType = .done
+        field.text = text
+
+        let doubleTap = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.selectAll(_:)))
+        doubleTap.numberOfTapsRequired = 2
+        field.addGestureRecognizer(doubleTap)
+
+        return field
+    }
+
+    func updateUIView(_ uiView: UITextField, context: Context) {
+        if uiView.text != text {
+            uiView.text = text
+        }
+        uiView.placeholder = placeholder
+        uiView.textColor = Self.uiColor(fromHex: textColorHex)
+    }
+
+    class Coordinator: NSObject, UITextFieldDelegate {
+        var parent: SelectAllTeamNameField
+
+        init(_ parent: SelectAllTeamNameField) {
+            self.parent = parent
+        }
+
+        @objc func selectAll(_ recognizer: UITapGestureRecognizer) {
+            (recognizer.view as? UITextField)?.selectAll(nil)
+        }
+
+        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            let current = textField.text ?? ""
+            guard let range = Range(range, in: current) else { return true }
+            let next = current.replacingCharacters(in: range, with: string)
+            let trimmed = String(next.prefix(parent.maxLength))
+            if trimmed != next {
+                textField.text = trimmed
+                parent.text = trimmed
+                return false
+            }
+            return true
+        }
+
+        func textFieldDidChangeSelection(_ textField: UITextField) {
+            let trimmed = String((textField.text ?? "").prefix(parent.maxLength))
+            if textField.text != trimmed {
+                textField.text = trimmed
+            }
+            parent.text = trimmed
+        }
+
+        func textFieldDidEndEditing(_ textField: UITextField) {
+            parent.onSubmit()
+        }
+
+        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+            textField.resignFirstResponder()
+            parent.onSubmit()
+            return true
+        }
+    }
+}
+
 struct TeamNameRow: View {
     @ObservedObject var store: GameStore
     let index: Int
     @State private var localName: String = ""
-    @FocusState private var focused: Bool
     
     private var defaultName: String { "Team \(index + 1)" }
     private var theme: TeamThemeColor { TeamThemeColor.forTeam(index + 1) }
@@ -294,24 +396,19 @@ struct TeamNameRow: View {
             Circle()
                 .fill(themeColor(theme.textHex))
                 .frame(width: 12, height: 12)
-            TextField(defaultName, text: $localName)
-                .textFieldStyle(.plain)
-                .foregroundStyle(themeColor(theme.textHex))
-                .onChange(of: localName) { new in
-                    let trimmed = String(new.prefix(MAX_TEAM_NAME_LENGTH))
-                    if trimmed != new { localName = trimmed }
-                    store.setTeamName(index: index, name: trimmed)
+            SelectAllTeamNameField(
+                text: $localName,
+                placeholder: defaultName,
+                textColorHex: theme.textHex,
+                maxLength: MAX_TEAM_NAME_LENGTH
+            ) {
+                if localName.trimmingCharacters(in: .whitespaces).isEmpty {
+                    localName = defaultName
+                    store.setTeamName(index: index, name: defaultName)
+                } else {
+                    store.setTeamName(index: index, name: localName)
                 }
-                .onAppear {
-                    localName = store.teamNames.indices.contains(index) ? store.teamNames[index] : defaultName
-                }
-                .focused($focused)
-                .onSubmit {
-                    if localName.trimmingCharacters(in: .whitespaces).isEmpty {
-                        localName = defaultName
-                        store.setTeamName(index: index, name: defaultName)
-                    }
-                }
+            }
             Text("\(localName.count)/\(MAX_TEAM_NAME_LENGTH)")
                 .font(.caption2)
                 .foregroundStyle(AppColors.mutedText)
@@ -320,6 +417,19 @@ struct TeamNameRow: View {
         .background(themeColor(theme.bgSolidHex).opacity(0.25))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(themeColor(theme.textHex).opacity(0.4), lineWidth: 1))
+        .onAppear {
+            localName = store.teamNames.indices.contains(index) ? store.teamNames[index] : defaultName
+        }
+        .onChange(of: localName) { new in
+            let trimmed = String(new.prefix(MAX_TEAM_NAME_LENGTH))
+            if trimmed != new { return }
+            store.setTeamName(index: index, name: trimmed)
+        }
+        .onChange(of: store.teamNames) { _ in
+            if store.teamNames.indices.contains(index), localName != store.teamNames[index] {
+                localName = store.teamNames[index]
+            }
+        }
     }
     
     private func themeColor(_ hex: String) -> Color {
@@ -335,6 +445,8 @@ enum AppColors {
     static let green = Color(red: 0.29, green: 0.87, blue: 0.5)
     static let yellow = Color(red: 0.98, green: 0.8, blue: 0.09)
     static let mutedText = Color.white.opacity(0.7)
+    /// Web app primary purple (--primary: 270 90% 65%) for sliders and accents
+    static let primaryPurple = Color(hex: "9333ea")
     /// Nav bar backgrounds matching main menu button colors (exact hex), with transparency
     static let barTeal = Color(hex: "0891b2").opacity(0.92)
     static let barPurple = Color(hex: "9333ea").opacity(0.92)
