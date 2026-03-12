@@ -7,8 +7,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Shared nav bar: transparent #140A24 so content shows through, same on all screens and scroll states
-        let barBackground = UIColor(red: 20/255, green: 10/255, blue: 36/255, alpha: 0.88)  // #140A24
+        // Shared nav bar and window: transparent purple so content shows through, same on all screens and scroll states
+        let barBackground = UIColor(red: 147/255, green: 51/255, blue: 234/255, alpha: 0.85)  // #9333ea
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
         appearance.backgroundColor = barBackground
