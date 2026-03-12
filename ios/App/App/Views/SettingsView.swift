@@ -24,8 +24,10 @@ struct SettingsView: View {
             .padding(.bottom, 40)
         }
         .background(BackgroundView())
+        .transparentPurpleBottomBar()
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.barBackground, for: .navigationBar)
+        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Settings")
@@ -468,4 +470,16 @@ enum AppColors {
     static let barPink = Color(hex: "ec4899").opacity(0.92)
     /// Shared top/bottom bar: transparent purple (#140A24) so content shows through on all screens
     static let barBackground = Color(hex: "140A24").opacity(0.92)
+}
+
+extension View {
+    /// Transparent purple bottom bar so the thin bottom strip matches the nav bar; content scrolls underneath.
+    func transparentPurpleBottomBar() -> some View {
+        overlay(alignment: .bottom) {
+            AppColors.barBackground
+                .frame(maxWidth: .infinity)
+                .frame(height: 34)
+                .ignoresSafeArea(edges: .bottom)
+        }
+    }
 }

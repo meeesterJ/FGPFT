@@ -72,8 +72,10 @@ struct CategoriesView: View {
             .padding(.bottom, 40)
         }
         .background(BackgroundView())
+        .transparentPurpleBottomBar()
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.barBackground, for: .navigationBar)
+        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Word Categories")
@@ -214,6 +216,7 @@ struct AddCategorySheet: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(AppColors.barBackground, for: .navigationBar)
+            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -346,6 +349,7 @@ struct EditCategorySheet: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(AppColors.barBackground, for: .navigationBar)
+            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
