@@ -6,33 +6,33 @@ struct AboutView: View {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Family Guess Party Fun Time™")
-                        .font(.title2)
+                        .font(AppFonts.display(size: 22))
                         .foregroundStyle(AppColors.pink)
                     Text("A fun party guessing game for the whole family! One player holds the phone to their forehead while others give verbal clues. Tilt forward when you guess correctly, or tilt backward to pass.")
-                        .font(.subheadline)
+                        .font(AppFonts.body(size: 15))
                         .foregroundStyle(AppColors.mutedText)
                     Text("© 2025 K Jasken and Associates, LLC. All rights reserved.")
-                        .font(.caption)
+                        .font(AppFonts.body(size: 12))
                         .foregroundStyle(AppColors.mutedText)
                     Text("Created by Keith Jasken.")
-                        .font(.caption)
+                        .font(AppFonts.body(size: 12))
                         .foregroundStyle(AppColors.mutedText)
                     Text("Version 1.0.0")
-                        .font(.caption)
+                        .font(AppFonts.body(size: 12))
                         .foregroundStyle(AppColors.mutedText)
                     Text("This app is intended for fun, group play, and entertainment.")
-                        .font(.caption)
+                        .font(AppFonts.body(size: 12))
                         .foregroundStyle(AppColors.mutedText)
                     HStack(spacing: 16) {
                         NavigationLink(value: AppRoute.privacy) {
                             Text("Privacy Policy")
-                                .font(.caption)
+                                .font(AppFonts.body(size: 12))
                                 .foregroundStyle(AppColors.purple)
                                 .underline()
                         }
                         NavigationLink(value: AppRoute.terms) {
                             Text("Terms of Use")
-                                .font(.caption)
+                                .font(AppFonts.body(size: 12))
                                 .foregroundStyle(AppColors.purple)
                                 .underline()
                         }
