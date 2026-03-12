@@ -34,12 +34,13 @@ struct SplashView: View {
             VStack(spacing: 24) {
                 Spacer()
                 TitleStackView(animated: true, availableHeight: titleHeight)
-                    .frame(maxHeight: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 Text("Tap anywhere to start")
                     .font(AppFonts.body(size: 20))
                     .foregroundStyle(.secondary)
                 Spacer()
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .contentShape(Rectangle())
         .onTapGesture(perform: onTap)
@@ -52,12 +53,12 @@ struct MainMenuView: View {
     
     var body: some View {
         GeometryReader { geo in
-            let titleHeight = geo.size.height * 0.55
-            VStack(spacing: 24) {
-                Spacer()
+            let titleHeight = geo.size.height * 0.44
+            VStack(spacing: 0) {
+                Spacer(minLength: 36)
                 TitleStackView(animated: false, availableHeight: titleHeight)
-                    .frame(maxHeight: .infinity)
-                Spacer()
+                    .frame(maxWidth: .infinity)
+                Spacer(minLength: 20)
                 VStack(spacing: 12) {
                 Button { path.append(AppRoute.game) } label: {
                     Label("Play Now", systemImage: "play.fill")
@@ -93,8 +94,10 @@ struct MainMenuView: View {
                 .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "ca8a04"), borderColor: Color(hex: "facc15"))) // yellow-600, yellow-400
             }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 32)
+                .padding(.bottom, 24)
             }
+            .padding(.top, 28)
+            .padding(.bottom, 36)
         }
         .safeAreaInset(edge: .top) { Color.clear.frame(height: 0) }
     }
@@ -114,6 +117,8 @@ struct TitleStackView: View {
     /// When set, font and spacing scale so the title uses most of this height.
     var availableHeight: CGFloat? = nil
     
+    @State private var dropInTrigger = false
+    
     private var fontSize: CGFloat {
         guard let h = availableHeight, h > 0 else { return 64 }
         return min(96, max(48, h / 6.5))
@@ -124,15 +129,31 @@ struct TitleStackView: View {
     }
     
     var body: some View {
-        VStack(spacing: lineSpacing) {
-            ForEach(Array(titleWordColors.enumerated()), id: \.offset) { _, w in
+        VStack(alignment: .center, spacing: lineSpacing) {
+            ForEach(Array(titleWordColors.enumerated()), id: \.offset) { index, w in
                 Text(w.0)
                     .foregroundStyle(w.1)
                     .font(AppFonts.display(size: fontSize))
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
                     .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
+                    .opacity(animated ? (dropInTrigger ? 1 : 0) : 1)
+                    .offset(y: animated ? (dropInTrigger ? 0 : -50) : 0)
+                    .animation(
+                        animated ? .spring(response: 0.45, dampingFraction: 0.72)
+                            .delay(Double(index) * 0.12) : .default,
+                        value: dropInTrigger
+                    )
             }
         }
+        .frame(maxWidth: .infinity)
         .rotationEffect(.degrees(-2))
+        .onAppear {
+            guard animated else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
+                dropInTrigger = true
+            }
+        }
     }
 }
 

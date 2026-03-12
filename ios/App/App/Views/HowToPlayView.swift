@@ -12,6 +12,16 @@ struct HowToPlayView: View {
                     bullet("Clue givers may not say the word or part of the word")
                     bullet("Tilt forward when you guess correctly or tilt backward to pass")
                 }
+                section(title: "Tips", color: AppColors.yellow) {
+                    bullet("Don't say the word or any part of it")
+                    bullet("Pass quickly if you're stuck to save time")
+                    bullet("Take turns being the guesser")
+                    bullet("Split into two teams and compete!")
+                    bullet("Give creative clues - act it out, describe it, use rhymes!")
+                    bullet("Use accents or impersonation or act out clues")
+                    bullet("House rules are highly encouraged!")
+                    bullet("Edit lists or create your own custom lists")
+                }
                 section(title: "Step by Step", color: AppColors.cyan) {
                     bullet("1. Choose categories, time per round, and number of rounds in Settings, and start the game")
                     bullet("2. Hold your phone to your forehead in landscape mode")
@@ -24,16 +34,6 @@ struct HowToPlayView: View {
                     bullet("Edit existing lists to add or remove words")
                     bullet("Add brand new lists with your own themes")
                     bullet("Add words one per line when creating or editing a list")
-                }
-                section(title: "Tips", color: AppColors.yellow) {
-                    bullet("Don't say the word or any part of it")
-                    bullet("Pass quickly if you're stuck to save time")
-                    bullet("Take turns being the guesser")
-                    bullet("Split into two teams and compete!")
-                    bullet("Give creative clues - act it out, describe it, use rhymes!")
-                    bullet("Use accents or impersonation or act out clues")
-                    bullet("House rules are highly encouraged!")
-                    bullet("Edit lists or create your own custom lists")
                 }
                 section(title: "Study Mode", color: AppColors.purple) {
                     bullet("Great for language learning, flashcards, and vocabulary practice")
@@ -54,7 +54,7 @@ struct HowToPlayView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Back") { dismiss() }
+                Button { dismiss() } label: { Image(systemName: "chevron.left") }
             }
             ToolbarItem(placement: .principal) {
                 Text("How to Play")
