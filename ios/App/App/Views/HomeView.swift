@@ -59,7 +59,7 @@ struct MainMenuView: View {
                         .font(AppFonts.body(size: 18))
                             .fontWeight(.bold)
                 }
-                .buttonStyle(MenuButtonStyle(color: .pink))
+                .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "ec4899"), borderColor: Color(hex: "f472b6"))) // pink-500, pink-400
                 Button { path.append(AppRoute.categories) } label: {
                     Label("Categories", systemImage: "list.bullet")
                         .frame(maxWidth: .infinity)
@@ -67,7 +67,7 @@ struct MainMenuView: View {
                         .font(AppFonts.body(size: 18))
                             .fontWeight(.bold)
                 }
-                .buttonStyle(MenuButtonStyle(color: .cyan))
+                .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "0891b2"), borderColor: Color(hex: "22d3ee"))) // cyan-600, cyan-400
                 Button { path.append(AppRoute.settings) } label: {
                     Label("Settings", systemImage: "gearshape")
                         .frame(maxWidth: .infinity)
@@ -75,7 +75,7 @@ struct MainMenuView: View {
                         .font(AppFonts.body(size: 18))
                             .fontWeight(.bold)
                 }
-                .buttonStyle(MenuButtonStyle(color: .purple))
+                .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "9333ea"), borderColor: Color(hex: "a78bfa"))) // purple-600, purple-400
                 Button { path.append(AppRoute.howToPlay) } label: {
                     Label("How to Play", systemImage: "questionmark.circle")
                         .frame(maxWidth: .infinity)
@@ -83,7 +83,7 @@ struct MainMenuView: View {
                         .font(AppFonts.body(size: 18))
                             .fontWeight(.bold)
                 }
-                .buttonStyle(MenuButtonStyle(color: .yellow))
+                .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "ca8a04"), borderColor: Color(hex: "facc15"))) // yellow-600, yellow-400
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 32)
@@ -92,35 +92,41 @@ struct MainMenuView: View {
     }
 }
 
+/// Title word colors matching web app game-ui: text-pink-400, text-cyan-400, etc.
+private let titleWordColors: [(String, Color)] = [
+    ("Family", Color(hex: "f472b6")),   // pink-400
+    ("Guess", Color(hex: "22d3ee")),    // cyan-400
+    ("Party", Color(hex: "facc15")),    // yellow-400
+    ("Fun", Color(hex: "4ade80")),      // green-400
+    ("Time", Color(hex: "a78bfa")),      // purple-400
+]
+
 struct TitleStackView: View {
     let animated: Bool
-    private let words: [(String, Color)] = [
-        ("Family", .pink),
-        ("Guess", Color(red: 0.13, green: 0.83, blue: 0.93)),
-        ("Party", .yellow),
-        ("Fun", .green),
-        ("Time", .purple)
-    ]
     
     var body: some View {
-        HStack(spacing: 4) {
-            ForEach(Array(words.enumerated()), id: \.offset) { _, w in
+        VStack(spacing: 2) {
+            ForEach(Array(titleWordColors.enumerated()), id: \.offset) { _, w in
                 Text(w.0)
                     .foregroundStyle(w.1)
-                    .font(AppFonts.display(size: 36))
+                    .font(AppFonts.display(size: 52))
+                    .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
             }
         }
         .rotationEffect(.degrees(-2))
     }
 }
 
+/// Button colors match web app menuButtonStyles: bg-*-500/600, border-*-400.
 struct MenuButtonStyle: ButtonStyle {
-    let color: Color
+    let backgroundColor: Color
+    let borderColor: Color
     
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .foregroundStyle(.white)
-            .background(color)
+            .background(backgroundColor)
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(borderColor, lineWidth: 2))
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
     }
