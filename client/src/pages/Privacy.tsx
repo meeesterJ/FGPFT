@@ -8,7 +8,7 @@ export default function Privacy() {
   useSwipeBack({ targetPath: "/about" });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-card flex flex-col safe-area-top">
+    <div className="min-h-screen bg-gradient-to-b from-background to-card flex flex-col safe-area-top font-body">
       <header className="p-4 flex items-center border-b border-purple-500/30 bg-purple-900/20 backdrop-blur-md sticky top-0 z-10 safe-area-x">
         <Link href="/about">
           <Button variant="ghost" size="icon" className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/20" data-testid="button-back">
@@ -19,7 +19,7 @@ export default function Privacy() {
       </header>
 
       <ScrollArea className="flex-1 p-6 max-w-2xl mx-auto w-full">
-        <div className="space-y-6 pb-20 text-sm text-muted-foreground leading-relaxed font-body">
+        <div className="space-y-6 pb-20 text-sm text-muted-foreground leading-relaxed">
           
           <p className="text-xs text-muted-foreground" data-testid="text-last-updated">Last updated: February 2026</p>
 
