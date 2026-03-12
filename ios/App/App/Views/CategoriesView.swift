@@ -213,7 +213,7 @@ struct AddCategorySheet: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(createPink, for: .navigationBar)
+            .toolbarBackground(AppColors.barBackground, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -345,7 +345,7 @@ struct EditCategorySheet: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(editYellow, for: .navigationBar)
+            .toolbarBackground(AppColors.barBackground, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
