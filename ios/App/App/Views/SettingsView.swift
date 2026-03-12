@@ -25,7 +25,7 @@ struct SettingsView: View {
         }
         .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(AppColors.barPurple, for: .navigationBar)
+        .toolbarBackground(AppColors.barBackground, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Settings")
@@ -464,4 +464,6 @@ enum AppColors {
     static let barPurple = Color(hex: "9333ea").opacity(0.92)
     static let barYellow = Color(hex: "ca8a04").opacity(0.92)
     static let barPink = Color(hex: "ec4899").opacity(0.92)
+    /// Shared top/bottom bar: transparent #140A24 so content shows through on all screens
+    static let barBackground = Color(hex: "140A24").opacity(0.88)
 }

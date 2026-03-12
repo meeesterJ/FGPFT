@@ -73,7 +73,7 @@ struct CategoriesView: View {
         }
         .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(AppColors.barTeal, for: .navigationBar)
+        .toolbarBackground(AppColors.barBackground, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Word Categories")

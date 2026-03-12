@@ -50,7 +50,7 @@ struct AboutView: View {
         }
         .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(AppColors.barPurple, for: .navigationBar)
+        .toolbarBackground(AppColors.barBackground, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("About")

@@ -7,15 +7,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Default nav bar for Game/Summary; other screens set their own via SwiftUI .toolbarBackground
-        let basePurple = UIColor(red: 20/255, green: 10/255, blue: 36/255, alpha: 0.92)  // #140A24 – main background (Quick Start art)
+        // Shared nav bar: transparent #140A24 so content shows through, same on all screens and scroll states
+        let barBackground = UIColor(red: 20/255, green: 10/255, blue: 36/255, alpha: 0.88)  // #140A24
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = basePurple
+        appearance.backgroundColor = barBackground
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
-        window?.backgroundColor = basePurple
+        window?.backgroundColor = barBackground
         return true
     }
 
