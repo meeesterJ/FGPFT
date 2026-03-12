@@ -150,19 +150,38 @@ struct AddCategorySheet: View {
     @State private var errorMessage: String?
     
     private var createPink: Color { Color(hex: "ec4899") }
+    private var textBoxPurple: Color { AppColors.primaryPurple.opacity(0.45) }
     
     var body: some View {
         let navigationStack = NavigationStack {
             Form {
-                Section("List name") {
+                Section {
                     TextField("Name", text: $name)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
+                        .listRowBackground(textBoxPurple)
+                } header: {
+                    Text("List name")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(AppColors.mutedText)
                 }
                 Section {
-                    Toggle("Study mode", isOn: $isStudy)
+                    Toggle("Study Mode", isOn: $isStudy)
+                        .tint(AppColors.primaryPurple)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(AppColors.mutedText)
                 }
-                Section("Words (one per line)") {
+                Section {
                     TextEditor(text: $wordsText)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
+                        .scrollContentBackground(.hidden)
                         .frame(minHeight: 120)
+                        .listRowBackground(textBoxPurple)
+                } header: {
+                    Text("Words (one per line)")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(AppColors.mutedText)
                 }
                 if let err = errorMessage {
                     Section {
@@ -179,6 +198,7 @@ struct AddCategorySheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { onDismiss() }
+                        .font(AppFonts.body(size: 17))
                         .foregroundStyle(.white)
                 }
                 ToolbarItem(placement: .principal) {
@@ -188,7 +208,7 @@ struct AddCategorySheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") { create() }
-                        .fontWeight(.semibold)
+                        .font(AppFonts.body(size: 17).weight(.semibold))
                         .foregroundStyle(.white)
                 }
             }
@@ -242,19 +262,38 @@ struct EditCategorySheet: View {
     }
     
     private var editYellow: Color { Color(hex: "ca8a04") }
+    private var textBoxPurple: Color { AppColors.primaryPurple.opacity(0.45) }
     
     var body: some View {
         let navigationStack = NavigationStack {
             Form {
-                Section("List name") {
+                Section {
                     TextField("Name", text: $name)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
+                        .listRowBackground(textBoxPurple)
+                } header: {
+                    Text("List name")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(AppColors.mutedText)
                 }
                 Section {
-                    Toggle("Study mode", isOn: $isStudy)
+                    Toggle("Study Mode", isOn: $isStudy)
+                        .tint(AppColors.primaryPurple)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(AppColors.mutedText)
                 }
-                Section("Words (one per line)") {
+                Section {
                     TextEditor(text: wordsText)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
+                        .scrollContentBackground(.hidden)
                         .frame(minHeight: 120)
+                        .listRowBackground(textBoxPurple)
+                } header: {
+                    Text("Words (one per line)")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(AppColors.mutedText)
                 }
                 if let err = errorMessage {
                     Section {
@@ -271,6 +310,7 @@ struct EditCategorySheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { onDismiss() }
+                        .font(AppFonts.body(size: 17))
                         .foregroundStyle(.white)
                 }
                 ToolbarItem(placement: .principal) {
@@ -280,7 +320,7 @@ struct EditCategorySheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { save() }
-                        .fontWeight(.semibold)
+                        .font(AppFonts.body(size: 17).weight(.semibold))
                         .foregroundStyle(.white)
                 }
             }
