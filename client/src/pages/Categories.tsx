@@ -200,14 +200,14 @@ export default function Categories() {
             <ArrowLeft className="w-6 h-6" />
           </Button>
         </Link>
-        <h1 className="text-5xl font-thin ml-4 text-purple-400">Word Categories</h1>
+            <h1 className="text-5xl font-thin ml-4 text-purple-400 font-body">Word Categories</h1>
       </header>
 
       <ScrollArea className="flex-1 p-6 w-full">
         <div className={`pb-20 mx-auto ${isLandscape ? 'max-w-4xl' : 'max-w-2xl'}`}>
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <p className="text-sm text-muted-foreground">Select categories to include in your game</p>
+              <p className="text-sm text-muted-foreground font-body">Select categories to include in your game</p>
               
               <Button size="sm" className="bg-pink-500 text-white hover:bg-pink-400 border border-pink-400 shrink-0" onClick={() => setIsDialogOpen(true)}>
                 <Plus className="w-4 h-4 mr-2" />
@@ -234,8 +234,8 @@ export default function Categories() {
                         {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
                       </div>
                       <div>
-                        <h3 className="font-thin">{list.name}</h3>
-                        <p className="text-xs text-muted-foreground">
+                        <h3 className="font-thin font-body">{list.name}</h3>
+                        <p className="text-xs text-muted-foreground font-body">
                           {list.words.length} words{list.isCustom ? ' (Custom)' : ''}{list.isStudy ? ' · Study' : ''}
                         </p>
                       </div>
@@ -297,24 +297,25 @@ export default function Categories() {
             <Button variant="ghost" size="icon" className="text-pink-400 hover:text-pink-300 hover:bg-pink-500/20" onClick={() => setIsDialogOpen(false)}>
               <ArrowLeft className="w-6 h-6" />
             </Button>
-            <h1 className="text-2xl font-thin ml-4 text-pink-400">Create Custom List</h1>
+            <h1 className="text-2xl font-thin ml-4 text-pink-400 font-body">Create Custom List</h1>
           </header>
           <ScrollArea className="flex-1 p-6 w-full">
             <div className="max-w-2xl mx-auto space-y-6">
               <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
                 <div className="space-y-2">
-                  <Label className="text-pink-300">List Name</Label>
+                  <Label className="text-pink-300 font-body">List Name</Label>
                   <Input 
                     placeholder="e.g. My Family, Inside Jokes" 
                     value={newListName}
                     onChange={e => setNewListName(e.target.value)}
+                    className="font-body bg-background border-pink-500/30"
                     data-testid="input-new-list-name"
                   />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-purple-400" />
-                    <Label htmlFor="new-study-toggle" className="text-pink-300">Study Mode</Label>
+                    <Label htmlFor="new-study-toggle" className="text-pink-300 font-body">Study Mode</Label>
                   </div>
                   <Switch
                     id="new-study-toggle"
@@ -334,10 +335,10 @@ export default function Categories() {
                   </div>
                 )}
                 <div className="space-y-2">
-                  <Label className="text-pink-300">Words (one per line)</Label>
+                  <Label className="text-pink-300 font-body">Words (one per line)</Label>
                   <Textarea 
                     placeholder={"Word 1\nWord 2\nWord 3"} 
-                    className="h-40"
+                    className="h-40 font-body bg-background border-pink-500/30"
                     value={newListWords}
                     onChange={e => setNewListWords(e.target.value)}
                     data-testid="textarea-new-list-words"
@@ -345,7 +346,7 @@ export default function Categories() {
                 </div>
                 {ENABLE_CSV_UPLOAD && (
                   <div className="space-y-2">
-                    <Label className="text-pink-300">Or Upload CSV</Label>
+                    <Label className="text-pink-300 font-body">Or Upload CSV</Label>
                     <Input type="file" accept=".csv" onChange={handleFileUpload} />
                   </div>
                 )}
@@ -365,23 +366,24 @@ export default function Categories() {
             <Button variant="ghost" size="icon" className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20" onClick={() => setIsEditDialogOpen(false)}>
               <ArrowLeft className="w-6 h-6" />
             </Button>
-            <h1 className="text-2xl font-thin ml-4 text-yellow-400">Edit List: {editListName}</h1>
+            <h1 className="text-2xl font-thin ml-4 text-yellow-400 font-body">Edit List: {editListName}</h1>
           </header>
           <ScrollArea className="flex-1 p-6 w-full">
             <div className="max-w-2xl mx-auto space-y-6">
               <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
                 <div className="space-y-2">
-                  <Label className="text-yellow-300">List Name</Label>
+                  <Label className="text-yellow-300 font-body">List Name</Label>
                   <Input 
                     value={editListName}
                     onChange={e => setEditListName(e.target.value)}
+                    className="font-body bg-background border-yellow-500/30"
                     data-testid="input-edit-list-name"
                   />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-purple-400" />
-                    <Label htmlFor="edit-study-toggle" className="text-yellow-300">Study Mode</Label>
+                    <Label htmlFor="edit-study-toggle" className="text-yellow-300 font-body">Study Mode</Label>
                   </div>
                   <Switch
                     id="edit-study-toggle"
@@ -403,10 +405,10 @@ export default function Categories() {
               </section>
 
               <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
-                <Label className="text-yellow-300">Bulk Add Words (one per line)</Label>
+                <Label className="text-yellow-300 font-body">Bulk Add Words (one per line)</Label>
                 <Textarea 
                   placeholder={"Word 1\nWord 2\nWord 3"}
-                  className="h-24"
+                  className="h-24 font-body bg-background border-yellow-500/30"
                   value={bulkAddWords}
                   onChange={e => setBulkAddWords(e.target.value)}
                   data-testid="textarea-bulk-add"
@@ -436,7 +438,7 @@ export default function Categories() {
               </Button>
 
               <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
-                <Label className="text-yellow-300">Words ({editListWords.filter(w => w.trim()).length})</Label>
+                <Label className="text-yellow-300 font-body">Words ({editListWords.filter(w => w.trim()).length})</Label>
                 <div className="space-y-2">
                   {editListWords.map((word, index) => (
                     <div key={index} className="flex gap-2">
@@ -444,6 +446,7 @@ export default function Categories() {
                         value={word}
                         onChange={e => handleUpdateWord(index, e.target.value)}
                         placeholder={`Word ${index + 1}`}
+                        className="font-body bg-background border-yellow-500/30"
                         data-testid={`input-word-${index}`}
                       />
                       <Button 
