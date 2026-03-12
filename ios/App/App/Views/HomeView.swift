@@ -175,8 +175,8 @@ struct MenuButtonStyle: ButtonStyle {
 }
 
 struct BackgroundView: View {
-    /// Original web app: --background: 260 30% 12% (deep purple/black)
-    private let base = Color(hex: "1e1a2e")
+    /// Matches Quick Start How To image background (deep purple) so image edges blend on How to Play screen.
+    private let base = Color(hex: "1b0d2d")
     
     var body: some View {
         LinearGradient(

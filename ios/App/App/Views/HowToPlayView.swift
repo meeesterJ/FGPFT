@@ -64,8 +64,6 @@ struct HowToPlayView: View {
         Image("QuickStartHowTo")
             .resizable()
             .scaledToFit()
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.cyan.opacity(0.5), lineWidth: 1))
             .padding(.horizontal, 4)
     }
     
