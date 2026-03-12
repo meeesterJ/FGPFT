@@ -50,10 +50,10 @@ function TeamNameInput({ index }: { index: number }) {
         onDoubleClick={(e) => (e.target as HTMLInputElement).select()}
         maxLength={MAX_TEAM_NAME_LENGTH}
         placeholder={defaultName}
-        className={`flex-1 bg-transparent border-none outline-none text-base font-medium ${color.text} placeholder:text-muted-foreground/50`}
+        className={`flex-1 bg-transparent border-none outline-none text-lg font-medium font-display ${color.text} placeholder:text-muted-foreground/50`}
         data-testid={`input-team-name-${index + 1}`}
       />
-      <span className="text-sm text-muted-foreground">
+      <span className="text-base text-muted-foreground font-display">
         {localValue.length}/{MAX_TEAM_NAME_LENGTH}
       </span>
     </div>
@@ -143,8 +143,8 @@ export default function Settings() {
       {/* Number of Teams */}
       <section className={`space-y-4 bg-card/50 p-6 rounded-2xl border border-cyan-500/30 ${studyMode ? 'opacity-50' : ''}`}>
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-thin text-cyan-400">Number of Teams</h2>
-          <span className="text-3xl font-mono text-cyan-300">{studyMode ? 1 : numberOfTeams}</span>
+          <h2 className="text-3xl font-thin text-cyan-400 font-display">Number of Teams</h2>
+          <span className="text-4xl font-mono text-cyan-300">{studyMode ? 1 : numberOfTeams}</span>
         </div>
         {!studyMode && (
           <>
@@ -160,7 +160,7 @@ export default function Settings() {
 
             <button
               onClick={() => setTeamsExpanded(!teamsExpanded)}
-              className="flex items-center gap-2 text-lg text-muted-foreground hover:text-cyan-400 transition-colors w-full pt-1"
+              className="flex items-center gap-2 text-xl text-muted-foreground hover:text-cyan-400 transition-colors w-full pt-1 font-display"
               data-testid="button-customize-teams"
             >
               <ChevronDown className={`w-4 h-4 transition-transform ${teamsExpanded ? 'rotate-180' : ''}`} />
@@ -181,10 +181,10 @@ export default function Settings() {
       {/* Round Timer */}
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-pink-500/30">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-thin text-pink-400">Round Timer</h2>
-          <span className="text-3xl font-mono text-pink-300">
+          <h2 className="text-3xl font-thin text-pink-400 font-display">Round Timer</h2>
+          <span className="text-4xl font-mono text-pink-300">
             {studyMode ? (
-              roundDuration === 0 ? <span className="text-3xl leading-none font-black">∞</span> : studyTimerLabel
+              roundDuration === 0 ? <span className="text-4xl leading-none font-black">∞</span> : studyTimerLabel
             ) : `${roundDuration}s`}
           </span>
         </div>
@@ -214,8 +214,8 @@ export default function Settings() {
       {/* Rounds Count */}
       <section className={`space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30 ${studyMode ? 'opacity-50' : ''}`}>
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-thin text-green-400">Total Rounds</h2>
-          <span className="text-3xl font-mono text-green-300">{studyMode ? 1 : totalRounds}</span>
+          <h2 className="text-3xl font-thin text-green-400 font-display">Total Rounds</h2>
+          <span className="text-4xl font-mono text-green-300">{studyMode ? 1 : totalRounds}</span>
         </div>
         {!studyMode && (
           <Slider 
@@ -233,7 +233,7 @@ export default function Settings() {
       {/* Sounds Toggle */}
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-yellow-500/30">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-thin text-yellow-400">Sounds</h2>
+          <h2 className="text-3xl font-thin text-yellow-400 font-display">Sounds</h2>
           <Switch 
             checked={soundEnabled}
             onCheckedChange={setSoundEnabled}
@@ -243,8 +243,8 @@ export default function Settings() {
         {soundEnabled && (
           <div className="space-y-2 pt-2">
             <div className="flex justify-between items-center">
-              <span className="text-base text-muted-foreground">Volume</span>
-              <span className="text-base font-mono text-yellow-300">{soundVolume}%</span>
+              <span className="text-lg text-muted-foreground font-display">Volume</span>
+              <span className="text-lg font-mono text-yellow-300">{soundVolume}%</span>
             </div>
             <Slider 
               value={[soundVolume]} 
@@ -263,7 +263,7 @@ export default function Settings() {
       {isStandalone && (
         <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-green-500/30">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-thin text-green-400">Vibration</h2>
+            <h2 className="text-3xl font-thin text-green-400 font-display">Vibration</h2>
             <Switch 
               checked={hapticEnabled}
               onCheckedChange={setHapticEnabled}
@@ -275,9 +275,9 @@ export default function Settings() {
 
       {/* Controls */}
       <section className="space-y-4 bg-card/50 p-6 rounded-2xl border border-purple-500/30">
-        <h2 className="text-2xl font-thin text-purple-400">Controls</h2>
+        <h2 className="text-3xl font-thin text-purple-400 font-display">Controls</h2>
         <div className="flex justify-between items-center">
-          <span className="text-lg text-purple-300">Tilt Gestures</span>
+          <span className="text-xl text-purple-300 font-display">Tilt Gestures</span>
           <Switch 
             checked={tiltEnabled}
             onCheckedChange={setTiltEnabled}
@@ -286,11 +286,11 @@ export default function Settings() {
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <span className="text-lg text-purple-300">Show Buttons</span>
+            <span className="text-xl text-purple-300 font-display">Show Buttons</span>
             {!tiltEnabled ? (
-              <span className="text-sm text-purple-400/70 italic">On when Tilt is off (locked)</span>
+              <span className="text-base text-purple-400/70 italic font-display">On when Tilt is off (locked)</span>
             ) : (
-              <span className="text-sm text-purple-400/70 italic">Tap to use with Tilt</span>
+              <span className="text-base text-purple-400/70 italic font-display">Tap to use with Tilt</span>
             )}
           </div>
           <Switch 
@@ -311,7 +311,7 @@ export default function Settings() {
       >
         <button
           type="button"
-          className={`flex-1 min-w-0 h-full flex items-center justify-center gap-2 text-lg font-medium transition-all touch-manipulation cursor-pointer select-none ${
+          className={`flex-1 min-w-0 h-full flex items-center justify-center gap-2 text-xl font-medium transition-all touch-manipulation cursor-pointer select-none font-display ${
             !studyMode
               ? 'bg-gradient-to-r from-pink-500/30 to-purple-500/30 text-pink-300 border-r border-purple-500/30'
               : 'bg-card/30 text-muted-foreground hover:text-pink-300 border-r border-purple-500/30'
@@ -326,7 +326,7 @@ export default function Settings() {
         </button>
         <button
           type="button"
-          className={`flex-1 min-w-0 h-full flex items-center justify-center gap-2 text-lg font-medium transition-all touch-manipulation cursor-pointer select-none ${
+          className={`flex-1 min-w-0 h-full flex items-center justify-center gap-2 text-xl font-medium transition-all touch-manipulation cursor-pointer select-none font-display ${
             studyMode
               ? 'bg-gradient-to-r from-purple-500/30 to-cyan-500/30 text-cyan-300'
               : 'bg-card/30 text-muted-foreground hover:text-cyan-300'
@@ -345,14 +345,14 @@ export default function Settings() {
       {isIOS && !isStandalone && (
         <section className="bg-card/50 p-4 rounded-2xl border border-border flex items-center gap-3">
           <Share className="w-5 h-5 flex-shrink-0 text-muted-foreground" />
-          <span className="text-base text-muted-foreground">For the best fullscreen experience, tap the share button and "Add to Home Screen"</span>
+          <span className="text-lg text-muted-foreground font-display">For the best fullscreen experience, tap the share button and "Add to Home Screen"</span>
         </section>
       )}
 
       {/* About link */}
       <div className="flex justify-center pt-4">
         <Link href="/about">
-          <span className="text-base text-muted-foreground underline hover:text-purple-400 transition-colors cursor-pointer">
+          <span className="text-lg text-muted-foreground underline hover:text-purple-400 transition-colors cursor-pointer font-display">
             About
           </span>
         </Link>
@@ -368,7 +368,7 @@ export default function Settings() {
             <ArrowLeft className="w-6 h-6" />
           </Button>
         </Link>
-        <h1 className="text-5xl font-thin ml-4 text-purple-400">Settings</h1>
+        <h1 className="text-6xl font-thin ml-4 text-purple-400 font-display">Settings</h1>
       </header>
 
       <ScrollArea className="flex-1 p-6 w-full">
