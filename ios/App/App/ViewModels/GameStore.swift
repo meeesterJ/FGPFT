@@ -366,7 +366,7 @@ final class GameStore: ObservableObject {
         let newResults = roundResults + [entry]
         let newScore = correct ? currentScore + 1 : currentScore
         let newUsed = usedWords + [word]
-        var newDeck = Array(deck.dropFirst())
+        let newDeck = Array(deck.dropFirst())
         var nextWordStr = newDeck.first
         var finalDeck = newDeck
         var finalUsed = newUsed

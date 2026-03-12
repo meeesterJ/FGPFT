@@ -8,11 +8,11 @@ This document records every place where something **other than repo content** wa
 
 ## Fonts
 
-- **Display/Title**: The plan specifies Outfit (body) and Titan One (display). **Titan One** and **Outfit** are not yet bundled in the iOS app. The app uses **system fonts** (e.g. `.system(size:weight:)`) for all text. To match the web app, add the font files to the project, register them in Info.plist under "Fonts provided by application", and use e.g. `.font(.custom("TitanOne", size: 36))` and `.font(.custom("Outfit", size: 17))`.
+- **Bundled**: **Titan One** (`TitanOne-Regular.ttf`) and **Outfit** (`Outfit-VariableFont_wght.ttf`) are bundled in `App/Resources/`, registered in `Info.plist` under `UIAppFonts`, and used via `AppFonts` in Swift: Titan One for display/titles (e.g. main title, round numbers, countdown, "Game Over!"), Outfit for body text. Matches the original web app (`--font-display`, `--font-body` in `client/src/index.css`).
 
 ## Colors
 
-- **Background**: Base background uses **#3A4D63** (slate blue-gray) as specified. A **linear gradient** is used for depth: from `#3A4D63` to `#3A4D63` at 0.85 opacity (see `BackgroundView` in `HomeView.swift`). Accent colors (pink, cyan, purple, green, yellow) are kept from the repo and defined in `AppColors` and `TeamThemeColor` where used.
+- **Background**: Base background uses the **original web app purple**: `#1e1a2e` (from CSS `--background: 260 30% 12%`). A linear gradient is used for depth (base to base at 0.92 opacity). See `BackgroundView` in `HomeView.swift`. Accent colors (pink, cyan, purple, green, yellow) are kept from the repo.
 
 ## Copy
 
@@ -26,4 +26,4 @@ This document records every place where something **other than repo content** wa
 
 ---
 
-**Summary**: Audio and copy are from the repo. Fonts use system fallback until Outfit and Titan One are bundled. Background is #3A4D63 with a gradient. App icon and launch screen are unchanged from the original iOS project.
+**Summary**: Audio and copy are from the repo. Fonts (Titan One, Outfit) are bundled and registered. Background is original purple #1e1a2e with a gradient. App icon and launch screen are unchanged from the original iOS project.

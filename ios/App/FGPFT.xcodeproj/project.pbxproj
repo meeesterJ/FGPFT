@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,6 +29,8 @@
 		6AA100271FED79650016851F /* HapticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100281FED79650016851F /* HapticService.swift */; };
 		6AA100291FED79650016851F /* MotionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1002A1FED79650016851F /* MotionService.swift */; };
 		6AA1002B1FED79650016851F /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 6AA1002C1FED79650016851F /* Audio */; };
+		A09B8D3C2F623AE200D63BF4 /* TitanOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A09B8D3B2F623AE200D63BF4 /* TitanOne-Regular.ttf */; };
+		A09B8D3D2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A09B8D3A2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +59,8 @@
 		6AA1002A1FED79650016851F /* MotionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionService.swift; sourceTree = "<group>"; };
 		6AA1002C1FED79650016851F /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
+		A09B8D3A2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-VariableFont_wght.ttf"; sourceTree = "<group>"; };
+		A09B8D3B2F623AE200D63BF4 /* TitanOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitanOne-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +145,8 @@
 		6AA100241FED79650016851F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A09B8D3A2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf */,
+				A09B8D3B2F623AE200D63BF4 /* TitanOne-Regular.ttf */,
 				6AA100201FED79650016851F /* word-lists.json */,
 				6AA1002C1FED79650016851F /* Audio */,
 			);
@@ -218,6 +224,8 @@
 			files = (
 				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
 				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
+				A09B8D3C2F623AE200D63BF4 /* TitanOne-Regular.ttf in Resources */,
+				A09B8D3D2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf in Resources */,
 				6AA1001F1FED79650016851F /* word-lists.json in Resources */,
 				6AA1002B1FED79650016851F /* Audio in Resources */,
 			);
