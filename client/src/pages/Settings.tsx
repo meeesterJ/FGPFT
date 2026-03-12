@@ -47,6 +47,7 @@ function TeamNameInput({ index }: { index: number }) {
         onChange={handleChange}
         onFocus={() => setIsFocused(true)}
         onBlur={handleBlur}
+        onDoubleClick={(e) => (e.target as HTMLInputElement).select()}
         maxLength={MAX_TEAM_NAME_LENGTH}
         placeholder={defaultName}
         className={`flex-1 bg-transparent border-none outline-none text-base font-medium ${color.text} placeholder:text-muted-foreground/50`}
