@@ -44,8 +44,8 @@ struct PrivacyView: View {
             .padding(20)
             .padding(.bottom, 40)
         }
-        .background(BackgroundView())
         .transparentPurpleBottomBar()
+        .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.barBackground, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
