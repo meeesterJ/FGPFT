@@ -225,42 +225,13 @@ struct GameView: View {
             .frame(width: 80)
             .padding(.leading, 16)
             
-            Spacer()
-            
             if let word = store.currentWord, word != "No Words!" {
-                let parsed = parseWordAnswer(word)
-                let hasAnswer = parsed.answer != nil
-                
-                VStack(spacing: 8) {
-                    if store.studyMode && answerRevealed, let ans = parsed.answer {
-                        Text(ans)
-                            .font(AppFonts.body(size: wordFontSize(ans)))
-                            .foregroundStyle(.white)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 24)
-                    } else {
-                        Text(parsed.prompt)
-                            .font(AppFonts.display(size: wordFontSize(parsed.prompt)))
-                            .foregroundStyle(.white)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 24)
-                        
-                        if store.studyMode && hasAnswer && !answerRevealed {
-                            Text("Tap to reveal")
-                                .font(AppFonts.body(size: 16))
-                                .foregroundStyle(AppColors.mutedText)
-                        }
-                    }
-                }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    if store.studyMode && hasAnswer && !answerRevealed {
-                        answerRevealed = true
-                    }
-                }
+                wordDisplayView(for: word)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.horizontal, 16)
+            } else {
+                Spacer()
             }
-            
-            Spacer()
             
             if store.showButtons || !store.tiltEnabled {
                 VStack(spacing: 16) {
@@ -285,7 +256,7 @@ struct GameView: View {
                 }
                 .padding(.trailing, 40)
             } else {
-                Color.clear.frame(width: 80)
+                Color.clear.frame(width: 40)
             }
         }
     }
@@ -405,15 +376,41 @@ struct GameView: View {
         return Color(hex: String(t.textHex.dropFirst()))
     }
     
-    private func wordFontSize(_ text: String) -> CGFloat {
-        let words = text.split(separator: " ")
-        let longest = words.map(\.count).max() ?? 0
-        let total = text.count
-        if longest <= 6 && total <= 10 { return 48 }
-        if longest <= 8 { return 42 }
-        if longest <= 10 { return 36 }
-        if longest <= 13 { return 30 }
-        if longest <= 16 { return 26 }
-        return 22
+    @ViewBuilder
+    private func wordDisplayView(for word: String) -> some View {
+        let parsed = parseWordAnswer(word)
+        let hasAnswer = parsed.answer != nil
+        
+        VStack(spacing: 8) {
+            if store.studyMode && answerRevealed, let ans = parsed.answer {
+                Text(ans)
+                    .font(AppFonts.body(size: 120))
+                    .minimumScaleFactor(0.15)
+                    .lineLimit(nil)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                Text(parsed.prompt)
+                    .font(AppFonts.display(size: 120))
+                    .minimumScaleFactor(0.15)
+                    .lineLimit(nil)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                if store.studyMode && hasAnswer && !answerRevealed {
+                    Text("Tap to reveal")
+                        .font(AppFonts.body(size: 16))
+                        .foregroundStyle(AppColors.mutedText)
+                }
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if store.studyMode && hasAnswer && !answerRevealed {
+                answerRevealed = true
+            }
+        }
     }
 }
