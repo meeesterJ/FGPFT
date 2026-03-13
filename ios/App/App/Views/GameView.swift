@@ -86,13 +86,82 @@ struct GameView: View {
     }
     
     private var readyOverlay: some View {
+        Group {
+            if store.numberOfTeams > 1 {
+                multiTeamReadyLayout
+            } else {
+                singleTeamReadyLayout
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if store.studyMode {
+                triggerCountdown()
+            }
+        }
+    }
+    
+    private var multiTeamReadyLayout: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 16) {
+                Spacer()
+                Text(store.getTeamName(teamNumber: store.currentTeam))
+                    .font(AppFonts.display(size: 44))
+                    .foregroundStyle(teamColor(store.currentTeam))
+                
+                if store.showButtons || !store.tiltEnabled {
+                    Button {
+                        triggerCountdown()
+                    } label: {
+                        Label("Start", systemImage: "play.fill")
+                            .font(AppFonts.body(size: 22))
+                            .padding(.horizontal, 32)
+                            .padding(.vertical, 16)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(teamColor(store.currentTeam))
+                }
+                Spacer()
+            }
+            .padding(.leading, 40)
+            
+            Spacer()
+            
+            VStack {
+                Spacer()
+                multicoloredRound
+                Text("\(store.currentRound)")
+                    .font(AppFonts.display(size: 180))
+                    .foregroundStyle(AppColors.yellow)
+                Spacer()
+                if !store.studyMode {
+                    if showTiltToStart {
+                        HStack(spacing: 8) {
+                            Image(systemName: "iphone")
+                                .font(.system(size: 18))
+                            Text("Tilt forward to start")
+                        }
+                        .font(AppFonts.body(size: 20))
+                        .foregroundStyle(AppColors.mutedText)
+                    } else if !(store.showButtons || !store.tiltEnabled) {
+                        Text("Hold phone at forehead…")
+                            .font(AppFonts.body(size: 20))
+                            .foregroundStyle(AppColors.mutedText)
+                    }
+                }
+                Spacer()
+                    .frame(height: 60)
+            }
+            
+            Spacer()
+            
+            Color.clear.frame(width: 140)
+        }
+    }
+    
+    private var singleTeamReadyLayout: some View {
         VStack {
             Spacer()
-            if store.numberOfTeams > 1 {
-                Text(store.getTeamName(teamNumber: store.currentTeam))
-                    .font(AppFonts.display(size: 56))
-                    .foregroundStyle(teamColor(store.currentTeam))
-            }
             multicoloredRound
             Text("\(store.currentRound)")
                 .font(AppFonts.display(size: 180))
@@ -116,14 +185,14 @@ struct GameView: View {
                     .font(AppFonts.body(size: 20))
                     .foregroundStyle(AppColors.mutedText)
                 } else {
-                    Text("Hold phone at forehead, or tap Play")
+                    Text("Hold phone at forehead, or tap Start")
                         .font(AppFonts.body(size: 20))
                         .foregroundStyle(AppColors.mutedText)
                 }
                 Button {
                     triggerCountdown()
                 } label: {
-                    Label("Play", systemImage: "play.fill")
+                    Label("Start", systemImage: "play.fill")
                         .font(AppFonts.body(size: 22))
                         .padding(.horizontal, 32)
                         .padding(.vertical, 16)
@@ -146,12 +215,6 @@ struct GameView: View {
             }
             Spacer()
                 .frame(height: 60)
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            if store.studyMode {
-                triggerCountdown()
-            }
         }
     }
     
