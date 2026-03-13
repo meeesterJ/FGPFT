@@ -28,7 +28,6 @@
 		6AA100251FED79650016851F /* AudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100261FED79650016851F /* AudioService.swift */; };
 		6AA100271FED79650016851F /* HapticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA100281FED79650016851F /* HapticService.swift */; };
 		6AA100291FED79650016851F /* MotionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1002A1FED79650016851F /* MotionService.swift */; };
-		6AA1002E1FED79650016851F /* OrientationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1002F1FED79650016851F /* OrientationManager.swift */; };
 		6AA1002B1FED79650016851F /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 6AA1002C1FED79650016851F /* Audio */; };
 		A09B8D3C2F623AE200D63BF4 /* TitanOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A09B8D3B2F623AE200D63BF4 /* TitanOne-Regular.ttf */; };
 		A09B8D3D2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A09B8D3A2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf */; };
@@ -59,7 +58,6 @@
 		6AA100261FED79650016851F /* AudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioService.swift; sourceTree = "<group>"; };
 		6AA100281FED79650016851F /* HapticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticService.swift; sourceTree = "<group>"; };
 		6AA1002A1FED79650016851F /* MotionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionService.swift; sourceTree = "<group>"; };
-		6AA1002F1FED79650016851F /* OrientationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationManager.swift; sourceTree = "<group>"; };
 		6AA1002C1FED79650016851F /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		A09B8D3A2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-VariableFont_wght.ttf"; sourceTree = "<group>"; };
@@ -164,7 +162,6 @@
 				6AA100261FED79650016851F /* AudioService.swift */,
 				6AA100281FED79650016851F /* HapticService.swift */,
 				6AA1002A1FED79650016851F /* MotionService.swift */,
-				6AA1002F1FED79650016851F /* OrientationManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -263,7 +260,6 @@
 				6AA100251FED79650016851F /* AudioService.swift in Sources */,
 				6AA100271FED79650016851F /* HapticService.swift in Sources */,
 				6AA100291FED79650016851F /* MotionService.swift in Sources */,
-				6AA1002E1FED79650016851F /* OrientationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
