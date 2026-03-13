@@ -48,7 +48,7 @@ struct PrivacyView: View {
         .transparentPurpleBottomBar()
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.barBackground, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Privacy Policy")
@@ -69,3 +69,5 @@ struct PrivacyView: View {
         }
     }
 }
+
+
