@@ -101,16 +101,16 @@ struct GameView: View {
                 .font(AppFonts.display(size: 180))
                 .foregroundStyle(AppColors.yellow)
             Spacer()
-            if showTiltToStart {
-                if store.studyMode {
-                    HStack(spacing: 8) {
-                        Image(systemName: "iphone")
-                            .font(.system(size: 18))
-                        Text("Tap anywhere to start")
-                    }
-                    .font(AppFonts.body(size: 20))
-                    .foregroundStyle(AppColors.mutedText)
-                } else {
+            if store.studyMode {
+                HStack(spacing: 8) {
+                    Image(systemName: "iphone")
+                        .font(.system(size: 18))
+                    Text("Tap anywhere to start")
+                }
+                .font(AppFonts.body(size: 20))
+                .foregroundStyle(AppColors.mutedText)
+            } else if store.showButtons || !store.tiltEnabled {
+                if showTiltToStart {
                     HStack(spacing: 8) {
                         Image(systemName: "iphone")
                             .font(.system(size: 18))
@@ -118,20 +118,30 @@ struct GameView: View {
                     }
                     .font(AppFonts.body(size: 20))
                     .foregroundStyle(AppColors.mutedText)
-                    if store.showButtons || !store.tiltEnabled {
-                        Button {
-                            triggerCountdown()
-                        } label: {
-                            Label("Play", systemImage: "play.fill")
-                                .font(AppFonts.body(size: 22))
-                                .padding(.horizontal, 32)
-                                .padding(.vertical, 16)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(AppColors.pink)
-                        .padding(.top, 8)
-                    }
+                } else {
+                    Text("Hold phone at forehead, or tap Play")
+                        .font(AppFonts.body(size: 20))
+                        .foregroundStyle(AppColors.mutedText)
                 }
+                Button {
+                    triggerCountdown()
+                } label: {
+                    Label("Play", systemImage: "play.fill")
+                        .font(AppFonts.body(size: 22))
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 16)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(AppColors.pink)
+                .padding(.top, 8)
+            } else if showTiltToStart {
+                HStack(spacing: 8) {
+                    Image(systemName: "iphone")
+                        .font(.system(size: 18))
+                    Text("Tilt forward to start")
+                }
+                .font(AppFonts.body(size: 20))
+                .foregroundStyle(AppColors.mutedText)
             } else {
                 Text("Hold phone at forehead…")
                     .font(AppFonts.body(size: 20))
@@ -142,7 +152,7 @@ struct GameView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
-            if store.studyMode && showTiltToStart {
+            if store.studyMode {
                 triggerCountdown()
             }
         }
