@@ -22,6 +22,7 @@ struct HomeView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(BackgroundView())
         .ignoresSafeArea()
+        .onAppear { OrientationManager.shared.supportedOrientations = .portrait }
     }
 }
 

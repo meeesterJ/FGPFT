@@ -25,6 +25,7 @@ struct SummaryView: View {
             VStack(spacing: 24) {
                 HStack {
                     Button {
+                        OrientationManager.shared.supportedOrientations = .portrait
                         store.resetGame()
                         path = NavigationPath()
                     } label: {
@@ -116,6 +117,7 @@ struct SummaryView: View {
                     .tint(AppColors.pink)
                     
                     Button {
+                        OrientationManager.shared.supportedOrientations = .portrait
                         store.resetGame()
                         path = NavigationPath()
                     } label: {
@@ -132,6 +134,7 @@ struct SummaryView: View {
                 .padding(.bottom, 40)
             }
             .onAppear {
+                OrientationManager.shared.supportedOrientations = .landscapeRight
                 if !playedSounds && store.soundEnabled {
                     playedSounds = true
                     AudioService.shared.play("gameEnd", volume: Float(store.soundVolume) / 100)

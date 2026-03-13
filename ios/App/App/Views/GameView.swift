@@ -28,7 +28,11 @@ struct GameView: View {
             }
         }
         .ignoresSafeArea()
-        .onAppear(perform: onAppear)
+        .onAppear {
+            OrientationManager.shared.supportedOrientations = .landscapeRight
+            OrientationManager.shared.requestLandscapeIfNeeded()
+            onAppear()
+        }
         .onChange(of: motion.isAtForehead) { new in showTiltToStart = new }
         .onChange(of: showTiltToStart) { new in if new { motion.startTiltDetection(onForward: { DispatchQueue.main.async { triggerCountdown() } }, onBack: {}) } }
         .onChange(of: store.isGameFinished) { _ in if store.isGameFinished { path.append(AppRoute.summary) } }
