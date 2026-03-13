@@ -48,12 +48,13 @@ struct GameView: View {
                     } label: {
                         Image(systemName: "house.fill")
                             .font(.system(size: 20))
-                            .foregroundStyle(.white.opacity(0.6))
+                            .foregroundStyle(.white)
                             .frame(width: 44, height: 44)
-                            .contentShape(Rectangle())
+                            .background(Color.white.opacity(0.15))
+                            .clipShape(Circle())
                     }
                     .padding(.leading, 16)
-                    .padding(.top, 8)
+                    .padding(.top, 16)
                     Spacer()
                 }
                 Spacer()
