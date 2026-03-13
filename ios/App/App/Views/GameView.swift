@@ -13,6 +13,7 @@ struct GameView: View {
     @State private var isHandoff = false
     @State private var timeLeft: Int = 30
     @State private var timerTask: Task<Void, Never>?
+    @State private var answerRevealed = false
     
     private var volume: Float { Float(store.soundVolume) / 100 }
     
@@ -132,49 +133,61 @@ struct GameView: View {
     }
     
     private var playingView: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Button {
-                    store.resetGame()
-                    path.removeLast(path.count)
-                } label: {
-                    Image(systemName: "house")
-                        .font(.title2)
-                        .foregroundStyle(.white)
-                }
-                .padding(12)
-                Spacer()
+        HStack(spacing: 0) {
+            VStack(spacing: 4) {
                 if store.roundDuration > 0 && store.isPlaying {
-                    Text("\(timeLeft)")
+                    Text("\(timeLeft)s")
                         .font(AppFonts.body(size: 32).monospacedDigit())
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 20)
+                        .foregroundStyle(timeLeft <= 5 ? AppColors.pink : AppColors.green)
                 }
-                Spacer()
-                Color.clear.frame(width: 44, height: 44)
+                let idx = store.currentTeam - 1
+                let score = store.teamRoundScores.indices.contains(idx) ? store.teamRoundScores[idx].correct : 0
+                Text("\(score)")
+                    .font(AppFonts.body(size: 24))
+                    .foregroundStyle(AppColors.yellow)
             }
-            .padding(.top, 8)
+            .frame(width: 80)
+            .padding(.leading, 16)
             
             Spacer()
+            
             if let word = store.currentWord, word != "No Words!" {
                 let parsed = parseWordAnswer(word)
+                let hasAnswer = parsed.answer != nil
+                
                 VStack(spacing: 8) {
-                    Text(parsed.prompt)
-                        .font(AppFonts.body(size: wordFontSize(parsed.prompt)))
-                        .foregroundStyle(.white)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 24)
-                    if store.studyMode, let ans = parsed.answer {
-                        Text("[\(ans)]")
-                            .font(AppFonts.body(size: 20))
-                            .foregroundStyle(AppColors.mutedText)
+                    if store.studyMode && answerRevealed, let ans = parsed.answer {
+                        Text(ans)
+                            .font(AppFonts.body(size: wordFontSize(ans)))
+                            .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+                    } else {
+                        Text(parsed.prompt)
+                            .font(AppFonts.display(size: wordFontSize(parsed.prompt)))
+                            .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+                        
+                        if store.studyMode && hasAnswer && !answerRevealed {
+                            Text("Tap to reveal")
+                                .font(AppFonts.body(size: 16))
+                                .foregroundStyle(AppColors.mutedText)
+                        }
+                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    if store.studyMode && hasAnswer && !answerRevealed {
+                        answerRevealed = true
                     }
                 }
             }
+            
             Spacer()
             
             if store.showButtons || !store.tiltEnabled {
-                HStack(spacing: 40) {
+                VStack(spacing: 16) {
                     Button {
                         handlePass()
                     } label: {
@@ -194,7 +207,9 @@ struct GameView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(.green)
                 }
-                .padding(.bottom, 50)
+                .padding(.trailing, 16)
+            } else {
+                Color.clear.frame(width: 80)
             }
         }
     }
@@ -352,6 +367,7 @@ struct GameView: View {
         guard store.isPlaying else { return }
         if store.hapticEnabled { HapticService.correct() }
         if store.soundEnabled { AudioService.shared.play("correct", volume: volume) }
+        answerRevealed = false
         store.nextWord(correct: true)
         checkDeckOrTime()
     }
@@ -360,6 +376,7 @@ struct GameView: View {
         guard store.isPlaying else { return }
         if store.hapticEnabled { HapticService.pass() }
         if store.soundEnabled { AudioService.shared.play("pass", volume: volume) }
+        answerRevealed = false
         store.nextWord(correct: false)
         checkDeckOrTime()
     }
