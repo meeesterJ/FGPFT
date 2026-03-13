@@ -38,8 +38,30 @@ struct GameView: View {
             } else {
                 mainGameContent
             }
+            
+            VStack {
+                HStack {
+                    Button {
+                        timerTask?.cancel()
+                        motion.stopMonitoring()
+                        store.resetGame()
+                        path = NavigationPath()
+                    } label: {
+                        Image(systemName: "house.fill")
+                            .font(.system(size: 20))
+                            .foregroundStyle(.white.opacity(0.6))
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .padding(.leading, 16)
+                    .padding(.top, 8)
+                    Spacer()
+                }
+                Spacer()
+            }
         }
         .ignoresSafeArea()
+        .navigationBarHidden(true)
         .onAppear {
             OrientationManager.shared.supportedOrientations = .landscapeRight
             OrientationManager.shared.requestLandscapeIfNeeded()
