@@ -16,6 +16,17 @@ struct GameView: View {
     
     private var volume: Float { Float(store.soundVolume) / 100 }
     
+    private var multicoloredRound: some View {
+        HStack(spacing: 0) {
+            Text("R").foregroundStyle(AppColors.cyan)
+            Text("o").foregroundStyle(AppColors.pink)
+            Text("u").foregroundStyle(AppColors.yellow)
+            Text("n").foregroundStyle(AppColors.green)
+            Text("d").foregroundStyle(AppColors.purple)
+        }
+        .font(AppFonts.display(size: 56))
+    }
+    
     var body: some View {
         ZStack {
             BackgroundView()
@@ -62,19 +73,28 @@ struct GameView: View {
                     .font(AppFonts.display(size: 56))
                     .foregroundStyle(teamColor(store.currentTeam))
             }
-            Text("Round \(store.currentRound)")
-                .font(AppFonts.display(size: 44))
+            multicoloredRound
+            Text("\(store.currentRound)")
+                .font(AppFonts.display(size: 180))
                 .foregroundStyle(AppColors.yellow)
             Spacer()
             if showTiltToStart {
                 if store.studyMode {
-                    Text("Tap anywhere to start")
-                        .font(AppFonts.body(size: 20))
-                        .foregroundStyle(AppColors.mutedText)
+                    HStack(spacing: 8) {
+                        Image(systemName: "iphone")
+                            .font(.system(size: 18))
+                        Text("Tap anywhere to start")
+                    }
+                    .font(AppFonts.body(size: 20))
+                    .foregroundStyle(AppColors.mutedText)
                 } else {
-                    Text("Tilt forward to start")
-                        .font(AppFonts.body(size: 20))
-                        .foregroundStyle(AppColors.mutedText)
+                    HStack(spacing: 8) {
+                        Image(systemName: "iphone")
+                            .font(.system(size: 18))
+                        Text("Tilt forward to start")
+                    }
+                    .font(AppFonts.body(size: 20))
+                    .foregroundStyle(AppColors.mutedText)
                     if store.showButtons || !store.tiltEnabled {
                         Button {
                             triggerCountdown()
