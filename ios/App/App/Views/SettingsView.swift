@@ -473,13 +473,21 @@ enum AppColors {
 }
 
 extension View {
-    /// Transparent purple bottom bar so the thin bottom strip matches the nav bar; content scrolls underneath.
+    /// Transparent purple bottom bar matching the nav bar; extends to the physical screen edge.
+    /// Uses `ignoresSafeArea(edges: .bottom)` so the overlay is at the true bottom, reserves space via
+    /// `safeAreaInset` with a clear placeholder so scroll content is not hidden, and draws a 68pt bar
+    /// (bar + home indicator area) with `ignoresSafeArea` so it reaches the screen edge.
     func transparentPurpleBottomBar() -> some View {
-        overlay(alignment: .bottom) {
-            AppColors.barBackground
-                .frame(maxWidth: .infinity)
-                .frame(height: 34)
-                .ignoresSafeArea(edges: .bottom)
-        }
+        self
+            .ignoresSafeArea(edges: .bottom)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Color.clear.frame(height: 68)
+            }
+            .overlay(alignment: .bottom) {
+                AppColors.barBackground
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 68)
+                    .ignoresSafeArea(edges: .bottom)
+            }
     }
 }
