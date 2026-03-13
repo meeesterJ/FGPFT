@@ -9,7 +9,6 @@ struct GameView: View {
     @State private var showTiltToStart = false
     @State private var isCountingDown = false
     @State private var countdownSec = 3
-    @State private var showTeamScore = false
     @State private var isHandoff = false
     @State private var timeLeft: Int = 30
     @State private var timerTask: Task<Void, Never>?
@@ -32,7 +31,7 @@ struct GameView: View {
         ZStack {
             BackgroundView()
             
-            if store.currentWord == nil && !showTeamScore && !isHandoff {
+            if store.currentWord == nil && !isHandoff {
                 ProgressView("Loading…")
                     .tint(.white)
             } else {
@@ -74,9 +73,7 @@ struct GameView: View {
     
     private var mainGameContent: some View {
         ZStack {
-            if showTeamScore {
-                teamScoreOverlay
-            } else if isHandoff {
+            if isHandoff {
                 handoffOverlay
             } else if isWaitingForReady {
                 readyOverlay
@@ -246,29 +243,6 @@ struct GameView: View {
         }
     }
     
-    private var teamScoreOverlay: some View {
-        VStack {
-            Spacer()
-            Text(store.getTeamName(teamNumber: store.currentTeam))
-                .font(AppFonts.display(size: 56))
-                .foregroundStyle(teamColor(store.currentTeam))
-            Text("Score")
-                .font(AppFonts.body(size: 28))
-                .foregroundStyle(.white)
-            let idx = store.currentTeam - 1
-            Text("\(store.teamRoundScores.indices.contains(idx) ? store.teamRoundScores[idx].correct : 0)")
-                .font(AppFonts.display(size: 100))
-                .foregroundStyle(AppColors.yellow)
-            Spacer()
-            Text("Tap to continue")
-                .font(AppFonts.body(size: 17))
-                .foregroundStyle(AppColors.mutedText)
-                .padding(.bottom, 50)
-        }
-        .contentShape(Rectangle())
-        .onTapGesture(perform: onTeamScoreDismiss)
-    }
-    
     private var handoffOverlay: some View {
         VStack(spacing: 32) {
             Text("\(store.getTeamName(teamNumber: store.currentTeam)) Ready?")
@@ -298,7 +272,6 @@ struct GameView: View {
         }
         isWaitingForReady = true
         showTiltToStart = store.studyMode
-        showTeamScore = false
         isHandoff = store.numberOfTeams > 1 && store.currentTeam > 1
         if !isHandoff && !store.studyMode {
             motion.startMonitoringForReady()
@@ -351,48 +324,8 @@ struct GameView: View {
     
     private func showTeamScoreOrNext() {
         timerTask?.cancel()
-        if store.currentTeam < store.numberOfTeams {
-            showTeamScore = true
-        } else {
-            if store.currentRound >= store.totalRounds {
-                store.prepareRound()
-                if store.isGameFinished {
-                    path.append(AppRoute.summary)
-                }
-            } else {
-                store.prepareRound()
-                isHandoff = store.numberOfTeams > 1
-                if isHandoff {
-                    showTeamScore = false
-                } else {
-                    isWaitingForReady = true
-                    showTiltToStart = false
-                    motion.startMonitoringForReady()
-                }
-            }
-        }
-    }
-    
-    private func onTeamScoreDismiss() {
-        showTeamScore = false
-        if store.currentTeam >= store.numberOfTeams {
-            if store.currentRound >= store.totalRounds {
-                store.prepareRound()
-                if store.isGameFinished {
-                    path.append(AppRoute.summary)
-                    return
-                }
-            }
-            store.prepareRound()
-        } else {
-            store.prepareRound()
-        }
-        isHandoff = store.numberOfTeams > 1 && store.currentTeam > 1
-        if isHandoff { return }
-        isWaitingForReady = true
-        showTiltToStart = false
-        timeLeft = store.roundDuration == 0 ? 0 : min(store.roundDuration, 599)
-        motion.startMonitoringForReady()
+        motion.stopMonitoring()
+        path.append(AppRoute.roundSummary)
     }
     
     private func handleCorrect() {

@@ -18,6 +18,8 @@ struct ContentView: View {
                     case .terms: TermsView()
                     case .game: GameView(path: $path)
                     case .summary: SummaryView(path: $path)
+                    case .roundSummary: RoundSummaryView(path: $path)
+                    case .scoreboard: ScoreboardView(path: $path)
                     }
                 }
         }
@@ -25,5 +27,5 @@ struct ContentView: View {
 }
 
 enum AppRoute: Hashable {
-    case settings, categories, deletedCategories, about, howToPlay, privacy, terms, game, summary
+    case settings, categories, deletedCategories, about, howToPlay, privacy, terms, game, summary, roundSummary, scoreboard
 }
