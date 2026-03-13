@@ -44,34 +44,15 @@ struct ScoreboardView: View {
             }
             .padding(.horizontal, 32)
             
-            homeButton
+            HomeButtonOverlay {
+                store.resetGame()
+                path = NavigationPath()
+            }
         }
         .ignoresSafeArea()
         .navigationBarHidden(true)
         .onAppear {
             OrientationManager.shared.supportedOrientations = .landscapeLeft
-        }
-    }
-    
-    private var homeButton: some View {
-        VStack {
-            HStack {
-                Button {
-                    store.resetGame()
-                    path = NavigationPath()
-                } label: {
-                    Image(systemName: "house.fill")
-                        .font(.system(size: 20))
-                        .foregroundStyle(.white)
-                        .frame(width: 44, height: 44)
-                        .background(Color.white.opacity(0.15))
-                        .clipShape(Circle())
-                }
-                .padding(.leading, 16)
-                .padding(.top, 16)
-                Spacer()
-            }
-            Spacer()
         }
     }
     

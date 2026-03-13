@@ -24,19 +24,8 @@ struct SummaryView: View {
             BackgroundView()
             
             VStack(spacing: 24) {
-                HStack {
-                    Button {
-                        OrientationManager.shared.supportedOrientations = UIInterfaceOrientationMask.portrait
-                        store.resetGame()
-                        path = NavigationPath()
-                    } label: {
-                        Image(systemName: "house")
-                            .font(.title2)
-                            .foregroundStyle(.white)
-                    }
-                    .padding(12)
-                    Spacer()
-                }
+                Spacer()
+                    .frame(height: 60)
                 
                 Text("Game Over!")
                     .font(AppFonts.display(size: 52))
@@ -142,7 +131,15 @@ struct SummaryView: View {
                     AudioService.shared.play("applause", volume: Float(store.soundVolume) / 100)
                 }
             }
+            
+            HomeButtonOverlay {
+                OrientationManager.shared.supportedOrientations = UIInterfaceOrientationMask.portrait
+                store.resetGame()
+                path = NavigationPath()
+            }
         }
+        .ignoresSafeArea()
+        .navigationBarHidden(true)
         .sheet(isPresented: Binding(
             get: { selectedTeamIndex != nil },
             set: { if !$0 { selectedTeamIndex = nil } }

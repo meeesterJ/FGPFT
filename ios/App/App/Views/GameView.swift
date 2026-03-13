@@ -38,26 +38,11 @@ struct GameView: View {
                 mainGameContent
             }
             
-            VStack {
-                HStack {
-                    Button {
-                        timerTask?.cancel()
-                        motion.stopMonitoring()
-                        store.resetGame()
-                        path = NavigationPath()
-                    } label: {
-                        Image(systemName: "house.fill")
-                            .font(.system(size: 20))
-                            .foregroundStyle(.white)
-                            .frame(width: 44, height: 44)
-                            .background(Color.white.opacity(0.15))
-                            .clipShape(Circle())
-                    }
-                    .padding(.leading, 16)
-                    .padding(.top, 16)
-                    Spacer()
-                }
-                Spacer()
+            HomeButtonOverlay {
+                timerTask?.cancel()
+                motion.stopMonitoring()
+                store.resetGame()
+                path = NavigationPath()
             }
         }
         .ignoresSafeArea()
