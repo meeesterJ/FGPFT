@@ -97,20 +97,24 @@ struct MainMenuView: View {
             let safeH = max(0, geo.size.height - edgePadding * 2)
             
             if isLandscape {
-                // Landscape: title left, buttons stacked right; fill screen with padding
+                // Landscape: title left, buttons right; center content with safe area margins
+                let leadingSafeArea = geo.safeAreaInsets.leading
                 let trailingSafeArea = geo.safeAreaInsets.trailing
-                HStack(alignment: .center, spacing: edgePadding) {
-                    // Title on the left – use most of left half height for font scaling
+                let contentWidth = geo.size.width - leadingSafeArea - trailingSafeArea - (edgePadding * 2)
+                
+                HStack(alignment: .center, spacing: edgePadding * 2) {
+                    // Title on the left
                     let titleAreaHeight = safeH
                     TitleStackView(animated: false, availableHeight: titleAreaHeight * 0.85)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                    // Buttons stacked on the right with a sensible max width
+                        .frame(maxWidth: contentWidth * 0.5, maxHeight: .infinity, alignment: .center)
+                    // Buttons on the right
                     menuButtons
-                        .frame(maxWidth: min(280, safeW * 0.45), maxHeight: .infinity)
-                        .padding(.leading, edgePadding)
-                        .padding(.trailing, max(trailingSafeArea, edgePadding))
+                        .frame(width: min(260, contentWidth * 0.4), alignment: .center)
                 }
-                .padding(edgePadding)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.leading, leadingSafeArea + edgePadding)
+                .padding(.trailing, trailingSafeArea + edgePadding)
+                .padding(.vertical, edgePadding)
             } else {
                 // Portrait: existing vertical layout
                 let titleHeight = geo.size.height * 0.44
