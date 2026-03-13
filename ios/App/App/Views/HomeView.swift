@@ -98,6 +98,7 @@ struct MainMenuView: View {
             
             if isLandscape {
                 // Landscape: title left, buttons stacked right; fill screen with padding
+                let trailingSafeArea = geo.safeAreaInsets.trailing
                 HStack(alignment: .center, spacing: edgePadding) {
                     // Title on the left – use most of left half height for font scaling
                     let titleAreaHeight = safeH
@@ -107,6 +108,7 @@ struct MainMenuView: View {
                     menuButtons
                         .frame(maxWidth: min(280, safeW * 0.45), maxHeight: .infinity)
                         .padding(.leading, edgePadding)
+                        .padding(.trailing, max(trailingSafeArea, edgePadding))
                 }
                 .padding(edgePadding)
             } else {
