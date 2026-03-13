@@ -63,7 +63,7 @@ struct GameView: View {
         .ignoresSafeArea()
         .navigationBarHidden(true)
         .onAppear {
-            OrientationManager.shared.supportedOrientations = .landscapeRight
+            OrientationManager.shared.supportedOrientations = .landscapeLeft
             OrientationManager.shared.requestLandscapeIfNeeded()
             onAppear()
         }
