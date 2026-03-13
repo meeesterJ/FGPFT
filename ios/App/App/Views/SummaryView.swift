@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct SummaryView: View {
     @Binding var path: NavigationPath
@@ -25,7 +26,7 @@ struct SummaryView: View {
             VStack(spacing: 24) {
                 HStack {
                     Button {
-                        OrientationManager.shared.supportedOrientations = .portrait
+                        OrientationManager.shared.supportedOrientations = UIInterfaceOrientationMask.portrait
                         store.resetGame()
                         path = NavigationPath()
                     } label: {
@@ -117,7 +118,7 @@ struct SummaryView: View {
                     .tint(AppColors.pink)
                     
                     Button {
-                        OrientationManager.shared.supportedOrientations = .portrait
+                        OrientationManager.shared.supportedOrientations = UIInterfaceOrientationMask.portrait
                         store.resetGame()
                         path = NavigationPath()
                     } label: {
@@ -134,7 +135,7 @@ struct SummaryView: View {
                 .padding(.bottom, 40)
             }
             .onAppear {
-                OrientationManager.shared.supportedOrientations = .landscapeRight
+                OrientationManager.shared.supportedOrientations = UIInterfaceOrientationMask.landscapeRight
                 if !playedSounds && store.soundEnabled {
                     playedSounds = true
                     AudioService.shared.play("gameEnd", volume: Float(store.soundVolume) / 100)
