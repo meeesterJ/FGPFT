@@ -212,7 +212,7 @@ struct BackgroundView: View {
             startPoint: .top,
             endPoint: .bottom
         )
-        .ignoresSafeArea(edges: .bottom)
+        .ignoresSafeArea()
     }
 }
 
