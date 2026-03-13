@@ -49,8 +49,10 @@ struct HowToPlayView: View {
             .padding(.bottom, 40)
         }
         .background(BackgroundView())
+        .transparentPurpleBottomBar()
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.barBackground, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("How to Play")

@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
+        // Same color as nav/toolbar so the area below the bottom safe area (e.g. home indicator) matches the transparentPurpleBottomBar() strip
         window?.backgroundColor = barBackground
         return true
     }
