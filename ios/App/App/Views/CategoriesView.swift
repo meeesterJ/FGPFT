@@ -154,69 +154,60 @@ struct AddCategorySheet: View {
     private var createPink: Color { Color(hex: "ec4899") }
     private var inputBackground: Color { Color(hex: "140A24") }
     
-    private var purpleContainerShape: UnevenRoundedRectangle {
-        UnevenRoundedRectangle(
-            topLeadingRadius: 20,
-            bottomLeadingRadius: 0,
-            bottomTrailingRadius: 0,
-            topTrailingRadius: 20
-        )
-    }
-    
     var body: some View {
         let navigationStack = NavigationStack {
             ZStack(alignment: .top) {
                 createPink
                     .ignoresSafeArea()
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Color.clear.frame(height: 8)
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("List name")
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.white)
-                            TextField("Name", text: $name)
-                                .font(AppFonts.body(size: 17))
-                                .foregroundStyle(.white)
-                                .padding(12)
-                            Text("Study mode")
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.white)
-                            HStack {
-                                Spacer()
-                                Toggle("", isOn: $isStudy)
-                                    .labelsHidden()
-                                    .tint(AppColors.primaryPurple)
-                            }
-                            .padding(12)
-                            Text("Words (one per line)")
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.white)
-                            TextEditor(text: $wordsText)
-                                .font(AppFonts.body(size: 17))
-                                .foregroundStyle(.white)
-                                .scrollContentBackground(.hidden)
-                                .frame(minHeight: 120)
-                                .frame(maxWidth: .infinity)
-                                .padding(12)
-                            if let err = errorMessage {
-                                Text(err)
-                                    .font(AppFonts.body(size: 15))
-                                    .foregroundStyle(.red)
-                            }
-                        }
-                        .padding(16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                VStack(alignment: .leading, spacing: 12) {
+                    Color.clear.frame(height: 8)
+                    Text("List Name")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(.white)
+                    TextField("Name", text: $name)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
+                        .padding(12)
+                        .frame(maxWidth: .infinity)
                         .background(inputBackground)
-                        .clipShape(purpleContainerShape)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    HStack {
+                        Text("Study Mode")
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(.white)
+                        Spacer()
+                        Toggle("", isOn: $isStudy)
+                            .labelsHidden()
+                            .tint(AppColors.primaryPurple)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
+                    .padding(12)
+                    .background(inputBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    Text("Words (one per line)")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(.white)
+                    TextEditor(text: $wordsText)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
+                        .scrollContentBackground(.hidden)
+                        .frame(minHeight: 120)
+                        .frame(maxWidth: .infinity)
+                        .frame(maxHeight: .infinity)
+                        .padding(12)
+                        .background(inputBackground)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    if let err = errorMessage {
+                        Text(err)
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(.red)
+                    }
                 }
-                .frame(maxHeight: .infinity)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 32)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.barBackground, for: .navigationBar)
+            .toolbarBackground(createPink, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
@@ -288,69 +279,60 @@ struct EditCategorySheet: View {
     private var editYellow: Color { Color(hex: "ca8a04") }
     private var inputBackground: Color { Color(hex: "140A24") }
     
-    private var purpleContainerShape: UnevenRoundedRectangle {
-        UnevenRoundedRectangle(
-            topLeadingRadius: 20,
-            bottomLeadingRadius: 0,
-            bottomTrailingRadius: 0,
-            topTrailingRadius: 20
-        )
-    }
-    
     var body: some View {
         let navigationStack = NavigationStack {
             ZStack(alignment: .top) {
                 editYellow
                     .ignoresSafeArea()
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Color.clear.frame(height: 8)
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("List name")
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.white)
-                            TextField("Name", text: $name)
-                                .font(AppFonts.body(size: 17))
-                                .foregroundStyle(.white)
-                                .padding(12)
-                            Text("Study mode")
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.white)
-                            HStack {
-                                Spacer()
-                                Toggle("", isOn: $isStudy)
-                                    .labelsHidden()
-                                    .tint(AppColors.primaryPurple)
-                            }
-                            .padding(12)
-                            Text("Words (one per line)")
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.white)
-                            TextEditor(text: wordsText)
-                                .font(AppFonts.body(size: 17))
-                                .foregroundStyle(.white)
-                                .scrollContentBackground(.hidden)
-                                .frame(minHeight: 120)
-                                .frame(maxWidth: .infinity)
-                                .padding(12)
-                            if let err = errorMessage {
-                                Text(err)
-                                    .font(AppFonts.body(size: 15))
-                                    .foregroundStyle(.red)
-                            }
-                        }
-                        .padding(16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                VStack(alignment: .leading, spacing: 12) {
+                    Color.clear.frame(height: 8)
+                    Text("List Name")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(.white)
+                    TextField("Name", text: $name)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
+                        .padding(12)
+                        .frame(maxWidth: .infinity)
                         .background(inputBackground)
-                        .clipShape(purpleContainerShape)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    HStack {
+                        Text("Study Mode")
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(.white)
+                        Spacer()
+                        Toggle("", isOn: $isStudy)
+                            .labelsHidden()
+                            .tint(AppColors.primaryPurple)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
+                    .padding(12)
+                    .background(inputBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    Text("Words (one per line)")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(.white)
+                    TextEditor(text: wordsText)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
+                        .scrollContentBackground(.hidden)
+                        .frame(minHeight: 120)
+                        .frame(maxWidth: .infinity)
+                        .frame(maxHeight: .infinity)
+                        .padding(12)
+                        .background(inputBackground)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    if let err = errorMessage {
+                        Text(err)
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(.red)
+                    }
                 }
-                .frame(maxHeight: .infinity)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 32)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.barBackground, for: .navigationBar)
+            .toolbarBackground(editYellow, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
