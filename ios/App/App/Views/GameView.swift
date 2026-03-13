@@ -229,13 +229,11 @@ struct GameView: View {
             VStack(spacing: 4) {
                 if store.roundDuration > 0 && store.isPlaying {
                     Text("\(timeLeft)s")
-                        .font(AppFonts.body(size: 32).monospacedDigit())
+                        .font(AppFonts.body(size: 48).monospacedDigit())
                         .foregroundStyle(timeLeft <= 5 ? AppColors.pink : AppColors.green)
                 }
-                let idx = store.currentTeam - 1
-                let score = store.teamRoundScores.indices.contains(idx) ? store.teamRoundScores[idx].correct : 0
-                Text("\(score)")
-                    .font(AppFonts.body(size: 24))
+                Text("\(store.currentScore)")
+                    .font(AppFonts.body(size: 40))
                     .foregroundStyle(AppColors.yellow)
             }
             .frame(width: 80)
@@ -299,7 +297,7 @@ struct GameView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(.green)
                 }
-                .padding(.trailing, 16)
+                .padding(.trailing, 40)
             } else {
                 Color.clear.frame(width: 80)
             }
