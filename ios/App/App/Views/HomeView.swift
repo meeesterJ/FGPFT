@@ -22,7 +22,7 @@ struct HomeView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(BackgroundView())
         .ignoresSafeArea()
-        .onAppear { OrientationManager.shared.supportedOrientations = .portrait }
+        .onAppear { OrientationManager.shared.supportedOrientations = .allButUpsideDown }
     }
 }
 
@@ -52,54 +52,79 @@ struct MainMenuView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var store: GameStore
     
+    private var menuButtons: some View {
+        VStack(spacing: 12) {
+            Button { path.append(AppRoute.game) } label: {
+                Label("Play Now", systemImage: "play.fill")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .font(AppFonts.body(size: 18))
+                    .fontWeight(.bold)
+            }
+            .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "ec4899"), borderColor: Color(hex: "f472b6")))
+            Button { path.append(AppRoute.categories) } label: {
+                Label("Categories", systemImage: "list.bullet")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .font(AppFonts.body(size: 18))
+                    .fontWeight(.bold)
+            }
+            .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "0891b2"), borderColor: Color(hex: "22d3ee")))
+            Button { path.append(AppRoute.settings) } label: {
+                Label("Settings", systemImage: "gearshape")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .font(AppFonts.body(size: 18))
+                    .fontWeight(.bold)
+            }
+            .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "9333ea"), borderColor: Color(hex: "a78bfa")))
+            Button { path.append(AppRoute.howToPlay) } label: {
+                Label("How to Play", systemImage: "questionmark.circle")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .font(AppFonts.body(size: 18))
+                    .fontWeight(.bold)
+            }
+            .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "ca8a04"), borderColor: Color(hex: "facc15")))
+        }
+    }
+    
     var body: some View {
         GeometryReader { geo in
-            let titleHeight = geo.size.height * 0.44
-            VStack(spacing: 0) {
-                Spacer(minLength: 36)
-                TitleStackView(animated: false, availableHeight: titleHeight)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: titleHeight)
-                Spacer(minLength: 20)
-                VStack(spacing: 12) {
-                Button { path.append(AppRoute.game) } label: {
-                    Label("Play Now", systemImage: "play.fill")
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .font(AppFonts.body(size: 18))
-                            .fontWeight(.bold)
+            let isLandscape = geo.size.width > geo.size.height
+            let edgePadding: CGFloat = 24
+            let safeW = max(0, geo.size.width - edgePadding * 2)
+            let safeH = max(0, geo.size.height - edgePadding * 2)
+            
+            if isLandscape {
+                // Landscape: title left, buttons stacked right; fill screen with padding
+                HStack(alignment: .center, spacing: edgePadding) {
+                    // Title on the left – use most of left half height for font scaling
+                    let titleAreaHeight = safeH
+                    TitleStackView(animated: false, availableHeight: titleAreaHeight * 0.85)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                    // Buttons stacked on the right with a sensible max width
+                    menuButtons
+                        .frame(maxWidth: min(280, safeW * 0.45), maxHeight: .infinity)
+                        .padding(.leading, edgePadding)
                 }
-                .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "ec4899"), borderColor: Color(hex: "f472b6"))) // pink-500, pink-400
-                Button { path.append(AppRoute.categories) } label: {
-                    Label("Categories", systemImage: "list.bullet")
+                .padding(edgePadding)
+            } else {
+                // Portrait: existing vertical layout
+                let titleHeight = geo.size.height * 0.44
+                VStack(spacing: 0) {
+                    Spacer(minLength: 36)
+                    TitleStackView(animated: false, availableHeight: titleHeight)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .font(AppFonts.body(size: 18))
-                            .fontWeight(.bold)
+                        .frame(height: titleHeight)
+                    Spacer(minLength: 20)
+                    menuButtons
+                        .padding(.horizontal, edgePadding)
+                        .padding(.bottom, 24)
                 }
-                .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "0891b2"), borderColor: Color(hex: "22d3ee"))) // cyan-600, cyan-400
-                Button { path.append(AppRoute.settings) } label: {
-                    Label("Settings", systemImage: "gearshape")
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .font(AppFonts.body(size: 18))
-                            .fontWeight(.bold)
-                }
-                .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "9333ea"), borderColor: Color(hex: "a78bfa"))) // purple-600, purple-400
-                Button { path.append(AppRoute.howToPlay) } label: {
-                    Label("How to Play", systemImage: "questionmark.circle")
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .font(AppFonts.body(size: 18))
-                            .fontWeight(.bold)
-                }
-                .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "ca8a04"), borderColor: Color(hex: "facc15"))) // yellow-600, yellow-400
+                .padding(.top, 28)
+                .padding(.bottom, 36)
             }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 24)
-            }
-            .padding(.top, 28)
-            .padding(.bottom, 36)
         }
         .safeAreaInset(edge: .top) { Color.clear.frame(height: 0) }
     }
