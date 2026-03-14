@@ -124,7 +124,7 @@ struct SummaryView: View {
                 .padding(.bottom, 40)
             }
             .onAppear {
-                OrientationManager.shared.supportedOrientations = UIInterfaceOrientationMask.landscapeRight
+                OrientationManager.shared.supportedOrientations = .landscapeLeft
                 if !playedSounds && store.soundEnabled {
                     playedSounds = true
                     AudioService.shared.play("gameEnd", volume: Float(store.soundVolume) / 100)
