@@ -116,11 +116,16 @@ struct CategoryRow: View {
                     Text(list.name)
                         .font(AppFonts.body(size: 17))
                         .foregroundStyle(.primary)
-                    Text("\(list.words.count) words\(list.isCustom == true ? " (Custom)" : "")\(list.isStudy == true ? " · Study" : "")")
+                    Text("\(list.words.count) words\(list.isCustom == true ? " (Custom)" : "")\(list.isStudy == true ? "  ·  Study" : "")")
                         .font(AppFonts.body(size: 12))
                         .foregroundStyle(AppColors.mutedText)
                 }
                 Spacer(minLength: 8)
+                if list.isStudy == true {
+                    Image(systemName: "book.fill")
+                        .foregroundStyle(isSelected ? AppColors.cyan : AppColors.mutedText)
+                        .font(.system(size: 16))
+                }
             }
             .contentShape(Rectangle())
             .onTapGesture { onToggle() }
