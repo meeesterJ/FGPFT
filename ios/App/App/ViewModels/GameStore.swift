@@ -2,7 +2,7 @@ import Foundation
 import Combine
 
 private let storageKey = "guess-party-storage"
-private let storageVersion = 7
+private let storageVersion = 8
 
 func defaultTeamNames(count: Int) -> [String] {
     (1...count).map { "Team \($0)" }
@@ -31,6 +31,7 @@ struct PersistedGameState: Codable {
     var builtInListOverrides: [String: BuiltInListOverride]
     var deletedBuiltInLists: [String]
     var permanentlyDeletedBuiltInLists: [String]
+    var deletedCustomLists: [WordList]?
 }
 
 final class GameStore: ObservableObject {
@@ -51,6 +52,7 @@ final class GameStore: ObservableObject {
     @Published var builtInListOverrides: [String: BuiltInListOverride]
     @Published var deletedBuiltInLists: [String]
     @Published var permanentlyDeletedBuiltInLists: [String]
+    @Published var deletedCustomLists: [WordList]
     
     // MARK: - Session state (not persisted)
     @Published var currentRound: Int
@@ -91,6 +93,7 @@ final class GameStore: ObservableObject {
         self.builtInListOverrides = [:]
         self.deletedBuiltInLists = []
         self.permanentlyDeletedBuiltInLists = []
+        self.deletedCustomLists = []
         self.currentRound = 0
         self.currentScore = 0
         self.currentWord = nil
@@ -147,6 +150,7 @@ final class GameStore: ObservableObject {
         builtInListOverrides = decoded.builtInListOverrides
         deletedBuiltInLists = decoded.deletedBuiltInLists
         permanentlyDeletedBuiltInLists = decoded.permanentlyDeletedBuiltInLists
+        deletedCustomLists = decoded.deletedCustomLists ?? []
     }
     
     private func setupPersistence() {
@@ -173,7 +177,8 @@ final class GameStore: ObservableObject {
             customLists: customLists,
             builtInListOverrides: builtInListOverrides,
             deletedBuiltInLists: deletedBuiltInLists,
-            permanentlyDeletedBuiltInLists: permanentlyDeletedBuiltInLists
+            permanentlyDeletedBuiltInLists: permanentlyDeletedBuiltInLists,
+            deletedCustomLists: deletedCustomLists
         )
         if let data = try? JSONEncoder().encode(state) {
             userDefaults.set(data, forKey: storageKey)
@@ -255,8 +260,24 @@ final class GameStore: ObservableObject {
     }
     
     func removeCustomList(id: String) {
+        guard let listToDelete = customLists.first(where: { $0.id == id }) else { return }
         customLists.removeAll { $0.id == id }
         selectedListIds.removeAll { $0 == id }
+        deletedCustomLists.append(listToDelete)
+    }
+    
+    func restoreCustomList(id: String) {
+        guard let listToRestore = deletedCustomLists.first(where: { $0.id == id }) else { return }
+        deletedCustomLists.removeAll { $0.id == id }
+        customLists.append(listToRestore)
+    }
+    
+    func permanentlyDeleteCustomList(id: String) {
+        deletedCustomLists.removeAll { $0.id == id }
+    }
+    
+    func getDeletedCustomLists() -> [WordList] {
+        deletedCustomLists
     }
     
     func updateCustomList(id: String, updatedList: WordList) {

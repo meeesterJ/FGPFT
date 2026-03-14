@@ -17,7 +17,7 @@ struct CategoriesView: View {
     }
     
     private var deletedCount: Int {
-        store.getDeletedBuiltInLists().count
+        store.getDeletedBuiltInLists().count + store.getDeletedCustomLists().count
     }
     
     var body: some View {

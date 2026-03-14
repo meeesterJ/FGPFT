@@ -5,7 +5,23 @@ struct DeletedCategoriesView: View {
     @State private var confirmDelete: WordList?
     
     private var deletedLists: [WordList] {
-        store.getDeletedBuiltInLists()
+        store.getDeletedBuiltInLists() + store.getDeletedCustomLists()
+    }
+    
+    private func restore(list: WordList) {
+        if list.isCustom == true {
+            store.restoreCustomList(id: list.id)
+        } else {
+            store.restoreBuiltInList(id: list.id)
+        }
+    }
+    
+    private func permanentlyDelete(list: WordList) {
+        if list.isCustom == true {
+            store.permanentlyDeleteCustomList(id: list.id)
+        } else {
+            store.permanentlyDeleteBuiltInList(id: list.id)
+        }
     }
     
     var body: some View {
@@ -33,13 +49,13 @@ struct DeletedCategoriesView: View {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(list.name)
                                         .font(AppFonts.body(size: 17).weight(.semibold))
-                                    Text("\(list.words.count) words")
+                                    Text("\(list.words.count) words\(list.isCustom == true ? " (Custom)" : "")")
                                         .font(AppFonts.body(size: 12))
                                         .foregroundStyle(AppColors.mutedText)
                                 }
                                 HStack(spacing: 12) {
                                     Button {
-                                        store.restoreBuiltInList(id: list.id)
+                                        restore(list: list)
                                     } label: {
                                         Label("Restore", systemImage: "arrow.uturn.backward")
                                             .frame(maxWidth: .infinity)
@@ -87,7 +103,7 @@ struct DeletedCategoriesView: View {
             Button("Cancel", role: .cancel) { confirmDelete = nil }
             Button("Delete", role: .destructive) {
                 if let list = confirmDelete {
-                    store.permanentlyDeleteBuiltInList(id: list.id)
+                    permanentlyDelete(list: list)
                     confirmDelete = nil
                 }
             }

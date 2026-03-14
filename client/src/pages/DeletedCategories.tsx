@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { useGameStore } from "@/lib/store";
+import { useGameStore, WordList } from "@/lib/store";
 import { DEFAULT_WORD_LISTS } from "@/lib/words";
 import { ArrowLeft, Trash2, RotateCcw } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,17 +11,27 @@ export default function DeletedCategories() {
   useSwipeBack({ targetPath: "/categories" });
   const deletedBuiltInLists = useGameStore(s => s.deletedBuiltInLists);
   const permanentlyDeletedBuiltInLists = useGameStore(s => s.permanentlyDeletedBuiltInLists);
+  const deletedCustomLists = useGameStore(s => s.deletedCustomLists);
   const restoreBuiltInList = useGameStore(s => s.restoreBuiltInList);
   const permanentlyDeleteBuiltInList = useGameStore(s => s.permanentlyDeleteBuiltInList);
-  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null);
+  const restoreCustomList = useGameStore(s => s.restoreCustomList);
+  const permanentlyDeleteCustomList = useGameStore(s => s.permanentlyDeleteCustomList);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string; isCustom: boolean } | null>(null);
 
-  const deletedLists = DEFAULT_WORD_LISTS.filter(l => 
-    deletedBuiltInLists.includes(l.id) &&
-    !permanentlyDeletedBuiltInLists.includes(l.id)
-  );
+  const deletedLists: (WordList & { isCustom: boolean })[] = [
+    ...DEFAULT_WORD_LISTS.filter(l => 
+      deletedBuiltInLists.includes(l.id) &&
+      !permanentlyDeletedBuiltInLists.includes(l.id)
+    ).map(l => ({ ...l, isCustom: false })),
+    ...deletedCustomLists.map(l => ({ ...l, isCustom: true }))
+  ];
 
-  const handleRestore = (list: typeof DEFAULT_WORD_LISTS[0]) => {
-    restoreBuiltInList(list.id);
+  const handleRestore = (list: WordList & { isCustom: boolean }) => {
+    if (list.isCustom) {
+      restoreCustomList(list.id);
+    } else {
+      restoreBuiltInList(list.id);
+    }
   };
 
   return (
@@ -56,7 +66,9 @@ export default function DeletedCategories() {
                 >
                   <div>
                     <h3 className="font-thin text-lg">{list.name}</h3>
-                    <p className="text-xs text-muted-foreground">{list.words.length} words</p>
+                    <p className="text-xs text-muted-foreground">
+                      {list.words.length} words{list.isCustom ? ' (Custom)' : ''}
+                    </p>
                   </div>
                   <div className="flex gap-2">
                     <Button 
@@ -73,7 +85,7 @@ export default function DeletedCategories() {
                       variant="outline" 
                       size="sm"
                       className="flex-1 text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/50"
-                      onClick={() => setDeleteConfirm({ id: list.id, name: list.name })}
+                      onClick={() => setDeleteConfirm({ id: list.id, name: list.name, isCustom: list.isCustom })}
                       data-testid={`button-permanent-delete-${list.id}`}
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
@@ -110,7 +122,11 @@ export default function DeletedCategories() {
               <Button 
                 className="flex-1 bg-red-500 hover:bg-red-400 text-white border-red-400 py-6 text-lg"
                 onClick={() => {
-                  permanentlyDeleteBuiltInList(deleteConfirm.id);
+                  if (deleteConfirm.isCustom) {
+                    permanentlyDeleteCustomList(deleteConfirm.id);
+                  } else {
+                    permanentlyDeleteBuiltInList(deleteConfirm.id);
+                  }
                   setDeleteConfirm(null);
                 }}
                 data-testid="button-confirm-delete"
