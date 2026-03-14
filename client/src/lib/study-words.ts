@@ -2,7 +2,7 @@ export const STUDY_WORD_LISTS: { id: string; name: string; isStudy: boolean; wor
   {
     id: 'us-geography',
     name: 'US Geography',
-    isStudy: true,
+    isStudy: false,
     words: [
       'Alabama',
       'Montgomery',
@@ -209,7 +209,7 @@ export const STUDY_WORD_LISTS: { id: string; name: string; isStudy: boolean; wor
   {
     id: 'world-geography',
     name: 'World Geography',
-    isStudy: true,
+    isStudy: false,
     words: [
       'Canada',
       'Ottawa',
