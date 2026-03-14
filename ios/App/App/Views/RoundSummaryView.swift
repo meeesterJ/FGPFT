@@ -17,11 +17,11 @@ struct RoundSummaryView: View {
     }
     
     private var multicoloredRound: some View {
-        MulticoloredRoundText(fontSize: 48)
+        MulticoloredRoundText(fontSize: 32)
     }
     
     private var multicoloredStudy: some View {
-        MulticoloredStudyText(fontSize: 72)
+        MulticoloredStudyText(fontSize: 32)
     }
     
     var body: some View {
@@ -36,11 +36,6 @@ struct RoundSummaryView: View {
                     }
                     .padding(.horizontal, 32)
                     .padding(.top, geo.safeAreaInsets.top + 40)
-                    
-                    Spacer()
-                    
-                    bottomButton
-                        .padding(.bottom, 32)
                 }
                 
                 HomeButtonOverlay {
@@ -57,41 +52,44 @@ struct RoundSummaryView: View {
     }
     
     private var leftColumn: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 4) {
             Spacer()
             
             if store.studyMode {
-                multicoloredStudy
-                
-                Text("COMPLETE")
-                    .font(AppFonts.body(size: 14))
-                    .fontWeight(.medium)
-                    .foregroundStyle(AppColors.mutedText)
-                    .tracking(3)
+                HStack(spacing: 8) {
+                    multicoloredStudy
+                    Text("COMPLETE")
+                        .font(AppFonts.body(size: 12))
+                        .fontWeight(.medium)
+                        .foregroundStyle(AppColors.mutedText)
+                        .tracking(2)
+                }
             } else {
-                multicoloredRound
-                
-                Text("\(store.currentRound)")
-                    .font(AppFonts.display(size: 72))
-                    .foregroundStyle(AppColors.yellow)
-                
-                Text("COMPLETE")
-                    .font(AppFonts.body(size: 14))
-                    .fontWeight(.medium)
-                    .foregroundStyle(AppColors.mutedText)
-                    .tracking(3)
+                HStack(spacing: 8) {
+                    multicoloredRound
+                    Text("\(store.currentRound)")
+                        .font(AppFonts.display(size: 40))
+                        .foregroundStyle(AppColors.yellow)
+                    Text("COMPLETE")
+                        .font(AppFonts.body(size: 12))
+                        .fontWeight(.medium)
+                        .foregroundStyle(AppColors.mutedText)
+                        .tracking(2)
+                }
             }
+            
+            Text("\(pointsThisRound)")
+                .font(AppFonts.display(size: 96))
+                .foregroundStyle(AppColors.yellow)
+            
+            Text("Points this round")
+                .font(AppFonts.body(size: 14))
+                .foregroundStyle(AppColors.mutedText)
             
             Spacer()
                 .frame(height: 16)
             
-            Text("\(pointsThisRound)")
-                .font(AppFonts.display(size: 80))
-                .foregroundStyle(AppColors.yellow)
-            
-            Text("Points this round")
-                .font(AppFonts.body(size: 16))
-                .foregroundStyle(AppColors.mutedText)
+            bottomButton
             
             Spacer()
         }
@@ -151,26 +149,29 @@ struct RoundSummaryView: View {
                 path.append(AppRoute.scoreboard)
             }
         } label: {
-            HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 if store.studyMode {
                     Image(systemName: "brain.head.profile")
+                        .font(.system(size: 14))
                     Text("Get Smarter?")
-                        .font(AppFonts.body(size: 20))
-                        .fontWeight(.bold)
+                        .font(AppFonts.body(size: 14))
+                        .fontWeight(.semibold)
                 } else if store.willGameBeFinished {
                     Image(systemName: "trophy.fill")
+                        .font(.system(size: 14))
                     Text("See Winner!")
-                        .font(AppFonts.body(size: 20))
-                        .fontWeight(.bold)
+                        .font(AppFonts.body(size: 14))
+                        .fontWeight(.semibold)
                 } else {
                     Image(systemName: "list.number")
+                        .font(.system(size: 14))
                     Text("Scoreboard")
-                        .font(AppFonts.body(size: 20))
-                        .fontWeight(.bold)
+                        .font(AppFonts.body(size: 14))
+                        .fontWeight(.semibold)
                 }
             }
-            .frame(maxWidth: 240)
-            .padding(.vertical, 12)
+            .frame(maxWidth: 160)
+            .padding(.vertical, 8)
         }
         .buttonStyle(.borderedProminent)
         .tint(AppColors.pink)
