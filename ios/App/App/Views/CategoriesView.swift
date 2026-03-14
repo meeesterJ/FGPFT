@@ -100,43 +100,48 @@ struct CategoryRow: View {
     let onDelete: () -> Void
     
     var body: some View {
-        HStack {
-            Button(action: onToggle) {
-                HStack(spacing: 12) {
-                    ZStack {
+        HStack(spacing: 0) {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .stroke(isSelected ? AppColors.cyan : Color.white.opacity(0.4), lineWidth: 2)
+                        .frame(width: 24, height: 24)
+                    if isSelected {
                         Circle()
-                            .stroke(isSelected ? AppColors.cyan : Color.white.opacity(0.4), lineWidth: 2)
-                            .frame(width: 24, height: 24)
-                        if isSelected {
-                            Circle()
-                                .fill(AppColors.cyan)
-                                .frame(width: 10, height: 10)
-                        }
+                            .fill(AppColors.cyan)
+                            .frame(width: 10, height: 10)
                     }
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(list.name)
-                            .font(AppFonts.body(size: 17))
-                            .foregroundStyle(.primary)
-                        Text("\(list.words.count) words\(list.isCustom == true ? " (Custom)" : "")\(list.isStudy == true ? " · Study" : "")")
-                            .font(AppFonts.body(size: 12))
-                            .foregroundStyle(AppColors.mutedText)
-                    }
-                    Spacer()
                 }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(list.name)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.primary)
+                    Text("\(list.words.count) words\(list.isCustom == true ? " (Custom)" : "")\(list.isStudy == true ? " · Study" : "")")
+                        .font(AppFonts.body(size: 12))
+                        .foregroundStyle(AppColors.mutedText)
+                }
+                Spacer(minLength: 8)
             }
-            .buttonStyle(.plain)
-            Button(action: onEdit) {
-                Image(systemName: "pencil")
-                    .foregroundStyle(AppColors.yellow)
+            .contentShape(Rectangle())
+            .onTapGesture { onToggle() }
+            
+            HStack(spacing: 0) {
+                Button(action: onEdit) {
+                    Image(systemName: "pencil")
+                        .foregroundStyle(AppColors.yellow)
+                        .frame(width: 44, height: 44)
+                }
+                .buttonStyle(.plain)
+                Button(action: onDelete) {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.red)
+                        .frame(width: 44, height: 44)
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
-            Button(action: onDelete) {
-                Image(systemName: "trash")
-                    .foregroundStyle(.red)
-            }
-            .buttonStyle(.plain)
         }
-        .padding(16)
+        .padding(.leading, 16)
+        .padding(.vertical, 16)
         .background(isSelected ? AppColors.cyan.opacity(0.2) : Color.white.opacity(0.06))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(isSelected ? AppColors.cyan : Color.white.opacity(0.15), lineWidth: isSelected ? 2 : 1))
