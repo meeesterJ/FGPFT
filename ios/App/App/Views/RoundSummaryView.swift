@@ -27,6 +27,17 @@ struct RoundSummaryView: View {
         .font(AppFonts.display(size: 48))
     }
     
+    private var multicoloredStudy: some View {
+        HStack(spacing: 0) {
+            Text("S").foregroundStyle(AppColors.cyan)
+            Text("t").foregroundStyle(AppColors.pink)
+            Text("u").foregroundStyle(AppColors.yellow)
+            Text("d").foregroundStyle(AppColors.green)
+            Text("y").foregroundStyle(AppColors.purple)
+        }
+        .font(AppFonts.display(size: 72))
+    }
+    
     var body: some View {
         ZStack {
             BackgroundView()
@@ -61,17 +72,27 @@ struct RoundSummaryView: View {
         VStack(spacing: 8) {
             Spacer()
             
-            multicoloredRound
-            
-            Text("\(store.currentRound)")
-                .font(AppFonts.display(size: 72))
-                .foregroundStyle(AppColors.yellow)
-            
-            Text("COMPLETE")
-                .font(AppFonts.body(size: 14))
-                .fontWeight(.medium)
-                .foregroundStyle(AppColors.mutedText)
-                .tracking(3)
+            if store.studyMode {
+                multicoloredStudy
+                
+                Text("COMPLETE")
+                    .font(AppFonts.body(size: 14))
+                    .fontWeight(.medium)
+                    .foregroundStyle(AppColors.mutedText)
+                    .tracking(3)
+            } else {
+                multicoloredRound
+                
+                Text("\(store.currentRound)")
+                    .font(AppFonts.display(size: 72))
+                    .foregroundStyle(AppColors.yellow)
+                
+                Text("COMPLETE")
+                    .font(AppFonts.body(size: 14))
+                    .fontWeight(.medium)
+                    .foregroundStyle(AppColors.mutedText)
+                    .tracking(3)
+            }
             
             Spacer()
                 .frame(height: 16)
@@ -131,13 +152,26 @@ struct RoundSummaryView: View {
     
     private var bottomButton: some View {
         Button {
-            path.append(AppRoute.scoreboard)
+            if store.studyMode {
+                store.startGame()
+                path = NavigationPath()
+                path.append(AppRoute.game)
+            } else {
+                path.append(AppRoute.scoreboard)
+            }
         } label: {
             HStack(spacing: 8) {
-                Image(systemName: "list.number")
-                Text("Scoreboard")
-                    .font(AppFonts.body(size: 20))
-                    .fontWeight(.bold)
+                if store.studyMode {
+                    Image(systemName: "brain.head.profile")
+                    Text("Get Smarter?")
+                        .font(AppFonts.body(size: 20))
+                        .fontWeight(.bold)
+                } else {
+                    Image(systemName: "list.number")
+                    Text("Scoreboard")
+                        .font(AppFonts.body(size: 20))
+                        .fontWeight(.bold)
+                }
             }
             .frame(maxWidth: 300)
             .padding(.vertical, 16)
