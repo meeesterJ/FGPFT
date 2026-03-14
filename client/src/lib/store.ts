@@ -47,6 +47,7 @@ interface GameState {
   builtInListOverrides: Record<string, { name?: string; words?: string[]; isStudy?: boolean }>;
   deletedBuiltInLists: string[];
   permanentlyDeletedBuiltInLists: string[];
+  deletedCustomLists: WordList[];
   numberOfTeams: number;
   teamNames: string[];
   
@@ -80,6 +81,8 @@ interface GameState {
   toggleListSelection: (id: string) => void;
   addCustomList: (list: WordList) => void;
   removeCustomList: (id: string) => void;
+  restoreCustomList: (id: string) => void;
+  permanentlyDeleteCustomList: (id: string) => void;
   updateCustomList: (id: string, updatedList: WordList) => void;
   updateBuiltInList: (id: string, name: string, words: string[], isStudy?: boolean) => void;
   resetBuiltInList: (id: string) => void;
@@ -119,6 +122,7 @@ export const useGameStore = create<GameState>()(
       builtInListOverrides: {},
       deletedBuiltInLists: [],
       permanentlyDeletedBuiltInLists: [],
+      deletedCustomLists: [],
       numberOfTeams: 1,
       teamNames: defaultTeamNames(1),
       
@@ -174,9 +178,27 @@ export const useGameStore = create<GameState>()(
         selectedListIds: [...state.selectedListIds, list.id]
       })),
 
-      removeCustomList: (id) => set((state) => ({
-        customLists: state.customLists.filter(l => l.id !== id),
-        selectedListIds: state.selectedListIds.filter(lid => lid !== id)
+      removeCustomList: (id) => set((state) => {
+        const listToDelete = state.customLists.find(l => l.id === id);
+        if (!listToDelete) return state;
+        return {
+          customLists: state.customLists.filter(l => l.id !== id),
+          selectedListIds: state.selectedListIds.filter(lid => lid !== id),
+          deletedCustomLists: [...state.deletedCustomLists, listToDelete]
+        };
+      }),
+
+      restoreCustomList: (id) => set((state) => {
+        const listToRestore = state.deletedCustomLists.find(l => l.id === id);
+        if (!listToRestore) return state;
+        return {
+          deletedCustomLists: state.deletedCustomLists.filter(l => l.id !== id),
+          customLists: [...state.customLists, listToRestore]
+        };
+      }),
+
+      permanentlyDeleteCustomList: (id) => set((state) => ({
+        deletedCustomLists: state.deletedCustomLists.filter(l => l.id !== id)
       })),
 
       updateCustomList: (id, updatedList) => set((state) => ({
@@ -437,7 +459,7 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'guess-party-storage',
-      version: 7,
+      version: 8,
       partialize: (state) => ({ 
         studyMode: state.studyMode,
         roundDuration: state.roundDuration,
@@ -454,7 +476,8 @@ export const useGameStore = create<GameState>()(
         customLists: state.customLists,
         builtInListOverrides: state.builtInListOverrides,
         deletedBuiltInLists: state.deletedBuiltInLists,
-        permanentlyDeletedBuiltInLists: state.permanentlyDeletedBuiltInLists
+        permanentlyDeletedBuiltInLists: state.permanentlyDeletedBuiltInLists,
+        deletedCustomLists: state.deletedCustomLists
       }),
       migrate: (persistedState: any, version: number) => {
         if (version < 2) {
@@ -486,6 +509,9 @@ export const useGameStore = create<GameState>()(
         }
         if (version < 7) {
           persistedState.soundEnabled = persistedState.studyMode ? false : true;
+        }
+        if (version < 8) {
+          persistedState.deletedCustomLists = [];
         }
         return persistedState;
       },

@@ -22,6 +22,7 @@ export default function Categories() {
   const {
     deletedBuiltInLists,
     permanentlyDeletedBuiltInLists,
+    deletedCustomLists,
     selectedListIds,
     customLists,
     getEffectiveBuiltInLists,
@@ -34,6 +35,7 @@ export default function Categories() {
   } = useGameStore(useShallow(s => ({
     deletedBuiltInLists: s.deletedBuiltInLists,
     permanentlyDeletedBuiltInLists: s.permanentlyDeletedBuiltInLists,
+    deletedCustomLists: s.deletedCustomLists,
     selectedListIds: s.selectedListIds,
     customLists: s.customLists,
     getEffectiveBuiltInLists: s.getEffectiveBuiltInLists,
@@ -187,10 +189,13 @@ export default function Categories() {
     ...customLists
   ];
 
-  const deletedLists = DEFAULT_WORD_LISTS.filter(l => 
-    deletedBuiltInLists.includes(l.id) && 
-    !permanentlyDeletedBuiltInLists.includes(l.id)
-  );
+  const deletedLists = [
+    ...DEFAULT_WORD_LISTS.filter(l => 
+      deletedBuiltInLists.includes(l.id) && 
+      !permanentlyDeletedBuiltInLists.includes(l.id)
+    ),
+    ...deletedCustomLists
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-card flex flex-col safe-area-top">
