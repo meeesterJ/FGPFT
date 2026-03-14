@@ -206,6 +206,141 @@ const BASE_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: bo
       'Dinosaur', 'Robot', 'Unicorn', 'Dragon', 'Mermaid'
     ]
   },
+  {
+    id: 'ocean-mammals',
+    name: 'Ocean Mammals',
+    words: [
+      'Dolphin', 'Bottlenose Dolphin', 'Orca', 'Humpback Whale', 'Blue Whale',
+      'Sperm Whale', 'Narwhal', 'Beluga Whale', 'Sea Otter', 'Manatee',
+      'Gray Whale', 'Minke Whale', 'Fin Whale', 'Pilot Whale', 'Harbor Porpoise',
+      'Dusky Dolphin', 'Amazon River Dolphin', 'Baiji', 'Indus River Dolphin', 'California Sea Lion',
+      'Harbor Seal', 'Leopard Seal', 'Weddell Seal', 'Crabeater Seal', 'Elephant Seal',
+      'Walrus', 'Dugong', "Commerson's Dolphin", "Risso's Dolphin", 'False Killer Whale',
+      'Spinner Dolphin', 'Beaked Whale', 'Vaquita', 'Melon-headed Whale', 'Right Whale'
+    ]
+  },
+  {
+    id: 'coral-reef-dwellers',
+    name: 'Coral Reef Dwellers',
+    words: [
+      'Clownfish', 'Blue Tang', 'Lionfish', 'Moray Eel', 'Parrotfish',
+      'Butterflyfish', 'Triggerfish', 'Angelfish', 'Pufferfish', 'Reef Shark',
+      'Surgeonfish', 'Bannerfish', 'Wrasse', 'Gobies', 'Cleaner Shrimp',
+      'Sea Anemone', 'Coral Grouper', 'Damselfish', 'Hawkfish', 'Boxfish',
+      'Pipefish', 'Trumpetfish', 'Cardinalfish', 'Longnose Hawkfish', 'Royal Gramma',
+      'Scorpionfish', 'Anemone Crab', 'Flame Angel', 'Bicolor Blenny', 'Chalk Bass',
+      'Fairy Basslet'
+    ]
+  },
+  {
+    id: 'deep-sea-creatures',
+    name: 'Deep Sea Creatures',
+    words: [
+      'Anglerfish', 'Viperfish', 'Gulper Eel', 'Giant Isopod', 'Lanternfish',
+      'Fangtooth', 'Blobfish', 'Dumpling Squid', 'Glass Squid', 'Barreleye',
+      'Tripod Fish', 'Deep Sea Dragonfish', 'Hatchetfish', 'Yeti Crab', 'Dumbo Octopus',
+      'Black Dragonfish', 'Deep Sea Cucumber', 'Barbelled Dragonfish', 'Pelican Eel', 'Snipe Eel',
+      'Deep Sea Shrimp', 'Bristlemouth', 'Cookiecutter Shark', 'Goblin Shark', 'Frilled Shark',
+      'Sixgill Shark', 'Fangtooth Moray', 'Spookfish', 'Rattail Fish'
+    ]
+  },
+  {
+    id: 'african-herbivores',
+    name: 'African Herbivores',
+    words: [
+      'African Elephant', 'Giraffe', 'Zebra', 'Wildebeest', 'Impala',
+      'Gazelle', 'White Rhinoceros', 'Hippopotamus', 'Warthog', 'Ostrich',
+      'Waterbuck', 'Kudu', 'Eland', 'Topi', "Grant's Gazelle",
+      'Springbok', 'Bushbuck', "Thomson's Gazelle", 'Greater Kudu', 'African Buffalo',
+      'Steenbok', 'Dik-dik', 'Hartebeest', 'Sable Antelope', 'Roan Antelope',
+      'Oribi', 'Klipspringer', 'Reedbuck', 'Bongo'
+    ]
+  },
+  {
+    id: 'rainforest',
+    name: 'Rainforest',
+    words: [
+      'Orangutan', 'Chimpanzee', 'Howler Monkey', 'Spider Monkey', 'Sloth',
+      'Tree Frog', 'Toucan', 'Leaf Tailed Gecko', 'Kinkajou', 'Harpy Eagle',
+      'Macaw', 'Poison Dart Frog', 'Jaguar', 'Tapir', 'Okapi',
+      'Anaconda', 'Capuchin Monkey', 'Tamarin', 'Agouti', 'Ocelot',
+      'Coati', 'Anteater', 'Aracari', 'Red-eyed Tree Frog', 'Golden Lion Tamarin',
+      'Spectacled Caiman', 'Green Iguana', 'Tree Kangaroo', 'Sunbittern', 'Glass Frog'
+    ]
+  },
+  {
+    id: 'venomous-poisonous-animals',
+    name: 'Venomous/Poisonous Animals',
+    words: [
+      'King Cobra', 'Black Mamba', 'Inland Taipan', 'Stonefish', 'Blue Ringed Octopus',
+      'Box Jellyfish', 'Cone Snail', 'Brazilian Wandering Spider', 'Poison Dart Frog', 'Gila Monster',
+      'Scorpionfish', 'Deathstalker Scorpion', 'Sydney Funnel-Web Spider', 'Brown Recluse', 'Boomslang',
+      'Coral Snake', 'Tiger Snake', 'Sea Snake', 'Puff Adder', 'Krait',
+      'Lionfish', 'Tarantula Hawk Wasp', 'Fire Salamander', 'Cane Toad', 'Komodo Dragon',
+      'Slow Loris', 'Beaded Lizard', 'Marbled Cone Snail', 'Irukandji Jellyfish', 'Pufferfish'
+    ]
+  },
+  {
+    id: 'desert-survivors',
+    name: 'Desert Survivors',
+    words: [
+      'Dromedary Camel', 'Fennec Fox', 'Meerkat', 'Sand Cat', 'Sidewinder Rattlesnake',
+      'Gila Woodpecker', 'Roadrunner', 'Addax', 'Jerboa', 'Thorny Devil',
+      'Desert Tortoise', 'Kangaroo Rat', 'Armadillo Lizard', 'Horned Lizard', 'Oryx',
+      'Desert Hedgehog', 'Saharan Silver Ant', 'Caracal', 'Desert Monitor', 'Scarab Beetle',
+      'Golden Mole', 'Sandfish Skink', 'Tufted Ground Squirrel', 'Lappet-faced Vulture', 'Arabian Oryx',
+      'Jackrabbit', 'Burrowing Owl', 'Desert Iguana', "Rüppell's Fox", 'Egret'
+    ]
+  },
+  {
+    id: 'farm-pasture-animals',
+    name: 'Farm And Pasture Animals',
+    words: [
+      'Cow', 'Pig', 'Sheep', 'Goat', 'Chicken',
+      'Duck', 'Turkey', 'Horse', 'Donkey', 'Goose',
+      'Rooster', 'Llama', 'Alpaca', 'Mule', 'Pigeon',
+      'Dog', 'Cat', 'Rabbit', 'Guinea Fowl', 'Peacock',
+      'Ferret', 'Bee', 'Pony', 'Ox', 'Water Buffalo',
+      'Yak', 'Emu', 'Sheepdog', 'Border Collie'
+    ]
+  },
+  {
+    id: 'freshwater-animals',
+    name: 'Freshwater Animals',
+    words: [
+      'River Otter', 'Beaver', 'Platypus', 'Piranha', 'Arapaima',
+      'Catfish', 'Alligator Snapping Turtle', 'Freshwater Stingray', 'Axolotl', 'Electric Eel',
+      'Gar', 'Bowfin', 'Carp', 'Trout', 'Bass',
+      'Perch', 'Muskellunge', 'Salamander', 'Newt', 'Crayfish',
+      'Pickerel', 'Minnow', 'Paddlefish', 'Loach', 'Koi',
+      'Sturgeon', 'Turtle', 'Mudskipper', 'Water Snake', 'Frog'
+    ]
+  },
+  {
+    id: 'insect-all-stars',
+    name: 'Insect All Stars',
+    words: [
+      'Monarch Butterfly', 'Honey Bee', 'Bumblebee', 'Praying Mantis', 'Ladybug',
+      'Dragonfly', 'Firefly', 'Stag Beetle', 'Rhino Beetle', 'Antlion',
+      'Atlas Moth', 'Luna Moth', 'Walking Stick', 'Leafcutter Ant', 'Bullet Ant',
+      'Dung Beetle', 'Jewel Beetle', 'Mosquito', 'Cicada', 'Termite',
+      'Cricket', 'Grasshopper', 'Katydid', 'Paper Wasp', 'Carpenter Bee',
+      'Horsefly', 'Weevil', 'Lacewing', 'Silverfish', 'Bee Fly',
+      'Glowworm', 'Assassin Bug', 'Giant Weta'
+    ]
+  },
+  {
+    id: 'island-coastal',
+    name: 'Island And Coastal',
+    words: [
+      'Galapagos Tortoise', 'Marine Iguana', 'Sally Lightfoot Crab', 'Frigatebird', 'Albatross',
+      'Kiwi', 'Quokka', 'Komodo Dragon', 'Coconut Crab', 'Blue Footed Booby',
+      'Sea Turtle', 'Shearwater', 'Puffin', 'Hermit Crab', 'Noddy Tern',
+      'Galapagos Penguin', 'Brown Pelican', 'Auklet', 'Tropicbird', 'Skink',
+      'Gecko', 'Frill-necked Lizard', 'Masked Booby', 'Fairy Penguin', 'Seaside Sparrow',
+      'Flying Fox', 'Monitor Lizard', 'Tern', 'Storm Petrel'
+    ]
+  },
 ];
 
 export const DEFAULT_WORD_LISTS: { id: string; name: string; words: string[]; isStudy?: boolean }[] = [
