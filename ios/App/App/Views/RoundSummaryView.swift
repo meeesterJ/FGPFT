@@ -39,26 +39,28 @@ struct RoundSummaryView: View {
     }
     
     var body: some View {
-        ZStack {
-            BackgroundView()
-            
-            VStack(spacing: 0) {
-                HStack(alignment: .top, spacing: 24) {
-                    leftColumn
-                    rightColumn
+        GeometryReader { geo in
+            ZStack {
+                BackgroundView()
+                
+                VStack(spacing: 0) {
+                    HStack(alignment: .top, spacing: 24) {
+                        leftColumn
+                        rightColumn
+                    }
+                    .padding(.horizontal, 32)
+                    .padding(.top, geo.safeAreaInsets.top + 40)
+                    
+                    Spacer()
+                    
+                    bottomButton
+                        .padding(.bottom, 32)
                 }
-                .padding(.horizontal, 32)
-                .padding(.top, 24)
                 
-                Spacer()
-                
-                bottomButton
-                    .padding(.bottom, 32)
-            }
-            
-            HomeButtonOverlay {
-                store.resetGame()
-                path = NavigationPath()
+                HomeButtonOverlay {
+                    store.resetGame()
+                    path = NavigationPath()
+                }
             }
         }
         .ignoresSafeArea()
@@ -181,8 +183,8 @@ struct RoundSummaryView: View {
                         .fontWeight(.bold)
                 }
             }
-            .frame(maxWidth: 300)
-            .padding(.vertical, 16)
+            .frame(maxWidth: 240)
+            .padding(.vertical, 12)
         }
         .buttonStyle(.borderedProminent)
         .tint(AppColors.pink)
