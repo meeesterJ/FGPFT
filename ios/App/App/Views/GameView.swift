@@ -254,9 +254,9 @@ struct GameView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(.green)
                 }
-                .padding(.trailing, 40)
+                .padding(.trailing, 24)
             } else {
-                Color.clear.frame(width: 40)
+                Color.clear.frame(width: 24)
             }
         }
     }
