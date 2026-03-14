@@ -390,24 +390,75 @@ struct GameView: View {
         return Color(hex: String(t.textHex.dropFirst()))
     }
     
+    private struct TextSizingResult {
+        let fontSize: CGFloat
+        let allowHyphenation: Bool
+    }
+    
+    private func calculateTextSizing(for text: String) -> TextSizingResult {
+        let words = text.split(separator: " ").map { String($0) }
+        let wordCount = words.count
+        let longestWordLength = words.map { $0.count }.max() ?? 0
+        let totalLength = text.count
+        let hasVeryLongWord = longestWordLength >= 13
+        
+        let maxSize: CGFloat = 72
+        let minSize: CGFloat = 36
+        
+        if wordCount == 1 {
+            if longestWordLength <= 10 {
+                return TextSizingResult(fontSize: maxSize, allowHyphenation: false)
+            } else if longestWordLength <= 14 {
+                return TextSizingResult(fontSize: 60, allowHyphenation: false)
+            } else {
+                return TextSizingResult(fontSize: 50, allowHyphenation: true)
+            }
+        }
+        
+        if hasVeryLongWord {
+            let sizeFromTotal: CGFloat = {
+                switch totalLength {
+                case 0...15: return maxSize
+                case 16...25: return 60
+                case 26...35: return 50
+                default: return 44
+                }
+            }()
+            return TextSizingResult(fontSize: max(sizeFromTotal, minSize), allowHyphenation: true)
+        } else {
+            let sizeFromTotal: CGFloat = {
+                switch totalLength {
+                case 0...12: return maxSize
+                case 13...20: return 60
+                case 21...30: return 50
+                case 31...40: return 44
+                default: return minSize
+                }
+            }()
+            return TextSizingResult(fontSize: max(sizeFromTotal, minSize), allowHyphenation: false)
+        }
+    }
+    
     @ViewBuilder
     private func wordDisplayView(for word: String) -> some View {
         let parsed = parseWordAnswer(word)
         let hasAnswer = parsed.answer != nil
+        let promptSizing = calculateTextSizing(for: parsed.prompt)
+        let answerSizing = parsed.answer.map { calculateTextSizing(for: $0) }
         
         VStack(spacing: 8) {
-            if store.studyMode && answerRevealed, let ans = parsed.answer {
+            if store.studyMode && answerRevealed, let ans = parsed.answer, let sizing = answerSizing {
                 Text(ans)
-                    .font(AppFonts.body(size: 120))
-                    .minimumScaleFactor(0.15)
+                    .font(AppFonts.body(size: sizing.fontSize))
+                    .minimumScaleFactor(0.6)
                     .lineLimit(nil)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 Text(parsed.prompt)
-                    .font(AppFonts.body(size: 120))
-                    .minimumScaleFactor(0.15)
+                    .font(AppFonts.body(size: promptSizing.fontSize))
+                    .minimumScaleFactor(0.6)
                     .lineLimit(nil)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white)
