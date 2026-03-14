@@ -27,6 +27,17 @@ struct GameView: View {
         .font(AppFonts.display(size: 56))
     }
     
+    private var multicoloredStudy: some View {
+        HStack(spacing: 0) {
+            Text("S").foregroundStyle(AppColors.cyan)
+            Text("t").foregroundStyle(AppColors.pink)
+            Text("u").foregroundStyle(AppColors.yellow)
+            Text("d").foregroundStyle(AppColors.green)
+            Text("y").foregroundStyle(AppColors.purple)
+        }
+        .font(AppFonts.display(size: 120))
+    }
+    
     var body: some View {
         ZStack {
             BackgroundView()
@@ -113,10 +124,14 @@ struct GameView: View {
             
             VStack {
                 Spacer()
-                multicoloredRound
-                Text("\(store.currentRound)")
-                    .font(AppFonts.display(size: 180))
-                    .foregroundStyle(AppColors.yellow)
+                if store.studyMode {
+                    multicoloredStudy
+                } else {
+                    multicoloredRound
+                    Text("\(store.currentRound)")
+                        .font(AppFonts.display(size: 180))
+                        .foregroundStyle(AppColors.yellow)
+                }
                 Spacer()
                 if !store.studyMode {
                     if showTiltToStart {
@@ -143,10 +158,14 @@ struct GameView: View {
     private var singleTeamReadyLayout: some View {
         VStack {
             Spacer()
-            multicoloredRound
-            Text("\(store.currentRound)")
-                .font(AppFonts.display(size: 180))
-                .foregroundStyle(AppColors.yellow)
+            if store.studyMode {
+                multicoloredStudy
+            } else {
+                multicoloredRound
+                Text("\(store.currentRound)")
+                    .font(AppFonts.display(size: 180))
+                    .foregroundStyle(AppColors.yellow)
+            }
             Spacer()
             if store.studyMode {
                 HStack(spacing: 8) {
