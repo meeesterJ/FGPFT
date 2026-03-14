@@ -162,7 +162,6 @@ struct AddCategorySheet: View {
     @State private var errorMessage: String?
     
     private var createPink: Color { Color(hex: "ec4899") }
-    private var inputBackground: Color { Color(hex: "140A24") }
     
     var body: some View {
         let navigationStack = NavigationStack {
@@ -179,7 +178,7 @@ struct AddCategorySheet: View {
                         .foregroundStyle(.white)
                         .padding(12)
                         .frame(maxWidth: .infinity)
-                        .background(inputBackground)
+                        .background(AppColors.inputBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     HStack {
                         Text("Study Mode")
@@ -191,7 +190,7 @@ struct AddCategorySheet: View {
                             .tint(AppColors.primaryPurple)
                     }
                     .padding(12)
-                    .background(inputBackground)
+                    .background(AppColors.inputBackground)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     Text("Words (one per line)")
                         .font(AppFonts.body(size: 15))
@@ -204,7 +203,7 @@ struct AddCategorySheet: View {
                         .frame(maxWidth: .infinity)
                         .frame(maxHeight: .infinity)
                         .padding(12)
-                        .background(inputBackground)
+                        .background(AppColors.inputBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     if let err = errorMessage {
                         Text(err)
@@ -287,7 +286,6 @@ struct EditCategorySheet: View {
     }
     
     private var editYellow: Color { Color(hex: "ca8a04") }
-    private var inputBackground: Color { Color(hex: "140A24") }
     
     var body: some View {
         let navigationStack = NavigationStack {
@@ -304,7 +302,7 @@ struct EditCategorySheet: View {
                         .foregroundStyle(.white)
                         .padding(12)
                         .frame(maxWidth: .infinity)
-                        .background(inputBackground)
+                        .background(AppColors.inputBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     HStack {
                         Text("Study Mode")
@@ -316,7 +314,7 @@ struct EditCategorySheet: View {
                             .tint(AppColors.primaryPurple)
                     }
                     .padding(12)
-                    .background(inputBackground)
+                    .background(AppColors.inputBackground)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     Text("Words (one per line)")
                         .font(AppFonts.body(size: 15))
@@ -329,7 +327,7 @@ struct EditCategorySheet: View {
                         .frame(maxWidth: .infinity)
                         .frame(maxHeight: .infinity)
                         .padding(12)
-                        .background(inputBackground)
+                        .background(AppColors.inputBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     if let err = errorMessage {
                         Text(err)

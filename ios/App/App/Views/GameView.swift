@@ -17,25 +17,11 @@ struct GameView: View {
     private var volume: Float { Float(store.soundVolume) / 100 }
     
     private var multicoloredRound: some View {
-        HStack(spacing: 0) {
-            Text("R").foregroundStyle(AppColors.cyan)
-            Text("o").foregroundStyle(AppColors.pink)
-            Text("u").foregroundStyle(AppColors.yellow)
-            Text("n").foregroundStyle(AppColors.green)
-            Text("d").foregroundStyle(AppColors.purple)
-        }
-        .font(AppFonts.display(size: 56))
+        MulticoloredRoundText(fontSize: 56)
     }
     
     private var multicoloredStudy: some View {
-        HStack(spacing: 0) {
-            Text("S").foregroundStyle(AppColors.cyan)
-            Text("t").foregroundStyle(AppColors.pink)
-            Text("u").foregroundStyle(AppColors.yellow)
-            Text("d").foregroundStyle(AppColors.green)
-            Text("y").foregroundStyle(AppColors.purple)
-        }
-        .font(AppFonts.display(size: 120))
+        MulticoloredStudyText(fontSize: 120)
     }
     
     var body: some View {
@@ -63,9 +49,9 @@ struct GameView: View {
             OrientationManager.shared.requestLandscapeIfNeeded()
             onAppear()
         }
-        .onChange(of: motion.isAtForehead) { new in showTiltToStart = new }
-        .onChange(of: showTiltToStart) { new in if new { motion.startTiltDetection(onForward: { DispatchQueue.main.async { triggerCountdown() } }, onBack: {}) } }
-        .onChange(of: store.isGameFinished) { _ in if store.isGameFinished && !store.studyMode { path.append(AppRoute.summary) } }
+        .onChange(of: motion.isAtForehead) { _, newValue in showTiltToStart = newValue }
+        .onChange(of: showTiltToStart) { _, newValue in if newValue { motion.startTiltDetection(onForward: { DispatchQueue.main.async { triggerCountdown() } }, onBack: {}) } }
+        .onChange(of: store.isGameFinished) { _, _ in if store.isGameFinished && !store.studyMode { path.append(AppRoute.summary) } }
     }
     
     private var mainGameContent: some View {
@@ -391,8 +377,7 @@ struct GameView: View {
     }
     
     private func teamColor(_ team: Int) -> Color {
-        let t = TeamThemeColor.forTeam(team)
-        return Color(hex: String(t.textHex.dropFirst()))
+        TeamThemeColor.forTeam(team).color
     }
     
     private struct TextSizingResult {
