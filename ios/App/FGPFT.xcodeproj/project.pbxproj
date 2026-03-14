@@ -34,6 +34,7 @@
 		A09B8D3D2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A09B8D3A2F623AE200D63BF4 /* Outfit-VariableFont_wght.ttf */; };
 		A09F5D942F63BD18001CDFCC /* ScoreboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A09F5D932F63BD18001CDFCC /* ScoreboardView.swift */; };
 		A09F5D952F63BD18001CDFCC /* RoundSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A09F5D922F63BD18001CDFCC /* RoundSummaryView.swift */; };
+		A09F5D972F63C542001CDFCC /* HomeButtonOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A09F5D962F63C542001CDFCC /* HomeButtonOverlay.swift */; };
 		B01C9D012F7240000D63BF4 /* Quick Start How To.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = B01C9D002F7240000D63BF4 /* Quick Start How To.jpeg */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		A09B8D3B2F623AE200D63BF4 /* TitanOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitanOne-Regular.ttf"; sourceTree = "<group>"; };
 		A09F5D922F63BD18001CDFCC /* RoundSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundSummaryView.swift; sourceTree = "<group>"; };
 		A09F5D932F63BD18001CDFCC /* ScoreboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreboardView.swift; sourceTree = "<group>"; };
+		A09F5D962F63C542001CDFCC /* HomeButtonOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeButtonOverlay.swift; sourceTree = "<group>"; };
 		B01C9D002F7240000D63BF4 /* Quick Start How To.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Quick Start How To.jpeg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,6 +121,7 @@
 		6AA100211FED79650016851F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A09F5D962F63C542001CDFCC /* HomeButtonOverlay.swift */,
 				A09F5D922F63BD18001CDFCC /* RoundSummaryView.swift */,
 				A09F5D932F63BD18001CDFCC /* ScoreboardView.swift */,
 				6AA100041FED79650016851F /* ContentView.swift */,
@@ -266,6 +269,7 @@
 				6AA100131FED79650016851F /* TermsView.swift in Sources */,
 				6AA100151FED79650016851F /* GameView.swift in Sources */,
 				6AA100171FED79650016851F /* SummaryView.swift in Sources */,
+				A09F5D972F63C542001CDFCC /* HomeButtonOverlay.swift in Sources */,
 				6AA100191FED79650016851F /* WordList.swift in Sources */,
 				6AA1001B1FED79650016851F /* TeamScore.swift in Sources */,
 				6AA1001D1FED79650016851F /* GameStore.swift in Sources */,

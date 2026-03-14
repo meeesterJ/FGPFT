@@ -392,7 +392,7 @@ struct GameView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 Text(parsed.prompt)
-                    .font(AppFonts.display(size: 120))
+                    .font(AppFonts.body(size: 120))
                     .minimumScaleFactor(0.15)
                     .lineLimit(nil)
                     .multilineTextAlignment(.center)
