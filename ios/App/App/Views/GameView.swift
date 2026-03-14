@@ -49,9 +49,9 @@ struct GameView: View {
             OrientationManager.shared.requestLandscapeIfNeeded()
             onAppear()
         }
-        .onChange(of: motion.isAtForehead) { _, newValue in showTiltToStart = newValue }
-        .onChange(of: showTiltToStart) { _, newValue in if newValue { motion.startTiltDetection(onForward: { DispatchQueue.main.async { triggerCountdown() } }, onBack: {}) } }
-        .onChange(of: store.isGameFinished) { _, _ in if store.isGameFinished && !store.studyMode { path.append(AppRoute.summary) } }
+        .onChange(of: motion.isAtForehead) { new in showTiltToStart = new }
+        .onChange(of: showTiltToStart) { new in if new { motion.startTiltDetection(onForward: { DispatchQueue.main.async { triggerCountdown() } }, onBack: {}) } }
+        .onChange(of: store.isGameFinished) { _ in if store.isGameFinished && !store.studyMode { path.append(AppRoute.summary) } }
     }
     
     private var mainGameContent: some View {
