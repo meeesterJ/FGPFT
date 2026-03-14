@@ -431,17 +431,17 @@ struct TeamNameRow: View {
         .onAppear {
             localName = store.teamNames.indices.contains(index) ? store.teamNames[index] : defaultName
         }
-        .onChange(of: localName) { _, newValue in
-            let trimmed = String(newValue.prefix(MAX_TEAM_NAME_LENGTH))
-            if trimmed != newValue {
+        .onChange(of: localName) { new in
+            let trimmed = String(new.prefix(MAX_TEAM_NAME_LENGTH))
+            if trimmed != new {
                 localName = trimmed
                 return
             }
             store.setTeamName(index: index, name: trimmed)
         }
-        .onChange(of: store.teamNames) { _, newNames in
-            if newNames.indices.contains(index), localName != newNames[index] {
-                localName = newNames[index]
+        .onChange(of: store.teamNames) { _ in
+            if store.teamNames.indices.contains(index), localName != store.teamNames[index] {
+                localName = store.teamNames[index]
             }
         }
     }
