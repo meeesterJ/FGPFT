@@ -1,6 +1,12 @@
 import SwiftUI
 import UIKit
 
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        indices.contains(index) ? self[index] : nil
+    }
+}
+
 struct SummaryView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var store: GameStore
@@ -19,127 +25,53 @@ struct SummaryView: View {
         return (winners.count > 1, winners[0], maxCorrect)
     }
     
+    private func isWinner(teamIndex: Int) -> Bool {
+        guard let info = winnerInfo, !info.isTie else { return false }
+        return (teamIndex + 1) == info.winnerTeam
+    }
+    
     var body: some View {
-        ZStack {
-            BackgroundView()
-            
-            VStack(spacing: 24) {
-                Spacer()
-                    .frame(height: 60)
+        GeometryReader { geo in
+            ZStack {
+                BackgroundView()
                 
-                Text("Game Over!")
-                    .font(AppFonts.display(size: 52))
-                    .foregroundStyle(AppColors.yellow)
-                
-                if !scores.isEmpty {
-                    VStack(spacing: 12) {
-                        ForEach(Array(scores.enumerated()), id: \.offset) { i, score in
-                            let teamNum = i + 1
-                            let isWinner = winnerInfo.map { !$0.isTie && score.correct == $0.maxCorrect } ?? false
-                            Button {
-                                selectedTeamIndex = i
-                            } label: {
-                                HStack {
-                                    if isWinner {
-                                        Image(systemName: "crown.fill")
-                                            .foregroundStyle(AppColors.yellow)
-                                    }
-                                    Text(store.numberOfTeams > 1 ? store.getTeamName(teamNumber: teamNum) : "Score")
-                                        .foregroundStyle(teamColor(teamNum))
-                                        .lineLimit(1)
-                                    Spacer()
-                                    HStack(spacing: 16) {
-                                        HStack(spacing: 4) {
-                                            Image(systemName: "checkmark.circle.fill")
-                                                .foregroundStyle(.green)
-                                            Text("\(score.correct)")
-                                                .foregroundStyle(.green)
-                                                .font(AppFonts.body(size: 17).monospacedDigit())
-                                        }
-                                        HStack(spacing: 4) {
-                                            Image(systemName: "xmark.circle.fill")
-                                                .foregroundStyle(.red)
-                                            Text("\(score.passed)")
-                                                .foregroundStyle(.red)
-                                                .font(AppFonts.body(size: 17).monospacedDigit())
-                                        }
-                                    }
-                                }
-                                .padding(16)
-                                .background(teamColor(teamNum).opacity(0.2))
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                    .padding(.horizontal, 24)
+                VStack(spacing: 16) {
+                    Spacer()
+                        .frame(height: geo.safeAreaInsets.top + 20)
                     
-                    if let info = winnerInfo {
-                        HStack(spacing: 8) {
-                            Image(systemName: "trophy.fill")
-                                .foregroundStyle(AppColors.yellow)
-                            Text(info.isTie ? "Tie!" : "\(store.getTeamName(teamNumber: info.winnerTeam)) wins!")
-                                .font(AppFonts.body(size: 18))
-                                .fontWeight(.bold)
-                                .foregroundStyle(AppColors.yellow)
-                        }
-                        .padding(12)
-                        .background(AppColors.yellow.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                }
-                
-                Spacer()
-                
-                VStack(spacing: 12) {
-                    Button {
-                        store.startGame()
-                        path = NavigationPath()
-                        path.append(AppRoute.game)
-                    } label: {
-                        Label("Play Again", systemImage: "arrow.clockwise")
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .font(AppFonts.body(size: 18))
-                            .fontWeight(.bold)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(AppColors.pink)
+                    Text("Game Over!")
+                        .font(AppFonts.display(size: 44))
+                        .foregroundStyle(AppColors.yellow)
                     
-                    Button {
-                        OrientationManager.shared.supportedOrientations = UIInterfaceOrientationMask.portrait
-                        store.resetGame()
-                        path = NavigationPath()
-                    } label: {
-                        Label("Home", systemImage: "house")
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .font(AppFonts.body(size: 18))
-                            .fontWeight(.bold)
+                    if !scores.isEmpty {
+                        scoresTable
+                            .padding(.horizontal, 24)
                     }
-                    .buttonStyle(.bordered)
-                    .foregroundStyle(.white)
+                    
+                    Spacer()
+                    
+                    bottomSection
+                        .padding(.horizontal, 32)
+                        .padding(.bottom, geo.safeAreaInsets.bottom + 24)
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 40)
-            }
-            .onAppear {
-                OrientationManager.shared.supportedOrientations = .landscapeLeft
-                if !playedSounds && store.soundEnabled {
-                    playedSounds = true
-                    AudioService.shared.play("gameEnd", volume: Float(store.soundVolume) / 100)
-                    AudioService.shared.play("applause", volume: Float(store.soundVolume) / 100)
+                
+                HomeButtonOverlay {
+                    OrientationManager.shared.supportedOrientations = UIInterfaceOrientationMask.portrait
+                    store.resetGame()
+                    path = NavigationPath()
                 }
-            }
-            
-            HomeButtonOverlay {
-                OrientationManager.shared.supportedOrientations = UIInterfaceOrientationMask.portrait
-                store.resetGame()
-                path = NavigationPath()
             }
         }
         .ignoresSafeArea()
         .navigationBarHidden(true)
+        .onAppear {
+            OrientationManager.shared.supportedOrientations = .landscapeLeft
+            if !playedSounds && store.soundEnabled {
+                playedSounds = true
+                AudioService.shared.play("gameEnd", volume: Float(store.soundVolume) / 100)
+                AudioService.shared.play("applause", volume: Float(store.soundVolume) / 100)
+            }
+        }
         .sheet(isPresented: Binding(
             get: { selectedTeamIndex != nil },
             set: { if !$0 { selectedTeamIndex = nil } }
@@ -153,6 +85,171 @@ struct SummaryView: View {
             } else {
                 EmptyView()
             }
+        }
+    }
+    
+    private var scoresTable: some View {
+        VStack(spacing: 4) {
+            headerRow
+                .padding(.bottom, 4)
+            
+            ForEach(Array(scores.enumerated()), id: \.offset) { i, totalScore in
+                teamRow(teamIndex: i, totalScore: totalScore)
+            }
+        }
+        .frame(maxWidth: 700)
+    }
+    
+    private var headerRow: some View {
+        HStack(spacing: 0) {
+            Text("Team")
+                .frame(width: 130, alignment: .leading)
+                .padding(.leading, 12)
+            
+            ForEach(1...store.totalRounds, id: \.self) { round in
+                Text("R\(round)")
+                    .frame(width: 60)
+            }
+            
+            Text("Total")
+                .frame(width: 70)
+                .padding(.trailing, 12)
+        }
+        .font(AppFonts.body(size: 13))
+        .foregroundStyle(.white.opacity(0.6))
+        .padding(.vertical, 8)
+        .background(Color.white.opacity(0.05))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+    
+    private func teamRow(teamIndex: Int, totalScore: TeamScore) -> some View {
+        let teamNum = teamIndex + 1
+        let winner = isWinner(teamIndex: teamIndex)
+        
+        return Button {
+            selectedTeamIndex = teamIndex
+        } label: {
+            HStack(spacing: 0) {
+                HStack(spacing: 6) {
+                    if winner {
+                        Image(systemName: "crown.fill")
+                            .font(.system(size: 14))
+                            .foregroundStyle(AppColors.yellow)
+                    }
+                    Text(store.numberOfTeams > 1 ? store.getTeamName(teamNumber: teamNum) : "Score")
+                        .font(AppFonts.body(size: 15))
+                        .fontWeight(.semibold)
+                        .foregroundStyle(teamColor(teamNum))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                .frame(width: 130, alignment: .leading)
+                .padding(.leading, 12)
+                
+                ForEach(0..<store.totalRounds, id: \.self) { roundIndex in
+                    let roundScore = store.teamScoreHistory[safe: roundIndex]?[safe: teamIndex] ?? TeamScore()
+                    VStack(spacing: 1) {
+                        HStack(spacing: 2) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 10))
+                            Text("\(roundScore.correct)")
+                                .font(AppFonts.body(size: 13).monospacedDigit())
+                        }
+                        .foregroundStyle(AppColors.green)
+                        
+                        HStack(spacing: 2) {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.system(size: 10))
+                            Text("\(roundScore.passed)")
+                                .font(AppFonts.body(size: 13).monospacedDigit())
+                        }
+                        .foregroundStyle(AppColors.pink)
+                    }
+                    .frame(width: 60)
+                }
+                
+                VStack(spacing: 1) {
+                    HStack(spacing: 2) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 11))
+                        Text("\(totalScore.correct)")
+                            .font(AppFonts.body(size: 15).monospacedDigit().bold())
+                    }
+                    .foregroundStyle(AppColors.green)
+                    
+                    HStack(spacing: 2) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 11))
+                        Text("\(totalScore.passed)")
+                            .font(AppFonts.body(size: 15).monospacedDigit().bold())
+                    }
+                    .foregroundStyle(AppColors.pink)
+                }
+                .frame(width: 70)
+                .padding(.trailing, 12)
+            }
+            .padding(.vertical, 10)
+            .background(
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(teamColor(teamNum).opacity(0.15))
+                    
+                    if winner {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        AppColors.yellow.opacity(0.2),
+                                        AppColors.yellow.opacity(0.05)
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                        
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(AppColors.yellow.opacity(0.5), lineWidth: 1.5)
+                    }
+                }
+            )
+        }
+        .buttonStyle(.plain)
+    }
+    
+    private var bottomSection: some View {
+        HStack(spacing: 24) {
+            if let info = winnerInfo {
+                HStack(spacing: 12) {
+                    Image(systemName: "trophy.fill")
+                        .font(.system(size: 40))
+                        .foregroundStyle(AppColors.yellow)
+                    
+                    Text(info.isTie ? "It's a Tie!" : "\(store.getTeamName(teamNumber: info.winnerTeam)) wins!")
+                        .font(AppFonts.display(size: 24))
+                        .foregroundStyle(AppColors.yellow)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(AppColors.yellow.opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+            }
+            
+            Button {
+                store.startGame()
+                path = NavigationPath()
+                path.append(AppRoute.game)
+            } label: {
+                Label("Play Again", systemImage: "arrow.clockwise")
+                    .font(AppFonts.body(size: 18))
+                    .fontWeight(.bold)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 16)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(AppColors.pink)
+            .frame(maxWidth: winnerInfo != nil ? .infinity : 300)
         }
     }
     

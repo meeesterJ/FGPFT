@@ -8,12 +8,8 @@ struct ScoreboardView: View {
         store.currentTeam >= store.numberOfTeams
     }
     
-    private var isLastRound: Bool {
-        store.currentRound >= store.totalRounds
-    }
-    
     private var isGameOver: Bool {
-        isLastTeamOfRound && isLastRound
+        store.willGameBeFinished
     }
     
     private var leaderIndex: Int? {
@@ -27,6 +23,7 @@ struct ScoreboardView: View {
     var body: some View {
         ZStack {
             BackgroundView()
+                .ignoresSafeArea()
             
             VStack(spacing: 24) {
                 Spacer()
@@ -49,7 +46,6 @@ struct ScoreboardView: View {
                 path = NavigationPath()
             }
         }
-        .ignoresSafeArea()
         .navigationBarHidden(true)
         .onAppear {
             OrientationManager.shared.supportedOrientations = .landscapeLeft

@@ -156,6 +156,9 @@ struct RoundSummaryView: View {
                 store.startGame()
                 path = NavigationPath()
                 path.append(AppRoute.game)
+            } else if store.willGameBeFinished {
+                store.prepareRound()
+                path.append(AppRoute.summary)
             } else {
                 path.append(AppRoute.scoreboard)
             }
@@ -164,6 +167,11 @@ struct RoundSummaryView: View {
                 if store.studyMode {
                     Image(systemName: "brain.head.profile")
                     Text("Get Smarter?")
+                        .font(AppFonts.body(size: 20))
+                        .fontWeight(.bold)
+                } else if store.willGameBeFinished {
+                    Image(systemName: "trophy.fill")
+                    Text("See Winner!")
                         .font(AppFonts.body(size: 20))
                         .fontWeight(.bold)
                 } else {

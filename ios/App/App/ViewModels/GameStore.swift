@@ -67,6 +67,7 @@ final class GameStore: ObservableObject {
     @Published var teamTotalScores: [TeamScore]
     @Published var teamRoundResults: [[(word: String, correct: Bool)]]
     @Published var teamGameResults: [[(word: String, correct: Bool)]]
+    @Published var teamScoreHistory: [[TeamScore]]
     
     private let userDefaults: UserDefaults
     private var builtInLists: [WordList] = []
@@ -104,6 +105,7 @@ final class GameStore: ObservableObject {
         self.teamTotalScores = []
         self.teamRoundResults = []
         self.teamGameResults = []
+        self.teamScoreHistory = []
         loadBuiltInLists()
         loadPersisted()
         setupPersistence()
@@ -326,6 +328,7 @@ final class GameStore: ObservableObject {
         teamTotalScores = emptyScores
         teamRoundResults = emptyResults
         teamGameResults = emptyResults
+        teamScoreHistory = []
         prepareRound()
     }
     
@@ -351,6 +354,7 @@ final class GameStore: ObservableObject {
         roundResults = []
         teamRoundScores = (0..<numberOfTeams).map { _ in TeamScore() }
         teamRoundResults = (0..<numberOfTeams).map { _ in [(word: String, correct: Bool)]() }
+        teamScoreHistory.append(Array(repeating: TeamScore(), count: numberOfTeams))
         currentWord = deck.first ?? "No Words!"
         isPlaying = false
         isRoundOver = false
@@ -416,12 +420,20 @@ final class GameStore: ObservableObject {
         if teamIndex >= 0 && teamIndex < teamGameResults.count {
             teamGameResults[teamIndex].append(contentsOf: roundResults)
         }
+        let roundIndex = currentRound - 1
+        if roundIndex >= 0 && roundIndex < teamScoreHistory.count && teamIndex >= 0 && teamIndex < numberOfTeams {
+            teamScoreHistory[roundIndex][teamIndex] = TeamScore(correct: correctCount, passed: passedCount)
+        }
         isPlaying = false
         isRoundOver = false
     }
     
     func isAllTeamsPlayed() -> Bool {
         currentTeam >= numberOfTeams
+    }
+    
+    var willGameBeFinished: Bool {
+        currentTeam >= numberOfTeams && currentRound >= totalRounds
     }
     
     func resetGame() {
@@ -437,6 +449,7 @@ final class GameStore: ObservableObject {
         teamTotalScores = []
         teamRoundResults = []
         teamGameResults = []
+        teamScoreHistory = []
     }
 }
 
