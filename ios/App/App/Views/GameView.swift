@@ -186,22 +186,33 @@ struct GameView: View {
     
     private var playingView: some View {
         HStack(spacing: 0) {
+            // Fixed three-slot layout: timer above, score centered, answer icon below.
+            // Slots always reserve space so the score does not shift when the icon appears.
             VStack(spacing: 4) {
-                if store.roundDuration > 0 && store.isPlaying {
-                    Text("\(timeLeft)s")
-                        .font(AppFonts.body(size: 48).monospacedDigit())
-                        .foregroundStyle(timeLeft <= 5 ? AppColors.pink : AppColors.green)
+                Group {
+                    if store.roundDuration > 0 && store.isPlaying {
+                        Text("\(timeLeft)s")
+                            .font(AppFonts.body(size: 48).monospacedDigit())
+                            .foregroundStyle(timeLeft <= 5 ? AppColors.pink : AppColors.green)
+                    } else {
+                        Color.clear
+                    }
                 }
+                .frame(height: 52)
+                
                 Text("\(store.currentScore)")
                     .font(AppFonts.body(size: 40))
                     .foregroundStyle(AppColors.yellow)
                 
-                if showAnswerFeedback, let correct = lastAnswerCorrect {
-                    Image(systemName: correct ? "checkmark.circle.fill" : "xmark.circle.fill")
+                ZStack {
+                    Color.clear
+                        .frame(width: 36, height: 36)
+                    Image(systemName: (lastAnswerCorrect ?? false) ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .font(.system(size: 36))
-                        .foregroundStyle(correct ? AppColors.green : AppColors.pink)
-                        .transition(.opacity)
+                        .foregroundStyle((lastAnswerCorrect ?? false) ? AppColors.green : AppColors.pink)
+                        .opacity(showAnswerFeedback ? 1 : 0)
                 }
+                .frame(width: 36, height: 36)
             }
             .frame(width: 80)
             .padding(.leading, 16)

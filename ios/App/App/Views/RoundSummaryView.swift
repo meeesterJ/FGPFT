@@ -17,7 +17,7 @@ struct RoundSummaryView: View {
     }
     
     private var multicoloredRound: some View {
-        MulticoloredRoundText(fontSize: 32)
+        MulticoloredRoundText(fontSize: 56)
     }
     
     private var multicoloredStudy: some View {
@@ -36,6 +36,7 @@ struct RoundSummaryView: View {
                     }
                     .padding(.horizontal, 32)
                     .padding(.top, geo.safeAreaInsets.top + 40)
+                    .padding(.bottom, geo.safeAreaInsets.bottom + 40)
                 }
                 
                 HomeButtonOverlay {
@@ -68,10 +69,10 @@ struct RoundSummaryView: View {
                 HStack(spacing: 8) {
                     multicoloredRound
                     Text("\(store.currentRound)")
-                        .font(AppFonts.display(size: 40))
+                        .font(AppFonts.display(size: 56))
                         .foregroundStyle(AppColors.yellow)
                     Text("COMPLETE")
-                        .font(AppFonts.body(size: 12))
+                        .font(AppFonts.body(size: 14))
                         .fontWeight(.medium)
                         .foregroundStyle(AppColors.mutedText)
                         .tracking(2)
@@ -82,18 +83,35 @@ struct RoundSummaryView: View {
                 .font(AppFonts.display(size: 96))
                 .foregroundStyle(AppColors.yellow)
             
-            Text("Points this round")
-                .font(AppFonts.body(size: 14))
-                .foregroundStyle(AppColors.mutedText)
-            
-            Spacer()
-                .frame(height: 16)
-            
-            bottomButton
+            pointsAndButtonRow
             
             Spacer()
         }
         .frame(maxWidth: .infinity)
+    }
+    
+    /// Adaptive row: horizontal on wide left column, vertical on narrow (e.g. small landscape) to avoid truncation.
+    private var pointsAndButtonRow: some View {
+        GeometryReader { rowGeo in
+            let narrow = rowGeo.size.width < 320
+            if narrow {
+                VStack(spacing: 10) {
+                    Text("Points this round")
+                        .font(AppFonts.body(size: 14))
+                        .foregroundStyle(AppColors.mutedText)
+                    bottomButton(expanded: true)
+                }
+                .frame(maxWidth: .infinity)
+            } else {
+                HStack(alignment: .center, spacing: 16) {
+                    Text("Points this round")
+                        .font(AppFonts.body(size: 14))
+                        .foregroundStyle(AppColors.mutedText)
+                    bottomButton(expanded: false)
+                }
+            }
+        }
+        .frame(minHeight: 56)
     }
     
     private var rightColumn: some View {
@@ -102,7 +120,7 @@ struct RoundSummaryView: View {
                 .font(AppFonts.body(size: 18))
                 .fontWeight(.bold)
                 .foregroundStyle(.white)
-                .padding(.top, 8)
+                .padding(.top, 12)
             
             ScrollView {
                 VStack(spacing: 8) {
@@ -136,7 +154,7 @@ struct RoundSummaryView: View {
         )
     }
     
-    private var bottomButton: some View {
+    private func bottomButton(expanded: Bool) -> some View {
         Button {
             if store.studyMode {
                 store.startGame()
@@ -170,7 +188,9 @@ struct RoundSummaryView: View {
                         .fontWeight(.semibold)
                 }
             }
-            .frame(maxWidth: 160)
+            .frame(maxWidth: expanded ? .infinity : 160)
+            .minimumScaleFactor(0.85)
+            .lineLimit(1)
             .padding(.vertical, 8)
         }
         .buttonStyle(.borderedProminent)

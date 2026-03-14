@@ -14,6 +14,7 @@ final class MotionService: ObservableObject {
     private let queue = OperationQueue()
     
     /// True when device is in landscape and held vertically (screen in vertical plane).
+    /// Only true when stableGravityX is set and stability sample count has been reached.
     @Published private(set) var isAtForehead = false
     /// Forward tilt past threshold (for correct during play).
     @Published private(set) var didTiltForward = false
@@ -24,7 +25,7 @@ final class MotionService: ObservableObject {
     
     private var onForward: (() -> Void)?
     private var onBack: (() -> Void)?
-    private var baseline: (beta: Double, gamma: Double)?
+    private var baselineTiltAngle: Double?
     private let stabilitySamples = 15
     private var sampleCount = 0
     private var stableGravityX: Double?
@@ -56,7 +57,7 @@ final class MotionService: ObservableObject {
         didTiltForward = false
         didTiltBack = false
         tiltState = .neutral
-        baseline = nil
+        baselineTiltAngle = nil
         sampleCount = 0
         stableGravityX = nil
     }
@@ -68,14 +69,14 @@ final class MotionService: ObservableObject {
         didTiltForward = false
         didTiltBack = false
         tiltState = .neutral
-        baseline = nil
+        baselineTiltAngle = nil
         lastTiltTime = nil
     }
     
     func stopTiltDetection() {
         onForward = nil
         onBack = nil
-        baseline = nil
+        baselineTiltAngle = nil
         tiltState = .neutral
     }
     
@@ -94,30 +95,52 @@ final class MotionService: ObservableObject {
         } else {
             sampleCount = 0
             isAtForehead = false
+            stableGravityX = nil
+            baselineTiltAngle = nil
         }
         
         guard isAtForehead else { return }
         guard onForward != nil || onBack != nil else { return }
+        guard let stableX = stableGravityX else { return }
         
-        let beta = data.attitude.pitch * 180 / .pi
-        let gamma = data.attitude.roll * 180 / .pi
+        // Detect if gravity.x sign has flipped from baseline - this means phone
+        // orientation has changed significantly and we need to recalibrate
+        let signFlipped = (stableX >= 0 && g.x < 0) || (stableX < 0 && g.x >= 0)
+        if signFlipped {
+            stableGravityX = nil
+            baselineTiltAngle = nil
+            sampleCount = 0
+            isAtForehead = false
+            return
+        }
         
-        if baseline == nil {
-            baseline = (beta, gamma)
+        // Gravity-based tilt angle calculation
+        // When vertical at forehead: abs(gravity.x) ≈ 1, gravity.z ≈ 0
+        // Forward tilt (top away from face): gravity.z changes
+        // Backward tilt (top toward face): gravity.z changes opposite direction
+        //
+        // Use abs(g.x) for denominator (always positive) and apply sign correction
+        // based on stableGravityX to ensure consistent tilt direction regardless
+        // of whether gravity.x is positive or negative when phone is at forehead
+        let signCorrection = stableX >= 0 ? 1.0 : -1.0
+        let tiltAngle = signCorrection * atan2(g.z, abs(g.x)) * 180 / .pi
+        
+        if baselineTiltAngle == nil {
+            baselineTiltAngle = tiltAngle
             tiltState = .neutral
             return
         }
-        guard let b = baseline else { return }
-        let deltaBeta = beta - b.beta
+        guard let baseline = baselineTiltAngle else { return }
+        let tiltDelta = tiltAngle - baseline
         
-        updateTiltState(deltaBeta: deltaBeta)
+        updateTiltState(tiltDelta: tiltDelta)
     }
     
-    private func updateTiltState(deltaBeta: Double) {
-        let absDelta = abs(deltaBeta)
+    private func updateTiltState(tiltDelta: Double) {
+        let absDelta = abs(tiltDelta)
         let isInNeutralZone = absDelta <= neutralThreshold
-        let isTiltedForward = deltaBeta > tiltThreshold
-        let isTiltedBack = deltaBeta < -tiltThreshold
+        let isTiltedForward = tiltDelta > tiltThreshold
+        let isTiltedBack = tiltDelta < -tiltThreshold
         
         switch tiltState {
         case .neutral:
