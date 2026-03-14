@@ -21,31 +21,33 @@ struct ScoreboardView: View {
     }
     
     var body: some View {
-        ZStack {
-            BackgroundView()
-                .ignoresSafeArea()
-            
-            VStack(spacing: 24) {
-                Spacer()
+        GeometryReader { geo in
+            ZStack {
+                BackgroundView()
                 
-                Text("Scoreboard")
-                    .font(AppFonts.display(size: 44))
-                    .foregroundStyle(AppColors.yellow)
+                VStack(spacing: 24) {
+                    Spacer()
+                    
+                    Text("Scoreboard")
+                        .font(AppFonts.display(size: 44))
+                        .foregroundStyle(AppColors.yellow)
+                    
+                    scoresGrid
+                    
+                    Spacer()
+                    
+                    bottomButton
+                        .padding(.bottom, 32)
+                }
+                .padding(.horizontal, 32)
                 
-                scoresGrid
-                
-                Spacer()
-                
-                bottomButton
-                    .padding(.bottom, 32)
-            }
-            .padding(.horizontal, 32)
-            
-            HomeButtonOverlay {
-                store.resetGame()
-                path = NavigationPath()
+                HomeButtonOverlay {
+                    store.resetGame()
+                    path = NavigationPath()
+                }
             }
         }
+        .ignoresSafeArea()
         .navigationBarHidden(true)
         .onAppear {
             OrientationManager.shared.supportedOrientations = .landscapeLeft
@@ -149,7 +151,7 @@ struct ScoreboardView: View {
                 .padding(.vertical, 4)
             }
         }
-        .frame(maxWidth: 500)
+        .frame(maxWidth: 700)
         .onAppear {
             withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) {
                 leaderGlow = true
@@ -179,7 +181,7 @@ struct ScoreboardView: View {
                         .fontWeight(.bold)
                     Image(systemName: "arrow.right")
                 } else {
-                    Text("Next Team Ready?")
+                    Text("\(store.getTeamName(teamNumber: store.currentTeam + 1)) Ready?")
                         .font(AppFonts.body(size: 20))
                         .fontWeight(.bold)
                     Image(systemName: "arrow.right")
