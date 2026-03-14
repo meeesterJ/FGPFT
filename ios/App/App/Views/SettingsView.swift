@@ -431,17 +431,17 @@ struct TeamNameRow: View {
         .onAppear {
             localName = store.teamNames.indices.contains(index) ? store.teamNames[index] : defaultName
         }
-        .onChange(of: localName) { new in
-            let trimmed = String(new.prefix(MAX_TEAM_NAME_LENGTH))
-            if trimmed != new {
+        .onChange(of: localName) { _, newValue in
+            let trimmed = String(newValue.prefix(MAX_TEAM_NAME_LENGTH))
+            if trimmed != newValue {
                 localName = trimmed
                 return
             }
             store.setTeamName(index: index, name: trimmed)
         }
-        .onChange(of: store.teamNames) { _ in
-            if store.teamNames.indices.contains(index), localName != store.teamNames[index] {
-                localName = store.teamNames[index]
+        .onChange(of: store.teamNames) { _, newNames in
+            if newNames.indices.contains(index), localName != newNames[index] {
+                localName = newNames[index]
             }
         }
     }
@@ -450,26 +450,6 @@ struct TeamNameRow: View {
         let h = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
         return Color(hex: h)
     }
-}
-
-enum AppColors {
-    static let pink = Color(hex: "f472b6")
-    static let cyan = Color(red: 0.13, green: 0.83, blue: 0.93)
-    static let purple = Color(red: 0.65, green: 0.55, blue: 0.98)
-    static let green = Color(red: 0.29, green: 0.87, blue: 0.5)
-    static let yellow = Color(red: 0.98, green: 0.8, blue: 0.09)
-    /// Destructive actions (e.g. delete); matches web --destructive: 350 85% 60%
-    static let destructive = Color(hex: "e84a6f")
-    static let mutedText = Color.white.opacity(0.7)
-    /// Web app primary purple (--primary: 270 90% 65%) for sliders and accents
-    static let primaryPurple = Color(hex: "9333ea")
-    /// Nav bar backgrounds matching main menu button colors (exact hex), with transparency
-    static let barTeal = Color(hex: "0891b2").opacity(0.92)
-    static let barPurple = Color(hex: "9333ea").opacity(0.92)
-    static let barYellow = Color(hex: "ca8a04").opacity(0.92)
-    static let barPink = Color(hex: "ec4899").opacity(0.92)
-    /// Shared top/bottom bar: transparent purple (#140A24) so content shows through on all screens
-    static let barBackground = Color(hex: "140A24").opacity(0.92)
 }
 
 extension View {
