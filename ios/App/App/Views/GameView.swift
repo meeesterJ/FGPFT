@@ -248,7 +248,7 @@ struct GameView: View {
             }
             
             if store.showButtons || !store.tiltEnabled {
-                VStack(spacing: 16) {
+                VStack {
                     Button {
                         handlePass()
                     } label: {
@@ -258,6 +258,10 @@ struct GameView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.red)
+                    .padding(.top, 16)
+                    
+                    Spacer()
+                    
                     Button {
                         handleCorrect()
                     } label: {
@@ -267,6 +271,7 @@ struct GameView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.green)
+                    .padding(.bottom, 16)
                 }
                 .padding(.trailing, 24)
             } else {
