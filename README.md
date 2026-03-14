@@ -1,7 +1,7 @@
 Family Guess Party Fun Time (FGPFT) is a mobile-friendly party guessing game and study tool, featuring tilt gestures, customizable word lists, team scoring, and Study Mode for language learning and flashcard review.
 
 ## Project Overview
-FGPFT delivers an interactive guessing game and learning tool built with React and TypeScript. Players hold the phone to their forehead while others give clues — tilt forward for correct, tilt back to pass. Study Mode turns the same format into a flashcard-style review tool with helper text and hidden answers. The app launches with 27 curated categories (9 game, 18 study) totaling 2,187 words.
+FGPFT delivers an interactive guessing game and learning tool built as a native iOS app. Players hold the phone to their forehead while others give clues — tilt forward for correct, tilt back to pass. Study Mode turns the same format into a flashcard-style review tool with helper text and hidden answers. The app launches with 27 curated categories (9 game, 18 study) totaling 2,201 words.
 
 ## Key Features
 - Tilt-based gesture controls or on-screen buttons — your choice
@@ -15,17 +15,17 @@ FGPFT delivers an interactive guessing game and learning tool built with React a
 - Responsive design optimized for mobile
 
 ## Game Mode Categories (9)
-Movies, Animals, Actions, Household Objects, Landforms, Human Body, Space, Ancient World, Mythology
+Charades - Actions, Charades - Food & Snacks, Charades - Animals, Animals - Easy, Animals - Medium, Animals - Hard, Household Objects, Christmas Kids Party, Family Fun
 
 ## Study Mode Categories (18)
-Vietnamese, Chinese (Mandarin), Spanish, Chemistry, US History, World Capitals, Geopolitics, Pioneers, and more — covering language learning, science, history, and geography.
+US Geography, World Geography, Mandarin, Mandarin-Beginner, Mandarin-Intermediate, Vietnamese-Beginner, Vietnamese-Intermediate, Spanish-Beginner, Spanish-Intermediate, Chemistry, US History, Landforms, Human Body, Space, Ancient World, Geopolitics, Pioneers, Mythology
 
 ## Default Settings
 - Mode: Game Mode
 - Timer: 30 seconds per round
 - Rounds: 3 rounds per game
 - Teams: 1
-- Selected Category: Animals
+- Selected Category: Animals - Easy
 - Show Buttons: Off (tilt-only mode)
 - Haptic Feedback: On
 - Sound: On in Game Mode, Off in Study Mode (auto-toggles when switching modes)
@@ -38,24 +38,24 @@ Vietnamese, Chinese (Mandarin), Spanish, Chemistry, US History, World Capitals, 
 - Changes to built-in lists (edits, soft deletes, permanent deletes)
 - Study Mode / Game Mode selection
 
-## Quick Start
-Visit the live app at https://familyguesspartyfuntime.replit.app/ to play immediately — no setup required.
+## Building the App
+Open `ios/App/FGPFT.xcodeproj` in Xcode, select your target device, and build. Requires Xcode 15+ and iOS 15.0+.
 
 ## Tech Stack
-- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS v4, shadcn/ui
-- **State Management**: Zustand with localStorage persistence
-- **Routing**: Wouter
-- **Backend**: Node.js with Express (serves the frontend)
-- **Native-Ready**: Platform abstraction layer for Capacitor/iOS deployment
+- **Platform**: Native iOS (SwiftUI)
+- **Language**: Swift
+- **State Management**: Combine with UserDefaults persistence
+- **Motion Detection**: CoreMotion for tilt gestures
+- **Audio**: AVFoundation for sound effects
+- **Minimum iOS**: iOS 15.0+
 
 ## Contributing
-Fork on GitHub or Replit, make changes, and submit a pull request with details on what you fixed or added. Include screenshots of gameplay improvements. Test on multiple devices.
+Fork on GitHub, make changes, and submit a pull request with details on what you fixed or added. Include screenshots of gameplay improvements. Test on multiple devices.
 
 ## License
 Licensed under the MIT License (LICENSE.txt)
 
 ## Credits
-- Built on Replit: Instant deployment and sharing powered by [Replit](https://replit.com/)
 - Fonts:
     [Outfit](https://fonts.google.com/specimen/Outfit)
     [Titan One](https://fonts.google.com/specimen/Titan+One) from Google Fonts under [SIL Open Font License](https://scripts.sil.org/OFL)
