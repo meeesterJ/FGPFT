@@ -6,13 +6,14 @@ struct GameView: View {
     @StateObject private var motion = MotionService()
     
     @State private var isWaitingForReady = true
-    @State private var showTiltToStart = false
     @State private var isCountingDown = false
     @State private var countdownSec = 3
     @State private var isHandoff = false
     @State private var timeLeft: Int = 30
     @State private var timerTask: Task<Void, Never>?
     @State private var answerRevealed = false
+    @State private var lastAnswerCorrect: Bool? = nil
+    @State private var showAnswerFeedback = false
     
     private var volume: Float { Float(store.soundVolume) / 100 }
     
@@ -49,8 +50,6 @@ struct GameView: View {
             OrientationManager.shared.requestLandscapeIfNeeded()
             onAppear()
         }
-        .onChange(of: motion.isAtForehead) { new in showTiltToStart = new }
-        .onChange(of: showTiltToStart) { new in if new { motion.startTiltDetection(onForward: { DispatchQueue.main.async { triggerCountdown() } }, onBack: {}) } }
         .onChange(of: store.isGameFinished) { _ in if store.isGameFinished && !store.studyMode { path.append(AppRoute.summary) } }
     }
     
@@ -78,9 +77,7 @@ struct GameView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
-            if store.studyMode {
-                triggerCountdown()
-            }
+            triggerCountdown()
         }
     }
     
@@ -120,19 +117,12 @@ struct GameView: View {
                 }
                 Spacer()
                 if !store.studyMode {
-                    if showTiltToStart {
-                        HStack(spacing: 8) {
-                            Image(systemName: "iphone")
-                                .font(.system(size: 18))
-                            Text("Tilt forward to start")
-                        }
-                        .font(AppFonts.body(size: 20))
-                        .foregroundStyle(AppColors.mutedText)
-                    } else if !(store.showButtons || !store.tiltEnabled) {
-                        Text("Hold phone at forehead…")
-                            .font(AppFonts.body(size: 20))
-                            .foregroundStyle(AppColors.mutedText)
+                    VStack(spacing: 4) {
+                        Text("Raise phone to forehead.")
+                        Text("Tap screen when ready.")
                     }
+                    .font(AppFonts.body(size: 20))
+                    .foregroundStyle(AppColors.mutedText)
                 }
                 Spacer()
                     .frame(height: 60)
@@ -161,43 +151,27 @@ struct GameView: View {
                 }
                 .font(AppFonts.body(size: 20))
                 .foregroundStyle(AppColors.mutedText)
-            } else if store.showButtons || !store.tiltEnabled {
-                if showTiltToStart {
-                    HStack(spacing: 8) {
-                        Image(systemName: "iphone")
-                            .font(.system(size: 18))
-                        Text("Tilt forward to start")
-                    }
-                    .font(AppFonts.body(size: 20))
-                    .foregroundStyle(AppColors.mutedText)
-                } else {
-                    Text("Hold phone at forehead, or tap Start")
-                        .font(AppFonts.body(size: 20))
-                        .foregroundStyle(AppColors.mutedText)
-                }
-                Button {
-                    triggerCountdown()
-                } label: {
-                    Label("Start", systemImage: "play.fill")
-                        .font(AppFonts.body(size: 22))
-                        .padding(.horizontal, 32)
-                        .padding(.vertical, 16)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(AppColors.pink)
-                .padding(.top, 8)
-            } else if showTiltToStart {
-                HStack(spacing: 8) {
-                    Image(systemName: "iphone")
-                        .font(.system(size: 18))
-                    Text("Tilt forward to start")
+            } else {
+                VStack(spacing: 4) {
+                    Text("Raise phone to forehead.")
+                    Text("Tap screen when ready.")
                 }
                 .font(AppFonts.body(size: 20))
                 .foregroundStyle(AppColors.mutedText)
-            } else {
-                Text("Hold phone at forehead…")
-                    .font(AppFonts.body(size: 20))
-                    .foregroundStyle(AppColors.mutedText)
+                
+                if store.showButtons || !store.tiltEnabled {
+                    Button {
+                        triggerCountdown()
+                    } label: {
+                        Label("Start", systemImage: "play.fill")
+                            .font(AppFonts.body(size: 22))
+                            .padding(.horizontal, 32)
+                            .padding(.vertical, 16)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppColors.pink)
+                    .padding(.top, 8)
+                }
             }
             Spacer()
                 .frame(height: 60)
@@ -221,9 +195,17 @@ struct GameView: View {
                 Text("\(store.currentScore)")
                     .font(AppFonts.body(size: 40))
                     .foregroundStyle(AppColors.yellow)
+                
+                if showAnswerFeedback, let correct = lastAnswerCorrect {
+                    Image(systemName: correct ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        .font(.system(size: 36))
+                        .foregroundStyle(correct ? AppColors.green : AppColors.pink)
+                        .transition(.opacity)
+                }
             }
             .frame(width: 80)
             .padding(.leading, 16)
+            .animation(.easeInOut(duration: 0.2), value: showAnswerFeedback)
             
             if let word = store.currentWord, word != "No Words!" {
                 wordDisplayView(for: word)
@@ -275,7 +257,6 @@ struct GameView: View {
             Button {
                 isHandoff = false
                 isWaitingForReady = true
-                motion.startMonitoringForReady()
             } label: {
                 Text("Ready!")
                     .font(AppFonts.body(size: 24))
@@ -294,11 +275,7 @@ struct GameView: View {
             store.prepareRound()
         }
         isWaitingForReady = true
-        showTiltToStart = store.studyMode
         isHandoff = store.numberOfTeams > 1 && store.currentTeam > 1
-        if !isHandoff && !store.studyMode {
-            motion.startMonitoringForReady()
-        }
         timeLeft = store.roundDuration == 0 ? 0 : min(store.roundDuration, 599)
     }
     
@@ -320,7 +297,17 @@ struct GameView: View {
             isCountingDown = false
             store.beginRound()
             startTimer()
+            startGameplayTiltDetection()
         }
+    }
+    
+    private func startGameplayTiltDetection() {
+        guard store.tiltEnabled && !store.studyMode else { return }
+        motion.startMonitoringForReady()
+        motion.startTiltDetection(
+            onForward: { [self] in DispatchQueue.main.async { handleCorrect() } },
+            onBack: { [self] in DispatchQueue.main.async { handlePass() } }
+        )
     }
     
     private func startTimer() {
@@ -347,6 +334,7 @@ struct GameView: View {
     
     private func showTeamScoreOrNext() {
         timerTask?.cancel()
+        motion.stopTiltDetection()
         motion.stopMonitoring()
         path.append(AppRoute.roundSummary)
     }
@@ -356,6 +344,7 @@ struct GameView: View {
         if store.hapticEnabled { HapticService.correct() }
         if store.soundEnabled { AudioService.shared.play("correct", volume: volume) }
         answerRevealed = false
+        showFeedback(correct: true)
         store.nextWord(correct: true)
         checkDeckOrTime()
     }
@@ -365,8 +354,18 @@ struct GameView: View {
         if store.hapticEnabled { HapticService.pass() }
         if store.soundEnabled { AudioService.shared.play("pass", volume: volume) }
         answerRevealed = false
+        showFeedback(correct: false)
         store.nextWord(correct: false)
         checkDeckOrTime()
+    }
+    
+    private func showFeedback(correct: Bool) {
+        lastAnswerCorrect = correct
+        showAnswerFeedback = true
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            showAnswerFeedback = false
+        }
     }
     
     private func checkDeckOrTime() {
