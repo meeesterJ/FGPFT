@@ -88,10 +88,10 @@ struct GameView: View {
     }
     
     private var multiTeamReadyLayout: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 16) {
+        HStack(spacing: 0) {
+            VStack(alignment: .center, spacing: 28) {
                 Spacer()
-                Text(store.getTeamName(teamNumber: store.currentTeam))
+                Text("\(store.getTeamName(teamNumber: store.currentTeam)) Ready?")
                     .font(AppFonts.display(size: 44))
                     .foregroundStyle(teamColor(store.currentTeam))
                 
@@ -109,9 +109,7 @@ struct GameView: View {
                 }
                 Spacer()
             }
-            .padding(.leading, 40)
-            
-            Spacer()
+            .frame(maxWidth: .infinity)
             
             VStack {
                 Spacer()
@@ -138,10 +136,7 @@ struct GameView: View {
                 Spacer()
                     .frame(height: 60)
             }
-            
-            Spacer()
-            
-            Color.clear.frame(width: 140)
+            .frame(maxWidth: .infinity)
         }
     }
     
