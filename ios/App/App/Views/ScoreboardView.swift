@@ -30,7 +30,7 @@ struct ScoreboardView: View {
                 
                 Text("Scoreboard")
                     .font(AppFonts.display(size: 44))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(AppColors.yellow)
                 
                 scoresGrid
                 
