@@ -4,6 +4,7 @@ struct CategoriesView: View {
     @EnvironmentObject var store: GameStore
     @State private var showCreate = false
     @State private var editingList: WordList?
+    @State private var scrollToListId: String?
     
     private var effectiveBuiltIn: [WordList] {
         store.getEffectiveBuiltInLists().filter {
@@ -29,6 +30,14 @@ struct CategoriesView: View {
                         .foregroundStyle(AppColors.mutedText)
                     Spacer()
                     Button {
+                        store.clearListSelections()
+                    } label: {
+                        Text("Clear Selections")
+                            .font(AppFonts.body(size: 15).weight(.medium))
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppColors.green)
+                    Button {
                         showCreate = true
                     } label: {
                         Label("Create List", systemImage: "plus")
@@ -39,21 +48,29 @@ struct CategoriesView: View {
                 }
                 .padding(.horizontal, 4)
                 
-                LazyVStack(spacing: 12) {
-                    ForEach(allLists) { list in
-                        CategoryRow(
-                            list: list,
-                            isSelected: store.selectedListIds.contains(list.id),
-                            onToggle: { store.toggleListSelection(id: list.id) },
-                            onEdit: { editingList = list },
-                            onDelete: {
-                                if list.isCustom == true {
-                                    store.removeCustomList(id: list.id)
-                                } else {
-                                    store.deleteBuiltInList(id: list.id)
+                ScrollViewReader { proxy in
+                    LazyVStack(spacing: 12) {
+                        ForEach(allLists) { list in
+                            CategoryRow(
+                                list: list,
+                                isSelected: store.selectedListIds.contains(list.id),
+                                onToggle: { store.toggleListSelection(id: list.id) },
+                                onEdit: { editingList = list },
+                                onDelete: {
+                                    if list.isCustom == true {
+                                        store.removeCustomList(id: list.id)
+                                    } else {
+                                        store.deleteBuiltInList(id: list.id)
+                                    }
                                 }
-                            }
-                        )
+                            )
+                            .id(list.id)
+                        }
+                    }
+                    .onChange(of: scrollToListId) { newId in
+                        guard let id = newId else { return }
+                        proxy.scrollTo(id, anchor: .center)
+                        scrollToListId = nil
                     }
                 }
                 
@@ -68,7 +85,8 @@ struct CategoriesView: View {
                     .padding(.top, 8)
                 }
             }
-            .padding(20)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 0)
             .padding(.bottom, 40)
         }
         .transparentPurpleBottomBar()
@@ -83,8 +101,20 @@ struct CategoriesView: View {
                     .foregroundStyle(AppColors.cyan)
             }
         }
+        .onDisappear {
+            if store.selectedListIds.isEmpty, let first = allLists.first {
+                store.setSelectedListIds([first.id])
+            }
+        }
         .sheet(isPresented: $showCreate) {
-            AddCategorySheet(store: store) { showCreate = false }
+            AddCategorySheet(store: store) { createdListId in
+                showCreate = false
+                if let id = createdListId {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        scrollToListId = id
+                    }
+                }
+            }
         }
         .sheet(item: $editingList) { list in
             EditCategorySheet(store: store, list: list) { editingList = nil }
@@ -155,7 +185,7 @@ struct CategoryRow: View {
 
 struct AddCategorySheet: View {
     @ObservedObject var store: GameStore
-    let onDismiss: () -> Void
+    let onDismiss: (String?) -> Void
     @State private var name = ""
     @State private var wordsText = ""
     @State private var isStudy = false
@@ -221,7 +251,7 @@ struct AddCategorySheet: View {
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { onDismiss() }
+                    Button("Cancel") { onDismiss(nil) }
                         .font(AppFonts.body(size: 17))
                         .foregroundStyle(.white)
                 }
@@ -256,7 +286,7 @@ struct AddCategorySheet: View {
         }
         let list = WordList(id: "custom-\(Int(Date().timeIntervalSince1970))", name: name.trimmingCharacters(in: .whitespaces), words: words, isCustom: true, isStudy: isStudy)
         store.addCustomList(list)
-        onDismiss()
+        onDismiss(list.id)
     }
 }
 
