@@ -48,10 +48,10 @@ struct ModeSettings: Codable {
 
 **Persisted state:** Add to `PersistedGameState`:
 
-- `gameModeSettings: ModeSettings`
-- `studyModeSettings: ModeSettings`
+- `gameModeSettings: ModeSettings?` (optional for backward compatibility)
+- `studyModeSettings: ModeSettings?` (optional for backward compatibility)
 
-Keep the existing single `soundEnabled`, `soundVolume`, `hapticEnabled`, `tiltEnabled`, `showButtons` in persistence only for **migration** (see below). After migration they can be removed from the persisted model; the single source of truth for "what's on screen" is the live `@Published` vars, which are filled from the active mode's slot.
+When decoding, if either is `nil`, treat as "old format" and run migration (see §3). Keep the existing single `soundEnabled`, `soundVolume`, `hapticEnabled`, `tiltEnabled`, `showButtons` in `PersistedGameState` for migration only; after migration you can stop writing them and rely on the two slots. The single source of truth for "what's on screen" is the live `@Published` vars, filled from the active mode's slot.
 
 **Live state:** Keep the existing `@Published` vars (`soundEnabled`, `soundVolume`, `hapticEnabled`, `tiltEnabled`, `showButtons`) as the single set the UI binds to. The store also holds `gameModeSettings` and `studyModeSettings` (either persisted only, or as private vars updated on load and on mode switch).
 
@@ -59,10 +59,10 @@ Keep the existing single `soundEnabled`, `soundVolume`, `hapticEnabled`, `tiltEn
 
 ## 3. Migration (first run with new code)
 
-- If persisted data has no `gameModeSettings` / `studyModeSettings`, derive them from the existing single fields:
-  - **Current mode's slot**: use current `soundEnabled`, `soundVolume`, `hapticEnabled`, `tiltEnabled`, `showButtons`.
+- If decoded `gameModeSettings` or `studyModeSettings` is `nil` (old format), derive both slots:
+  - **Current mode's slot**: use decoded `soundEnabled`, `soundVolume`, `hapticEnabled`, `tiltEnabled`, `showButtons`.
   - **Other mode's slot**: use the **First-install defaults** for that mode (see table above). Game defaults: sound on, volume 100%, haptic on, tilt on, buttons off. Study defaults: sound off, volume 100%, haptic off, tilt off, buttons on.
-- Bump `storageVersion` (or equivalent) and persist the two new fields so next launch is normal.
+- Assign the two slots in memory and apply the current mode's slot to the live vars. Bump `storageVersion` and persist so the next launch has the new format.
 
 ---
 
@@ -83,8 +83,8 @@ Keep the existing single `soundEnabled`, `soundVolume`, `hapticEnabled`, `tiltEn
 
 ## 5. GameStore changes (summary)
 
-- Add `ModeSettings` and default helpers (e.g. `static func gameDefaults` / `studyDefaults` using the **First-install defaults** table).
-- Add `gameModeSettings` and `studyModeSettings` to `PersistedGameState`; in `loadPersisted` run migration if missing, then apply the current mode's slot to the live vars.
+- Add `ModeSettings` and default helpers (e.g. `static func gameDefaults` / `studyDefaults` using the **First-install defaults** table). Hold `gameModeSettings` and `studyModeSettings` in the store (e.g. private vars), initialized in `init` to the default structs so first install has valid slots before any persist.
+- Add optional `gameModeSettings` and `studyModeSettings` to `PersistedGameState`; in `loadPersisted` run migration when nil, then apply the current mode's slot to the live vars.
 - In `savePersisted`, include the two mode structs (and stop persisting the old single sound/haptic/tilt/showButtons if you remove them from the persisted model after migration).
 - `setStudyMode`: save current live settings to current mode's slot, load the other mode's slot into live vars, set `studyMode`.
 - In `setSoundEnabled`, `setSoundVolume`, `setHapticEnabled`, `setTiltEnabled`, `setShowButtons`: after updating the live var, update the current mode's slot (e.g. `if studyMode { studyModeSettings.soundEnabled = ... } else { gameModeSettings.soundEnabled = ... }`), then trigger save as you do today.
@@ -95,7 +95,7 @@ No change to the public "shape" of the store from the UI's perspective: the same
 
 ## 6. SettingsView
 
-- **handleModeToggle:** Only call `store.setStudyMode(study)`. All "apply this mode's settings" logic lives in GameStore: setStudyMode loads the correct slot into the live vars. So you can remove the extra logic that currently (or in the previous plan) set tilt/haptic explicitly on toggle; the store will restore whatever that mode had last time.
+- **handleModeToggle:** Keep the existing **teams, totalRounds, and round duration** logic (study: set 1 team, 1 round, study timer steps; game: round duration adjustment). Call `store.setStudyMode(study)` so the store saves the current slot and loads the other mode's slot into the live vars (sound, volume, haptic, tilt, buttons). Remove the explicit `store.setTiltEnabled(true)` in the game branch; that comes from restoring the game slot.
 
 ---
 
