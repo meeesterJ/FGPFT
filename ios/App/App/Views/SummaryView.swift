@@ -44,8 +44,10 @@ struct SummaryView: View {
                         .foregroundStyle(AppColors.yellow)
                     
                     if !scores.isEmpty {
-                        scoresTable
-                            .padding(.horizontal, 24)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            scoresTable
+                        }
+                        .padding(.horizontal, 24)
                     }
                     
                     Spacer()

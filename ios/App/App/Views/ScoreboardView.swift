@@ -32,7 +32,9 @@ struct ScoreboardView: View {
                         .font(AppFonts.display(size: 44))
                         .foregroundStyle(AppColors.yellow)
                     
-                    scoresGrid
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        scoresGrid
+                    }
                     
                     Spacer()
                     

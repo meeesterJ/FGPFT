@@ -20,7 +20,8 @@ struct SettingsView: View {
                 controlsSection
                 aboutLink
             }
-            .padding(20)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 0)
             .padding(.bottom, 40)
         }
         .transparentPurpleBottomBar()
@@ -242,7 +243,6 @@ struct SettingsView: View {
                 store.setRoundDuration(300)
             }
         } else {
-            store.setTiltEnabled(true)
             if studyTimerSteps.contains(store.roundDuration) && store.roundDuration > 60 {
                 store.setRoundDuration(30)
             } else if store.roundDuration == 0 {
@@ -459,10 +459,11 @@ extension View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 Rectangle()
                     .fill(Color.clear)
+                    .frame(maxWidth: .infinity)
                     .frame(height: 34)
                     .background(
                         AppColors.barBackground
-                            .ignoresSafeArea(edges: .bottom)
+                            .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
                     )
             }
     }

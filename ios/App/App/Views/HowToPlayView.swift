@@ -45,7 +45,8 @@ struct HowToPlayView: View {
                     bullet("Mark a category as Study Mode when creating or editing a list")
                 }
             }
-            .padding(20)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 0)
             .padding(.bottom, 40)
         }
         .transparentPurpleBottomBar()

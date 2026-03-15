@@ -67,12 +67,43 @@ All 16 required icon sizes are present in `ios/App/App/Assets.xcassets/AppIcon.a
 | Field | Max Length | Status |
 |-------|------------|--------|
 | App Name | 30 chars | "Family Guess Party Fun Time" |
-| Subtitle | 30 chars | **MISSING** |
-| Description | 4000 chars | **MISSING** |
-| Keywords | 100 chars | **MISSING** |
-| Privacy Policy URL | URL | **MISSING** |
-| Support URL | URL | **MISSING** |
-| Marketing URL | URL | Optional |
+| Subtitle | 30 chars | "A fun, interactive party guessing game and study tool for the whole family!"|
+| Description | 4000 chars | "Get ready for a fun time with Family Guess Party Fun Time! Guesser holds the phone to their forehead while others give clues. Tilt forward when you guess correctly, tilt back to pass!
+
+No ads. No in-app purchases or subscriptions. 
+No data collection. 
+You buy it. 
+It's yours. 
+And you can customize words and categories as much as you'd like.
+
+
+GAME MODE for classic family fun
+STUDY MODE learning on the go
+
+Features:
+• 25+ built-in categories with 2,000+ words
+• Customizable word lists — create your own and customize the built in categories
+• Adjustable timer and round settings
+• Team mode with score tracking and custom team names
+• Intuitive tilt controls or on-screen buttons — your choice
+• Works great on iPhone and iPad (Study mode)
+
+Perfect for:
+• Family game nights
+• Birthday parties
+• Road trips
+• Team building events
+• Holiday gatherings
+• Language learning & vocabulary practice
+• Classroom review & study sessions
+• Test prep & flashcard drills
+
+© 2025 K Jasken and Associates LLC. Family Guess Party Fun Time is a trademark of K Jasken and Associates LLC." |
+
+| Keywords | 100 chars | game, party game, family, charades, heads up, trivia, word game, study, flashcards, vocabulary |
+| Privacy Policy URL | URL | https://meeesterj.github.io/FGPFT/privacy.html |
+| Support URL | URL | https://meeesterj.github.io/FGPFT/terms.html|
+
 
 ### Optional Assets
 
@@ -147,7 +178,7 @@ Perfect for family game night, parties, road trips, and classroom learning!
 
 ## Suggested Keywords (100 chars max)
 ```
-charades,party game,heads up,trivia,flashcards,language learning,family game,guessing game,study
+charades,party game,trivia,flashcards,language learning,family game,guessing game,study
 ```
 
 ---

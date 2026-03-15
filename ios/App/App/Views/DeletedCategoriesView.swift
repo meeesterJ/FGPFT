@@ -81,7 +81,8 @@ struct DeletedCategoriesView: View {
                     }
                 }
             }
-            .padding(20)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 0)
             .padding(.bottom, 40)
         }
         .transparentPurpleBottomBar()

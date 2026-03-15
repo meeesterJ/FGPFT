@@ -45,7 +45,8 @@ struct AboutView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.pink.opacity(0.35), lineWidth: 1))
             }
-            .padding(20)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 0)
             .padding(.bottom, 40)
         }
         .transparentPurpleBottomBar()

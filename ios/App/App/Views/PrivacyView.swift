@@ -41,7 +41,8 @@ struct PrivacyView: View {
                     .font(AppFonts.body(size: 12))
                     .foregroundStyle(AppColors.mutedText)
             }
-            .padding(20)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 0)
             .padding(.bottom, 40)
         }
         .transparentPurpleBottomBar()
