@@ -14,8 +14,8 @@ These pages are for **App Store Connect** and public linking.
 
 Replace `YOUR_USERNAME` and `YOUR_REPO` with your GitHub username and repo name:
 
-- **Privacy Policy:** `https://YOUR_USERNAME.github.io/YOUR_REPO/privacy.html`
-- **Terms of Use:** `https://YOUR_USERNAME.github.io/YOUR_REPO/terms.html`
-- **Index (links to both):** `https://YOUR_USERNAME.github.io/YOUR_REPO/`
+- **Privacy Policy:** `https://meeesterj.github.io/FGPFT/privacy.html`
+- **Terms of Use:** `https://meeesterj.github.io/FGPFT/terms.html`
+- **Index (links to both):** `https://meeesterj.github.io/FGPFT/`
 
 Use the **Privacy Policy** URL in App Store Connect under App Information → Privacy Policy URL. Use the **Terms** URL in the optional field if your app has one.
