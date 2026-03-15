@@ -2,10 +2,48 @@ import Foundation
 import Combine
 
 private let storageKey = "guess-party-storage"
-private let storageVersion = 8
+private let storageVersion = 9
 
 func defaultTeamNames(count: Int) -> [String] {
     (1...count).map { "Team \($0)" }
+}
+
+/// Per-mode settings (sound, volume, haptic, tilt, buttons). Stored separately for Game and Study so switching modes restores each mode's last-used values.
+struct ModeSettings: Codable {
+    var soundEnabled: Bool
+    var soundVolume: Int
+    var hapticEnabled: Bool
+    var tiltEnabled: Bool
+    var showButtons: Bool
+
+    static func gameDefaults() -> ModeSettings {
+        ModeSettings(
+            soundEnabled: true,
+            soundVolume: 100,
+            hapticEnabled: true,
+            tiltEnabled: true,
+            showButtons: false
+        )
+    }
+
+    static func studyDefaults() -> ModeSettings {
+        ModeSettings(
+            soundEnabled: false,
+            soundVolume: 100,
+            hapticEnabled: false,
+            tiltEnabled: false,
+            showButtons: true
+        )
+    }
+
+    /// Ensures showButtons is true when tiltEnabled is false (invariant enforced by setShowButtons). Use when loading or applying slots.
+    func sanitized() -> ModeSettings {
+        var s = self
+        if !s.tiltEnabled && !s.showButtons {
+            s.showButtons = true
+        }
+        return s
+    }
 }
 
 struct BuiltInListOverride: Codable {
@@ -32,6 +70,9 @@ struct PersistedGameState: Codable {
     var deletedBuiltInLists: [String]
     var permanentlyDeletedBuiltInLists: [String]
     var deletedCustomLists: [WordList]?
+    /// New format: per-mode settings. Nil when loading old persisted data (migration).
+    var gameModeSettings: ModeSettings?
+    var studyModeSettings: ModeSettings?
 }
 
 final class GameStore: ObservableObject {
@@ -74,7 +115,10 @@ final class GameStore: ObservableObject {
     private let userDefaults: UserDefaults
     private var builtInLists: [WordList] = []
     private var cancellables = Set<AnyCancellable>()
-    
+    /// Per-mode slots; initialized to defaults so first install has valid state before any persist.
+    private var gameModeSettings: ModeSettings
+    private var studyModeSettings: ModeSettings
+
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
         self.studyMode = false
@@ -109,6 +153,8 @@ final class GameStore: ObservableObject {
         self.teamRoundResults = []
         self.teamGameResults = []
         self.teamScoreHistory = []
+        self.gameModeSettings = ModeSettings.gameDefaults()
+        self.studyModeSettings = ModeSettings.studyDefaults()
         loadBuiltInLists()
         loadPersisted()
         setupPersistence()
@@ -137,13 +183,8 @@ final class GameStore: ObservableObject {
         studyMode = decoded.studyMode
         roundDuration = decoded.roundDuration
         totalRounds = decoded.totalRounds
-        showButtons = decoded.showButtons
-        tiltEnabled = decoded.tiltEnabled
         numberOfTeams = decoded.numberOfTeams
         teamNames = decoded.teamNames.isEmpty ? defaultTeamNames(count: numberOfTeams) : decoded.teamNames
-        hapticEnabled = decoded.hapticEnabled
-        soundEnabled = decoded.soundEnabled
-        soundVolume = decoded.soundVolume
         tiltPermissionGranted = decoded.tiltPermissionGranted
         selectedListIds = decoded.selectedListIds
         customLists = decoded.customLists
@@ -151,6 +192,65 @@ final class GameStore: ObservableObject {
         deletedBuiltInLists = decoded.deletedBuiltInLists
         permanentlyDeletedBuiltInLists = decoded.permanentlyDeletedBuiltInLists
         deletedCustomLists = decoded.deletedCustomLists ?? []
+
+        if let game = decoded.gameModeSettings, let study = decoded.studyModeSettings {
+            gameModeSettings = game
+            studyModeSettings = study
+        } else {
+            // Migration: old format had only single settings. Current mode's slot = decoded values (sanitized); other = defaults.
+            if decoded.studyMode {
+                studyModeSettings = ModeSettings(
+                    soundEnabled: decoded.soundEnabled,
+                    soundVolume: decoded.soundVolume,
+                    hapticEnabled: decoded.hapticEnabled,
+                    tiltEnabled: decoded.tiltEnabled,
+                    showButtons: decoded.showButtons
+                ).sanitized()
+                gameModeSettings = ModeSettings.gameDefaults()
+            } else {
+                gameModeSettings = ModeSettings(
+                    soundEnabled: decoded.soundEnabled,
+                    soundVolume: decoded.soundVolume,
+                    hapticEnabled: decoded.hapticEnabled,
+                    tiltEnabled: decoded.tiltEnabled,
+                    showButtons: decoded.showButtons
+                ).sanitized()
+                studyModeSettings = ModeSettings.studyDefaults()
+            }
+            savePersisted()
+        }
+        applyCurrentModeSlotToLive()
+    }
+
+    /// Copies the active mode's slot (game or study) into the live @Published settings. Sanitizes so buttons are on when tilt is off, and writes back so we never persist invalid state.
+    private func applyCurrentModeSlotToLive() {
+        let slot = (studyMode ? studyModeSettings : gameModeSettings).sanitized()
+        if studyMode {
+            studyModeSettings = slot
+        } else {
+            gameModeSettings = slot
+        }
+        soundEnabled = slot.soundEnabled
+        soundVolume = slot.soundVolume
+        hapticEnabled = slot.hapticEnabled
+        tiltEnabled = slot.tiltEnabled
+        showButtons = slot.showButtons
+    }
+
+    /// Writes current live settings into the active mode's slot so they persist when switching away and back.
+    private func updateCurrentModeSlot() {
+        let slot = ModeSettings(
+            soundEnabled: soundEnabled,
+            soundVolume: soundVolume,
+            hapticEnabled: hapticEnabled,
+            tiltEnabled: tiltEnabled,
+            showButtons: showButtons
+        )
+        if studyMode {
+            studyModeSettings = slot
+        } else {
+            gameModeSettings = slot
+        }
     }
     
     private func setupPersistence() {
@@ -178,7 +278,9 @@ final class GameStore: ObservableObject {
             builtInListOverrides: builtInListOverrides,
             deletedBuiltInLists: deletedBuiltInLists,
             permanentlyDeletedBuiltInLists: permanentlyDeletedBuiltInLists,
-            deletedCustomLists: deletedCustomLists
+            deletedCustomLists: deletedCustomLists,
+            gameModeSettings: gameModeSettings,
+            studyModeSettings: studyModeSettings
         )
         if let data = try? JSONEncoder().encode(state) {
             userDefaults.set(data, forKey: storageKey)
@@ -220,8 +322,21 @@ final class GameStore: ObservableObject {
     // MARK: - Settings actions
     
     func setStudyMode(_ enabled: Bool) {
+        // Save current live settings into the current mode's slot before switching.
+        let currentSlot = ModeSettings(
+            soundEnabled: soundEnabled,
+            soundVolume: soundVolume,
+            hapticEnabled: hapticEnabled,
+            tiltEnabled: tiltEnabled,
+            showButtons: showButtons
+        )
+        if studyMode {
+            studyModeSettings = currentSlot
+        } else {
+            gameModeSettings = currentSlot
+        }
         studyMode = enabled
-        soundEnabled = !enabled
+        applyCurrentModeSlotToLive()
     }
     
     func setRoundDuration(_ seconds: Int) { roundDuration = seconds }
@@ -229,34 +344,52 @@ final class GameStore: ObservableObject {
     func setShowButtons(_ show: Bool) {
         if !tiltEnabled && !show { return }
         showButtons = show
+        updateCurrentModeSlot()
     }
-    
+
     func setTiltEnabled(_ enabled: Bool) {
         tiltEnabled = enabled
         showButtons = !enabled
+        updateCurrentModeSlot()
     }
-    
-    func setHapticEnabled(_ enabled: Bool) { hapticEnabled = enabled }
-    func setSoundEnabled(_ enabled: Bool) { soundEnabled = enabled }
-    func setSoundVolume(_ volume: Int) { soundVolume = min(100, max(0, volume)) }
+
+    func setHapticEnabled(_ enabled: Bool) {
+        hapticEnabled = enabled
+        updateCurrentModeSlot()
+    }
+    func setSoundEnabled(_ enabled: Bool) {
+        soundEnabled = enabled
+        updateCurrentModeSlot()
+    }
+    func setSoundVolume(_ volume: Int) {
+        soundVolume = min(100, max(0, volume))
+        updateCurrentModeSlot()
+    }
     func setTiltPermissionGranted(_ granted: Bool) { tiltPermissionGranted = granted }
     
+    /// Toggles list selection. Empty selectedListIds is allowed; startGame() uses a fallback (e.g. first available list) when starting.
     func toggleListSelection(id: String) {
         if selectedListIds.contains(id) {
-            if selectedListIds.count <= 1 { return }
             selectedListIds.removeAll { $0 == id }
         } else {
             selectedListIds.append(id)
         }
     }
     
+    func clearListSelections() {
+        selectedListIds = []
+    }
+    
+    func setSelectedListIds(_ ids: [String]) {
+        selectedListIds = ids
+    }
+    
+    /// Adds a custom list and selects only it (replaces current selection). Intentional iOS behavior; fallback in startGame() handles empty selection if needed.
     func addCustomList(_ list: WordList) {
         var list = list
         list.isCustom = true
         customLists.append(list)
-        if !selectedListIds.contains(list.id) {
-            selectedListIds.append(list.id)
-        }
+        selectedListIds = [list.id]
     }
     
     func removeCustomList(id: String) {
@@ -335,7 +468,7 @@ final class GameStore: ObservableObject {
             selectedListIds = activeIds
         }
         let activeLists = available.filter { activeIds.contains($0.id) }
-        let allWords = activeLists.flatMap(\.words).shuffled()
+        let allWords = Array(Set(activeLists.flatMap(\.words))).shuffled()
         let emptyScores = (0..<numberOfTeams).map { _ in TeamScore() }
         let emptyResults = (0..<numberOfTeams).map { _ in [(word: String, correct: Bool)]() }
         currentRound = 0
@@ -428,6 +561,11 @@ final class GameStore: ObservableObject {
     }
     
     func endRound() {
+        // Treat "seen but unanswered" word as used so the next team does not see it
+        if let w = currentWord, w != "No Words!", !deck.isEmpty, deck.first == w {
+            deck = Array(deck.dropFirst())
+            usedWords = usedWords + [w]
+        }
         let correctCount = roundResults.filter(\.correct).count
         let passedCount = roundResults.filter { !$0.correct }.count
         let teamIndex = currentTeam - 1
