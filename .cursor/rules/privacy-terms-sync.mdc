@@ -1,0 +1,14 @@
+---
+description: When updating Privacy or Terms, update both in-app views and web HTML
+globs: "**/PrivacyView.swift,**/TermsView.swift,**/privacy.html,**/terms.html"
+alwaysApply: false
+---
+
+# Privacy and Terms — Keep In-App and Web in Sync
+
+When editing **Privacy Policy** or **Terms of Use** content, update **both** places so the app and the App Store / public links stay in sync:
+
+- **Web (App Store, GitHub Pages):** `docs/privacy.html` and `docs/terms.html`
+- **In-app views:** `ios/App/App/Views/PrivacyView.swift` and `ios/App/App/Views/TermsView.swift`
+
+If you change copy, sections, or "Last updated" in one place, apply the same changes to the other. See `docs/README.md` for the same reminder.
