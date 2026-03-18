@@ -9,7 +9,7 @@ struct HomeButtonOverlay: View {
                 HStack {
                     Button(action: action) {
                         Image(systemName: "house.fill")
-                            .font(.system(size: 20))
+                            .font(AppFonts.sfSymbol(size: 20))
                             .foregroundStyle(.white)
                             .frame(width: 44, height: 44)
                             .background(Color.white.opacity(0.15))

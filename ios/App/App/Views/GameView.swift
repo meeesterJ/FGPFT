@@ -30,8 +30,13 @@ struct GameView: View {
             BackgroundView()
             
             if store.currentWord == nil && !isHandoff {
-                ProgressView("Loading…")
-                    .tint(.white)
+                VStack(spacing: 14) {
+                    ProgressView()
+                        .tint(.white)
+                    Text("Loading…")
+                        .font(AppFonts.body(size: 16))
+                        .foregroundStyle(.white)
+                }
             } else {
                 mainGameContent
             }
@@ -146,7 +151,7 @@ struct GameView: View {
             if store.studyMode {
                 HStack(spacing: 8) {
                     Image(systemName: "iphone")
-                        .font(.system(size: 18))
+                        .font(AppFonts.sfSymbol(size: 18))
                     Text("Tap anywhere to start")
                 }
                 .font(AppFonts.body(size: 20))
@@ -208,7 +213,7 @@ struct GameView: View {
                     Color.clear
                         .frame(width: 36, height: 36)
                     Image(systemName: (lastAnswerCorrect ?? false) ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .font(.system(size: 36))
+                        .font(AppFonts.sfSymbol(size: 36))
                         .foregroundStyle((lastAnswerCorrect ?? false) ? AppColors.green : AppColors.pink)
                         .opacity(showAnswerFeedback ? 1 : 0)
                 }

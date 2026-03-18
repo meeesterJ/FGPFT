@@ -86,7 +86,7 @@ struct SettingsView: View {
                     HStack {
                         Image(systemName: "chevron.down")
                             .rotationEffect(.degrees(teamsExpanded ? 180 : 0))
-                            .font(.system(size: 12))
+                            .font(AppFonts.sfSymbol(size: 12))
                         Text("Customize Teams")
                             .font(AppFonts.body(size: 12))
                     }
@@ -224,7 +224,7 @@ struct SettingsView: View {
             Spacer()
             NavigationLink(value: AppRoute.about) {
                 Text("About")
-                    .font(.subheadline)
+                    .font(AppFonts.body(size: 15))
                     .foregroundStyle(AppColors.mutedText)
                     .underline()
             }
@@ -329,7 +329,7 @@ private struct SelectAllTeamNameField: UIViewRepresentable {
         field.delegate = context.coordinator
         field.placeholder = placeholder
         field.textColor = Self.uiColor(fromHex: textColorHex)
-        field.font = UIFont(name: "Outfit", size: 17) ?? .systemFont(ofSize: 17, weight: .regular)
+        field.font = AppFonts.uiOutfit(size: 17)
         field.autocorrectionType = .no
         field.returnKeyType = .done
         field.text = text
@@ -347,7 +347,7 @@ private struct SelectAllTeamNameField: UIViewRepresentable {
         }
         uiView.placeholder = placeholder
         uiView.textColor = Self.uiColor(fromHex: textColorHex)
-        uiView.font = UIFont(name: "Outfit", size: 17) ?? .systemFont(ofSize: 17, weight: .regular)
+        uiView.font = AppFonts.uiOutfit(size: 17)
     }
 
     class Coordinator: NSObject, UITextFieldDelegate {

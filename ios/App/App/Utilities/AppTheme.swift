@@ -1,8 +1,49 @@
 import SwiftUI
+import UIKit
 
+/// App typography: **Titan One** (`display`) and **Outfit** (`body`), with runtime resolution for bundled font names.
+/// SF Symbols must use `sfSymbol(size:)` — that is the only intentional use of the system font for glyphs.
 enum AppFonts {
-    static func display(size: CGFloat) -> Font { .custom("Titan One", size: size) }
-    static func body(size: CGFloat) -> Font { .custom("Outfit", size: size) }
+    /// Resolves the bundled variable Outfit face (family "Outfit" or named instances).
+    private static let outfitPostScriptName: String = {
+        for name in ["Outfit", "Outfit-Thin_Regular", "Outfit-Regular"] {
+            if UIFont(name: name, size: 12) != nil { return name }
+        }
+        return "Outfit"
+    }()
+
+    private static let titanPostScriptName: String = {
+        for name in ["Titan One", "TitanOne-Regular"] {
+            if UIFont(name: name, size: 12) != nil { return name }
+        }
+        return "Titan One"
+    }()
+
+    static func display(size: CGFloat) -> Font { .custom(titanPostScriptName, size: size) }
+    static func body(size: CGFloat) -> Font { .custom(outfitPostScriptName, size: size) }
+
+    /// SF Symbols render with the system font; use only for `Image(systemName:)`.
+    static func sfSymbol(size: CGFloat) -> Font { .system(size: size) }
+
+    static func uiOutfit(size: CGFloat) -> UIFont {
+        UIFont(name: outfitPostScriptName, size: size) ?? .systemFont(ofSize: size, weight: .regular)
+    }
+}
+
+/// Custom capsule buttons (avoids `.borderedProminent` system font / metrics drift).
+struct AppCapsuleButtonStyle: ButtonStyle {
+    let fill: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(AppFonts.body(size: 15).weight(.medium))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(fill)
+            .clipShape(Capsule())
+            .opacity(configuration.isPressed ? 0.88 : 1)
+    }
 }
 
 enum AppColors {

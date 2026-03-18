@@ -65,7 +65,7 @@ struct TermsView: View {
     private func section(_ title: String, color: Color, @ViewBuilder content: () -> some View) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.headline)
+                .font(AppFonts.body(size: 17).weight(.semibold))
                 .foregroundStyle(color)
             content()
                 .font(AppFonts.body(size: 15))

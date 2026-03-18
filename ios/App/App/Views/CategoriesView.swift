@@ -21,32 +21,54 @@ struct CategoriesView: View {
         store.getDeletedBuiltInLists().count + store.getDeletedCustomLists().count
     }
     
+    private var categoriesInstruction: some View {
+        Text("Select categories to include in your game")
+            .font(AppFonts.body(size: 15))
+            .foregroundStyle(AppColors.mutedText)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+    
+    private var categoriesActionButtons: some View {
+        HStack(spacing: 10) {
+            Button {
+                store.clearListSelections()
+            } label: {
+                Text("Clear Selections")
+            }
+            .buttonStyle(AppCapsuleButtonStyle(fill: AppColors.green))
+            Button {
+                showCreate = true
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "plus")
+                        .font(AppFonts.sfSymbol(size: 14))
+                        .fontWeight(.semibold)
+                    Text("Create List")
+                }
+            }
+            .buttonStyle(AppCapsuleButtonStyle(fill: AppColors.pink))
+        }
+    }
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Text("Select categories to include in your game")
-                        .font(AppFonts.body(size: 15))
-                        .foregroundStyle(AppColors.mutedText)
-                    Spacer()
-                    Button {
-                        store.clearListSelections()
-                    } label: {
-                        Text("Clear Selections")
-                            .font(AppFonts.body(size: 15).weight(.medium))
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .center, spacing: 12) {
+                        categoriesInstruction
+                        categoriesActionButtons
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(AppColors.green)
-                    Button {
-                        showCreate = true
-                    } label: {
-                        Label("Create List", systemImage: "plus")
-                            .font(AppFonts.body(size: 15).weight(.medium))
+                    VStack(alignment: .leading, spacing: 12) {
+                        categoriesInstruction
+                        HStack {
+                            Spacer(minLength: 0)
+                            categoriesActionButtons
+                        }
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(AppColors.pink)
                 }
                 .padding(.horizontal, 4)
+                .dynamicTypeSize(.medium ... .xLarge)
                 
                 ScrollViewReader { proxy in
                     LazyVStack(spacing: 12) {
@@ -154,7 +176,7 @@ struct CategoryRow: View {
                 if list.isStudy == true {
                     Image(systemName: "book.fill")
                         .foregroundStyle(isSelected ? AppColors.cyan : AppColors.mutedText)
-                        .font(.system(size: 16))
+                        .font(AppFonts.sfSymbol(size: 16))
                 }
             }
             .contentShape(Rectangle())

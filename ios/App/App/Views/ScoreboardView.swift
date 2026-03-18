@@ -69,7 +69,7 @@ struct ScoreboardView: View {
                 
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 12))
+                        .font(AppFonts.sfSymbol(size: 12))
                     Text("Correct")
                         .font(AppFonts.body(size: 14))
                 }
@@ -78,7 +78,7 @@ struct ScoreboardView: View {
                 
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.right.circle.fill")
-                        .font(.system(size: 12))
+                        .font(AppFonts.sfSymbol(size: 12))
                     Text("Pass")
                         .font(AppFonts.body(size: 14))
                 }
@@ -100,7 +100,7 @@ struct ScoreboardView: View {
                     HStack(spacing: 8) {
                         if isLeader {
                             Image(systemName: "crown.fill")
-                                .font(.system(size: 16))
+                                .font(AppFonts.sfSymbol(size: 16))
                                 .foregroundStyle(AppColors.yellow)
                                 .shadow(color: AppColors.yellow.opacity(0.8), radius: leaderGlow ? 8 : 4)
                         }

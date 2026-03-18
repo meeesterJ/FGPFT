@@ -133,7 +133,7 @@ struct RoundSummaryView: View {
                             Spacer()
                             Image(systemName: result.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .foregroundStyle(result.correct ? AppColors.green : AppColors.pink)
-                                .font(.system(size: 20))
+                                .font(AppFonts.sfSymbol(size: 20))
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
@@ -170,19 +170,19 @@ struct RoundSummaryView: View {
             HStack(spacing: 6) {
                 if store.studyMode {
                     Image(systemName: "brain.head.profile")
-                        .font(.system(size: 14))
+                        .font(AppFonts.sfSymbol(size: 14))
                     Text("Get Smarter?")
                         .font(AppFonts.body(size: 14))
                         .fontWeight(.semibold)
                 } else if store.willGameBeFinished {
                     Image(systemName: "trophy.fill")
-                        .font(.system(size: 14))
+                        .font(AppFonts.sfSymbol(size: 14))
                     Text("See Winner!")
                         .font(AppFonts.body(size: 14))
                         .fontWeight(.semibold)
                 } else {
                     Image(systemName: "list.number")
-                        .font(.system(size: 14))
+                        .font(AppFonts.sfSymbol(size: 14))
                     Text("Scoreboard")
                         .font(AppFonts.body(size: 14))
                         .fontWeight(.semibold)

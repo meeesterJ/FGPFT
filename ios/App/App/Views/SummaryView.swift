@@ -135,7 +135,7 @@ struct SummaryView: View {
                 HStack(spacing: 6) {
                     if winner {
                         Image(systemName: "crown.fill")
-                            .font(.system(size: 14))
+                            .font(AppFonts.sfSymbol(size: 14))
                             .foregroundStyle(AppColors.yellow)
                     }
                     Text(store.numberOfTeams > 1 ? store.getTeamName(teamNumber: teamNum) : "Score")
@@ -153,7 +153,7 @@ struct SummaryView: View {
                     VStack(spacing: 1) {
                         HStack(spacing: 2) {
                             Image(systemName: "checkmark.circle.fill")
-                                .font(.system(size: 10))
+                                .font(AppFonts.sfSymbol(size: 10))
                             Text("\(roundScore.correct)")
                                 .font(AppFonts.body(size: 13).monospacedDigit())
                         }
@@ -161,7 +161,7 @@ struct SummaryView: View {
                         
                         HStack(spacing: 2) {
                             Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 10))
+                                .font(AppFonts.sfSymbol(size: 10))
                             Text("\(roundScore.passed)")
                                 .font(AppFonts.body(size: 13).monospacedDigit())
                         }
@@ -173,7 +173,7 @@ struct SummaryView: View {
                 VStack(spacing: 1) {
                     HStack(spacing: 2) {
                         Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 11))
+                            .font(AppFonts.sfSymbol(size: 11))
                         Text("\(totalScore.correct)")
                             .font(AppFonts.body(size: 15).monospacedDigit().bold())
                     }
@@ -181,7 +181,7 @@ struct SummaryView: View {
                     
                     HStack(spacing: 2) {
                         Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 11))
+                            .font(AppFonts.sfSymbol(size: 11))
                         Text("\(totalScore.passed)")
                             .font(AppFonts.body(size: 15).monospacedDigit().bold())
                     }
@@ -223,7 +223,7 @@ struct SummaryView: View {
             if let info = winnerInfo {
                 HStack(spacing: 12) {
                     Image(systemName: "trophy.fill")
-                        .font(.system(size: 40))
+                        .font(AppFonts.sfSymbol(size: 40))
                         .foregroundStyle(AppColors.yellow)
                     
                     Text(info.isTie ? "It's a Tie!" : "\(store.getTeamName(teamNumber: info.winnerTeam)) wins!")
