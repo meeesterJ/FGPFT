@@ -18,7 +18,7 @@ struct RoundSummaryView: View {
     
     private var multicoloredRound: some View {
         // Slightly smaller than the round number so the number reads as "bigger than Round".
-        MulticoloredRoundText(fontSize: 48)
+        MulticoloredRoundText(fontSize: 56)
     }
     
     private var multicoloredStudy: some View {
@@ -70,10 +70,12 @@ struct RoundSummaryView: View {
                 }
             } else {
                 VStack(spacing: 1) {
-                    HStack(spacing: 8) {
+                    HStack(alignment: .center, spacing: 16) {
                         multicoloredRound
+                            .frame(height: 80, alignment: .center)
                         Text("\(store.currentRound)")
-                            .font(AppFonts.display(size: 64))
+                            .font(AppFonts.display(size: 80))
+                            .frame(height: 80, alignment: .center)
                             .foregroundStyle(AppColors.yellow)
                     }
                     
@@ -85,9 +87,17 @@ struct RoundSummaryView: View {
                 }
             }
             
-            Text("\(pointsThisRound)")
-                .font(AppFonts.display(size: 96))
-                .foregroundStyle(AppColors.yellow)
+            HStack(alignment: .center, spacing: 12) {
+                Text("\(pointsThisRound)")
+                    .font(AppFonts.display(size: 96))
+                    .foregroundStyle(AppColors.yellow)
+                
+                Text("POINTS")
+                    .font(AppFonts.body(size: store.studyMode ? 12 : 14))
+                    .fontWeight(.medium)
+                    .foregroundStyle(AppColors.mutedText)
+                    .tracking(2)
+            }
             
             bottomButtonRow
             
