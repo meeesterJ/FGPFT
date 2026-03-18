@@ -4,11 +4,11 @@ This document records every place where something **other than repo content** wa
 
 ## Audio
 
-- **Sound effects**: All `.wav` files were **copied from the repo** at `client/public/audio/` into `App/Resources/Audio/`. Files: `correct.wav`, `pass.wav`, `tick.wav`, `tock.wav`, `roundEnd.wav`, `gameEnd.wav`, `applause.wav`, `drumroll.wav`, `countdown.wav`, `buzz.wav`. No substitutions; source is the same as the web app.
+- **Sound effects**: All `.wav` files are included in `App/Resources/Audio/`. Files: `correct.wav`, `pass.wav`, `tick.wav`, `tock.wav`, `roundEnd.wav`, `gameEnd.wav`, `applause.wav`, `drumroll.wav`, `countdown.wav`, `buzz.wav`.
 
 ## Fonts
 
-- **Bundled**: **Titan One** (`TitanOne-Regular.ttf`) and **Outfit** (`Outfit-VariableFont_wght.ttf`) are bundled in `App/Resources/`, registered in `Info.plist` under `UIAppFonts`, and used via `AppFonts` in Swift: Titan One for display/titles (e.g. main title, round numbers, countdown, "Game Over!"), Outfit for body text. Matches the original web app (`--font-display`, `--font-body` in `client/src/index.css`).
+- **Bundled**: **Titan One** (`TitanOne-Regular.ttf`) and **Outfit** (`Outfit-VariableFont_wght.ttf`) are bundled in `App/Resources/`, registered in `Info.plist` under `UIAppFonts`, and used via `AppFonts` in Swift.
 
 ## Colors
 
@@ -16,11 +16,11 @@ This document records every place where something **other than repo content** wa
 
 ## Copy
 
-- All in-app strings (Settings, Categories, Summary, About, How to Play, Privacy, Terms) were taken from or closely match the copy in the repo (`client/src/pages/`). No intentional rewordings. Minor adaptations for native UI (e.g. "Back" instead of arrow-only) are consistent with standard iOS patterns.
+- All in-app strings (Settings, Categories, Summary, About, How to Play, Privacy, Terms) were taken from or closely match the copy in the repo at the time the native app was created. Minor adaptations for native UI (e.g. "Back" instead of arrow-only) follow standard iOS patterns.
 
 ## Other assets
 
-- **App icon**: Uses the existing **Assets.xcassets/AppIcon** in the Xcode project; no change from the Capacitor setup. If the repo did not include a custom icon, the placeholder from the original project remains.
+- **App icon**: Uses the existing **Assets.xcassets/AppIcon** in the Xcode project.
 - **Launch screen**: Uses the existing **LaunchScreen.storyboard** and **Assets.xcassets/LaunchImage**; no new assets added.
 - **Quick Start image**: The web app’s How to Play page references `/quick-start-guide.jpg`. The native **How to Play** view does **not** include this image; the Quick Start section was omitted to avoid adding an asset not guaranteed in the repo. To add it, place the image in the asset catalog and display it in `HowToPlayView`.
 
