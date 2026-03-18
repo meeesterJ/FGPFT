@@ -318,7 +318,7 @@ struct CategoryRow: View {
             }
         }
         // On iPhone this row sits inside an already padded container.
-        .padding(.leading, LayoutAdaptation.contentMargin(compact: 0, pad: 16))
+        .padding(.leading, LayoutAdaptation.contentMargin(compact: 8, pad: 16))
         .padding(.vertical, 16)
         .background(isSelected ? AppColors.cyan.opacity(0.2) : Color.white.opacity(0.06))
         .clipShape(RoundedRectangle(cornerRadius: 12))
