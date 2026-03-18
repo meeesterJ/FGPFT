@@ -27,18 +27,19 @@ struct ScoreboardView: View {
             ZStack {
                 BackgroundView()
                 
-                VStack(spacing: 24) {
-                    Spacer()
-                    
+                VStack(spacing: 16) {
                     Text("Scoreboard")
                         .font(AppFonts.display(size: 44))
                         .foregroundStyle(AppColors.yellow)
                     
-                    scoresTables
-
-                    bottomButtonRow
-                        .padding(.bottom, geo.safeAreaInsets.bottom + 16)
+                    VStack(spacing: 8) {
+                        scoresTables
+                        
+                        bottomButtonRow
+                            .padding(.bottom, geo.safeAreaInsets.bottom + 12)
+                    }
                 }
+                .padding(.top, geo.safeAreaInsets.top + 40)
                 .padding(.horizontal, 32)
                 
                 HomeButtonOverlay {
