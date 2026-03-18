@@ -26,6 +26,8 @@ struct SplashView: View {
     var body: some View {
         GeometryReader { geo in
             let titleHeight = geo.size.height * 0.72 * 0.9  // 90% of previous size
+            let horizontalInset = LayoutAdaptation.contentMargin(compact: 28, pad: 0)
+            let topInset = LayoutAdaptation.value(compact: max(0, geo.safeAreaInsets.top) + 8, pad: 0)
             VStack(spacing: 24) {
                 Spacer()
                 TitleStackView(animated: true, availableHeight: titleHeight)
@@ -36,6 +38,8 @@ struct SplashView: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.horizontal, horizontalInset)
+            .padding(.top, topInset)
         }
         .contentShape(Rectangle())
         .onTapGesture(perform: onTap)
@@ -86,26 +90,38 @@ struct MainMenuView: View {
     var body: some View {
         GeometryReader { geo in
             let isLandscape = geo.size.width > geo.size.height
-            let edgePadding: CGFloat = 24
+            let edgePadding: CGFloat = LayoutAdaptation.contentMargin(compact: 32, pad: 24)
             let safeW = max(0, geo.size.width - edgePadding * 2)
             let safeH = max(0, geo.size.height - edgePadding * 2)
             
             if isLandscape {
-                // Landscape: title left, buttons right; center content with safe area margins
+                // Landscape: title left, buttons right
                 let leadingSafeArea = geo.safeAreaInsets.leading
                 let trailingSafeArea = geo.safeAreaInsets.trailing
                 let contentWidth = geo.size.width - leadingSafeArea - trailingSafeArea - (edgePadding * 2)
                 
-                HStack(alignment: .center, spacing: edgePadding * 2) {
-                    // Title on the left
-                    let titleAreaHeight = safeH
+                let titleAreaHeight = safeH
+                let inner = HStack(alignment: .center, spacing: edgePadding * 2) {
                     TitleStackView(animated: false, availableHeight: titleAreaHeight * 0.85)
                         .frame(maxWidth: contentWidth * 0.5, maxHeight: .infinity, alignment: .center)
-                    // Buttons on the right
                     menuButtons
                         .frame(width: min(260, contentWidth * 0.4), alignment: .center)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                Group {
+                    if LayoutAdaptation.isPad {
+                        inner
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        HStack {
+                            Spacer(minLength: 0)
+                            inner
+                                .frame(maxWidth: min(contentWidth, 680))
+                            Spacer(minLength: 0)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                }
                 .padding(.leading, leadingSafeArea + edgePadding)
                 .padding(.trailing, trailingSafeArea + edgePadding)
                 .padding(.vertical, edgePadding)
