@@ -21,7 +21,7 @@ struct SettingsView: View {
                 aboutLink
             }
             .padding(.vertical, 20)
-            .padding(.horizontal, 0)
+            .padding(.horizontal, LayoutAdaptation.contentMargin(compact: 16, pad: 0))
             .padding(.bottom, 40)
         }
         .transparentPurpleBottomBar()

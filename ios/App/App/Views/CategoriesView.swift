@@ -163,55 +163,59 @@ struct CategoriesView: View {
                 categoriesToolbarRow
                     .padding(.bottom, 4)
                     .dynamicTypeSize(.medium ... .xLarge)
-
-                ScrollViewReader { proxy in
-                    LazyVStack(spacing: 12) {
-                        if displayedLists.isEmpty {
-                            Text(
-                                sortMode == .customOnly
-                                    ? "No custom lists in this view. Create a list or change filters."
-                                    : "No lists match the current filter."
-                            )
-                            .font(AppFonts.body(size: 15))
-                            .foregroundStyle(AppColors.mutedText)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 24)
-                            .padding(.horizontal, 16)
-                        }
-                        ForEach(displayedLists) { list in
-                            CategoryRow(
-                                list: list,
-                                isSelected: store.selectedListIds.contains(list.id),
-                                onToggle: { store.toggleListSelection(id: list.id) },
-                                onEdit: { editingList = list },
-                                onDelete: {
-                                    if list.isCustom == true {
-                                        store.removeCustomList(id: list.id)
-                                    } else {
-                                        store.deleteBuiltInList(id: list.id)
-                                    }
-                                }
-                            )
-                            .id(list.id)
-                        }
-                    }
-                    .onChange(of: scrollToListId) { newId in
-                        guard let id = newId else { return }
-                        proxy.scrollTo(id, anchor: .center)
-                        scrollToListId = nil
-                    }
-                }
                 
-                if deletedCount > 0 {
-                    NavigationLink(value: AppRoute.deletedCategories) {
-                        Text("View Deleted Categories (\(deletedCount))")
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
+                VStack(alignment: .leading, spacing: 16) {
+                    ScrollViewReader { proxy in
+                        LazyVStack(spacing: 12) {
+                            if displayedLists.isEmpty {
+                                Text(
+                                    sortMode == .customOnly
+                                        ? "No custom lists in this view. Create a list or change filters."
+                                        : "No lists match the current filter."
+                                )
+                                .font(AppFonts.body(size: 15))
+                                .foregroundStyle(AppColors.mutedText)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 24)
+                                // The list region is already iPhone-padded; avoid double-insetting.
+                                .padding(.horizontal, LayoutAdaptation.contentMargin(compact: 0, pad: 16))
+                            }
+                            ForEach(displayedLists) { list in
+                                CategoryRow(
+                                    list: list,
+                                    isSelected: store.selectedListIds.contains(list.id),
+                                    onToggle: { store.toggleListSelection(id: list.id) },
+                                    onEdit: { editingList = list },
+                                    onDelete: {
+                                        if list.isCustom == true {
+                                            store.removeCustomList(id: list.id)
+                                        } else {
+                                            store.deleteBuiltInList(id: list.id)
+                                        }
+                                    }
+                                )
+                                .id(list.id)
+                            }
+                        }
+                        .onChange(of: scrollToListId) { newId in
+                            guard let id = newId else { return }
+                            proxy.scrollTo(id, anchor: .center)
+                            scrollToListId = nil
+                        }
                     }
-                    .buttonStyle(.bordered)
-                    .foregroundStyle(AppColors.mutedText)
-                    .padding(.top, 8)
+                    
+                    if deletedCount > 0 {
+                        NavigationLink(value: AppRoute.deletedCategories) {
+                            Text("View Deleted Categories (\(deletedCount))")
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.bordered)
+                        .foregroundStyle(AppColors.mutedText)
+                        .padding(.top, 8)
+                    }
                 }
+                .padding(.horizontal, LayoutAdaptation.contentMargin(compact: 16, pad: 0))
             }
             .padding(.vertical, 20)
             .padding(.horizontal, 0)
@@ -313,7 +317,8 @@ struct CategoryRow: View {
                 .buttonStyle(.plain)
             }
         }
-        .padding(.leading, 16)
+        // On iPhone this row sits inside an already padded container.
+        .padding(.leading, LayoutAdaptation.contentMargin(compact: 0, pad: 16))
         .padding(.vertical, 16)
         .background(isSelected ? AppColors.cyan.opacity(0.2) : Color.white.opacity(0.06))
         .clipShape(RoundedRectangle(cornerRadius: 12))
