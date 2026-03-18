@@ -1,0 +1,23 @@
+{
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/AppDelegate.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppDelegate.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppDelegate.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppDelegate.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppDelegate.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppDelegate.swiftdeps"
+  },
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/ContentView.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/ContentView.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/ContentView.swiftdeps"
+  },
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/SharedComponents/MulticoloredText.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/MulticoloredText.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/MulticoloredText.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/MulticoloredText.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/MulticoloredText.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/MulticoloredText.swiftdeps"
+  }
+}

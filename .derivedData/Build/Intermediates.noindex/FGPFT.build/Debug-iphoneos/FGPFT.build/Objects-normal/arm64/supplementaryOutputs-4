@@ -1,0 +1,23 @@
+{
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/CategoriesView.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/CategoriesView.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/CategoriesView.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/CategoriesView.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/CategoriesView.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/CategoriesView.swiftdeps"
+  },
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/DeletedCategoriesView.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/DeletedCategoriesView.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/DeletedCategoriesView.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/DeletedCategoriesView.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/DeletedCategoriesView.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/DeletedCategoriesView.swiftdeps"
+  },
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/SettingsView.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/SettingsView.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/SettingsView.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/SettingsView.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/SettingsView.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/SettingsView.swiftdeps"
+  }
+}

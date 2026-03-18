@@ -1,0 +1,23 @@
+{
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Utilities/AppTheme.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppTheme.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppTheme.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppTheme.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppTheme.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AppTheme.swiftdeps"
+  },
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/GameView.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/GameView.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/GameView.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/GameView.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/GameView.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/GameView.swiftdeps"
+  },
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/TermsView.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/TermsView.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/TermsView.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/TermsView.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/TermsView.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/TermsView.swiftdeps"
+  }
+}

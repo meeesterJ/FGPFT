@@ -1,0 +1,23 @@
+{
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/AboutView.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AboutView.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AboutView.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AboutView.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AboutView.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/AboutView.swiftdeps"
+  },
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/HowToPlayView.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/HowToPlayView.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/HowToPlayView.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/HowToPlayView.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/HowToPlayView.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/HowToPlayView.swiftdeps"
+  },
+  "/Users/meesterj/Desktop/FGPFT/ios/App/App/Views/PrivacyView.swift" : {
+    "const-values" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/PrivacyView.swiftconstvalues",
+    "dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/PrivacyView.d",
+    "diagnostics" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/PrivacyView.dia",
+    "object" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/PrivacyView.o",
+    "swift-dependencies" : "/Users/meesterj/Desktop/FGPFT/.derivedData/Build/Intermediates.noindex/FGPFT.build/Debug-iphoneos/FGPFT.build/Objects-normal/arm64/PrivacyView.swiftdeps"
+  }
+}
