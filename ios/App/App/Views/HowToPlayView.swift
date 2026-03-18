@@ -32,6 +32,8 @@ struct HowToPlayView: View {
                     bullet("Edit existing lists to add or remove words")
                     bullet("Add brand new lists with your own themes")
                     bullet("Add words one per line when creating or editing a list")
+                    bullet("Tap Sort to change list order")
+                    bullet("Use the book button to switch between game and Study lists")
                 }
                 section(title: "Study Mode", color: AppColors.purple) {
                     bullet("Great for language learning, flashcards, and vocabulary practice")
