@@ -40,7 +40,7 @@ struct AppCapsuleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(AppFonts.body(size: 15).weight(.medium))
-            .foregroundStyle(.white)
+            .foregroundStyle(AppColors.textPrimary)
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
             .background(fill)
@@ -56,7 +56,14 @@ enum AppColors {
     static let green = Color(red: 0.29, green: 0.87, blue: 0.5)
     static let yellow = Color(red: 0.98, green: 0.8, blue: 0.09)
     static let destructive = Color(hex: "e84a6f")
-    static let mutedText = Color.white.opacity(0.7)
+    /// Primary text color on the app's dark backgrounds (do not use `.primary`).
+    static let textPrimary = Color.white
+    /// Secondary (muted) text color on the app's dark backgrounds (do not use `.secondary`).
+    static let textSecondary = Color.white.opacity(0.7)
+    /// Tertiary (more-muted) text color on the app's dark backgrounds.
+    static let textTertiary = Color.white.opacity(0.5)
+    /// Legacy alias; prefer `textSecondary`.
+    static let mutedText = textSecondary
     static let primaryPurple = Color(hex: "9333ea")
     /// Main menu “How to Play” / Categories Sort button.
     static let howToPlayGold = Color(hex: "ca8a04")
@@ -69,7 +76,7 @@ struct CategoriesToolbarCapsuleStyle: ButtonStyle {
     let fill: Color
     var strokeColor: Color = .clear
     var strokeWidth: CGFloat = 0
-    var foreground: Color = .white
+    var foreground: Color = AppColors.textPrimary
     /// Set false for SF Symbol–only labels so the symbol keeps `sfSymbol` sizing.
     var applyTextFont: Bool = true
 

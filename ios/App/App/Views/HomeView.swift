@@ -32,7 +32,7 @@ struct SplashView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 Text("Tap anywhere to start")
                     .font(AppFonts.body(size: 20))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppColors.textSecondary)
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

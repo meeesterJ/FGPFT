@@ -283,7 +283,7 @@ struct CategoryRow: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(list.name)
                         .font(AppFonts.body(size: 17))
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(AppColors.textPrimary)
                     Text("\(list.words.count) words\(list.isCustom == true ? " (Custom)" : "")\(list.isStudy == true ? "  ·  Study" : "")")
                         .font(AppFonts.body(size: 12))
                         .foregroundStyle(AppColors.mutedText)
