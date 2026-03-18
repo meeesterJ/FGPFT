@@ -94,11 +94,13 @@ struct CategoriesToolbarCapsuleStyle: ButtonStyle {
         .foregroundStyle(foreground)
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
-        .frame(minHeight: 40)
+        .frame(minHeight: 44)
         .background(fill)
         .clipShape(Capsule())
         .overlay(
             Capsule()
+                // Keep the outline fully inside the capsule bounds to avoid clipping in tight containers.
+                .inset(by: strokeWidth / 2)
                 .stroke(strokeColor, lineWidth: strokeWidth)
         )
         .opacity(configuration.isPressed ? 0.88 : 1)
