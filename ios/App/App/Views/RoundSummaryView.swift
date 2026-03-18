@@ -17,7 +17,8 @@ struct RoundSummaryView: View {
     }
     
     private var multicoloredRound: some View {
-        MulticoloredRoundText(fontSize: 56)
+        // Slightly smaller than the round number so the number reads as "bigger than Round".
+        MulticoloredRoundText(fontSize: 48)
     }
     
     private var multicoloredStudy: some View {
@@ -53,12 +54,14 @@ struct RoundSummaryView: View {
     }
     
     private var leftColumn: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 2) {
             Spacer()
             
             if store.studyMode {
-                HStack(spacing: 8) {
+                VStack(spacing: 1) {
+                    // Study mode doesn't show "Round n", but we keep COMPLETE directly beneath the title.
                     multicoloredStudy
+                    
                     Text("COMPLETE")
                         .font(AppFonts.body(size: 12))
                         .fontWeight(.medium)
@@ -66,11 +69,14 @@ struct RoundSummaryView: View {
                         .tracking(2)
                 }
             } else {
-                HStack(spacing: 8) {
-                    multicoloredRound
-                    Text("\(store.currentRound)")
-                        .font(AppFonts.display(size: 56))
-                        .foregroundStyle(AppColors.yellow)
+                VStack(spacing: 1) {
+                    HStack(spacing: 8) {
+                        multicoloredRound
+                        Text("\(store.currentRound)")
+                            .font(AppFonts.display(size: 64))
+                            .foregroundStyle(AppColors.yellow)
+                    }
+                    
                     Text("COMPLETE")
                         .font(AppFonts.body(size: 14))
                         .fontWeight(.medium)
@@ -83,33 +89,19 @@ struct RoundSummaryView: View {
                 .font(AppFonts.display(size: 96))
                 .foregroundStyle(AppColors.yellow)
             
-            pointsAndButtonRow
+            bottomButtonRow
             
             Spacer()
         }
         .frame(maxWidth: .infinity)
     }
     
-    /// Adaptive row: horizontal on wide left column, vertical on narrow (e.g. small landscape) to avoid truncation.
-    private var pointsAndButtonRow: some View {
+    /// Button-only adaptive row (keeps the small-width behavior without the "Points this round" label).
+    private var bottomButtonRow: some View {
         GeometryReader { rowGeo in
             let narrow = rowGeo.size.width < 320
-            if narrow {
-                VStack(spacing: 10) {
-                    Text("Points this round")
-                        .font(AppFonts.body(size: 14))
-                        .foregroundStyle(AppColors.mutedText)
-                    bottomButton(expanded: true)
-                }
-                .frame(maxWidth: .infinity)
-            } else {
-                HStack(alignment: .center, spacing: 16) {
-                    Text("Points this round")
-                        .font(AppFonts.body(size: 14))
-                        .foregroundStyle(AppColors.mutedText)
-                    bottomButton(expanded: false)
-                }
-            }
+            bottomButton(expanded: narrow)
+                .frame(maxWidth: .infinity, alignment: .center)
         }
         .frame(minHeight: 56)
     }
