@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { useShallow } from 'zustand/react/shallow';
 import { Button } from "@/components/ui/button";
-import { useGameStore, TEAM_THEME_COLORS, MAX_TEAM_NAME_LENGTH } from "@/lib/store";
+import { useGameStore, TEAM_THEME_COLORS, MAX_TEAM_NAME_LENGTH, defaultTeamNameAtIndex } from "@/lib/store";
 import { ArrowLeft, Share, ChevronDown, Gamepad2, BookOpen } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -14,7 +14,7 @@ function TeamNameInput({ index }: { index: number }) {
   const teamName = useGameStore(s => s.teamNames[index]);
   const setTeamName = useGameStore(s => s.setTeamName);
   const color = TEAM_THEME_COLORS[index % TEAM_THEME_COLORS.length];
-  const defaultName = `Team ${index + 1}`;
+  const defaultName = defaultTeamNameAtIndex(index);
   const [localValue, setLocalValue] = useState(teamName || defaultName);
   const [isFocused, setIsFocused] = useState(false);
 

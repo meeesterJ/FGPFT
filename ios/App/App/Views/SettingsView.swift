@@ -399,7 +399,7 @@ struct TeamNameRow: View {
     let index: Int
     @State private var localName: String = ""
     
-    private var defaultName: String { "Team \(index + 1)" }
+    private var defaultName: String { defaultTeamName(at: index) }
     private var theme: TeamThemeColor { TeamThemeColor.forTeam(index + 1) }
     
     var body: some View {

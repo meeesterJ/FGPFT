@@ -26,8 +26,26 @@ export const TEAM_THEME_COLORS = [
 
 export const MAX_TEAM_NAME_LENGTH = 12;
 
+/** Default names for teams 1–5 (pink, teal, purple, green, yellow slots). */
+export const DEFAULT_TEAM_NAMES = [
+  'Flamingos',
+  'Oxen',
+  'Grapes',
+  'Pickles',
+  'Bumblebees',
+] as const;
+
+export function defaultTeamNameAtIndex(index: number): string {
+  return DEFAULT_TEAM_NAMES[index] ?? `Team ${index + 1}`;
+}
+
 function defaultTeamNames(count: number): string[] {
-  return Array.from({ length: count }, (_, i) => `Team ${i + 1}`);
+  return Array.from({ length: count }, (_, i) => defaultTeamNameAtIndex(i));
+}
+
+function isAllGenericTeamNames(names: string[], count: number): boolean {
+  if (names.length !== count || count < 1) return false;
+  return names.every((name, i) => name === `Team ${i + 1}`);
 }
 
 interface GameState {
@@ -249,7 +267,7 @@ export const useGameStore = create<GameState>()(
 
       setNumberOfTeams: (count) => set((state) => {
         const newNames = Array.from({ length: count }, (_, i) => {
-          return state.teamNames[i] || `Team ${i + 1}`;
+          return state.teamNames[i] || defaultTeamNameAtIndex(i);
         });
         return { numberOfTeams: count, teamNames: newNames };
       }),
@@ -263,7 +281,8 @@ export const useGameStore = create<GameState>()(
 
       getTeamName: (teamNumber) => {
         const { teamNames } = get();
-        return teamNames[teamNumber - 1] || `Team ${teamNumber}`;
+        const i = teamNumber - 1;
+        return teamNames[i] || defaultTeamNameAtIndex(i);
       },
 
       getTeamColor: (teamNumber) => {
@@ -459,7 +478,7 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'guess-party-storage',
-      version: 8,
+      version: 9,
       partialize: (state) => ({ 
         studyMode: state.studyMode,
         roundDuration: state.roundDuration,
@@ -512,6 +531,13 @@ export const useGameStore = create<GameState>()(
         }
         if (version < 8) {
           persistedState.deletedCustomLists = [];
+        }
+        if (version < 9) {
+          const count = persistedState.numberOfTeams || persistedState.teamNames?.length || 1;
+          const names = persistedState.teamNames || [];
+          if (isAllGenericTeamNames(names, count)) {
+            persistedState.teamNames = defaultTeamNames(count);
+          }
         }
         return persistedState;
       },

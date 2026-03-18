@@ -3,9 +3,28 @@ import Combine
 
 private let storageKey = "guess-party-storage"
 private let storageVersion = 9
+private let migratedDefaultTeamNamesKey = "guess-party-migrated-default-team-names-v1"
+
+/// Default names for teams 1–5 (matches pink → yellow color order).
+private let defaultTeamNameList = ["Flamingos", "Oxen", "Grapes", "Pickles", "Bumblebees"]
+
+func defaultTeamName(at index: Int) -> String {
+    if index >= 0, index < defaultTeamNameList.count {
+        return defaultTeamNameList[index]
+    }
+    return "Team \(index + 1)"
+}
 
 func defaultTeamNames(count: Int) -> [String] {
-    (1...count).map { "Team \($0)" }
+    (0..<count).map { defaultTeamName(at: $0) }
+}
+
+private func isAllGenericTeamNames(_ names: [String], count: Int) -> Bool {
+    guard names.count == count, count >= 1 else { return false }
+    for i in 0..<count {
+        if names[i] != "Team \(i + 1)" { return false }
+    }
+    return true
 }
 
 /// Per-mode settings (sound, volume, haptic, tilt, buttons). Stored separately for Game and Study so switching modes restores each mode's last-used values.
@@ -127,7 +146,7 @@ final class GameStore: ObservableObject {
         self.showButtons = false
         self.tiltEnabled = true
         self.numberOfTeams = 1
-        self.teamNames = defaultTeamNames(count: 1)
+        self.teamNames = [defaultTeamName(at: 0)]
         self.hapticEnabled = true
         self.soundEnabled = true
         self.soundVolume = 100
@@ -185,6 +204,11 @@ final class GameStore: ObservableObject {
         totalRounds = decoded.totalRounds
         numberOfTeams = decoded.numberOfTeams
         teamNames = decoded.teamNames.isEmpty ? defaultTeamNames(count: numberOfTeams) : decoded.teamNames
+        if !userDefaults.bool(forKey: migratedDefaultTeamNamesKey),
+           isAllGenericTeamNames(teamNames, count: numberOfTeams) {
+            teamNames = defaultTeamNames(count: numberOfTeams)
+            userDefaults.set(true, forKey: migratedDefaultTeamNamesKey)
+        }
         tiltPermissionGranted = decoded.tiltPermissionGranted
         selectedListIds = decoded.selectedListIds
         customLists = decoded.customLists
@@ -311,8 +335,8 @@ final class GameStore: ObservableObject {
     
     func getTeamName(teamNumber: Int) -> String {
         let index = teamNumber - 1
-        guard index >= 0, index < teamNames.count else { return "Team \(teamNumber)" }
-        return teamNames[index].isEmpty ? "Team \(teamNumber)" : teamNames[index]
+        guard index >= 0, index < teamNames.count else { return defaultTeamName(at: index) }
+        return teamNames[index].isEmpty ? defaultTeamName(at: index) : teamNames[index]
     }
     
     func getTeamColor(teamNumber: Int) -> TeamThemeColor {
@@ -443,7 +467,7 @@ final class GameStore: ObservableObject {
     func setNumberOfTeams(_ count: Int) {
         numberOfTeams = count
         while teamNames.count < count {
-            teamNames.append("Team \(teamNames.count + 1)")
+            teamNames.append(defaultTeamName(at: teamNames.count))
         }
         if teamNames.count > count {
             teamNames = Array(teamNames.prefix(count))
