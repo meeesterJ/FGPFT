@@ -28,6 +28,9 @@ enum AppFonts {
     static func uiOutfit(size: CGFloat) -> UIFont {
         UIFont(name: outfitPostScriptName, size: size) ?? .systemFont(ofSize: size, weight: .regular)
     }
+
+    /// Toolbar row on Categories (compact for ~390pt+ width without horizontal scroll).
+    static let categoriesToolbarFontSize: CGFloat = 14
 }
 
 /// Custom capsule buttons (avoids `.borderedProminent` system font / metrics drift).
@@ -55,8 +58,51 @@ enum AppColors {
     static let destructive = Color(hex: "e84a6f")
     static let mutedText = Color.white.opacity(0.7)
     static let primaryPurple = Color(hex: "9333ea")
+    /// Main menu “How to Play” / Categories Sort button.
+    static let howToPlayGold = Color(hex: "ca8a04")
     static let barBackground = Color(hex: "140A24").opacity(0.92)
     static let inputBackground = Color(hex: "140A24")
+}
+
+/// Categories toolbar: uniform pill height, compact type (scrolls horizontally on narrow widths).
+struct CategoriesToolbarCapsuleStyle: ButtonStyle {
+    let fill: Color
+    var strokeColor: Color = .clear
+    var strokeWidth: CGFloat = 0
+    var foreground: Color = .white
+    /// Set false for SF Symbol–only labels so the symbol keeps `sfSymbol` sizing.
+    var applyTextFont: Bool = true
+
+    func makeBody(configuration: Configuration) -> some View {
+        Group {
+            if applyTextFont {
+                configuration.label
+                    .font(AppFonts.body(size: AppFonts.categoriesToolbarFontSize).weight(.medium))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.88)
+            } else {
+                configuration.label
+            }
+        }
+        .foregroundStyle(foreground)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .frame(minHeight: 40)
+        .background(fill)
+        .clipShape(Capsule())
+        .overlay(
+            Capsule()
+                .stroke(strokeColor, lineWidth: strokeWidth)
+        )
+        .opacity(configuration.isPressed ? 0.88 : 1)
+    }
+}
+
+struct CategoriesToolbarSortButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .opacity(configuration.isPressed ? 0.88 : 1)
+    }
 }
 
 extension Color {

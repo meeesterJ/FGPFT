@@ -79,7 +79,7 @@ struct MainMenuView: View {
                     .font(AppFonts.body(size: 18))
                     .fontWeight(.bold)
             }
-            .buttonStyle(MenuButtonStyle(backgroundColor: Color(hex: "ca8a04"), borderColor: Color(hex: "facc15")))
+            .buttonStyle(MenuButtonStyle(backgroundColor: AppColors.howToPlayGold, borderColor: Color(hex: "facc15")))
         }
     }
     

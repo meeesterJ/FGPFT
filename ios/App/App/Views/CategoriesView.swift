@@ -1,78 +1,184 @@
 import SwiftUI
 
+private enum CategorySortMode: CaseIterable, Equatable {
+    case sortDefault
+    case customOnly
+    case newFirst
+    case oldFirst
+    case alpha
+
+    var label: String {
+        switch self {
+        case .sortDefault: return "Sort"
+        case .customOnly: return "Custom"
+        case .newFirst: return "New"
+        case .oldFirst: return "Old"
+        case .alpha: return "Alpha"
+        }
+    }
+
+    mutating func advance() {
+        let all = Self.allCases
+        let i = (all.firstIndex(of: self)! + 1) % all.count
+        self = all[i]
+    }
+}
+
 struct CategoriesView: View {
     @EnvironmentObject var store: GameStore
     @State private var showCreate = false
     @State private var editingList: WordList?
     @State private var scrollToListId: String?
-    
+    @State private var showStudyListsOnly = false
+    @State private var sortMode: CategorySortMode = .sortDefault
+
     private var effectiveBuiltIn: [WordList] {
         store.getEffectiveBuiltInLists().filter {
             !store.deletedBuiltInLists.contains($0.id) && !store.permanentlyDeletedBuiltInLists.contains($0.id)
         }
     }
-    
+
     private var allLists: [WordList] {
         effectiveBuiltIn.map { WordList(id: $0.id, name: $0.name, words: $0.words, isCustom: false, isStudy: $0.isStudy) }
-        + store.customLists
+            + store.customLists
     }
-    
+
     private var deletedCount: Int {
         store.getDeletedBuiltInLists().count + store.getDeletedCustomLists().count
     }
-    
-    private var categoriesInstruction: some View {
-        Text("Select categories to include in your game")
-            .font(AppFonts.body(size: 15))
-            .foregroundStyle(AppColors.mutedText)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .fixedSize(horizontal: false, vertical: true)
+
+    private func studyFilteredBase(from lists: [WordList]) -> [WordList] {
+        lists.filter { showStudyListsOnly ? ($0.isStudy == true) : ($0.isStudy != true) }
     }
-    
-    private var categoriesActionButtons: some View {
-        HStack(spacing: 10) {
-            Button {
-                store.clearListSelections()
-            } label: {
-                Text("Clear Selections")
-            }
-            .buttonStyle(AppCapsuleButtonStyle(fill: AppColors.green))
-            Button {
-                showCreate = true
-            } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: "plus")
-                        .font(AppFonts.sfSymbol(size: 14))
-                        .fontWeight(.semibold)
-                    Text("Create List")
-                }
-            }
-            .buttonStyle(AppCapsuleButtonStyle(fill: AppColors.pink))
+
+    private func customTimestamp(from id: String) -> Int {
+        guard id.hasPrefix("custom-"), let n = Int(id.dropFirst("custom-".count)) else { return 0 }
+        return n
+    }
+
+    /// Lists shown in the categories list (study filter + sort mode).
+    private func listsForDisplay() -> [WordList] {
+        let base = studyFilteredBase(from: allLists)
+        switch sortMode {
+        case .sortDefault:
+            return base
+        case .customOnly:
+            return base.filter { $0.isCustom == true }
+        case .newFirst:
+            let customs = base.filter { $0.isCustom == true }
+            let builtIns = base.filter { $0.isCustom != true }
+            let sortedCustoms = customs.sorted { customTimestamp(from: $0.id) > customTimestamp(from: $1.id) }
+            return sortedCustoms + builtIns
+        case .oldFirst:
+            let customs = base.filter { $0.isCustom == true }
+            let builtIns = base.filter { $0.isCustom != true }
+            let sortedCustoms = customs.sorted { customTimestamp(from: $0.id) < customTimestamp(from: $1.id) }
+            return sortedCustoms + builtIns
+        case .alpha:
+            return base.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         }
     }
-    
+
+    private func pruneSelectionsToMatchVisibleLists() {
+        let lists = listsForDisplay()
+        let visible = Set(lists.map(\.id))
+        let kept = store.selectedListIds.filter { visible.contains($0) }
+        if lists.isEmpty {
+            store.setSelectedListIds([])
+        } else if kept.isEmpty {
+            store.setSelectedListIds([lists[0].id])
+        } else if kept.count != store.selectedListIds.count || kept != store.selectedListIds {
+            store.setSelectedListIds(kept)
+        }
+    }
+
+    private var categoriesToolbarRow: some View {
+        let toolbarFont = AppFonts.body(size: AppFonts.categoriesToolbarFontSize).weight(.medium)
+        return ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 9) {
+                Button {
+                    store.clearListSelections()
+                } label: {
+                    Text("Clear")
+                }
+                .buttonStyle(CategoriesToolbarCapsuleStyle(fill: AppColors.green))
+
+                Button {
+                    showCreate = true
+                } label: {
+                    Text("+Create")
+                }
+                .buttonStyle(CategoriesToolbarCapsuleStyle(fill: AppColors.pink))
+
+                Button {
+                    showStudyListsOnly.toggle()
+                } label: {
+                    Image(systemName: "book.fill")
+                        .font(AppFonts.sfSymbol(size: 12))
+                }
+                .buttonStyle(
+                    CategoriesToolbarCapsuleStyle(
+                        fill: showStudyListsOnly ? AppColors.cyan.opacity(0.2) : AppColors.primaryPurple,
+                        strokeColor: showStudyListsOnly ? AppColors.cyan : .clear,
+                        strokeWidth: showStudyListsOnly ? 2 : 0,
+                        foreground: showStudyListsOnly ? AppColors.cyan : .white,
+                        applyTextFont: false
+                    )
+                )
+                .accessibilityLabel(showStudyListsOnly ? "Showing study lists only" : "Showing game lists only")
+
+                Button {
+                    sortMode.advance()
+                } label: {
+                    ZStack {
+                        Text("Custom")
+                            .font(toolbarFont)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.88)
+                            .opacity(0)
+                            .accessibilityHidden(true)
+                        Text(sortMode.label)
+                            .font(toolbarFont)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.88)
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 10)
+                    .frame(minHeight: 40)
+                    .background(AppColors.howToPlayGold)
+                    .clipShape(Capsule())
+                }
+                .buttonStyle(CategoriesToolbarSortButtonStyle())
+                .accessibilityLabel("Sort lists, \(sortMode.label)")
+            }
+            .padding(.horizontal, 16)
+        }
+    }
+
     var body: some View {
+        let displayedLists = listsForDisplay()
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                ViewThatFits(in: .horizontal) {
-                    HStack(alignment: .center, spacing: 12) {
-                        categoriesInstruction
-                        categoriesActionButtons
-                    }
-                    VStack(alignment: .leading, spacing: 12) {
-                        categoriesInstruction
-                        HStack {
-                            Spacer(minLength: 0)
-                            categoriesActionButtons
-                        }
-                    }
-                }
-                .padding(.horizontal, 4)
-                .dynamicTypeSize(.medium ... .xLarge)
-                
+                categoriesToolbarRow
+                    .padding(.bottom, 4)
+                    .dynamicTypeSize(.medium ... .xLarge)
+
                 ScrollViewReader { proxy in
                     LazyVStack(spacing: 12) {
-                        ForEach(allLists) { list in
+                        if displayedLists.isEmpty {
+                            Text(
+                                sortMode == .customOnly
+                                    ? "No custom lists in this view. Create a list or change filters."
+                                    : "No lists match the current filter."
+                            )
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(AppColors.mutedText)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 24)
+                            .padding(.horizontal, 16)
+                        }
+                        ForEach(displayedLists) { list in
                             CategoryRow(
                                 list: list,
                                 isSelected: store.selectedListIds.contains(list.id),
@@ -123,8 +229,18 @@ struct CategoriesView: View {
                     .foregroundStyle(AppColors.cyan)
             }
         }
+        .onAppear {
+            pruneSelectionsToMatchVisibleLists()
+        }
+        .onChange(of: showStudyListsOnly) { _ in
+            pruneSelectionsToMatchVisibleLists()
+        }
+        .onChange(of: sortMode) { _ in
+            pruneSelectionsToMatchVisibleLists()
+        }
         .onDisappear {
-            if store.selectedListIds.isEmpty, let first = allLists.first {
+            let lists = listsForDisplay()
+            if store.selectedListIds.isEmpty, let first = lists.first {
                 store.setSelectedListIds([first.id])
             }
         }
