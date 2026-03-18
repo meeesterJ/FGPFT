@@ -53,6 +53,8 @@ export default function HowToPlay() {
           <li>• Edit existing lists to add or remove words</li>
           <li>• Add brand new lists with your own themes</li>
           <li>• Add words one at a time or in bulk*</li>
+          <li>• Tap Sort to change list order</li>
+          <li>• Use the book button to switch between game and Study lists</li>
         </ul>
         <p className="text-[0.6rem] text-muted-foreground/40 leading-tight mt-3">*There may be some helpful, possibly fake smart tools out there that could, possibly make a list you could, say, hypothetically copy and paste into, perhaps a category. 😉</p>
       </section>
