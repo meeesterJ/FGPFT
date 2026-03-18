@@ -35,11 +35,9 @@ struct ScoreboardView: View {
                         .foregroundStyle(AppColors.yellow)
                     
                     scoresTables
-                    
-                    Spacer()
-                    
+
                     bottomButtonRow
-                        .padding(.bottom, 32)
+                        .padding(.bottom, geo.safeAreaInsets.bottom + 16)
                 }
                 .padding(.horizontal, 32)
                 
