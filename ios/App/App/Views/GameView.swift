@@ -17,6 +17,11 @@ struct GameView: View {
     
     private var volume: Float { Float(store.soundVolume) / 100 }
     
+    /// The ready-screen "Start" button is redundant on round 1 because the screen is tappable to advance.
+    private var shouldShowStartButton: Bool {
+        (store.showButtons || !store.tiltEnabled) && store.currentRound > 1
+    }
+    
     private var multicoloredRound: some View {
         MulticoloredRoundText(fontSize: 56)
     }
@@ -94,7 +99,7 @@ struct GameView: View {
                     .font(AppFonts.display(size: 44))
                     .foregroundStyle(teamColor(store.currentTeam))
                 
-                if store.showButtons || !store.tiltEnabled {
+                if shouldShowStartButton {
                     Button {
                         triggerCountdown()
                     } label: {
@@ -164,7 +169,7 @@ struct GameView: View {
                 .font(AppFonts.body(size: 20))
                 .foregroundStyle(AppColors.mutedText)
                 
-                if store.showButtons || !store.tiltEnabled {
+                if shouldShowStartButton {
                     Button {
                         triggerCountdown()
                     } label: {
@@ -280,7 +285,7 @@ struct GameView: View {
                     .padding(.vertical, 20)
             }
             .buttonStyle(.borderedProminent)
-            .tint(AppColors.cyan)
+            .tint(teamColor(store.currentTeam))
         }
     }
     

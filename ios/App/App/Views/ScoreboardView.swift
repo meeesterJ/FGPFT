@@ -3,6 +3,8 @@ import SwiftUI
 struct ScoreboardView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var store: GameStore
+
+    private let tableColumnWidth: CGFloat = 320
     
     private var isLastTeamOfRound: Bool {
         store.currentTeam >= store.numberOfTeams
@@ -25,22 +27,19 @@ struct ScoreboardView: View {
             ZStack {
                 BackgroundView()
                 
-                VStack(spacing: 24) {
-                    Spacer()
-                    
+                VStack(spacing: 12) {
                     Text("Scoreboard")
                         .font(AppFonts.display(size: 44))
                         .foregroundStyle(AppColors.yellow)
                     
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        scoresGrid
+                    VStack(spacing: 6) {
+                        scoresTables
+                        
+                        bottomButtonRow
+                            .padding(.bottom, geo.safeAreaInsets.bottom + 8)
                     }
-                    
-                    Spacer()
-                    
-                    bottomButton
-                        .padding(.bottom, 32)
                 }
+                .padding(.top, geo.safeAreaInsets.top + 32)
                 .padding(.horizontal, 32)
                 
                 HomeButtonOverlay {
@@ -58,100 +57,17 @@ struct ScoreboardView: View {
     
     @State private var leaderGlow: Bool = false
     
-    private var scoresGrid: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                Text("Team")
-                    .font(AppFonts.body(size: 14))
-                    .foregroundStyle(.white.opacity(0.6))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 16)
-                
-                HStack(spacing: 4) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(AppFonts.sfSymbol(size: 12))
-                    Text("Correct")
-                        .font(AppFonts.body(size: 14))
-                }
-                .foregroundStyle(AppColors.green.opacity(0.8))
-                .frame(width: 90)
-                
-                HStack(spacing: 4) {
-                    Image(systemName: "arrow.right.circle.fill")
-                        .font(AppFonts.sfSymbol(size: 12))
-                    Text("Pass")
-                        .font(AppFonts.body(size: 14))
-                }
-                .foregroundStyle(AppColors.pink.opacity(0.8))
-                .frame(width: 80)
-                .padding(.trailing, 16)
-            }
-            .padding(.vertical, 10)
-            .background(Color.white.opacity(0.05))
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .padding(.bottom, 8)
+    private var totalTeams: Int {
+        store.teamTotalScores.count
+    }
+    
+    private var scoresTables: some View {
+        HStack(alignment: .top, spacing: 24) {
+            leftTeamsTable
+                .frame(width: tableColumnWidth)
             
-            ForEach(Array(store.teamTotalScores.enumerated()), id: \.offset) { index, score in
-                let teamNumber = index + 1
-                let isLeader = leaderIndex == index
-                let teamColor = TeamThemeColor.forTeam(teamNumber)
-                
-                HStack(spacing: 0) {
-                    HStack(spacing: 8) {
-                        if isLeader {
-                            Image(systemName: "crown.fill")
-                                .font(AppFonts.sfSymbol(size: 16))
-                                .foregroundStyle(AppColors.yellow)
-                                .shadow(color: AppColors.yellow.opacity(0.8), radius: leaderGlow ? 8 : 4)
-                        }
-                        
-                        Text(store.getTeamName(teamNumber: teamNumber))
-                            .font(AppFonts.display(size: 18))
-                            .foregroundStyle(Color(hex: String(teamColor.textHex.dropFirst())))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 16)
-                    
-                    Text("\(score.correct)")
-                        .font(AppFonts.display(size: 24).monospacedDigit())
-                        .foregroundStyle(AppColors.green)
-                        .frame(width: 90)
-                    
-                    Text("\(score.passed)")
-                        .font(AppFonts.display(size: 24).monospacedDigit())
-                        .foregroundStyle(AppColors.pink)
-                        .frame(width: 80)
-                        .padding(.trailing, 16)
-                }
-                .padding(.vertical, 14)
-                .background(
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color(hex: String(teamColor.bgSolidHex.dropFirst())).opacity(0.4))
-                        
-                        if isLeader {
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            AppColors.yellow.opacity(leaderGlow ? 0.25 : 0.15),
-                                            AppColors.yellow.opacity(0.05)
-                                        ],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                            
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .stroke(AppColors.yellow.opacity(leaderGlow ? 0.8 : 0.5), lineWidth: 2)
-                                .shadow(color: AppColors.yellow.opacity(0.5), radius: leaderGlow ? 10 : 5)
-                        }
-                    }
-                )
-                .padding(.vertical, 4)
-            }
+            rightTeamsTable
+                .frame(width: tableColumnWidth)
         }
         .frame(maxWidth: 700)
         .onAppear {
@@ -161,8 +77,147 @@ struct ScoreboardView: View {
         }
     }
     
+    private var leftTeamsTable: some View {
+        let visibleCount = min(3, max(0, totalTeams))
+        let visibleTeams: [Int] = visibleCount > 0 ? Array(1...visibleCount) : []
+        
+        return VStack(spacing: 0) {
+            tableHeader
+            
+            ForEach(visibleTeams, id: \.self) { teamNumber in
+                let score = store.teamTotalScores[teamNumber - 1]
+                teamRow(teamNumber: teamNumber, score: score)
+            }
+        }
+    }
+    
+    private var rightTeamsTable: some View {
+        let shouldShowRightTable = totalTeams > 3
+        let rightSlots = [4, 5]
+
+        return VStack(spacing: 0) {
+            tableHeader
+                .opacity(shouldShowRightTable ? 1 : 0) // reserve space so button doesn't move
+            
+            ForEach(rightSlots, id: \.self) { teamNumber in
+                let isAvailable = teamNumber <= totalTeams
+                let score = isAvailable ? store.teamTotalScores[teamNumber - 1] : TeamScore()
+                
+                teamRow(teamNumber: teamNumber, score: score)
+                    .opacity(isAvailable ? 1 : 0)
+            }
+        }
+    }
+    
+    private var tableHeader: some View {
+        HStack(spacing: 0) {
+            Text("Team")
+                .font(AppFonts.body(size: 14))
+                .foregroundStyle(.white.opacity(0.6))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 16)
+            
+            HStack(spacing: 4) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(AppFonts.sfSymbol(size: 12))
+                Text("Correct")
+                    .font(AppFonts.body(size: 14))
+            }
+            .foregroundStyle(AppColors.green.opacity(0.8))
+            .frame(width: 90)
+            
+            HStack(spacing: 4) {
+                Image(systemName: "arrow.right.circle.fill")
+                    .font(AppFonts.sfSymbol(size: 12))
+                Text("Pass")
+                    .font(AppFonts.body(size: 14))
+            }
+            .foregroundStyle(AppColors.pink.opacity(0.8))
+            .frame(width: 80)
+            .padding(.trailing, 16)
+        }
+        .padding(.vertical, 10)
+        .background(Color.white.opacity(0.05))
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .padding(.bottom, 8)
+    }
+    
+    private func teamRow(teamNumber: Int, score: TeamScore) -> some View {
+        let isLeader = (leaderIndex == teamNumber - 1)
+        let teamColor = TeamThemeColor.forTeam(teamNumber)
+        
+        return HStack(spacing: 0) {
+            HStack(spacing: 8) {
+                if isLeader {
+                    Image(systemName: "crown.fill")
+                        .font(AppFonts.sfSymbol(size: 16))
+                        .foregroundStyle(AppColors.yellow)
+                        .shadow(color: AppColors.yellow.opacity(0.8), radius: leaderGlow ? 8 : 4)
+                }
+                
+                Text(store.getTeamName(teamNumber: teamNumber))
+                    .font(AppFonts.display(size: 18))
+                    .foregroundStyle(Color(hex: String(teamColor.textHex.dropFirst())))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, 16)
+            
+            Text("\(score.correct)")
+                .font(AppFonts.display(size: 24).monospacedDigit())
+                .foregroundStyle(AppColors.green)
+                .frame(width: 90)
+            
+            Text("\(score.passed)")
+                .font(AppFonts.display(size: 24).monospacedDigit())
+                .foregroundStyle(AppColors.pink)
+                .frame(width: 80)
+                .padding(.trailing, 16)
+        }
+        .padding(.vertical, 14)
+        .background(
+            ZStack {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(hex: String(teamColor.bgSolidHex.dropFirst())).opacity(0.4))
+                
+                if isLeader {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    AppColors.yellow.opacity(leaderGlow ? 0.25 : 0.15),
+                                    AppColors.yellow.opacity(0.05)
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                    
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(AppColors.yellow.opacity(leaderGlow ? 0.8 : 0.5), lineWidth: 2)
+                        .shadow(color: AppColors.yellow.opacity(0.5), radius: leaderGlow ? 10 : 5)
+                }
+            }
+        )
+        .padding(.vertical, 4)
+    }
+    
+    private var bottomButtonRow: some View {
+        HStack(spacing: 24) {
+            Color.clear
+                .frame(width: tableColumnWidth)
+            
+            bottomButton
+                .frame(width: tableColumnWidth, alignment: .trailing)
+        }
+        .frame(maxWidth: 700)
+    }
+    
     private var bottomButton: some View {
-        Button {
+        let teamReadyTint = TeamThemeColor.forTeam(store.currentTeam + 1).color
+        let tintColor: Color = (isGameOver || isLastTeamOfRound) ? AppColors.pink : teamReadyTint
+        return Button {
             if isGameOver {
                 store.prepareRound()
                 path.append(AppRoute.summary)
@@ -171,28 +226,33 @@ struct ScoreboardView: View {
                 path.removeLast(2)
             }
         } label: {
-            HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 if isGameOver {
                     Text("AND THE WINNER IS...")
-                        .font(AppFonts.body(size: 20))
-                        .fontWeight(.bold)
+                        .font(AppFonts.body(size: 14))
+                        .fontWeight(.semibold)
                     Image(systemName: "trophy.fill")
+                        .font(AppFonts.sfSymbol(size: 14))
                 } else if isLastTeamOfRound {
                     Text("Next Round...")
-                        .font(AppFonts.body(size: 20))
-                        .fontWeight(.bold)
+                        .font(AppFonts.body(size: 14))
+                        .fontWeight(.semibold)
                     Image(systemName: "arrow.right")
+                        .font(AppFonts.sfSymbol(size: 14))
                 } else {
                     Text("\(store.getTeamName(teamNumber: store.currentTeam + 1)) Ready?")
-                        .font(AppFonts.body(size: 20))
-                        .fontWeight(.bold)
+                        .font(AppFonts.body(size: 14))
+                        .fontWeight(.semibold)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
                     Image(systemName: "arrow.right")
+                        .font(AppFonts.sfSymbol(size: 14))
                 }
             }
-            .frame(maxWidth: 320)
-            .padding(.vertical, 16)
+            .frame(maxWidth: 160, alignment: .trailing)
+            .padding(.vertical, 8)
         }
         .buttonStyle(.borderedProminent)
-        .tint(AppColors.pink)
+        .tint(tintColor)
     }
 }

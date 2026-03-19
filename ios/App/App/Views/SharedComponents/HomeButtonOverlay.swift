@@ -5,6 +5,7 @@ struct HomeButtonOverlay: View {
     
     var body: some View {
         GeometryReader { geo in
+            let extraInset = LayoutAdaptation.homeButtonExtraInsets()
             VStack {
                 HStack {
                     Button(action: action) {
@@ -15,8 +16,8 @@ struct HomeButtonOverlay: View {
                             .background(Color.white.opacity(0.15))
                             .clipShape(Circle())
                     }
-                    .padding(.leading, geo.safeAreaInsets.leading + 16)
-                    .padding(.top, geo.safeAreaInsets.top + 16)
+                    .padding(.leading, geo.safeAreaInsets.leading + 16 + extraInset)
+                    .padding(.top, geo.safeAreaInsets.top + 16 + extraInset)
                     Spacer()
                 }
                 Spacer()
