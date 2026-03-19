@@ -285,7 +285,7 @@ struct GameView: View {
                     .padding(.vertical, 20)
             }
             .buttonStyle(.borderedProminent)
-            .tint(AppColors.cyan)
+            .tint(teamColor(store.currentTeam))
         }
     }
     
