@@ -27,19 +27,19 @@ struct ScoreboardView: View {
             ZStack {
                 BackgroundView()
                 
-                VStack(spacing: 16) {
+                VStack(spacing: 12) {
                     Text("Scoreboard")
                         .font(AppFonts.display(size: 44))
                         .foregroundStyle(AppColors.yellow)
                     
-                    VStack(spacing: 8) {
+                    VStack(spacing: 6) {
                         scoresTables
                         
                         bottomButtonRow
-                            .padding(.bottom, geo.safeAreaInsets.bottom + 12)
+                            .padding(.bottom, geo.safeAreaInsets.bottom + 8)
                     }
                 }
-                .padding(.top, geo.safeAreaInsets.top + 40)
+                .padding(.top, geo.safeAreaInsets.top + 32)
                 .padding(.horizontal, 32)
                 
                 HomeButtonOverlay {
@@ -215,7 +215,9 @@ struct ScoreboardView: View {
     }
     
     private var bottomButton: some View {
-        Button {
+        let teamReadyTint = TeamThemeColor.forTeam(store.currentTeam + 1).color
+        let tintColor: Color = (isGameOver || isLastTeamOfRound) ? AppColors.pink : teamReadyTint
+        return Button {
             if isGameOver {
                 store.prepareRound()
                 path.append(AppRoute.summary)
@@ -224,28 +226,33 @@ struct ScoreboardView: View {
                 path.removeLast(2)
             }
         } label: {
-            HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 if isGameOver {
                     Text("AND THE WINNER IS...")
-                        .font(AppFonts.body(size: 20))
-                        .fontWeight(.bold)
+                        .font(AppFonts.body(size: 14))
+                        .fontWeight(.semibold)
                     Image(systemName: "trophy.fill")
+                        .font(AppFonts.sfSymbol(size: 14))
                 } else if isLastTeamOfRound {
                     Text("Next Round...")
-                        .font(AppFonts.body(size: 20))
-                        .fontWeight(.bold)
+                        .font(AppFonts.body(size: 14))
+                        .fontWeight(.semibold)
                     Image(systemName: "arrow.right")
+                        .font(AppFonts.sfSymbol(size: 14))
                 } else {
                     Text("\(store.getTeamName(teamNumber: store.currentTeam + 1)) Ready?")
-                        .font(AppFonts.body(size: 20))
-                        .fontWeight(.bold)
+                        .font(AppFonts.body(size: 14))
+                        .fontWeight(.semibold)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
                     Image(systemName: "arrow.right")
+                        .font(AppFonts.sfSymbol(size: 14))
                 }
             }
-            .frame(maxWidth: 320)
-            .padding(.vertical, 16)
+            .frame(maxWidth: 160, alignment: .trailing)
+            .padding(.vertical, 8)
         }
         .buttonStyle(.borderedProminent)
-        .tint(AppColors.pink)
+        .tint(tintColor)
     }
 }
