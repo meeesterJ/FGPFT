@@ -76,14 +76,15 @@ struct RoundSummaryView: View {
 
             let headerHeight = max(roundWordSize.height, roundDigitSize.height)
 
-            let headerWidth = roundWordSize.width + digitSpacing + roundDigitSize.width
             let pointsRowWidth = pointsNumberSize.width + pointsLabelSpacing + pointsLabelSize.width
 
-            let headerStartX = bounds.minX + (bounds.width - headerWidth) / 2
             let completeX = bounds.minX + (bounds.width - completeSize.width) / 2
 
-            // X center of the digit in the "Round n" row.
-            let digitCenterX = headerStartX + roundWordSize.width + digitSpacing + roundDigitSize.width / 2
+            // X center of the digit (and therefore the points number) should be the container center,
+            // so the score aligns with the centered button below.
+            let digitCenterX = bounds.minX + bounds.width / 2
+            let roundDigitLeftX = digitCenterX - roundDigitSize.width / 2
+            let roundWordLeftX = roundDigitLeftX - digitSpacing - roundWordSize.width
 
             let headerTopY = bounds.minY
             let roundWordY = headerTopY + (headerHeight - roundWordSize.height) / 2
@@ -91,11 +92,11 @@ struct RoundSummaryView: View {
 
             // Place header row.
             subviews[0].place(
-                at: CGPoint(x: headerStartX, y: roundWordY),
+                at: CGPoint(x: roundWordLeftX, y: roundWordY),
                 proposal: ProposedViewSize(width: roundWordSize.width, height: roundWordSize.height)
             )
             subviews[1].place(
-                at: CGPoint(x: headerStartX + roundWordSize.width + digitSpacing, y: roundDigitY),
+                at: CGPoint(x: roundDigitLeftX, y: roundDigitY),
                 proposal: ProposedViewSize(width: roundDigitSize.width, height: roundDigitSize.height)
             )
 
@@ -263,12 +264,12 @@ struct RoundSummaryView: View {
             } else {
                 RoundSummaryNonStudyLayout {
                     multicoloredRound
-                        .frame(height: 80)
+                        .frame(height: 96)
                     
                     Text("\(store.currentRound)")
-                        .font(AppFonts.display(size: 80))
+                        .font(AppFonts.display(size: 96))
                         .baselineOffset(store.currentRound == 1 ? -6 : 0)
-                        .frame(height: 80)
+                        .frame(height: 96)
                         .foregroundStyle(AppColors.yellow)
                     
                     Text("COMPLETE")
