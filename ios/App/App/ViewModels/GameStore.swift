@@ -104,6 +104,8 @@ struct PersistedGameState: Codable {
     var deletedBuiltInLists: [String]
     var permanentlyDeletedBuiltInLists: [String]
     var deletedCustomLists: [WordList]?
+    /// Nil for older saves; category favorites by list id.
+    var favoriteListIds: [String]?
     /// New format: per-mode settings. Nil when loading old persisted data (migration).
     var gameModeSettings: ModeSettings?
     var studyModeSettings: ModeSettings?
@@ -128,6 +130,7 @@ final class GameStore: ObservableObject {
     @Published var deletedBuiltInLists: [String]
     @Published var permanentlyDeletedBuiltInLists: [String]
     @Published var deletedCustomLists: [WordList]
+    @Published var favoriteListIds: Set<String>
     
     // MARK: - Session state (not persisted)
     @Published var currentRound: Int
@@ -172,6 +175,7 @@ final class GameStore: ObservableObject {
         self.deletedBuiltInLists = []
         self.permanentlyDeletedBuiltInLists = []
         self.deletedCustomLists = []
+        self.favoriteListIds = []
         self.currentRound = 0
         self.currentScore = 0
         self.currentWord = nil
@@ -232,6 +236,7 @@ final class GameStore: ObservableObject {
         deletedBuiltInLists = decoded.deletedBuiltInLists
         permanentlyDeletedBuiltInLists = decoded.permanentlyDeletedBuiltInLists
         deletedCustomLists = decoded.deletedCustomLists ?? []
+        favoriteListIds = Set(decoded.favoriteListIds ?? [])
 
         if let game = decoded.gameModeSettings, let study = decoded.studyModeSettings {
             gameModeSettings = game
@@ -318,6 +323,7 @@ final class GameStore: ObservableObject {
             deletedBuiltInLists: deletedBuiltInLists,
             permanentlyDeletedBuiltInLists: permanentlyDeletedBuiltInLists,
             deletedCustomLists: deletedCustomLists,
+            favoriteListIds: Array(favoriteListIds),
             gameModeSettings: gameModeSettings,
             studyModeSettings: studyModeSettings
         )
@@ -427,6 +433,20 @@ final class GameStore: ObservableObject {
     func setSelectedListIds(_ ids: [String]) {
         selectedListIds = ids
     }
+
+    func isFavorite(id: String) -> Bool {
+        favoriteListIds.contains(id)
+    }
+
+    func toggleFavorite(id: String) {
+        var next = favoriteListIds
+        if next.contains(id) {
+            next.remove(id)
+        } else {
+            next.insert(id)
+        }
+        favoriteListIds = next
+    }
     
     /// Adds a custom list and selects only it (replaces current selection). Intentional iOS behavior; fallback in startGame() handles empty selection if needed.
     func addCustomList(_ list: WordList) {
@@ -440,6 +460,7 @@ final class GameStore: ObservableObject {
         guard let listToDelete = customLists.first(where: { $0.id == id }) else { return }
         customLists.removeAll { $0.id == id }
         selectedListIds.removeAll { $0 == id }
+        favoriteListIds = favoriteListIds.subtracting([id])
         deletedCustomLists.append(listToDelete)
     }
     
@@ -451,6 +472,7 @@ final class GameStore: ObservableObject {
     
     func permanentlyDeleteCustomList(id: String) {
         deletedCustomLists.removeAll { $0.id == id }
+        favoriteListIds = favoriteListIds.subtracting([id])
     }
     
     func getDeletedCustomLists() -> [WordList] {
@@ -473,6 +495,7 @@ final class GameStore: ObservableObject {
     func deleteBuiltInList(id: String) {
         deletedBuiltInLists.append(id)
         selectedListIds.removeAll { $0 == id }
+        favoriteListIds = favoriteListIds.subtracting([id])
     }
     
     func restoreBuiltInList(id: String) {
@@ -482,6 +505,7 @@ final class GameStore: ObservableObject {
     func permanentlyDeleteBuiltInList(id: String) {
         deletedBuiltInLists.removeAll { $0 == id }
         permanentlyDeletedBuiltInLists.append(id)
+        favoriteListIds = favoriteListIds.subtracting([id])
     }
     
     func setNumberOfTeams(_ count: Int) {

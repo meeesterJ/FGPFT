@@ -6,6 +6,7 @@ private enum CategorySortMode: CaseIterable, Equatable {
     case newFirst
     case oldFirst
     case alpha
+    case favoritesOnly
 
     var label: String {
         switch self {
@@ -14,6 +15,7 @@ private enum CategorySortMode: CaseIterable, Equatable {
         case .newFirst: return "New"
         case .oldFirst: return "Old"
         case .alpha: return "Alpha"
+        case .favoritesOnly: return "Fav"
         }
     }
 
@@ -56,26 +58,57 @@ struct CategoriesView: View {
         return n
     }
 
-    /// Lists shown in the categories list (study filter + sort mode).
+    /// Lists shown in the categories list (study filter + sort mode). Fav ignores study/game filter.
     private func listsForDisplay() -> [WordList] {
-        let base = studyFilteredBase(from: allLists)
         switch sortMode {
+        case .favoritesOnly:
+            return allLists.filter { store.favoriteListIds.contains($0.id) }
         case .sortDefault:
-            return base
+            return studyFilteredBase(from: allLists)
         case .customOnly:
-            return base.filter { $0.isCustom == true }
+            return studyFilteredBase(from: allLists).filter { $0.isCustom == true }
         case .newFirst:
+            let base = studyFilteredBase(from: allLists)
             let customs = base.filter { $0.isCustom == true }
             let builtIns = base.filter { $0.isCustom != true }
             let sortedCustoms = customs.sorted { customTimestamp(from: $0.id) > customTimestamp(from: $1.id) }
             return sortedCustoms + builtIns
         case .oldFirst:
+            let base = studyFilteredBase(from: allLists)
             let customs = base.filter { $0.isCustom == true }
             let builtIns = base.filter { $0.isCustom != true }
             let sortedCustoms = customs.sorted { customTimestamp(from: $0.id) < customTimestamp(from: $1.id) }
             return sortedCustoms + builtIns
         case .alpha:
-            return base.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            return studyFilteredBase(from: allLists)
+                .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        }
+    }
+
+    private func deleteList(_ list: WordList) {
+        if list.isCustom == true {
+            store.removeCustomList(id: list.id)
+        } else {
+            store.deleteBuiltInList(id: list.id)
+        }
+    }
+
+    private var listRowLeadingInset: CGFloat {
+        LayoutAdaptation.contentMargin(compact: 16, pad: 0) + LayoutAdaptation.contentMargin(compact: 8, pad: 16)
+    }
+
+    private var listRowTrailingInset: CGFloat {
+        LayoutAdaptation.contentMargin(compact: 16, pad: 0)
+    }
+
+    private func emptyStateMessage() -> String {
+        switch sortMode {
+        case .customOnly:
+            return "No custom lists in this view. Create a list or change filters."
+        case .favoritesOnly:
+            return "No favorite lists yet. Swipe right on a list to favorite it."
+        default:
+            return "No lists match the current filter."
         }
     }
 
@@ -131,7 +164,10 @@ struct CategoriesView: View {
                     sortMode.advance()
                 } label: {
                     ZStack {
-                        Text("Custom")
+                        HStack(spacing: 4) {
+                            Text("Custom")
+                            Text("Fav")
+                        }
                             .font(toolbarFont)
                             .lineLimit(1)
                             .minimumScaleFactor(0.88)
@@ -152,58 +188,73 @@ struct CategoriesView: View {
                 .buttonStyle(CategoriesToolbarSortButtonStyle())
                 .accessibilityLabel("Sort lists, \(sortMode.label)")
             }
-            .padding(.horizontal, 16)
+            // Match listRowLeadingInset / listRowTrailingInset so toolbar aligns with category rows.
+            .padding(.leading, listRowLeadingInset)
+            .padding(.trailing, listRowTrailingInset)
         }
     }
 
     var body: some View {
         let displayedLists = listsForDisplay()
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                categoriesToolbarRow
-                    .padding(.bottom, 4)
-                    .dynamicTypeSize(.medium ... .xLarge)
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    ScrollViewReader { proxy in
-                        LazyVStack(spacing: 12) {
-                            if displayedLists.isEmpty {
-                                Text(
-                                    sortMode == .customOnly
-                                        ? "No custom lists in this view. Create a list or change filters."
-                                        : "No lists match the current filter."
-                                )
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(AppColors.mutedText)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 24)
-                                // The list region is already iPhone-padded; avoid double-insetting.
-                                .padding(.horizontal, LayoutAdaptation.contentMargin(compact: 0, pad: 16))
+        let rowInsets = EdgeInsets(
+            top: 6,
+            leading: listRowLeadingInset,
+            bottom: 6,
+            trailing: listRowTrailingInset
+        )
+        VStack(alignment: .leading, spacing: 16) {
+            categoriesToolbarRow
+                .padding(.bottom, 4)
+                .dynamicTypeSize(.medium ... .xLarge)
+
+            ScrollViewReader { proxy in
+                List {
+                    if displayedLists.isEmpty {
+                        Text(emptyStateMessage())
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(AppColors.mutedText)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 24)
+                            .padding(.horizontal, LayoutAdaptation.contentMargin(compact: 0, pad: 16))
+                            .listRowInsets(rowInsets)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                    } else {
+                        ForEach(displayedLists) { list in
+                            let favorited = store.isFavorite(id: list.id)
+                            CategoryRow(
+                                list: list,
+                                isSelected: store.selectedListIds.contains(list.id),
+                                isFavorite: favorited,
+                                onToggle: { store.toggleListSelection(id: list.id) },
+                                onToggleFavorite: { store.toggleFavorite(id: list.id) },
+                                onEdit: { editingList = list },
+                                onDelete: { deleteList(list) }
+                            )
+                            .id(list.id)
+                            .listRowInsets(rowInsets)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                Button {
+                                    store.toggleFavorite(id: list.id)
+                                } label: {
+                                    Label(
+                                        favorited ? "Unfavorite" : "Favorite",
+                                        systemImage: favorited ? "star.slash.fill" : "star.fill"
+                                    )
+                                }
+                                .tint(AppColors.howToPlayGold)
                             }
-                            ForEach(displayedLists) { list in
-                                CategoryRow(
-                                    list: list,
-                                    isSelected: store.selectedListIds.contains(list.id),
-                                    onToggle: { store.toggleListSelection(id: list.id) },
-                                    onEdit: { editingList = list },
-                                    onDelete: {
-                                        if list.isCustom == true {
-                                            store.removeCustomList(id: list.id)
-                                        } else {
-                                            store.deleteBuiltInList(id: list.id)
-                                        }
-                                    }
-                                )
-                                .id(list.id)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button(role: .destructive) {
+                                    deleteList(list)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
                             }
-                        }
-                        .onChange(of: scrollToListId) { newId in
-                            guard let id = newId else { return }
-                            proxy.scrollTo(id, anchor: .center)
-                            scrollToListId = nil
                         }
                     }
-                    
                     if deletedCount > 0 {
                         NavigationLink(value: AppRoute.deletedCategories) {
                             Text("View Deleted Categories (\(deletedCount))")
@@ -212,15 +263,29 @@ struct CategoriesView: View {
                         }
                         .buttonStyle(.bordered)
                         .foregroundStyle(AppColors.mutedText)
-                        .padding(.top, 8)
+                        .listRowInsets(EdgeInsets(
+                            top: 8,
+                            leading: listRowLeadingInset,
+                            bottom: 8,
+                            trailing: listRowTrailingInset
+                        ))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                     }
                 }
-                .padding(.horizontal, LayoutAdaptation.contentMargin(compact: 16, pad: 0))
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .environment(\.defaultMinListRowHeight, 1)
+                .onChange(of: scrollToListId) { newId in
+                    guard let id = newId else { return }
+                    proxy.scrollTo(id, anchor: .center)
+                    scrollToListId = nil
+                }
             }
-            .padding(.vertical, 20)
             .padding(.horizontal, 0)
-            .padding(.bottom, 40)
         }
+        .padding(.vertical, 20)
+        .padding(.bottom, 40)
         .transparentPurpleBottomBar()
         .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
@@ -240,6 +305,9 @@ struct CategoriesView: View {
             pruneSelectionsToMatchVisibleLists()
         }
         .onChange(of: sortMode) { _ in
+            pruneSelectionsToMatchVisibleLists()
+        }
+        .onChange(of: store.favoriteListIds) { _ in
             pruneSelectionsToMatchVisibleLists()
         }
         .onDisappear {
@@ -267,7 +335,9 @@ struct CategoriesView: View {
 struct CategoryRow: View {
     let list: WordList
     let isSelected: Bool
+    let isFavorite: Bool
     let onToggle: () -> Void
+    let onToggleFavorite: () -> Void
     let onEdit: () -> Void
     let onDelete: () -> Void
     
@@ -293,16 +363,28 @@ struct CategoryRow: View {
                         .foregroundStyle(AppColors.mutedText)
                 }
                 Spacer(minLength: 8)
-                if list.isStudy == true {
-                    Image(systemName: "book.fill")
-                        .foregroundStyle(isSelected ? AppColors.cyan : AppColors.mutedText)
-                        .font(AppFonts.sfSymbol(size: 16))
-                }
             }
             .contentShape(Rectangle())
             .onTapGesture { onToggle() }
             
             HStack(spacing: 0) {
+                if isFavorite {
+                    Button(action: onToggleFavorite) {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(AppColors.howToPlayGold)
+                            .font(AppFonts.sfSymbol(size: 16))
+                            .frame(width: 44, height: 44)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Remove from favorites")
+                }
+                if list.isStudy == true {
+                    Image(systemName: "book.fill")
+                        .foregroundStyle(isSelected ? AppColors.cyan : AppColors.mutedText)
+                        .font(AppFonts.sfSymbol(size: 16))
+                        .frame(width: 44, height: 44)
+                        .accessibilityHidden(true)
+                }
                 Button(action: onEdit) {
                     Image(systemName: "pencil")
                         .foregroundStyle(AppColors.yellow)
@@ -317,8 +399,6 @@ struct CategoryRow: View {
                 .buttonStyle(.plain)
             }
         }
-        // On iPhone this row sits inside an already padded container.
-        .padding(.leading, LayoutAdaptation.contentMargin(compact: 8, pad: 16))
         .padding(.vertical, 16)
         .background(isSelected ? AppColors.cyan.opacity(0.2) : Color.white.opacity(0.06))
         .clipShape(RoundedRectangle(cornerRadius: 12))
