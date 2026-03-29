@@ -400,6 +400,7 @@ struct CategoryRow: View {
             }
         }
         .padding(.vertical, 16)
+        .padding(.leading, 10)
         .background(isSelected ? AppColors.cyan.opacity(0.2) : Color.white.opacity(0.06))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(isSelected ? AppColors.cyan : Color.white.opacity(0.15), lineWidth: isSelected ? 2 : 1))
