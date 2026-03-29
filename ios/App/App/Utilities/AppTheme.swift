@@ -22,6 +22,12 @@ enum AppFonts {
     static func display(size: CGFloat) -> Font { .custom(titanPostScriptName, size: size) }
     static func body(size: CGFloat) -> Font { .custom(outfitPostScriptName, size: size) }
 
+    /// Outfit at `baseSize` (default UIKit content size), scaled for Dynamic Type using `textStyle` metrics.
+    static func body(baseSize: CGFloat, textStyle: UIFont.TextStyle) -> Font {
+        let scaled = UIFontMetrics(forTextStyle: textStyle).scaledValue(for: baseSize)
+        return .custom(outfitPostScriptName, size: scaled)
+    }
+
     /// SF Symbols render with the system font; use only for `Image(systemName:)`.
     static func sfSymbol(size: CGFloat) -> Font { .system(size: size) }
 
