@@ -282,10 +282,10 @@ struct CategoriesView: View {
                     scrollToListId = nil
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding(.horizontal, 0)
         }
-        .padding(.vertical, 20)
-        .padding(.bottom, 40)
+        .padding(.top, 20)
         .transparentPurpleBottomBar()
         .background(BackgroundView())
         .navigationBarTitleDisplayMode(.inline)
