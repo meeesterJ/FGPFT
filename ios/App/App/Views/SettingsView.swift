@@ -196,20 +196,19 @@ struct SettingsView: View {
                 .tint(AppColors.primaryPurple)
             }
             if LayoutAdaptation.isPad {
-                HStack(alignment: .center) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("On-screen buttons")
-                            .font(AppFonts.body(size: 17))
-                            .foregroundStyle(AppColors.pink)
-                        Text("Always on for iPad")
-                            .font(AppFonts.body(size: 12))
-                            .foregroundStyle(AppColors.mutedText)
-                    }
+                HStack {
+                    Text("Show Buttons")
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(AppColors.pink)
                     Spacer()
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(AppFonts.sfSymbol(size: 22))
-                        .foregroundStyle(AppColors.green)
+                    Toggle("", isOn: .constant(true))
+                        .labelsHidden()
+                        .tint(AppColors.primaryPurple)
+                        .allowsHitTesting(false)
                 }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Show buttons, on")
+                .accessibilityHint("Always on for iPad")
             } else {
                 HStack {
                     Text("Show Buttons")
