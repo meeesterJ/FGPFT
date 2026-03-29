@@ -409,6 +409,7 @@ struct CategoryRow: View {
 
 private struct WordListEditorSection: View {
     @Binding var text: String
+    var expandingEditor: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -419,12 +420,13 @@ private struct WordListEditorSection: View {
                 .font(AppFonts.body(baseSize: 19, textStyle: .body))
                 .foregroundStyle(.white)
                 .scrollContentBackground(.hidden)
-                .frame(minHeight: 140)
-                .frame(maxWidth: .infinity)
+                .frame(minHeight: expandingEditor ? 120 : 140)
+                .frame(maxWidth: .infinity, maxHeight: expandingEditor ? .infinity : nil)
                 .padding(12)
                 .background(AppColors.inputBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
+        .frame(maxWidth: .infinity, maxHeight: expandingEditor ? .infinity : nil, alignment: .topLeading)
     }
 }
 
@@ -443,42 +445,40 @@ struct AddCategorySheet: View {
             ZStack(alignment: .top) {
                 createPink
                     .ignoresSafeArea()
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Color.clear.frame(height: 8)
-                        Text("List Name")
-                            .font(AppFonts.body(size: 15))
-                            .foregroundStyle(.white)
-                        TextField("Name", text: $name)
-                            .font(AppFonts.body(size: 17))
-                            .foregroundStyle(.white)
-                            .padding(12)
-                            .frame(maxWidth: .infinity)
-                            .background(AppColors.inputBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                        HStack {
-                            Text("Study Mode")
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.white)
-                            Spacer()
-                            Toggle("", isOn: $isStudy)
-                                .labelsHidden()
-                                .tint(AppColors.primaryPurple)
-                        }
+                VStack(alignment: .leading, spacing: 12) {
+                    Color.clear.frame(height: 8)
+                    Text("List Name")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(.white)
+                    TextField("Name", text: $name)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
                         .padding(12)
+                        .frame(maxWidth: .infinity)
                         .background(AppColors.inputBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                        WordListEditorSection(text: $wordsText)
-                        if let err = errorMessage {
-                            Text(err)
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.red)
-                        }
+                    HStack {
+                        Text("Study Mode")
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(.white)
+                        Spacer()
+                        Toggle("", isOn: $isStudy)
+                            .labelsHidden()
+                            .tint(AppColors.primaryPurple)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 32)
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .padding(12)
+                    .background(AppColors.inputBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    if let err = errorMessage {
+                        Text(err)
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(.red)
+                    }
+                    WordListEditorSection(text: $wordsText, expandingEditor: true)
                 }
+                .padding(.horizontal, 16)
+                .padding(.bottom, LayoutAdaptation.value(compact: 32, pad: 28))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(createPink, for: .navigationBar)
@@ -557,42 +557,40 @@ struct EditCategorySheet: View {
             ZStack(alignment: .top) {
                 editYellow
                     .ignoresSafeArea()
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Color.clear.frame(height: 8)
-                        Text("List Name")
-                            .font(AppFonts.body(size: 15))
-                            .foregroundStyle(.white)
-                        TextField("Name", text: $name)
-                            .font(AppFonts.body(size: 17))
-                            .foregroundStyle(.white)
-                            .padding(12)
-                            .frame(maxWidth: .infinity)
-                            .background(AppColors.inputBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                        HStack {
-                            Text("Study Mode")
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.white)
-                            Spacer()
-                            Toggle("", isOn: $isStudy)
-                                .labelsHidden()
-                                .tint(AppColors.primaryPurple)
-                        }
+                VStack(alignment: .leading, spacing: 12) {
+                    Color.clear.frame(height: 8)
+                    Text("List Name")
+                        .font(AppFonts.body(size: 15))
+                        .foregroundStyle(.white)
+                    TextField("Name", text: $name)
+                        .font(AppFonts.body(size: 17))
+                        .foregroundStyle(.white)
                         .padding(12)
+                        .frame(maxWidth: .infinity)
                         .background(AppColors.inputBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                        WordListEditorSection(text: wordsText)
-                        if let err = errorMessage {
-                            Text(err)
-                                .font(AppFonts.body(size: 15))
-                                .foregroundStyle(.red)
-                        }
+                    HStack {
+                        Text("Study Mode")
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(.white)
+                        Spacer()
+                        Toggle("", isOn: $isStudy)
+                            .labelsHidden()
+                            .tint(AppColors.primaryPurple)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 32)
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .padding(12)
+                    .background(AppColors.inputBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    if let err = errorMessage {
+                        Text(err)
+                            .font(AppFonts.body(size: 15))
+                            .foregroundStyle(.red)
+                    }
+                    WordListEditorSection(text: wordsText, expandingEditor: true)
                 }
+                .padding(.horizontal, 16)
+                .padding(.bottom, LayoutAdaptation.value(compact: 32, pad: 28))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(editYellow, for: .navigationBar)
