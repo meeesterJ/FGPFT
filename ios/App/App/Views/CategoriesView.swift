@@ -407,17 +407,21 @@ struct CategoryRow: View {
     }
 }
 
+/// Foreground on pink/yellow category sheet chrome (matches dark input card hue).
+private let categorySheetChromeForeground = Color(hex: "140A24")
+
 private struct WordListEditorSection: View {
     @Binding var text: String
     var expandingEditor: Bool = false
+    var labelForeground: Color
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Words (one per line)")
-                .font(AppFonts.body(baseSize: 17, textStyle: .subheadline))
-                .foregroundStyle(.white)
+                .font(AppFonts.body(baseSize: 22, textStyle: .body))
+                .foregroundStyle(labelForeground)
             TextEditor(text: $text)
-                .font(AppFonts.body(baseSize: 19, textStyle: .body))
+                .font(AppFonts.body(baseSize: 22, textStyle: .body))
                 .foregroundStyle(.white)
                 .scrollContentBackground(.hidden)
                 .frame(minHeight: expandingEditor ? 120 : 140)
@@ -449,7 +453,7 @@ struct AddCategorySheet: View {
                     Color.clear.frame(height: 8)
                     Text("List Name")
                         .font(AppFonts.body(size: 15))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(categorySheetChromeForeground)
                     TextField("Name", text: $name)
                         .font(AppFonts.body(size: 17))
                         .foregroundStyle(.white)
@@ -460,7 +464,7 @@ struct AddCategorySheet: View {
                     HStack {
                         Text("Study Mode")
                             .font(AppFonts.body(size: 15))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(categorySheetChromeForeground)
                         Spacer()
                         Toggle("", isOn: $isStudy)
                             .labelsHidden()
@@ -474,7 +478,11 @@ struct AddCategorySheet: View {
                             .font(AppFonts.body(size: 15))
                             .foregroundStyle(.red)
                     }
-                    WordListEditorSection(text: $wordsText, expandingEditor: true)
+                    WordListEditorSection(
+                        text: $wordsText,
+                        expandingEditor: true,
+                        labelForeground: categorySheetChromeForeground
+                    )
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, LayoutAdaptation.value(compact: 32, pad: 28))
@@ -483,22 +491,22 @@ struct AddCategorySheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(createPink, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { onDismiss(nil) }
                         .font(AppFonts.body(size: 17))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(categorySheetChromeForeground)
                 }
                 ToolbarItem(placement: .principal) {
                     Text("Create List")
                         .font(AppFonts.display(size: 22))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(categorySheetChromeForeground)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") { create() }
                         .font(AppFonts.body(size: 17).weight(.semibold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(categorySheetChromeForeground)
                 }
             }
         }
@@ -561,7 +569,7 @@ struct EditCategorySheet: View {
                     Color.clear.frame(height: 8)
                     Text("List Name")
                         .font(AppFonts.body(size: 15))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(categorySheetChromeForeground)
                     TextField("Name", text: $name)
                         .font(AppFonts.body(size: 17))
                         .foregroundStyle(.white)
@@ -572,7 +580,7 @@ struct EditCategorySheet: View {
                     HStack {
                         Text("Study Mode")
                             .font(AppFonts.body(size: 15))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(categorySheetChromeForeground)
                         Spacer()
                         Toggle("", isOn: $isStudy)
                             .labelsHidden()
@@ -586,7 +594,11 @@ struct EditCategorySheet: View {
                             .font(AppFonts.body(size: 15))
                             .foregroundStyle(.red)
                     }
-                    WordListEditorSection(text: wordsText, expandingEditor: true)
+                    WordListEditorSection(
+                        text: wordsText,
+                        expandingEditor: true,
+                        labelForeground: categorySheetChromeForeground
+                    )
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, LayoutAdaptation.value(compact: 32, pad: 28))
@@ -595,22 +607,22 @@ struct EditCategorySheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(editYellow, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { onDismiss() }
                         .font(AppFonts.body(size: 17))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(categorySheetChromeForeground)
                 }
                 ToolbarItem(placement: .principal) {
                     Text("Edit List")
                         .font(AppFonts.display(size: 22))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(categorySheetChromeForeground)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { save() }
                         .font(AppFonts.body(size: 17).weight(.semibold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(categorySheetChromeForeground)
                 }
             }
         }
