@@ -195,26 +195,38 @@ struct SettingsView: View {
                 .labelsHidden()
                 .tint(AppColors.primaryPurple)
             }
-            HStack {
-                HStack(spacing: 4) {
+            if LayoutAdaptation.isPad {
+                HStack(alignment: .center) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("On-screen buttons")
+                            .font(AppFonts.body(size: 17))
+                            .foregroundStyle(AppColors.pink)
+                        Text("Always on for iPad")
+                            .font(AppFonts.body(size: 12))
+                            .foregroundStyle(AppColors.mutedText)
+                    }
+                    Spacer()
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(AppFonts.sfSymbol(size: 22))
+                        .foregroundStyle(AppColors.green)
+                }
+            } else {
+                HStack {
                     Text("Show Buttons")
                         .font(AppFonts.body(size: 17))
                         .foregroundStyle(AppColors.pink)
-                    if !store.tiltEnabled {
-                        Text("Required")
-                            .font(AppFonts.body(size: 12))
-                            .italic()
-                            .foregroundStyle(AppColors.pink.opacity(0.7))
-                    }
+                    Spacer()
+                    Toggle("", isOn: Binding(
+                        get: { store.showButtons },
+                        set: { store.setShowButtons($0) }
+                    ))
+                    .labelsHidden()
+                    .tint(AppColors.primaryPurple)
                 }
-                Spacer()
-                Toggle("", isOn: Binding(
-                    get: { store.showButtons },
-                    set: { store.setShowButtons($0) }
-                ))
-                .labelsHidden()
-                .tint(AppColors.primaryPurple)
-                .disabled(store.tiltEnabled)
+                Text("At least one of tilt or on-screen buttons must stay on. Turning one off turns the other on if needed.")
+                    .font(AppFonts.body(size: 12))
+                    .foregroundStyle(AppColors.mutedText)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }

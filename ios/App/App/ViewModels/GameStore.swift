@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import UIKit
 
 private let storageKey = "guess-party-storage"
 private let storageVersion = 9
@@ -55,9 +56,23 @@ struct ModeSettings: Codable {
         )
     }
 
-    /// Ensures showButtons is true when tiltEnabled is false (invariant enforced by setShowButtons). Use when loading or applying slots.
+    /// iPad game defaults: thumb buttons on, tilt off (tilt can be enabled in settings).
+    static func gamePadDefaults() -> ModeSettings {
+        ModeSettings(
+            soundEnabled: true,
+            soundVolume: 100,
+            hapticEnabled: true,
+            tiltEnabled: false,
+            showButtons: true
+        )
+    }
+
+    /// Ensures `tiltEnabled || showButtons`; on iPad, buttons always stay on.
     func sanitized() -> ModeSettings {
         var s = self
+        if LayoutAdaptation.isPad {
+            s.showButtons = true
+        }
         if !s.tiltEnabled && !s.showButtons {
             s.showButtons = true
         }
@@ -172,10 +187,11 @@ final class GameStore: ObservableObject {
         self.teamRoundResults = []
         self.teamGameResults = []
         self.teamScoreHistory = []
-        self.gameModeSettings = ModeSettings.gameDefaults()
+        self.gameModeSettings = LayoutAdaptation.isPad ? ModeSettings.gamePadDefaults() : ModeSettings.gameDefaults()
         self.studyModeSettings = ModeSettings.studyDefaults()
         loadBuiltInLists()
         loadPersisted()
+        applyCurrentModeSlotToLive()
         setupPersistence()
     }
     
@@ -230,7 +246,7 @@ final class GameStore: ObservableObject {
                     tiltEnabled: decoded.tiltEnabled,
                     showButtons: decoded.showButtons
                 ).sanitized()
-                gameModeSettings = ModeSettings.gameDefaults()
+                gameModeSettings = LayoutAdaptation.isPad ? ModeSettings.gamePadDefaults() : ModeSettings.gameDefaults()
             } else {
                 gameModeSettings = ModeSettings(
                     soundEnabled: decoded.soundEnabled,
@@ -243,7 +259,6 @@ final class GameStore: ObservableObject {
             }
             savePersisted()
         }
-        applyCurrentModeSlotToLive()
     }
 
     /// Copies the active mode's slot (game or study) into the live @Published settings. Sanitizes so buttons are on when tilt is off, and writes back so we never persist invalid state.
@@ -366,14 +381,19 @@ final class GameStore: ObservableObject {
     func setRoundDuration(_ seconds: Int) { roundDuration = seconds }
     func setTotalRounds(_ rounds: Int) { totalRounds = rounds }
     func setShowButtons(_ show: Bool) {
-        if !tiltEnabled && !show { return }
+        if LayoutAdaptation.isPad, !show { return }
+        if !show, !tiltEnabled {
+            tiltEnabled = true
+        }
         showButtons = show
         updateCurrentModeSlot()
     }
 
     func setTiltEnabled(_ enabled: Bool) {
+        if !enabled, !showButtons {
+            showButtons = true
+        }
         tiltEnabled = enabled
-        showButtons = !enabled
         updateCurrentModeSlot()
     }
 

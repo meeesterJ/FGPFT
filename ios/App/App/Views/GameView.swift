@@ -194,39 +194,80 @@ struct GameView: View {
             .foregroundStyle(AppColors.yellow)
     }
     
-    private var playingView: some View {
-        HStack(spacing: 0) {
-            // Fixed three-slot layout: timer above, score centered, answer icon below.
-            // Slots always reserve space so the score does not shift when the icon appears.
-            VStack(spacing: 4) {
-                Group {
-                    if store.roundDuration > 0 && store.isPlaying {
-                        Text("\(timeLeft)s")
-                            .font(AppFonts.body(size: 48).monospacedDigit())
-                            .foregroundStyle(timeLeft <= 5 ? AppColors.pink : AppColors.green)
-                    } else {
-                        Color.clear
-                    }
-                }
-                .frame(height: 52)
-                
-                Text("\(store.currentScore)")
-                    .font(AppFonts.body(size: 40))
-                    .foregroundStyle(AppColors.yellow)
-                
-                ZStack {
+    private var showTouchGameControls: Bool {
+        store.showButtons || !store.tiltEnabled
+    }
+    
+    /// Timer, score, and last-answer icon (shared by iPhone and iPad playing layouts).
+    private var timerScoreColumn: some View {
+        VStack(spacing: 4) {
+            Group {
+                if store.roundDuration > 0 && store.isPlaying {
+                    Text("\(timeLeft)s")
+                        .font(AppFonts.body(size: 48).monospacedDigit())
+                        .foregroundStyle(timeLeft <= 5 ? AppColors.pink : AppColors.green)
+                } else {
                     Color.clear
-                        .frame(width: 36, height: 36)
-                    Image(systemName: (lastAnswerCorrect ?? false) ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .font(AppFonts.sfSymbol(size: 36))
-                        .foregroundStyle((lastAnswerCorrect ?? false) ? AppColors.green : AppColors.pink)
-                        .opacity(showAnswerFeedback ? 1 : 0)
                 }
-                .frame(width: 36, height: 36)
             }
-            .frame(width: 80)
-            .padding(.leading, 16)
-            .animation(.easeInOut(duration: 0.2), value: showAnswerFeedback)
+            .frame(height: 52)
+            
+            Text("\(store.currentScore)")
+                .font(AppFonts.body(size: 40))
+                .foregroundStyle(AppColors.yellow)
+            
+            ZStack {
+                Color.clear
+                    .frame(width: 36, height: 36)
+                Image(systemName: (lastAnswerCorrect ?? false) ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .font(AppFonts.sfSymbol(size: 36))
+                    .foregroundStyle((lastAnswerCorrect ?? false) ? AppColors.green : AppColors.pink)
+                    .opacity(showAnswerFeedback ? 1 : 0)
+            }
+            .frame(width: 36, height: 36)
+        }
+        .frame(width: 80)
+        .padding(.leading, 16)
+        .animation(.easeInOut(duration: 0.2), value: showAnswerFeedback)
+    }
+    
+    private var passGameControlButton: some View {
+        Button {
+            handlePass()
+        } label: {
+            Label("Pass", systemImage: "xmark")
+                .font(AppFonts.body(size: 22))
+                .frame(width: 120, height: 56)
+        }
+        .buttonStyle(.borderedProminent)
+        .tint(.red)
+    }
+    
+    private var correctGameControlButton: some View {
+        Button {
+            handleCorrect()
+        } label: {
+            Label("Correct", systemImage: "checkmark")
+                .font(AppFonts.body(size: 22))
+                .frame(width: 120, height: 56)
+        }
+        .buttonStyle(.borderedProminent)
+        .tint(.green)
+    }
+    
+    @ViewBuilder
+    private var playingView: some View {
+        if LayoutAdaptation.isPad {
+            playingViewPad
+        } else {
+            playingViewPhone
+        }
+    }
+    
+    /// iPhone: trailing column with Pass above Correct (unchanged from original layout).
+    private var playingViewPhone: some View {
+        HStack(spacing: 0) {
+            timerScoreColumn
             
             if let word = store.currentWord, word != "No Words!" {
                 wordDisplayView(for: word)
@@ -236,35 +277,46 @@ struct GameView: View {
                 Spacer()
             }
             
-            if store.showButtons || !store.tiltEnabled {
+            if showTouchGameControls {
                 VStack {
-                    Button {
-                        handlePass()
-                    } label: {
-                        Label("Pass", systemImage: "xmark")
-                            .font(AppFonts.body(size: 22))
-                            .frame(width: 120, height: 56)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.red)
-                    .padding(.top, 16)
-                    
+                    passGameControlButton
+                        .padding(.top, 16)
                     Spacer()
-                    
-                    Button {
-                        handleCorrect()
-                    } label: {
-                        Label("Correct", systemImage: "checkmark")
-                            .font(AppFonts.body(size: 22))
-                            .frame(width: 120, height: 56)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.green)
-                    .padding(.bottom, 16)
+                    correctGameControlButton
+                        .padding(.bottom, 16)
                 }
                 .padding(.trailing, 24)
             } else {
                 Color.clear.frame(width: 24)
+            }
+        }
+    }
+    
+    /// iPad: Pass bottom-leading, Correct bottom-trailing for thumb reach (LTR).
+    private var playingViewPad: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .bottom) {
+                HStack(spacing: 0) {
+                    timerScoreColumn
+                    if let word = store.currentWord, word != "No Words!" {
+                        wordDisplayView(for: word)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding(.horizontal, 16)
+                    } else {
+                        Spacer()
+                    }
+                }
+                
+                if showTouchGameControls {
+                    HStack(alignment: .bottom) {
+                        passGameControlButton
+                        Spacer()
+                        correctGameControlButton
+                    }
+                    .padding(.leading, geo.safeAreaInsets.leading + 16)
+                    .padding(.trailing, geo.safeAreaInsets.trailing + 16)
+                    .padding(.bottom, geo.safeAreaInsets.bottom + 16)
+                }
             }
         }
     }
