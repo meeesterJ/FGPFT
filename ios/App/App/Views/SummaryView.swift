@@ -1,12 +1,6 @@
 import SwiftUI
 import UIKit
 
-extension Array {
-    subscript(safe index: Int) -> Element? {
-        indices.contains(index) ? self[index] : nil
-    }
-}
-
 struct SummaryView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var store: GameStore
@@ -30,8 +24,20 @@ struct SummaryView: View {
         return (teamIndex + 1) == info.winnerTeam
     }
     
+    /// Width for one score column: two columns fit in landscape without horizontal scrolling.
+    private func columnWidth(for geo: GeometryProxy) -> CGFloat {
+        let horizontalPadding: CGFloat = 24
+        let gap: CGFloat = 24
+        let inner = geo.size.width - horizontalPadding * 2
+        if store.numberOfTeams > 3 {
+            return min(260, (inner - gap) / 2)
+        }
+        return min(280, inner)
+    }
+    
     var body: some View {
         GeometryReader { geo in
+            let colW = columnWidth(for: geo)
             ZStack {
                 BackgroundView()
                 
@@ -44,22 +50,19 @@ struct SummaryView: View {
                         .foregroundStyle(AppColors.yellow)
                     
                     if !scores.isEmpty {
-                        ScrollView(.horizontal, showsIndicators: false) {
+                        Group {
                             if store.numberOfTeams > 3 {
                                 HStack(alignment: .top, spacing: 24) {
-                                    scoresTable(forTeamIndices: leftTeamIndices)
-                                        .frame(width: teamTableWidth)
-                                    
-                                    scoresTable(forTeamIndices: rightTeamIndices)
-                                        .frame(width: teamTableWidth)
+                                    scoresTable(forTeamIndices: leftTeamIndices, columnWidth: colW)
+                                    scoresTable(forTeamIndices: rightTeamIndices, columnWidth: colW)
                                 }
-                                .frame(minWidth: geo.size.width, alignment: .center)
+                                .frame(maxWidth: .infinity)
                             } else {
                                 HStack {
-                                    scoresTable(forTeamIndices: leftTeamIndices)
-                                        .frame(width: teamTableWidth)
+                                    Spacer(minLength: 0)
+                                    scoresTable(forTeamIndices: leftTeamIndices, columnWidth: colW)
+                                    Spacer(minLength: 0)
                                 }
-                                .frame(minWidth: geo.size.width, alignment: .center)
                             }
                         }
                         .padding(.horizontal, 24)
@@ -67,22 +70,9 @@ struct SummaryView: View {
                     
                     Spacer()
                     
-                    if store.numberOfTeams > 3 {
-                        HStack(spacing: 24) {
-                            bottomSection
-                                .frame(width: bottomLeftColumnWidth, alignment: .leading)
-                            
-                            Color.clear
-                                .frame(width: teamTableWidth)
-                        }
+                    bottomSection
                         .padding(.horizontal, 32)
                         .padding(.bottom, geo.safeAreaInsets.bottom + 24)
-                    } else {
-                        bottomSection
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(.horizontal, 32)
-                            .padding(.bottom, geo.safeAreaInsets.bottom + 24)
-                    }
                 }
                 
                 HomeButtonOverlay {
@@ -118,20 +108,6 @@ struct SummaryView: View {
         }
     }
     
-    private var teamTableWidth: CGFloat {
-        // Match the internal fixed column widths:
-        // - Team name column: 130 + leading padding(12) = 142
-        // - Each round column: 60
-        // - Total column: 70 + trailing padding(12) = 82
-        224 + CGFloat(store.totalRounds) * 60
-    }
-    
-    /// Left column for the game-over action row when split (4–5 teams): at least as wide as the score table,
-    /// and never narrower than the Play Again control needs (see `bottomSection` button sizing).
-    private var bottomLeftColumnWidth: CGFloat {
-        max(teamTableWidth, 300)
-    }
-    
     private var leftTeamIndices: [Int] {
         let count = scores.count
         return Array(0..<min(3, count))
@@ -142,7 +118,7 @@ struct SummaryView: View {
         return Array(3..<min(5, count))
     }
     
-    private func scoresTable(forTeamIndices indices: [Int]) -> some View {
+    private func scoresTable(forTeamIndices indices: [Int], columnWidth: CGFloat) -> some View {
         VStack(spacing: 4) {
             headerRow
                 .padding(.bottom, 4)
@@ -151,19 +127,14 @@ struct SummaryView: View {
                 teamRow(teamIndex: teamIndex, totalScore: scores[teamIndex])
             }
         }
-        .frame(width: teamTableWidth)
+        .frame(width: columnWidth)
     }
     
     private var headerRow: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 8) {
             Text("Team")
-                .frame(width: 130, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 12)
-            
-            ForEach(1...store.totalRounds, id: \.self) { round in
-                Text("R\(round)")
-                    .frame(width: 60)
-            }
             
             Text("Total")
                 .frame(width: 70)
@@ -183,7 +154,7 @@ struct SummaryView: View {
         return Button {
             selectedTeamIndex = teamIndex
         } label: {
-            HStack(spacing: 0) {
+            HStack(spacing: 8) {
                 HStack(spacing: 6) {
                     if winner {
                         Image(systemName: "crown.fill")
@@ -197,30 +168,8 @@ struct SummaryView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
-                .frame(width: 130, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 12)
-                
-                ForEach(0..<store.totalRounds, id: \.self) { roundIndex in
-                    let roundScore = store.teamScoreHistory[safe: roundIndex]?[safe: teamIndex] ?? TeamScore()
-                    VStack(spacing: 1) {
-                        HStack(spacing: 2) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .font(AppFonts.sfSymbol(size: 10))
-                            Text("\(roundScore.correct)")
-                                .font(AppFonts.body(size: 13).monospacedDigit())
-                        }
-                        .foregroundStyle(AppColors.green)
-                        
-                        HStack(spacing: 2) {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(AppFonts.sfSymbol(size: 10))
-                            Text("\(roundScore.passed)")
-                                .font(AppFonts.body(size: 13).monospacedDigit())
-                        }
-                        .foregroundStyle(AppColors.pink)
-                    }
-                    .frame(width: 60)
-                }
                 
                 VStack(spacing: 1) {
                     HStack(spacing: 2) {
@@ -272,6 +221,8 @@ struct SummaryView: View {
     
     private var bottomSection: some View {
         HStack(spacing: 24) {
+            Spacer(minLength: 0)
+            
             if let info = winnerInfo {
                 HStack(spacing: 12) {
                     Image(systemName: "trophy.fill")
@@ -285,8 +236,8 @@ struct SummaryView: View {
                         .multilineTextAlignment(.center)
                         .minimumScaleFactor(0.7)
                 }
-                .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical, 16)
+                .padding(.horizontal, 16)
                 .background(AppColors.yellow.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 16))
             }
@@ -304,7 +255,8 @@ struct SummaryView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(AppColors.pink)
-            .frame(maxWidth: winnerInfo != nil ? .infinity : 300)
+            
+            Spacer(minLength: 0)
         }
     }
     
@@ -340,4 +292,3 @@ private struct WordListSheet: View {
         }
     }
 }
-
