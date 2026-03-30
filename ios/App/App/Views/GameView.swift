@@ -85,6 +85,7 @@ struct GameView: View {
                 singleTeamReadyLayout
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
         .onTapGesture {
             triggerCountdown()
