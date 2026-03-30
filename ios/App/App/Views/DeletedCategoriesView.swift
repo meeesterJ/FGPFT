@@ -30,8 +30,8 @@ struct DeletedCategoriesView: View {
                 if deletedLists.isEmpty {
                     VStack(spacing: 8) {
                         Text("No deleted categories")
-                            .font(AppFonts.body(size: 20))
-                            .foregroundStyle(AppColors.mutedText)
+                            .font(AppFonts.body(size: 17))
+                            .foregroundStyle(AppColors.textPrimary)
                         Text("Categories you delete will appear here.")
                             .font(AppFonts.body(size: 15))
                             .foregroundStyle(AppColors.mutedText)
@@ -48,7 +48,8 @@ struct DeletedCategoriesView: View {
                             VStack(alignment: .leading, spacing: 12) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(list.name)
-                                        .font(AppFonts.body(size: 17).weight(.semibold))
+                                        .font(AppFonts.body(size: 17))
+                                        .foregroundStyle(AppColors.textPrimary)
                                     Text("\(list.words.count) words\(list.isCustom == true ? " (Custom)" : "")")
                                         .font(AppFonts.body(size: 12))
                                         .foregroundStyle(AppColors.mutedText)
@@ -59,7 +60,8 @@ struct DeletedCategoriesView: View {
                                     } label: {
                                         Label("Restore", systemImage: "arrow.uturn.backward")
                                             .frame(maxWidth: .infinity)
-                                            .font(AppFonts.body(size: 17))
+                                            .font(AppFonts.body(size: LayoutAdaptation.value(compact: 17, pad: 20)))
+                                            .fontWeight(.semibold)
                                     }
                                     .buttonStyle(.borderedProminent)
                                     .tint(AppColors.cyan)
@@ -68,7 +70,8 @@ struct DeletedCategoriesView: View {
                                     } label: {
                                         Label("Delete Forever", systemImage: "trash")
                                             .frame(maxWidth: .infinity)
-                                            .font(AppFonts.body(size: 17))
+                                            .font(AppFonts.body(size: LayoutAdaptation.value(compact: 17, pad: 20)))
+                                            .fontWeight(.semibold)
                                             .foregroundStyle(AppColors.destructive)
                                     }
                                     .buttonStyle(.bordered)
