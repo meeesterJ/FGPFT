@@ -224,21 +224,22 @@ struct SummaryView: View {
             Spacer(minLength: 0)
             
             if let info = winnerInfo {
+                let winnerAccent = info.isTie ? AppColors.yellow : teamColor(info.winnerTeam)
                 HStack(spacing: 12) {
                     Image(systemName: "trophy.fill")
                         .font(AppFonts.sfSymbol(size: 40))
-                        .foregroundStyle(AppColors.yellow)
+                        .foregroundStyle(winnerAccent)
                     
                     Text(info.isTie ? "It's a Tie!" : "\(store.getTeamName(teamNumber: info.winnerTeam)) wins!")
                         .font(AppFonts.display(size: 24))
-                        .foregroundStyle(AppColors.yellow)
+                        .foregroundStyle(winnerAccent)
                         .lineLimit(1)
                         .multilineTextAlignment(.center)
                         .minimumScaleFactor(0.7)
                 }
                 .padding(.vertical, 16)
                 .padding(.horizontal, 16)
-                .background(AppColors.yellow.opacity(0.15))
+                .background(winnerAccent.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 16))
             }
             
