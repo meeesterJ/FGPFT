@@ -26,12 +26,34 @@ struct RoundSummaryView: View {
     }
 
     /// Non-study layout: places the `Round` + digit row and the `POINTS` row in one layout pass,
-    /// so the points number can be centered under the digit while the `POINTS` label sits right of center.
+    /// so the points number can be centered under the header group while the `POINTS` label sits right of center.
     private struct RoundSummaryNonStudyLayout: Layout {
         private let digitSpacing: CGFloat = 16  // Matches the existing HStack(spacing: 16)
         private let headerToCompleteSpacing: CGFloat = 1 // Matches VStack(spacing: 1)
         private let completeToPointsSpacing: CGFloat = 2 // Matches outer VStack(spacing: 2)
         private let pointsLabelSpacing: CGFloat = 12
+
+        /// Aligns the last text baseline of "Round" and the round digit (same rule as `HStack(alignment: .lastTextBaseline)`).
+        private func headerRowMetrics(
+            wordSize: CGSize,
+            digitSize: CGSize,
+            dim0: ViewDimensions,
+            dim1: ViewDimensions
+        ) -> (height: CGFloat, wordY: CGFloat, digitY: CGFloat) {
+            let b0 = dim0[VerticalAlignment.lastTextBaseline]
+            let b1 = dim1[VerticalAlignment.lastTextBaseline]
+            if b0 > 0, b1 > 0 {
+                let maxB = max(b0, b1)
+                let wordY = maxB - b0
+                let digitY = maxB - b1
+                let height = max(wordY + wordSize.height, digitY + digitSize.height)
+                return (height, wordY, digitY)
+            }
+            let height = max(wordSize.height, digitSize.height)
+            let wordY = (height - wordSize.height) / 2
+            let digitY = (height - digitSize.height) / 2
+            return (height, wordY, digitY)
+        }
 
         func sizeThatFits(
             proposal: ProposedViewSize,
@@ -46,15 +68,17 @@ struct RoundSummaryView: View {
             let pointsNumber = subviews[3].sizeThatFits(.unspecified)
             let pointsLabel = subviews[4].sizeThatFits(.unspecified)
 
-            // Center vertically within the header row; the `baselineOffset` on the digit
-            // handles the fine-tuning for the "1" visual alignment.
-            let headerHeight = max(roundWord.height, roundDigit.height)
+            let wordProposal = ProposedViewSize(width: roundWord.width, height: roundWord.height)
+            let digitProposal = ProposedViewSize(width: roundDigit.width, height: roundDigit.height)
+            let dim0 = subviews[0].dimensions(in: wordProposal)
+            let dim1 = subviews[1].dimensions(in: digitProposal)
+            let headerMetrics = headerRowMetrics(wordSize: roundWord, digitSize: roundDigit, dim0: dim0, dim1: dim1)
 
             let headerWidth = roundWord.width + digitSpacing + roundDigit.width
             let pointsRowWidth = pointsNumber.width + pointsLabelSpacing + pointsLabel.width
 
             let width = max(headerWidth, pointsRowWidth, complete.width)
-            let height = headerHeight + headerToCompleteSpacing + complete.height + completeToPointsSpacing + max(pointsNumber.height, pointsLabel.height)
+            let height = headerMetrics.height + headerToCompleteSpacing + complete.height + completeToPointsSpacing + max(pointsNumber.height, pointsLabel.height)
 
             let proposedWidth = proposal.width ?? width
             return CGSize(width: proposedWidth, height: height)
@@ -74,30 +98,33 @@ struct RoundSummaryView: View {
             let pointsNumberSize = subviews[3].sizeThatFits(.unspecified)
             let pointsLabelSize = subviews[4].sizeThatFits(.unspecified)
 
-            let headerHeight = max(roundWordSize.height, roundDigitSize.height)
-
-            let pointsRowWidth = pointsNumberSize.width + pointsLabelSpacing + pointsLabelSize.width
+            let wordProposal = ProposedViewSize(width: roundWordSize.width, height: roundWordSize.height)
+            let digitProposal = ProposedViewSize(width: roundDigitSize.width, height: roundDigitSize.height)
+            let dim0 = subviews[0].dimensions(in: wordProposal)
+            let dim1 = subviews[1].dimensions(in: digitProposal)
+            let headerMetrics = headerRowMetrics(wordSize: roundWordSize, digitSize: roundDigitSize, dim0: dim0, dim1: dim1)
+            let headerHeight = headerMetrics.height
 
             let completeX = bounds.minX + (bounds.width - completeSize.width) / 2
 
-            // X center of the digit (and therefore the points number) should be the container center,
-            // so the score aligns with the centered button below.
-            let digitCenterX = bounds.minX + bounds.width / 2
-            let roundDigitLeftX = digitCenterX - roundDigitSize.width / 2
-            let roundWordLeftX = roundDigitLeftX - digitSpacing - roundWordSize.width
+            // Center the full "Round" + digit group on the column so it lines up with the score and button.
+            let headerWidth = roundWordSize.width + digitSpacing + roundDigitSize.width
+            let headerLeftX = bounds.midX - headerWidth / 2
+            let roundWordLeftX = headerLeftX
+            let roundDigitLeftX = headerLeftX + roundWordSize.width + digitSpacing
 
             let headerTopY = bounds.minY
-            let roundWordY = headerTopY + (headerHeight - roundWordSize.height) / 2
-            let roundDigitY = headerTopY + (headerHeight - roundDigitSize.height) / 2
+            let roundWordY = headerTopY + headerMetrics.wordY
+            let roundDigitY = headerTopY + headerMetrics.digitY
 
             // Place header row.
             subviews[0].place(
                 at: CGPoint(x: roundWordLeftX, y: roundWordY),
-                proposal: ProposedViewSize(width: roundWordSize.width, height: roundWordSize.height)
+                proposal: wordProposal
             )
             subviews[1].place(
                 at: CGPoint(x: roundDigitLeftX, y: roundDigitY),
-                proposal: ProposedViewSize(width: roundDigitSize.width, height: roundDigitSize.height)
+                proposal: digitProposal
             )
 
             // Place "COMPLETE" below the header row.
@@ -107,12 +134,13 @@ struct RoundSummaryView: View {
                 proposal: ProposedViewSize(width: completeSize.width, height: completeSize.height)
             )
 
-            // Place points row so the points number center matches digit center.
+            // Place points row so the points number center matches the column center (same as the header group).
+            let columnCenterX = bounds.midX
             let pointsRowTopY = completeY + completeSize.height + completeToPointsSpacing
             let pointsRowHeight = max(pointsNumberSize.height, pointsLabelSize.height)
 
             let pointsNumberY = pointsRowTopY + (pointsRowHeight - pointsNumberSize.height) / 2
-            let pointsNumberLeftX = digitCenterX - pointsNumberSize.width / 2
+            let pointsNumberLeftX = columnCenterX - pointsNumberSize.width / 2
 
             subviews[3].place(
                 at: CGPoint(x: pointsNumberLeftX, y: pointsNumberY),
@@ -264,12 +292,9 @@ struct RoundSummaryView: View {
             } else {
                 RoundSummaryNonStudyLayout {
                     multicoloredRound
-                        .frame(height: 96)
                     
                     Text("\(store.currentRound)")
                         .font(AppFonts.display(size: 96))
-                        .baselineOffset(store.currentRound == 1 ? -6 : 0)
-                        .frame(height: 96)
                         .foregroundStyle(AppColors.yellow)
                     
                     Text("COMPLETE")
