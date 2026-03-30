@@ -45,16 +45,44 @@ struct SummaryView: View {
                     
                     if !scores.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
-                            scoresTable
+                            if store.numberOfTeams > 3 {
+                                HStack(alignment: .top, spacing: 24) {
+                                    scoresTable(forTeamIndices: leftTeamIndices)
+                                        .frame(width: teamTableWidth)
+                                    
+                                    scoresTable(forTeamIndices: rightTeamIndices)
+                                        .frame(width: teamTableWidth)
+                                }
+                                .frame(minWidth: geo.size.width, alignment: .center)
+                            } else {
+                                HStack {
+                                    scoresTable(forTeamIndices: leftTeamIndices)
+                                        .frame(width: teamTableWidth)
+                                }
+                                .frame(minWidth: geo.size.width, alignment: .center)
+                            }
                         }
                         .padding(.horizontal, 24)
                     }
                     
                     Spacer()
                     
-                    bottomSection
+                    if store.numberOfTeams > 3 {
+                        HStack(spacing: 24) {
+                            bottomSection
+                                .frame(width: bottomLeftColumnWidth, alignment: .leading)
+                            
+                            Color.clear
+                                .frame(width: teamTableWidth)
+                        }
                         .padding(.horizontal, 32)
                         .padding(.bottom, geo.safeAreaInsets.bottom + 24)
+                    } else {
+                        bottomSection
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.horizontal, 32)
+                            .padding(.bottom, geo.safeAreaInsets.bottom + 24)
+                    }
                 }
                 
                 HomeButtonOverlay {
@@ -90,16 +118,40 @@ struct SummaryView: View {
         }
     }
     
-    private var scoresTable: some View {
+    private var teamTableWidth: CGFloat {
+        // Match the internal fixed column widths:
+        // - Team name column: 130 + leading padding(12) = 142
+        // - Each round column: 60
+        // - Total column: 70 + trailing padding(12) = 82
+        224 + CGFloat(store.totalRounds) * 60
+    }
+    
+    /// Left column for the game-over action row when split (4–5 teams): at least as wide as the score table,
+    /// and never narrower than the Play Again control needs (see `bottomSection` button sizing).
+    private var bottomLeftColumnWidth: CGFloat {
+        max(teamTableWidth, 300)
+    }
+    
+    private var leftTeamIndices: [Int] {
+        let count = scores.count
+        return Array(0..<min(3, count))
+    }
+    
+    private var rightTeamIndices: [Int] {
+        let count = scores.count
+        return Array(3..<min(5, count))
+    }
+    
+    private func scoresTable(forTeamIndices indices: [Int]) -> some View {
         VStack(spacing: 4) {
             headerRow
                 .padding(.bottom, 4)
             
-            ForEach(Array(scores.enumerated()), id: \.offset) { i, totalScore in
-                teamRow(teamIndex: i, totalScore: totalScore)
+            ForEach(indices, id: \.self) { teamIndex in
+                teamRow(teamIndex: teamIndex, totalScore: scores[teamIndex])
             }
         }
-        .frame(maxWidth: 700)
+        .frame(width: teamTableWidth)
     }
     
     private var headerRow: some View {
