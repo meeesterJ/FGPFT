@@ -73,15 +73,15 @@ Party guessing game & study tool for families and friends!
 **Full Description:**
 Get ready for endless fun with Family Guess Party Fun Time! One player holds the phone to their forehead while others give clues. Tilt forward when you guess correctly, tilt back to pass!
 
-GAME MODE — 9 built-in categories for classic party fun:
-Movies, Animals, Actions, Household Objects, Landforms, Human Body, Space, Ancient World, and Mythology.
+GAME MODE — 22 built-in categories for classic party fun:
+Charades, animal packs, ocean life, geography, household objects, holidays, and more.
 
-STUDY MODE — 18 study categories for learning on the go:
-Vietnamese, Chinese characters, Spanish vocabulary, chemistry, US history, world capitals, geopolitics, pioneering figures, and more. Study cards support helper text and hidden answers for self-quizzing.
+STUDY MODE — 9 study categories for learning on the go:
+Chemistry, US history, landforms, human body, space, ancient world, geopolitics, pioneers, mythology. Study cards support helper text and hidden answers for self-quizzing.
 
 Features:
 • Intuitive tilt controls or on-screen buttons — your choice
-• 27 built-in categories with 2,187+ words
+• 31 built-in categories with 2,112+ words
 • Study Mode with formatted cards, helper text, and answer reveals
 • Customizable word lists — create your own or import from CSV
 • Adjustable timer and round settings

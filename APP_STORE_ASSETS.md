@@ -81,7 +81,7 @@ GAME MODE for classic family fun
 STUDY MODE learning on the go
 
 Features:
-• 25+ built-in categories with 2,000+ words
+• 31 built-in categories with 2,100+ words
 • Customizable word lists — create your own and customize the built in categories
 • Adjustable timer and round settings
 • Team mode with score tracking and custom team names
@@ -148,10 +148,10 @@ GAME MODE
 - Hold your phone to your forehead while friends give you clues
 - Tilt forward for correct, tilt back to pass
 - Compete in teams with customizable rounds and timers
-- 27 built-in categories with 2,200+ words
+- 31 built-in categories with 2,112+ words
 
 STUDY MODE
-- Perfect for language learning and flashcard review
+- Perfect for flashcard review and memorization
 - Formatted cards with helper text and hidden answers
 - Tap to reveal answers
 - Great for vocabulary, geography, history, and more
@@ -167,8 +167,8 @@ FEATURES
 CATEGORIES INCLUDED
 - Charades (Actions, Food, Animals)
 - Animals (Easy, Medium, Hard)
-- Languages (Mandarin, Vietnamese, Spanish)
-- Education (Geography, Chemistry, History, Space)
+- Geography (US Geography, World Geography)
+- Education (Chemistry, History, Space, and more)
 - And many more!
 
 Perfect for family game night, parties, road trips, and classroom learning!
