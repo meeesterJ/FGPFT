@@ -21,11 +21,11 @@ struct HowToPlayView: View {
                     bullet("Edit lists or create your own custom lists")
                 }
                 section(title: "Step by Step", color: AppColors.cyan) {
-                    bullet("1. Choose categories, time per round, and number of rounds in Settings, and start the game")
-                    bullet("2. Hold your phone to your forehead in landscape mode")
-                    bullet("3. Your friends give you clues without saying the word")
-                    bullet("4. Tilt forward for correct, backward to pass")
-                    bullet("5. Score as many points as you can before time runs out!")
+                    bullet("Choose categories, time per round, and number of rounds in Settings, and start the game")
+                    bullet("Hold your phone to your forehead in landscape mode")
+                    bullet("Your friends give you clues without saying the word")
+                    bullet("Tilt forward for correct, backward to pass")
+                    bullet("Score as many points as you can before time runs out!")
                 }
                 section(title: "Categories", color: AppColors.green) {
                     bullet("Customize your own lists!")
@@ -37,9 +37,8 @@ struct HowToPlayView: View {
                 }
                 section(title: "Study Mode", color: AppColors.purple) {
                     bullet("Great for language learning, flashcards, and vocabulary practice")
-                    bullet("Format: Word (helper text) [answer]")
-                    bullet("Helper text and answers are optional — use what you need")
-                    bullet("Helper text shows as a hint below the word, e.g. \"Hola (greeting)\"")
+                    bullet("Format: Word [answer]")
+                    bullet("Answers are optional — use what you need")
                     bullet("Answers in [brackets] are revealed with a tap, e.g. \"Hola [Hello]\"")
                     bullet("Tap the card to reveal the answer")
                     bullet("Tilt is off by default — use the on-screen buttons instead")
