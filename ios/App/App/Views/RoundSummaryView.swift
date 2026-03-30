@@ -18,20 +18,20 @@ struct RoundSummaryView: View {
     
     private var multicoloredRound: some View {
         // Slightly smaller than the round number so the number reads as "bigger than Round".
-        MulticoloredRoundText(fontSize: 56)
+        MulticoloredRoundText(fontSize: LayoutAdaptation.value(compact: 56, pad: 76))
     }
     
     private var multicoloredStudy: some View {
-        MulticoloredStudyText(fontSize: 32)
+        MulticoloredStudyText(fontSize: LayoutAdaptation.value(compact: 32, pad: 44))
     }
 
     /// Non-study layout: places the `Round` + digit row and the `POINTS` row in one layout pass,
     /// so the points number can be centered under the header group while the `POINTS` label sits right of center.
     private struct RoundSummaryNonStudyLayout: Layout {
-        private let digitSpacing: CGFloat = 16  // Matches the existing HStack(spacing: 16)
+        var digitSpacing: CGFloat
+        var pointsLabelSpacing: CGFloat
         private let headerToCompleteSpacing: CGFloat = 1 // Matches VStack(spacing: 1)
         private let completeToPointsSpacing: CGFloat = 2 // Matches outer VStack(spacing: 2)
-        private let pointsLabelSpacing: CGFloat = 12
 
         /// Aligns the last text baseline of "Round" and the round digit (same rule as `HStack(alignment: .lastTextBaseline)`).
         private func headerRowMetrics(
@@ -160,9 +160,9 @@ struct RoundSummaryView: View {
     /// Study mode layout: no "Round n" digit, so we center the points number within the layout
     /// and place `POINTS` to the right of it.
     private struct RoundSummaryStudyLayout: Layout {
+        var pointsLabelSpacing: CGFloat
         private let headerToCompleteSpacing: CGFloat = 1 // VStack(spacing: 1)
         private let completeToPointsSpacing: CGFloat = 2 // Outer VStack(spacing: 2)
-        private let pointsLabelSpacing: CGFloat = 12
 
         func sizeThatFits(
             proposal: ProposedViewSize,
@@ -243,13 +243,13 @@ struct RoundSummaryView: View {
                 BackgroundView()
                 
                 VStack(spacing: 0) {
-                    HStack(alignment: .top, spacing: 24) {
+                    HStack(alignment: .top, spacing: LayoutAdaptation.value(compact: 24, pad: 32)) {
                         leftColumn
                         rightColumn
                     }
-                    .padding(.horizontal, 32)
-                    .padding(.top, geo.safeAreaInsets.top + 40)
-                    .padding(.bottom, geo.safeAreaInsets.bottom + 40)
+                    .padding(.horizontal, LayoutAdaptation.value(compact: 32, pad: 44))
+                    .padding(.top, geo.safeAreaInsets.top + LayoutAdaptation.value(compact: 40, pad: 52))
+                    .padding(.bottom, geo.safeAreaInsets.bottom + LayoutAdaptation.value(compact: 40, pad: 52))
                 }
                 
                 HomeButtonOverlay {
@@ -270,45 +270,50 @@ struct RoundSummaryView: View {
             Spacer()
             
             if store.studyMode {
-                RoundSummaryStudyLayout {
+                RoundSummaryStudyLayout(
+                    pointsLabelSpacing: LayoutAdaptation.value(compact: 12, pad: 16)
+                ) {
                     multicoloredStudy
                     
                     Text("COMPLETE")
-                        .font(AppFonts.body(size: 12))
+                        .font(AppFonts.body(size: LayoutAdaptation.value(compact: 12, pad: 16)))
                         .fontWeight(.medium)
                         .foregroundStyle(AppColors.mutedText)
                         .tracking(2)
                     
                     Text("\(pointsThisRound)")
-                        .font(AppFonts.display(size: 96))
+                        .font(AppFonts.display(size: LayoutAdaptation.value(compact: 96, pad: 120)))
                         .foregroundStyle(AppColors.yellow)
                     
                     Text("POINTS")
-                        .font(AppFonts.body(size: 12))
+                        .font(AppFonts.body(size: LayoutAdaptation.value(compact: 12, pad: 16)))
                         .fontWeight(.medium)
                         .foregroundStyle(AppColors.mutedText)
                         .tracking(2)
                 }
             } else {
-                RoundSummaryNonStudyLayout {
+                RoundSummaryNonStudyLayout(
+                    digitSpacing: LayoutAdaptation.value(compact: 16, pad: 22),
+                    pointsLabelSpacing: LayoutAdaptation.value(compact: 12, pad: 16)
+                ) {
                     multicoloredRound
                     
                     Text("\(store.currentRound)")
-                        .font(AppFonts.display(size: 96))
+                        .font(AppFonts.display(size: LayoutAdaptation.value(compact: 96, pad: 120)))
                         .foregroundStyle(AppColors.yellow)
                     
                     Text("COMPLETE")
-                        .font(AppFonts.body(size: 14))
+                        .font(AppFonts.body(size: LayoutAdaptation.value(compact: 14, pad: 18)))
                         .fontWeight(.medium)
                         .foregroundStyle(AppColors.mutedText)
                         .tracking(2)
                     
                     Text("\(pointsThisRound)")
-                        .font(AppFonts.display(size: 96))
+                        .font(AppFonts.display(size: LayoutAdaptation.value(compact: 96, pad: 120)))
                         .foregroundStyle(AppColors.yellow)
                     
                     Text("POINTS")
-                        .font(AppFonts.body(size: 14))
+                        .font(AppFonts.body(size: LayoutAdaptation.value(compact: 14, pad: 18)))
                         .fontWeight(.medium)
                         .foregroundStyle(AppColors.mutedText)
                         .tracking(2)
@@ -329,51 +334,54 @@ struct RoundSummaryView: View {
             bottomButton(expanded: narrow)
                 .frame(maxWidth: .infinity, alignment: .center)
         }
-        .frame(minHeight: 56)
+        .frame(minHeight: LayoutAdaptation.value(compact: 56, pad: 68))
     }
     
     private var rightColumn: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: LayoutAdaptation.value(compact: 12, pad: 16)) {
             Text("Word History")
-                .font(AppFonts.body(size: 18))
+                .font(AppFonts.body(size: LayoutAdaptation.value(compact: 18, pad: 24)))
                 .fontWeight(.bold)
                 .foregroundStyle(.white)
-                .padding(.top, 12)
+                .padding(.top, LayoutAdaptation.value(compact: 12, pad: 16))
             
             ScrollView {
-                VStack(spacing: 8) {
+                VStack(spacing: LayoutAdaptation.value(compact: 8, pad: 12)) {
                     ForEach(Array(wordResults.enumerated()), id: \.offset) { _, result in
                         HStack {
                             Text(result.word)
-                                .font(AppFonts.body(size: 16))
+                                .font(AppFonts.body(size: LayoutAdaptation.value(compact: 16, pad: 22)))
                                 .foregroundStyle(.white)
                                 .lineLimit(1)
                             Spacer()
                             Image(systemName: result.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .foregroundStyle(result.correct ? AppColors.green : AppColors.pink)
-                                .font(AppFonts.sfSymbol(size: 20))
+                                .font(AppFonts.sfSymbol(size: LayoutAdaptation.value(compact: 20, pad: 26)))
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
+                        .padding(.horizontal, LayoutAdaptation.value(compact: 16, pad: 22))
+                        .padding(.vertical, LayoutAdaptation.value(compact: 10, pad: 14))
                         .background(Color.white.opacity(0.08))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: LayoutAdaptation.value(compact: 8, pad: 12)))
                     }
                 }
             }
             .frame(maxHeight: .infinity)
         }
         .frame(maxWidth: .infinity)
-        .padding(16)
+        .padding(LayoutAdaptation.value(compact: 16, pad: 22))
         .background(Color.white.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: LayoutAdaptation.value(compact: 16, pad: 20)))
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: LayoutAdaptation.value(compact: 16, pad: 20))
                 .stroke(AppColors.purple.opacity(0.3), lineWidth: 1)
         )
     }
     
     private func bottomButton(expanded: Bool) -> some View {
-        Button {
+        let labelSize = LayoutAdaptation.value(compact: 14, pad: 18)
+        let symbolSize = LayoutAdaptation.value(compact: 14, pad: 18)
+        let maxBtnWidth = LayoutAdaptation.value(compact: 160, pad: 220)
+        return Button {
             if store.studyMode {
                 store.startGame()
                 path = NavigationPath()
@@ -388,28 +396,28 @@ struct RoundSummaryView: View {
             HStack(spacing: 6) {
                 if store.studyMode {
                     Image(systemName: "brain.head.profile")
-                        .font(AppFonts.sfSymbol(size: 14))
+                        .font(AppFonts.sfSymbol(size: symbolSize))
                     Text("Get Smarter?")
-                        .font(AppFonts.body(size: 14))
+                        .font(AppFonts.body(size: labelSize))
                         .fontWeight(.semibold)
                 } else if store.willGameBeFinished {
                     Image(systemName: "trophy.fill")
-                        .font(AppFonts.sfSymbol(size: 14))
+                        .font(AppFonts.sfSymbol(size: symbolSize))
                     Text("See Winner!")
-                        .font(AppFonts.body(size: 14))
+                        .font(AppFonts.body(size: labelSize))
                         .fontWeight(.semibold)
                 } else {
                     Image(systemName: "list.number")
-                        .font(AppFonts.sfSymbol(size: 14))
+                        .font(AppFonts.sfSymbol(size: symbolSize))
                     Text("Scoreboard")
-                        .font(AppFonts.body(size: 14))
+                        .font(AppFonts.body(size: labelSize))
                         .fontWeight(.semibold)
                 }
             }
-            .frame(maxWidth: expanded ? .infinity : 160)
+            .frame(maxWidth: expanded ? .infinity : maxBtnWidth)
             .minimumScaleFactor(0.85)
             .lineLimit(1)
-            .padding(.vertical, 8)
+            .padding(.vertical, LayoutAdaptation.value(compact: 8, pad: 12))
         }
         .buttonStyle(.borderedProminent)
         .tint(AppColors.pink)

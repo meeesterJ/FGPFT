@@ -23,11 +23,11 @@ struct GameView: View {
     }
     
     private var multicoloredRound: some View {
-        MulticoloredRoundText(fontSize: 56)
+        MulticoloredRoundText(fontSize: LayoutAdaptation.value(compact: 56, pad: 76))
     }
     
     private var multicoloredStudy: some View {
-        MulticoloredStudyText(fontSize: 120)
+        MulticoloredStudyText(fontSize: LayoutAdaptation.value(compact: 120, pad: 160))
     }
     
     var body: some View {
@@ -35,11 +35,12 @@ struct GameView: View {
             BackgroundView()
             
             if store.currentWord == nil && !isHandoff {
-                VStack(spacing: 14) {
+                VStack(spacing: LayoutAdaptation.value(compact: 14, pad: 22)) {
                     ProgressView()
                         .tint(.white)
+                        .scaleEffect(LayoutAdaptation.value(compact: 1.0, pad: 1.35))
                     Text("Loading…")
-                        .font(AppFonts.body(size: 16))
+                        .font(AppFonts.body(size: LayoutAdaptation.value(compact: 16, pad: 22)))
                         .foregroundStyle(.white)
                 }
             } else {
@@ -94,10 +95,10 @@ struct GameView: View {
     
     private var multiTeamReadyLayout: some View {
         HStack(spacing: 0) {
-            VStack(alignment: .center, spacing: 28) {
+            VStack(alignment: .center, spacing: LayoutAdaptation.value(compact: 28, pad: 36)) {
                 Spacer()
                 Text("\(store.getTeamName(teamNumber: store.currentTeam)) Ready?")
-                    .font(AppFonts.display(size: 44))
+                    .font(AppFonts.display(size: LayoutAdaptation.value(compact: 44, pad: 58)))
                     .foregroundStyle(teamColor(store.currentTeam))
                 
                 if shouldShowStartButton {
@@ -105,9 +106,9 @@ struct GameView: View {
                         triggerCountdown()
                     } label: {
                         Label("Start", systemImage: "play.fill")
-                            .font(AppFonts.body(size: 22))
-                            .padding(.horizontal, 32)
-                            .padding(.vertical, 16)
+                            .font(AppFonts.body(size: LayoutAdaptation.value(compact: 22, pad: 28)))
+                            .padding(.horizontal, LayoutAdaptation.value(compact: 32, pad: 44))
+                            .padding(.vertical, LayoutAdaptation.value(compact: 16, pad: 22))
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(teamColor(store.currentTeam))
@@ -123,7 +124,7 @@ struct GameView: View {
                 } else {
                     multicoloredRound
                     Text("\(store.currentRound)")
-                        .font(AppFonts.display(size: 180))
+                        .font(AppFonts.display(size: LayoutAdaptation.value(compact: 180, pad: 230)))
                         .foregroundStyle(AppColors.yellow)
                 }
                 Spacer()
@@ -132,11 +133,11 @@ struct GameView: View {
                         Text("Raise phone to forehead.")
                         Text("Tap screen when ready.")
                     }
-                    .font(AppFonts.body(size: 20))
+                    .font(AppFonts.body(size: LayoutAdaptation.value(compact: 20, pad: 26)))
                     .foregroundStyle(AppColors.mutedText)
                 }
                 Spacer()
-                    .frame(height: 60)
+                    .frame(height: LayoutAdaptation.value(compact: 60, pad: 80))
             }
             .frame(maxWidth: .infinity)
         }
@@ -150,24 +151,24 @@ struct GameView: View {
             } else {
                 multicoloredRound
                 Text("\(store.currentRound)")
-                    .font(AppFonts.display(size: 180))
+                    .font(AppFonts.display(size: LayoutAdaptation.value(compact: 180, pad: 230)))
                     .foregroundStyle(AppColors.yellow)
             }
             Spacer()
             if store.studyMode {
                 HStack(spacing: 8) {
                     Image(systemName: "iphone")
-                        .font(AppFonts.sfSymbol(size: 18))
+                        .font(AppFonts.sfSymbol(size: LayoutAdaptation.value(compact: 18, pad: 24)))
                     Text("Tap anywhere to start")
                 }
-                .font(AppFonts.body(size: 20))
+                .font(AppFonts.body(size: LayoutAdaptation.value(compact: 20, pad: 26)))
                 .foregroundStyle(AppColors.mutedText)
             } else {
                 VStack(spacing: 4) {
                     Text("Raise phone to forehead.")
                     Text("Tap screen when ready.")
                 }
-                .font(AppFonts.body(size: 20))
+                .font(AppFonts.body(size: LayoutAdaptation.value(compact: 20, pad: 26)))
                 .foregroundStyle(AppColors.mutedText)
                 
                 if shouldShowStartButton {
@@ -175,9 +176,9 @@ struct GameView: View {
                         triggerCountdown()
                     } label: {
                         Label("Start", systemImage: "play.fill")
-                            .font(AppFonts.body(size: 22))
-                            .padding(.horizontal, 32)
-                            .padding(.vertical, 16)
+                            .font(AppFonts.body(size: LayoutAdaptation.value(compact: 22, pad: 28)))
+                            .padding(.horizontal, LayoutAdaptation.value(compact: 32, pad: 44))
+                            .padding(.vertical, LayoutAdaptation.value(compact: 16, pad: 22))
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(AppColors.pink)
@@ -185,13 +186,13 @@ struct GameView: View {
                 }
             }
             Spacer()
-                .frame(height: 60)
+                .frame(height: LayoutAdaptation.value(compact: 60, pad: 80))
         }
     }
     
     private var countdownOverlay: some View {
         Text(countdownSec > 0 ? "\(countdownSec)" : "Go!")
-            .font(AppFonts.display(size: 120))
+            .font(AppFonts.display(size: LayoutAdaptation.value(compact: 120, pad: 160)))
             .foregroundStyle(AppColors.yellow)
     }
     
@@ -201,34 +202,35 @@ struct GameView: View {
     
     /// Timer, score, and last-answer icon (shared by iPhone and iPad playing layouts).
     private var timerScoreColumn: some View {
-        VStack(spacing: 4) {
+        let iconBox = LayoutAdaptation.value(compact: 36, pad: 44)
+        return VStack(spacing: 4) {
             Group {
                 if store.roundDuration > 0 && store.isPlaying {
                     Text("\(timeLeft)s")
-                        .font(AppFonts.body(size: 48).monospacedDigit())
+                        .font(AppFonts.body(size: LayoutAdaptation.value(compact: 48, pad: 60)).monospacedDigit())
                         .foregroundStyle(timeLeft <= 5 ? AppColors.pink : AppColors.green)
                 } else {
                     Color.clear
                 }
             }
-            .frame(height: 52)
+            .frame(height: LayoutAdaptation.value(compact: 52, pad: 64))
             
             Text("\(store.currentScore)")
-                .font(AppFonts.body(size: 40))
+                .font(AppFonts.body(size: LayoutAdaptation.value(compact: 40, pad: 52)))
                 .foregroundStyle(AppColors.yellow)
             
             ZStack {
                 Color.clear
-                    .frame(width: 36, height: 36)
+                    .frame(width: iconBox, height: iconBox)
                 Image(systemName: (lastAnswerCorrect ?? false) ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    .font(AppFonts.sfSymbol(size: 36))
+                    .font(AppFonts.sfSymbol(size: iconBox))
                     .foregroundStyle((lastAnswerCorrect ?? false) ? AppColors.green : AppColors.pink)
                     .opacity(showAnswerFeedback ? 1 : 0)
             }
-            .frame(width: 36, height: 36)
+            .frame(width: iconBox, height: iconBox)
         }
-        .frame(width: 80)
-        .padding(.leading, 16)
+        .frame(width: LayoutAdaptation.value(compact: 80, pad: 100))
+        .padding(.leading, LayoutAdaptation.value(compact: 16, pad: 24))
         .animation(.easeInOut(duration: 0.2), value: showAnswerFeedback)
     }
     
@@ -237,10 +239,10 @@ struct GameView: View {
             handlePass()
         } label: {
             Label("Pass", systemImage: "xmark")
-                .font(AppFonts.body(size: LayoutAdaptation.isPad ? 24 : 22))
+                .font(AppFonts.body(size: LayoutAdaptation.value(compact: 22, pad: 28)))
                 .frame(
-                    width: LayoutAdaptation.isPad ? 150 : 120,
-                    height: LayoutAdaptation.isPad ? 70 : 56
+                    width: LayoutAdaptation.value(compact: 120, pad: 176),
+                    height: LayoutAdaptation.value(compact: 56, pad: 78)
                 )
         }
         .buttonStyle(.borderedProminent)
@@ -252,10 +254,10 @@ struct GameView: View {
             handleCorrect()
         } label: {
             Label("Correct", systemImage: "checkmark")
-                .font(AppFonts.body(size: LayoutAdaptation.isPad ? 24 : 22))
+                .font(AppFonts.body(size: LayoutAdaptation.value(compact: 22, pad: 28)))
                 .frame(
-                    width: LayoutAdaptation.isPad ? 150 : 120,
-                    height: LayoutAdaptation.isPad ? 70 : 56
+                    width: LayoutAdaptation.value(compact: 120, pad: 176),
+                    height: LayoutAdaptation.value(compact: 56, pad: 78)
                 )
         }
         .buttonStyle(.borderedProminent)
@@ -279,7 +281,7 @@ struct GameView: View {
             if let word = store.currentWord, word != "No Words!" {
                 wordDisplayView(for: word)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, LayoutAdaptation.value(compact: 16, pad: 28))
             } else {
                 Spacer()
             }
@@ -287,14 +289,14 @@ struct GameView: View {
             if showTouchGameControls {
                 VStack {
                     passGameControlButton
-                        .padding(.top, 16)
+                        .padding(.top, LayoutAdaptation.value(compact: 16, pad: 22))
                     Spacer()
                     correctGameControlButton
-                        .padding(.bottom, 16)
+                        .padding(.bottom, LayoutAdaptation.value(compact: 16, pad: 22))
                 }
-                .padding(.trailing, 24)
+                .padding(.trailing, LayoutAdaptation.value(compact: 24, pad: 32))
             } else {
-                Color.clear.frame(width: 24)
+                Color.clear.frame(width: LayoutAdaptation.value(compact: 24, pad: 32))
             }
         }
     }
@@ -302,13 +304,15 @@ struct GameView: View {
     /// iPad: Pass bottom-leading, Correct bottom-trailing for thumb reach (LTR).
     private var playingViewPad: some View {
         GeometryReader { geo in
+            let edgePad = LayoutAdaptation.value(compact: 28, pad: 40)
+            let bottomPad = LayoutAdaptation.value(compact: 34, pad: 48)
             ZStack(alignment: .bottom) {
                 HStack(spacing: 0) {
                     timerScoreColumn
                     if let word = store.currentWord, word != "No Words!" {
                         wordDisplayView(for: word)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, LayoutAdaptation.value(compact: 16, pad: 28))
                     } else {
                         Spacer()
                     }
@@ -320,18 +324,18 @@ struct GameView: View {
                         Spacer()
                         correctGameControlButton
                     }
-                    .padding(.leading, geo.safeAreaInsets.leading + 28)
-                    .padding(.trailing, geo.safeAreaInsets.trailing + 28)
-                    .padding(.bottom, geo.safeAreaInsets.bottom + 34)
+                    .padding(.leading, geo.safeAreaInsets.leading + edgePad)
+                    .padding(.trailing, geo.safeAreaInsets.trailing + edgePad)
+                    .padding(.bottom, geo.safeAreaInsets.bottom + bottomPad)
                 }
             }
         }
     }
     
     private var handoffOverlay: some View {
-        VStack(spacing: 32) {
+        VStack(spacing: LayoutAdaptation.value(compact: 32, pad: 44)) {
             Text("\(store.getTeamName(teamNumber: store.currentTeam)) Ready?")
-                .font(AppFonts.display(size: 44))
+                .font(AppFonts.display(size: LayoutAdaptation.value(compact: 44, pad: 58)))
                 .foregroundStyle(teamColor(store.currentTeam))
                 .multilineTextAlignment(.center)
             Button {
@@ -339,9 +343,9 @@ struct GameView: View {
                 isWaitingForReady = true
             } label: {
                 Text("Ready!")
-                    .font(AppFonts.body(size: 24))
-                    .padding(.horizontal, 48)
-                    .padding(.vertical, 20)
+                    .font(AppFonts.body(size: LayoutAdaptation.value(compact: 24, pad: 30)))
+                    .padding(.horizontal, LayoutAdaptation.value(compact: 48, pad: 60))
+                    .padding(.vertical, LayoutAdaptation.value(compact: 20, pad: 28))
             }
             .buttonStyle(.borderedProminent)
             .tint(teamColor(store.currentTeam))
@@ -471,16 +475,19 @@ struct GameView: View {
         let totalLength = text.count
         let hasVeryLongWord = longestWordLength >= 13
         
-        let maxSize: CGFloat = 72
-        let minSize: CGFloat = 36
+        let maxSize = LayoutAdaptation.value(compact: 72, pad: 96)
+        let minSize = LayoutAdaptation.value(compact: 36, pad: 46)
+        let tierA = LayoutAdaptation.value(compact: 60, pad: 78)
+        let tierB = LayoutAdaptation.value(compact: 50, pad: 66)
+        let tierC = LayoutAdaptation.value(compact: 44, pad: 56)
         
         if wordCount == 1 {
             if longestWordLength <= 10 {
                 return TextSizingResult(fontSize: maxSize, allowHyphenation: false)
             } else if longestWordLength <= 14 {
-                return TextSizingResult(fontSize: 60, allowHyphenation: false)
+                return TextSizingResult(fontSize: tierA, allowHyphenation: false)
             } else {
-                return TextSizingResult(fontSize: 50, allowHyphenation: true)
+                return TextSizingResult(fontSize: tierB, allowHyphenation: true)
             }
         }
         
@@ -488,9 +495,9 @@ struct GameView: View {
             let sizeFromTotal: CGFloat = {
                 switch totalLength {
                 case 0...15: return maxSize
-                case 16...25: return 60
-                case 26...35: return 50
-                default: return 44
+                case 16...25: return tierA
+                case 26...35: return tierB
+                default: return tierC
                 }
             }()
             return TextSizingResult(fontSize: max(sizeFromTotal, minSize), allowHyphenation: true)
@@ -498,9 +505,9 @@ struct GameView: View {
             let sizeFromTotal: CGFloat = {
                 switch totalLength {
                 case 0...12: return maxSize
-                case 13...20: return 60
-                case 21...30: return 50
-                case 31...40: return 44
+                case 13...20: return tierA
+                case 21...30: return tierB
+                case 31...40: return tierC
                 default: return minSize
                 }
             }()
@@ -535,7 +542,7 @@ struct GameView: View {
                 
                 if store.studyMode && hasAnswer && !answerRevealed {
                     Text("Tap to reveal")
-                        .font(AppFonts.body(size: 16))
+                        .font(AppFonts.body(size: LayoutAdaptation.value(compact: 16, pad: 22)))
                         .foregroundStyle(AppColors.mutedText)
                 }
             }

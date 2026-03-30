@@ -26,13 +26,13 @@ struct SummaryView: View {
     
     /// Width for one score column: two columns fit in landscape without horizontal scrolling.
     private func columnWidth(for geo: GeometryProxy) -> CGFloat {
-        let horizontalPadding: CGFloat = 24
-        let gap: CGFloat = 24
+        let horizontalPadding = LayoutAdaptation.value(compact: 24, pad: 32)
+        let gap = LayoutAdaptation.value(compact: 24, pad: 32)
         let inner = geo.size.width - horizontalPadding * 2
         if store.numberOfTeams > 3 {
-            return min(260, (inner - gap) / 2)
+            return min(LayoutAdaptation.value(compact: 260, pad: 340), (inner - gap) / 2)
         }
-        return min(280, inner)
+        return min(LayoutAdaptation.value(compact: 280, pad: 360), inner)
     }
     
     var body: some View {
@@ -41,18 +41,18 @@ struct SummaryView: View {
             ZStack {
                 BackgroundView()
                 
-                VStack(spacing: 16) {
+                VStack(spacing: LayoutAdaptation.value(compact: 16, pad: 22)) {
                     Spacer()
-                        .frame(height: geo.safeAreaInsets.top + 20)
+                        .frame(height: geo.safeAreaInsets.top + LayoutAdaptation.value(compact: 20, pad: 28))
                     
                     Text("Game Over!")
-                        .font(AppFonts.display(size: 44))
+                        .font(AppFonts.display(size: LayoutAdaptation.value(compact: 44, pad: 58)))
                         .foregroundStyle(AppColors.yellow)
                     
                     if !scores.isEmpty {
                         Group {
                             if store.numberOfTeams > 3 {
-                                HStack(alignment: .top, spacing: 24) {
+                                HStack(alignment: .top, spacing: LayoutAdaptation.value(compact: 24, pad: 32)) {
                                     scoresTable(forTeamIndices: leftTeamIndices, columnWidth: colW)
                                     scoresTable(forTeamIndices: rightTeamIndices, columnWidth: colW)
                                 }
@@ -65,14 +65,14 @@ struct SummaryView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, LayoutAdaptation.value(compact: 24, pad: 32))
                     }
                     
                     Spacer()
                     
                     bottomSection
-                        .padding(.horizontal, 32)
-                        .padding(.bottom, geo.safeAreaInsets.bottom + 24)
+                        .padding(.horizontal, LayoutAdaptation.value(compact: 32, pad: 44))
+                        .padding(.bottom, geo.safeAreaInsets.bottom + LayoutAdaptation.value(compact: 24, pad: 36))
                 }
                 
                 HomeButtonOverlay {
@@ -131,25 +131,31 @@ struct SummaryView: View {
     }
     
     private var headerRow: some View {
-        HStack(spacing: 8) {
+        let totalColW = LayoutAdaptation.value(compact: 70, pad: 88)
+        return HStack(spacing: 8) {
             Text("Team")
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 12)
+                .padding(.leading, LayoutAdaptation.value(compact: 12, pad: 16))
             
             Text("Total")
-                .frame(width: 70)
-                .padding(.trailing, 12)
+                .frame(width: totalColW)
+                .padding(.trailing, LayoutAdaptation.value(compact: 12, pad: 16))
         }
-        .font(AppFonts.body(size: 13))
+        .font(AppFonts.body(size: LayoutAdaptation.value(compact: 13, pad: 17)))
         .foregroundStyle(.white.opacity(0.6))
-        .padding(.vertical, 8)
+        .padding(.vertical, LayoutAdaptation.value(compact: 8, pad: 12))
         .background(Color.white.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: LayoutAdaptation.value(compact: 8, pad: 12)))
     }
     
     private func teamRow(teamIndex: Int, totalScore: TeamScore) -> some View {
         let teamNum = teamIndex + 1
         let winner = isWinner(teamIndex: teamIndex)
+        let totalColW = LayoutAdaptation.value(compact: 70, pad: 88)
+        let bodyFont = LayoutAdaptation.value(compact: 15, pad: 20)
+        let symSmall = LayoutAdaptation.value(compact: 11, pad: 14)
+        let crownSz = LayoutAdaptation.value(compact: 14, pad: 18)
+        let cornerR = LayoutAdaptation.value(compact: 10, pad: 14)
         
         return Button {
             selectedTeamIndex = teamIndex
@@ -158,47 +164,47 @@ struct SummaryView: View {
                 HStack(spacing: 6) {
                     if winner {
                         Image(systemName: "crown.fill")
-                            .font(AppFonts.sfSymbol(size: 14))
+                            .font(AppFonts.sfSymbol(size: crownSz))
                             .foregroundStyle(AppColors.yellow)
                     }
                     Text(store.numberOfTeams > 1 ? store.getTeamName(teamNumber: teamNum) : "Score")
-                        .font(AppFonts.body(size: 15))
+                        .font(AppFonts.body(size: bodyFont))
                         .fontWeight(.semibold)
                         .foregroundStyle(teamColor(teamNum))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 12)
+                .padding(.leading, LayoutAdaptation.value(compact: 12, pad: 16))
                 
                 VStack(spacing: 1) {
                     HStack(spacing: 2) {
                         Image(systemName: "checkmark.circle.fill")
-                            .font(AppFonts.sfSymbol(size: 11))
+                            .font(AppFonts.sfSymbol(size: symSmall))
                         Text("\(totalScore.correct)")
-                            .font(AppFonts.body(size: 15).monospacedDigit().bold())
+                            .font(AppFonts.body(size: bodyFont).monospacedDigit().bold())
                     }
                     .foregroundStyle(AppColors.green)
                     
                     HStack(spacing: 2) {
                         Image(systemName: "xmark.circle.fill")
-                            .font(AppFonts.sfSymbol(size: 11))
+                            .font(AppFonts.sfSymbol(size: symSmall))
                         Text("\(totalScore.passed)")
-                            .font(AppFonts.body(size: 15).monospacedDigit().bold())
+                            .font(AppFonts.body(size: bodyFont).monospacedDigit().bold())
                     }
                     .foregroundStyle(AppColors.pink)
                 }
-                .frame(width: 70)
-                .padding(.trailing, 12)
+                .frame(width: totalColW)
+                .padding(.trailing, LayoutAdaptation.value(compact: 12, pad: 16))
             }
-            .padding(.vertical, 10)
+            .padding(.vertical, LayoutAdaptation.value(compact: 10, pad: 14))
             .background(
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: cornerR)
                         .fill(teamColor(teamNum).opacity(0.15))
                     
                     if winner {
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: cornerR)
                             .fill(
                                 LinearGradient(
                                     colors: [
@@ -210,7 +216,7 @@ struct SummaryView: View {
                                 )
                             )
                         
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: cornerR)
                             .stroke(AppColors.yellow.opacity(0.5), lineWidth: 1.5)
                     }
                 }
@@ -220,27 +226,27 @@ struct SummaryView: View {
     }
     
     private var bottomSection: some View {
-        HStack(spacing: 24) {
+        HStack(spacing: LayoutAdaptation.value(compact: 24, pad: 32)) {
             Spacer(minLength: 0)
             
             if let info = winnerInfo {
                 let winnerAccent = info.isTie ? AppColors.yellow : teamColor(info.winnerTeam)
-                HStack(spacing: 12) {
+                HStack(spacing: LayoutAdaptation.value(compact: 12, pad: 16)) {
                     Image(systemName: "trophy.fill")
-                        .font(AppFonts.sfSymbol(size: 40))
+                        .font(AppFonts.sfSymbol(size: LayoutAdaptation.value(compact: 40, pad: 52)))
                         .foregroundStyle(winnerAccent)
                     
                     Text(info.isTie ? "It's a Tie!" : "\(store.getTeamName(teamNumber: info.winnerTeam)) wins!")
-                        .font(AppFonts.display(size: 24))
+                        .font(AppFonts.display(size: LayoutAdaptation.value(compact: 24, pad: 32)))
                         .foregroundStyle(winnerAccent)
                         .lineLimit(1)
                         .multilineTextAlignment(.center)
                         .minimumScaleFactor(0.7)
                 }
-                .padding(.vertical, 16)
-                .padding(.horizontal, 16)
+                .padding(.vertical, LayoutAdaptation.value(compact: 16, pad: 22))
+                .padding(.horizontal, LayoutAdaptation.value(compact: 16, pad: 22))
                 .background(winnerAccent.opacity(0.15))
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipShape(RoundedRectangle(cornerRadius: LayoutAdaptation.value(compact: 16, pad: 20)))
             }
             
             Button {
@@ -249,10 +255,10 @@ struct SummaryView: View {
                 path.append(AppRoute.game)
             } label: {
                 Label("Play Again", systemImage: "arrow.clockwise")
-                    .font(AppFonts.body(size: 18))
+                    .font(AppFonts.body(size: LayoutAdaptation.value(compact: 18, pad: 24)))
                     .fontWeight(.bold)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 16)
+                    .padding(.horizontal, LayoutAdaptation.value(compact: 24, pad: 36))
+                    .padding(.vertical, LayoutAdaptation.value(compact: 16, pad: 22))
             }
             .buttonStyle(.borderedProminent)
             .tint(AppColors.pink)
