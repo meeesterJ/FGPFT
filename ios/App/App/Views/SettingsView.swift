@@ -206,6 +206,7 @@ struct SettingsView: View {
                         .tint(AppColors.primaryPurple)
                         .allowsHitTesting(false)
                 }
+                .opacity(0.65)
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel("Show buttons, on")
                 .accessibilityHint("Always on for iPad")
