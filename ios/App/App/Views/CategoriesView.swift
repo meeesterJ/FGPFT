@@ -418,7 +418,7 @@ private struct WordListEditorSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Words (one per line)")
-                .font(AppFonts.body(baseSize: 22, textStyle: .body))
+                .font(AppFonts.body(size: 15))
                 .foregroundStyle(labelForeground)
             TextEditor(text: $text)
                 .font(AppFonts.body(baseSize: 22, textStyle: .body))
