@@ -236,8 +236,11 @@ struct GameView: View {
             handlePass()
         } label: {
             Label("Pass", systemImage: "xmark")
-                .font(AppFonts.body(size: 22))
-                .frame(width: 120, height: 56)
+                .font(AppFonts.body(size: LayoutAdaptation.isPad ? 24 : 22))
+                .frame(
+                    width: LayoutAdaptation.isPad ? 150 : 120,
+                    height: LayoutAdaptation.isPad ? 70 : 56
+                )
         }
         .buttonStyle(.borderedProminent)
         .tint(.red)
@@ -248,8 +251,11 @@ struct GameView: View {
             handleCorrect()
         } label: {
             Label("Correct", systemImage: "checkmark")
-                .font(AppFonts.body(size: 22))
-                .frame(width: 120, height: 56)
+                .font(AppFonts.body(size: LayoutAdaptation.isPad ? 24 : 22))
+                .frame(
+                    width: LayoutAdaptation.isPad ? 150 : 120,
+                    height: LayoutAdaptation.isPad ? 70 : 56
+                )
         }
         .buttonStyle(.borderedProminent)
         .tint(.green)
@@ -313,9 +319,9 @@ struct GameView: View {
                         Spacer()
                         correctGameControlButton
                     }
-                    .padding(.leading, geo.safeAreaInsets.leading + 16)
-                    .padding(.trailing, geo.safeAreaInsets.trailing + 16)
-                    .padding(.bottom, geo.safeAreaInsets.bottom + 16)
+                    .padding(.leading, geo.safeAreaInsets.leading + 28)
+                    .padding(.trailing, geo.safeAreaInsets.trailing + 28)
+                    .padding(.bottom, geo.safeAreaInsets.bottom + 34)
                 }
             }
         }
