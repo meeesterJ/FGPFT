@@ -62,14 +62,21 @@ struct ScoreboardView: View {
     }
     
     private var scoresTables: some View {
-        HStack(alignment: .top, spacing: 24) {
-            leftTeamsTable
-                .frame(width: tableColumnWidth)
-            
-            rightTeamsTable
-                .frame(width: tableColumnWidth)
+        Group {
+            if totalTeams > 3 {
+                HStack(alignment: .top, spacing: 24) {
+                    leftTeamsTable
+                        .frame(width: tableColumnWidth)
+                    
+                    rightTeamsTable
+                        .frame(width: tableColumnWidth)
+                }
+            } else {
+                leftTeamsTable
+                    .frame(width: tableColumnWidth)
+            }
         }
-        .frame(maxWidth: 700)
+        .frame(maxWidth: 700, alignment: .center)
         .onAppear {
             withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) {
                 leaderGlow = true
@@ -204,14 +211,22 @@ struct ScoreboardView: View {
     }
     
     private var bottomButtonRow: some View {
-        HStack(spacing: 24) {
-            Color.clear
-                .frame(width: tableColumnWidth)
-            
-            bottomButton
-                .frame(width: tableColumnWidth, alignment: .trailing)
+        Group {
+            if totalTeams > 3 {
+                HStack(spacing: 24) {
+                    Color.clear
+                        .frame(width: tableColumnWidth)
+                    
+                    bottomButton
+                        .frame(width: tableColumnWidth)
+                }
+                .frame(maxWidth: 700)
+            } else {
+                bottomButton
+                    .frame(width: tableColumnWidth)
+                    .frame(maxWidth: 700, alignment: .center)
+            }
         }
-        .frame(maxWidth: 700)
     }
     
     private var bottomButton: some View {
@@ -249,7 +264,8 @@ struct ScoreboardView: View {
                         .font(AppFonts.sfSymbol(size: 14))
                 }
             }
-            .frame(maxWidth: 160, alignment: .trailing)
+            // Keep the label contents centered within the button, regardless of team name length.
+            .frame(maxWidth: .infinity, alignment: .center)
             .padding(.vertical, 8)
         }
         .buttonStyle(.borderedProminent)
