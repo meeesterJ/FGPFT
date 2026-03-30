@@ -230,9 +230,10 @@ struct SummaryView: View {
                         .font(AppFonts.display(size: 24))
                         .foregroundStyle(AppColors.yellow)
                         .lineLimit(1)
+                        .multilineTextAlignment(.center)
                         .minimumScaleFactor(0.7)
                 }
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical, 16)
                 .background(AppColors.yellow.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 16))
