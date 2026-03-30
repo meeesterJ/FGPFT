@@ -131,8 +131,8 @@ struct ScoreboardView: View {
     }
     
     private var tableHeader: some View {
-        let labelFont = LayoutAdaptation.value(compact: 14, pad: 18)
-        let iconSmall = LayoutAdaptation.value(compact: 12, pad: 15)
+        let labelFont: CGFloat = LayoutAdaptation.value(compact: 14, pad: 18)
+        let iconSmall: CGFloat = LayoutAdaptation.value(compact: 12, pad: 15)
         return HStack(spacing: 0) {
             Text("Team")
                 .font(AppFonts.body(size: labelFont))
@@ -168,12 +168,12 @@ struct ScoreboardView: View {
     private func teamRow(teamNumber: Int, score: TeamScore) -> some View {
         let isLeader = (leaderIndex == teamNumber - 1)
         let teamColor = TeamThemeColor.forTeam(teamNumber)
-        let nameSize = LayoutAdaptation.value(compact: 18, pad: 24)
-        let scoreSize = LayoutAdaptation.value(compact: 24, pad: 32)
-        let crownSize = LayoutAdaptation.value(compact: 16, pad: 22)
-        let rowPadV = LayoutAdaptation.value(compact: 14, pad: 18)
-        let rowOuterPad = LayoutAdaptation.value(compact: 4, pad: 6)
-        let cornerR = LayoutAdaptation.value(compact: 12, pad: 14)
+        let nameSize: CGFloat = LayoutAdaptation.value(compact: 18, pad: 24)
+        let scoreSize: CGFloat = LayoutAdaptation.value(compact: 24, pad: 32)
+        let crownSize: CGFloat = LayoutAdaptation.value(compact: 16, pad: 22)
+        let rowPadV: CGFloat = LayoutAdaptation.value(compact: 14, pad: 18)
+        let rowOuterPad: CGFloat = LayoutAdaptation.value(compact: 4, pad: 6)
+        let cornerR: CGFloat = LayoutAdaptation.value(compact: 12, pad: 14)
         
         return HStack(spacing: 0) {
             HStack(spacing: 8) {
@@ -254,8 +254,8 @@ struct ScoreboardView: View {
     private var bottomButton: some View {
         let teamReadyTint = TeamThemeColor.forTeam(store.currentTeam + 1).color
         let tintColor: Color = (isGameOver || isLastTeamOfRound) ? AppColors.pink : teamReadyTint
-        let btnFont = LayoutAdaptation.value(compact: 14, pad: 18)
-        let btnIcon = LayoutAdaptation.value(compact: 14, pad: 18)
+        let btnFont: CGFloat = LayoutAdaptation.value(compact: 14, pad: 18)
+        let btnIcon: CGFloat = LayoutAdaptation.value(compact: 14, pad: 18)
         return Button {
             if isGameOver {
                 store.prepareRound()

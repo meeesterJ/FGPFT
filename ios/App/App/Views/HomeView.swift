@@ -27,7 +27,7 @@ struct SplashView: View {
         GeometryReader { geo in
             let titleHeight = geo.size.height * 0.72 * 0.9  // 90% of previous size
             let horizontalInset = LayoutAdaptation.contentMargin(compact: 28, pad: 0)
-            let topInset = LayoutAdaptation.value(compact: max(0, geo.safeAreaInsets.top) + 8, pad: 0)
+            let topInset: CGFloat = LayoutAdaptation.value(compact: max(0, geo.safeAreaInsets.top) + 8, pad: 0)
             VStack(spacing: 24) {
                 Spacer()
                 TitleStackView(animated: true, availableHeight: titleHeight)

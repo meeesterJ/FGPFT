@@ -378,9 +378,9 @@ struct RoundSummaryView: View {
     }
     
     private func bottomButton(expanded: Bool) -> some View {
-        let labelSize = LayoutAdaptation.value(compact: 14, pad: 18)
-        let symbolSize = LayoutAdaptation.value(compact: 14, pad: 18)
-        let maxBtnWidth = LayoutAdaptation.value(compact: 160, pad: 220)
+        let labelSize: CGFloat = LayoutAdaptation.value(compact: 14, pad: 18)
+        let symbolSize: CGFloat = LayoutAdaptation.value(compact: 14, pad: 18)
+        let maxBtnWidth: CGFloat = LayoutAdaptation.value(compact: 160, pad: 220)
         return Button {
             if store.studyMode {
                 store.startGame()

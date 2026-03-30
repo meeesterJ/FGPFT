@@ -26,8 +26,8 @@ struct SummaryView: View {
     
     /// Width for one score column: two columns fit in landscape without horizontal scrolling.
     private func columnWidth(for geo: GeometryProxy) -> CGFloat {
-        let horizontalPadding = LayoutAdaptation.value(compact: 24, pad: 32)
-        let gap = LayoutAdaptation.value(compact: 24, pad: 32)
+        let horizontalPadding: CGFloat = LayoutAdaptation.value(compact: 24, pad: 32)
+        let gap: CGFloat = LayoutAdaptation.value(compact: 24, pad: 32)
         let inner = geo.size.width - horizontalPadding * 2
         if store.numberOfTeams > 3 {
             return min(LayoutAdaptation.value(compact: 260, pad: 340), (inner - gap) / 2)
@@ -131,7 +131,7 @@ struct SummaryView: View {
     }
     
     private var headerRow: some View {
-        let totalColW = LayoutAdaptation.value(compact: 70, pad: 88)
+        let totalColW: CGFloat = LayoutAdaptation.value(compact: 70, pad: 88)
         return HStack(spacing: 8) {
             Text("Team")
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -151,11 +151,11 @@ struct SummaryView: View {
     private func teamRow(teamIndex: Int, totalScore: TeamScore) -> some View {
         let teamNum = teamIndex + 1
         let winner = isWinner(teamIndex: teamIndex)
-        let totalColW = LayoutAdaptation.value(compact: 70, pad: 88)
-        let bodyFont = LayoutAdaptation.value(compact: 15, pad: 20)
-        let symSmall = LayoutAdaptation.value(compact: 11, pad: 14)
-        let crownSz = LayoutAdaptation.value(compact: 14, pad: 18)
-        let cornerR = LayoutAdaptation.value(compact: 10, pad: 14)
+        let totalColW: CGFloat = LayoutAdaptation.value(compact: 70, pad: 88)
+        let bodyFont: CGFloat = LayoutAdaptation.value(compact: 15, pad: 20)
+        let symSmall: CGFloat = LayoutAdaptation.value(compact: 11, pad: 14)
+        let crownSz: CGFloat = LayoutAdaptation.value(compact: 14, pad: 18)
+        let cornerR: CGFloat = LayoutAdaptation.value(compact: 10, pad: 14)
         
         return Button {
             selectedTeamIndex = teamIndex

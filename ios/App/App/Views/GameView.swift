@@ -202,7 +202,7 @@ struct GameView: View {
     
     /// Timer, score, and last-answer icon (shared by iPhone and iPad playing layouts).
     private var timerScoreColumn: some View {
-        let iconBox = LayoutAdaptation.value(compact: 36, pad: 44)
+        let iconBox: CGFloat = LayoutAdaptation.value(compact: 36, pad: 44)
         return VStack(spacing: 4) {
             Group {
                 if store.roundDuration > 0 && store.isPlaying {
@@ -304,8 +304,8 @@ struct GameView: View {
     /// iPad: Pass bottom-leading, Correct bottom-trailing for thumb reach (LTR).
     private var playingViewPad: some View {
         GeometryReader { geo in
-            let edgePad = LayoutAdaptation.value(compact: 28, pad: 40)
-            let bottomPad = LayoutAdaptation.value(compact: 34, pad: 48)
+            let edgePad: CGFloat = LayoutAdaptation.value(compact: 28, pad: 40)
+            let bottomPad: CGFloat = LayoutAdaptation.value(compact: 34, pad: 48)
             ZStack(alignment: .bottom) {
                 HStack(spacing: 0) {
                     timerScoreColumn
@@ -475,11 +475,11 @@ struct GameView: View {
         let totalLength = text.count
         let hasVeryLongWord = longestWordLength >= 13
         
-        let maxSize = LayoutAdaptation.value(compact: 72, pad: 96)
-        let minSize = LayoutAdaptation.value(compact: 36, pad: 46)
-        let tierA = LayoutAdaptation.value(compact: 60, pad: 78)
-        let tierB = LayoutAdaptation.value(compact: 50, pad: 66)
-        let tierC = LayoutAdaptation.value(compact: 44, pad: 56)
+        let maxSize: CGFloat = LayoutAdaptation.value(compact: 72, pad: 96)
+        let minSize: CGFloat = LayoutAdaptation.value(compact: 36, pad: 46)
+        let tierA: CGFloat = LayoutAdaptation.value(compact: 60, pad: 78)
+        let tierB: CGFloat = LayoutAdaptation.value(compact: 50, pad: 66)
+        let tierC: CGFloat = LayoutAdaptation.value(compact: 44, pad: 56)
         
         if wordCount == 1 {
             if longestWordLength <= 10 {
