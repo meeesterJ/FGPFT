@@ -15,7 +15,7 @@ private enum CategorySortMode: CaseIterable, Equatable {
         case .newFirst: return "New"
         case .oldFirst: return "Old"
         case .alpha: return "Alpha"
-        case .favoritesOnly: return "Fav"
+        case .favoritesOnly: return "Faves"
         }
     }
 
@@ -58,7 +58,7 @@ struct CategoriesView: View {
         return n
     }
 
-    /// Lists shown in the categories list (study filter + sort mode). Fav ignores study/game filter.
+    /// Lists shown in the categories list (study filter + sort mode). Faves ignores study/game filter.
     private func listsForDisplay() -> [WordList] {
         switch sortMode {
         case .favoritesOnly:
@@ -166,7 +166,7 @@ struct CategoriesView: View {
                     ZStack {
                         HStack(spacing: 4) {
                             Text("Custom")
-                            Text("Fav")
+                            Text("Faves")
                         }
                             .font(toolbarFont)
                             .lineLimit(1)
@@ -464,7 +464,7 @@ struct AddCategorySheet: View {
                     HStack {
                         Text("Study Mode")
                             .font(AppFonts.body(size: 15))
-                            .foregroundStyle(categorySheetChromeForeground)
+                            .foregroundStyle(AppColors.textPrimary)
                         Spacer()
                         Toggle("", isOn: $isStudy)
                             .labelsHidden()
@@ -580,7 +580,7 @@ struct EditCategorySheet: View {
                     HStack {
                         Text("Study Mode")
                             .font(AppFonts.body(size: 15))
-                            .foregroundStyle(categorySheetChromeForeground)
+                            .foregroundStyle(AppColors.textPrimary)
                         Spacer()
                         Toggle("", isOn: $isStudy)
                             .labelsHidden()
