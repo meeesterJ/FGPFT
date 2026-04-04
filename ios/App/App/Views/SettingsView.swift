@@ -111,7 +111,7 @@ struct SettingsView: View {
             title: "Round Timer",
             value: store.studyMode
                 ? (store.roundDuration == 0 ? "∞" : studyTimerLabels[studyTimerSteps.firstIndex(of: store.roundDuration) ?? 0])
-                : "\(store.roundDuration)s",
+                : "\(store.roundDuration) s",
             color: AppColors.pink
         ) {
             if store.studyMode {
@@ -122,9 +122,9 @@ struct SettingsView: View {
                 .tint(AppColors.primaryPurple)
             } else {
                 Slider(value: Binding(
-                    get: { Double(store.roundDuration) },
-                    set: { store.setRoundDuration(Int($0)) }
-                ), in: 5...60, step: 5)
+                    get: { Double(gameTimerToSlider(store.roundDuration)) },
+                    set: { store.setRoundDuration(sliderToGameTimer(Int($0))) }
+                ), in: 0...Double(GameRoundTimerOptions.gameSteps.count - 1), step: 1)
                 .tint(AppColors.primaryPurple)
             }
         }
@@ -256,9 +256,11 @@ struct SettingsView: View {
             }
         } else {
             if studyTimerSteps.contains(store.roundDuration) && store.roundDuration > 60 {
-                store.setRoundDuration(30)
+                store.setRoundDuration(GameRoundTimerOptions.defaultSeconds)
             } else if store.roundDuration == 0 {
-                store.setRoundDuration(30)
+                store.setRoundDuration(GameRoundTimerOptions.defaultSeconds)
+            } else if !GameRoundTimerOptions.gameSteps.contains(store.roundDuration) {
+                store.setRoundDuration(GameRoundTimerOptions.sanitizedGameDuration(store.roundDuration))
             }
         }
     }
@@ -271,6 +273,19 @@ private func studyTimerToSlider(_ duration: Int) -> Int {
 private func sliderToStudyTimer(_ index: Int) -> Int {
     guard index >= 0, index < studyTimerSteps.count else { return 60 }
     return studyTimerSteps[index]
+}
+
+private func gameTimerToSlider(_ duration: Int) -> Int {
+    let steps = GameRoundTimerOptions.gameSteps
+    return steps.firstIndex(of: duration)
+        ?? steps.firstIndex(of: GameRoundTimerOptions.defaultSeconds)
+        ?? 0
+}
+
+private func sliderToGameTimer(_ index: Int) -> Int {
+    let steps = GameRoundTimerOptions.gameSteps
+    guard index >= 0, index < steps.count else { return GameRoundTimerOptions.defaultSeconds }
+    return steps[index]
 }
 
 struct SettingsSection<Content: View>: View {
@@ -297,6 +312,8 @@ struct SettingsSection<Content: View>: View {
                     Text(value)
                         .font(AppFonts.body(size: 18).monospacedDigit())
                         .foregroundStyle(color.opacity(0.9))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
             }
             content

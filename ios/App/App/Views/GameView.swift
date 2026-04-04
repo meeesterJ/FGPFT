@@ -9,13 +9,17 @@ struct GameView: View {
     @State private var isCountingDown = false
     @State private var countdownSec = 3
     @State private var isHandoff = false
-    @State private var timeLeft: Int = 30
+    @State private var timeLeft: Int = 60
     @State private var timerTask: Task<Void, Never>?
     @State private var answerRevealed = false
     @State private var lastAnswerCorrect: Bool? = nil
     @State private var showAnswerFeedback = false
     
     private var volume: Float { Float(store.soundVolume) / 100 }
+
+    private var timerFontSize: CGFloat {
+        LayoutAdaptation.value(compact: timeLeft >= 100 ? 40 : 48, pad: timeLeft >= 100 ? 52 : 60)
+    }
     
     /// The ready-screen "Start" button is redundant on round 1 because the screen is tappable to advance.
     private var shouldShowStartButton: Bool {
@@ -207,8 +211,10 @@ struct GameView: View {
             Group {
                 if store.roundDuration > 0 && store.isPlaying {
                     Text("\(timeLeft)s")
-                        .font(AppFonts.body(size: LayoutAdaptation.value(compact: 48, pad: 60)).monospacedDigit())
+                        .font(AppFonts.body(size: timerFontSize).monospacedDigit())
                         .foregroundStyle(timeLeft <= 5 ? AppColors.pink : AppColors.green)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.82)
                 } else {
                     Color.clear
                 }
@@ -229,7 +235,7 @@ struct GameView: View {
             }
             .frame(width: iconBox, height: iconBox)
         }
-        .frame(width: LayoutAdaptation.value(compact: 80, pad: 100))
+        .frame(width: LayoutAdaptation.value(compact: 100, pad: 124))
         .padding(.leading, LayoutAdaptation.value(compact: 16, pad: 24))
         .animation(.easeInOut(duration: 0.2), value: showAnswerFeedback)
     }
@@ -360,7 +366,7 @@ struct GameView: View {
         }
         isWaitingForReady = true
         isHandoff = store.numberOfTeams > 1 && store.currentTeam > 1
-        timeLeft = store.roundDuration == 0 ? 0 : min(store.roundDuration, 599)
+        timeLeft = store.roundDuration == 0 ? 0 : store.roundDuration
     }
     
     private func triggerCountdown() {

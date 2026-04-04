@@ -192,7 +192,7 @@ final class GameStore: ObservableObject {
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
         self.studyMode = false
-        self.roundDuration = 30
+        self.roundDuration = GameRoundTimerOptions.defaultSeconds
         self.totalRounds = 3
         self.showButtons = false
         self.tiltEnabled = true
@@ -304,6 +304,14 @@ final class GameStore: ObservableObject {
                 studyModeSettings = ModeSettings.studyDefaults()
             }
             savePersisted()
+        }
+
+        if !studyMode {
+            let sanitized = GameRoundTimerOptions.sanitizedGameDuration(roundDuration)
+            if sanitized != roundDuration {
+                roundDuration = sanitized
+                savePersisted()
+            }
         }
     }
 

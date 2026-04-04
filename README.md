@@ -22,7 +22,7 @@ US Geography, World Geography, Mandarin, Mandarin-Beginner, Mandarin-Intermediat
 
 ## Default Settings
 - Mode: Game Mode
-- Timer: 30 seconds per round
+- Timer: 60 seconds per round
 - Rounds: 3 rounds per game
 - Teams: 1
 - Selected Category: Animals - Easy

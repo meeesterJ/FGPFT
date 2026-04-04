@@ -59,6 +59,8 @@ If a user **permanently deleted** a built-in list, its id stays in `permanentlyD
 
 Persisted values override **code defaults**. Changing default timer, rounds, teams, toggles, etc. in Swift **does not** retroactively change existing installs unless you add migration logic or the user clears data.
 
+**Game round timer:** On load, if the app is in Game mode, `roundDuration` is normalized to the current build’s allowed game steps (`GameRoundTimerOptions`). Values from older builds (e.g. 5s/10s steps or arbitrary seconds from the old continuous slider) snap to the nearest production duration; if the stored value changes, the blob is saved again so the slider stays aligned.
+
 ## Custom lists
 
 - Stored in the same JSON blob (`customLists`, `deletedCustomLists`).
