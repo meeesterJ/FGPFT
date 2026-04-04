@@ -1,11 +1,11 @@
 Family Guess Party Fun Time (FGPFT) is a mobile-friendly party guessing game and study tool, featuring tilt gestures, customizable word lists, team scoring, and Study Mode for language learning and flashcard review.
 
 ## Project Overview
-FGPFT delivers an interactive guessing game and learning tool built as a native iOS app. Players hold the phone to their forehead while others give clues — tilt forward for correct, tilt back to pass. Study Mode turns the same format into a flashcard-style review tool with helper text and hidden answers. The app launches with 31 curated categories (22 game, 9 study) totaling 2,112 words.
+FGPFT delivers an interactive guessing game and learning tool built as a native iOS app. Players hold the phone to their forehead while others give clues — tilt forward for correct, tilt back to pass. Study Mode turns the same format into a flashcard-style review tool with helper text and hidden answers. The app launches with 27 curated categories (9 game, 18 study) totaling 2,201 words.
 
 ## Key Features
 - Tilt-based gesture controls or on-screen buttons — your choice
-- 31 built-in categories across Game Mode and Study Mode
+- 27 built-in categories across Game Mode and Study Mode
 - Study Mode with formatted cards, helper text (in parentheses), and hidden answers (in brackets) revealed on tap
 - Team mode with 1-5 teams, per-round scoring, and winner declarations
 - Customizable word lists with CSV import support
@@ -14,11 +14,11 @@ FGPFT delivers an interactive guessing game and learning tool built as a native 
 - Sound and haptic feedback (auto-configured per mode)
 - Responsive design optimized for mobile
 
-## Game Mode Categories (22)
-Charades - Actions, Charades - Food & Snacks, Charades - Animals, Animals - Easy, Animals - Medium, Animals - Hard, Household Objects, Christmas Kids Party, Family Fun, Ocean Mammals, Coral Reef Dwellers, Deep Sea Creatures, African Herbivores, Rainforest, Venomous/Poisonous Animals, Desert Survivors, Farm And Pasture Animals, Freshwater Animals, Insect All Stars, Island And Coastal, US Geography, World Geography
+## Game Mode Categories (9)
+Charades - Actions, Charades - Food & Snacks, Charades - Animals, Animals - Easy, Animals - Medium, Animals - Hard, Household Objects, Christmas Kids Party, Family Fun
 
-## Study Mode Categories (9)
-Chemistry, US History, Landforms, Human Body, Space, Ancient World, Geopolitics, Pioneers, Mythology
+## Study Mode Categories (18)
+US Geography, World Geography, Mandarin, Mandarin-Beginner, Mandarin-Intermediate, Vietnamese-Beginner, Vietnamese-Intermediate, Spanish-Beginner, Spanish-Intermediate, Chemistry, US History, Landforms, Human Body, Space, Ancient World, Geopolitics, Pioneers, Mythology
 
 ## Default Settings
 - Mode: Game Mode
