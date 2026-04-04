@@ -86,6 +86,33 @@ struct BuiltInListOverride: Codable {
     var isStudy: Bool?
 }
 
+/// Sort mode for the Word Categories list toolbar; persisted as `rawValue`.
+enum CategoryListSortMode: String, CaseIterable, Equatable, Codable {
+    case sortDefault
+    case customOnly
+    case newFirst
+    case oldFirst
+    case alpha
+    case favoritesOnly
+
+    var label: String {
+        switch self {
+        case .sortDefault: return "Sort"
+        case .customOnly: return "Custom"
+        case .newFirst: return "New"
+        case .oldFirst: return "Old"
+        case .alpha: return "Alpha"
+        case .favoritesOnly: return "Faves"
+        }
+    }
+
+    func advanced() -> CategoryListSortMode {
+        let all = Self.allCases
+        let i = (all.firstIndex(of: self)! + 1) % all.count
+        return all[i]
+    }
+}
+
 struct PersistedGameState: Codable {
     var studyMode: Bool
     var roundDuration: Int
@@ -109,6 +136,10 @@ struct PersistedGameState: Codable {
     /// New format: per-mode settings. Nil when loading old persisted data (migration).
     var gameModeSettings: ModeSettings?
     var studyModeSettings: ModeSettings?
+    /// Nil on older saves: default to game lists only (false).
+    var categoriesShowStudyListsOnly: Bool?
+    /// Nil or unknown raw value on older saves: default to `.sortDefault`.
+    var categorySortModeRaw: String?
 }
 
 final class GameStore: ObservableObject {
@@ -131,7 +162,9 @@ final class GameStore: ObservableObject {
     @Published var permanentlyDeletedBuiltInLists: [String]
     @Published var deletedCustomLists: [WordList]
     @Published var favoriteListIds: Set<String>
-    
+    @Published var categoriesShowStudyListsOnly: Bool
+    @Published var categorySortMode: CategoryListSortMode
+
     // MARK: - Session state (not persisted)
     @Published var currentRound: Int
     @Published var currentScore: Int
@@ -176,6 +209,8 @@ final class GameStore: ObservableObject {
         self.permanentlyDeletedBuiltInLists = []
         self.deletedCustomLists = []
         self.favoriteListIds = []
+        self.categoriesShowStudyListsOnly = false
+        self.categorySortMode = .sortDefault
         self.currentRound = 0
         self.currentScore = 0
         self.currentWord = nil
@@ -237,6 +272,12 @@ final class GameStore: ObservableObject {
         permanentlyDeletedBuiltInLists = decoded.permanentlyDeletedBuiltInLists
         deletedCustomLists = decoded.deletedCustomLists ?? []
         favoriteListIds = Set(decoded.favoriteListIds ?? [])
+        categoriesShowStudyListsOnly = decoded.categoriesShowStudyListsOnly ?? false
+        if let raw = decoded.categorySortModeRaw, let mode = CategoryListSortMode(rawValue: raw) {
+            categorySortMode = mode
+        } else {
+            categorySortMode = .sortDefault
+        }
 
         if let game = decoded.gameModeSettings, let study = decoded.studyModeSettings {
             gameModeSettings = game
@@ -325,7 +366,9 @@ final class GameStore: ObservableObject {
             deletedCustomLists: deletedCustomLists,
             favoriteListIds: Array(favoriteListIds),
             gameModeSettings: gameModeSettings,
-            studyModeSettings: studyModeSettings
+            studyModeSettings: studyModeSettings,
+            categoriesShowStudyListsOnly: categoriesShowStudyListsOnly,
+            categorySortModeRaw: categorySortMode.rawValue
         )
         if let data = try? JSONEncoder().encode(state) {
             userDefaults.set(data, forKey: storageKey)

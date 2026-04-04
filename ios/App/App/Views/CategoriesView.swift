@@ -1,38 +1,10 @@
 import SwiftUI
 
-private enum CategorySortMode: CaseIterable, Equatable {
-    case sortDefault
-    case customOnly
-    case newFirst
-    case oldFirst
-    case alpha
-    case favoritesOnly
-
-    var label: String {
-        switch self {
-        case .sortDefault: return "Sort"
-        case .customOnly: return "Custom"
-        case .newFirst: return "New"
-        case .oldFirst: return "Old"
-        case .alpha: return "Alpha"
-        case .favoritesOnly: return "Faves"
-        }
-    }
-
-    mutating func advance() {
-        let all = Self.allCases
-        let i = (all.firstIndex(of: self)! + 1) % all.count
-        self = all[i]
-    }
-}
-
 struct CategoriesView: View {
     @EnvironmentObject var store: GameStore
     @State private var showCreate = false
     @State private var editingList: WordList?
     @State private var scrollToListId: String?
-    @State private var showStudyListsOnly = false
-    @State private var sortMode: CategorySortMode = .sortDefault
 
     private var effectiveBuiltIn: [WordList] {
         store.getEffectiveBuiltInLists().filter {
@@ -50,7 +22,7 @@ struct CategoriesView: View {
     }
 
     private func studyFilteredBase(from lists: [WordList]) -> [WordList] {
-        lists.filter { showStudyListsOnly ? ($0.isStudy == true) : ($0.isStudy != true) }
+        lists.filter { store.categoriesShowStudyListsOnly ? ($0.isStudy == true) : ($0.isStudy != true) }
     }
 
     private func customTimestamp(from id: String) -> Int {
@@ -60,7 +32,7 @@ struct CategoriesView: View {
 
     /// Lists shown in the categories list (study filter + sort mode). Faves ignores study/game filter.
     private func listsForDisplay() -> [WordList] {
-        switch sortMode {
+        switch store.categorySortMode {
         case .favoritesOnly:
             return allLists.filter { store.favoriteListIds.contains($0.id) }
         case .sortDefault:
@@ -102,7 +74,7 @@ struct CategoriesView: View {
     }
 
     private func emptyStateMessage() -> String {
-        switch sortMode {
+        switch store.categorySortMode {
         case .customOnly:
             return "No custom lists in this view. Create a list or change filters."
         case .favoritesOnly:
@@ -144,24 +116,24 @@ struct CategoriesView: View {
                 .buttonStyle(CategoriesToolbarCapsuleStyle(fill: AppColors.pink))
 
                 Button {
-                    showStudyListsOnly.toggle()
+                    store.categoriesShowStudyListsOnly = !store.categoriesShowStudyListsOnly
                 } label: {
                     Image(systemName: "book.fill")
                         .font(AppFonts.sfSymbol(size: 12))
                 }
                 .buttonStyle(
                     CategoriesToolbarCapsuleStyle(
-                        fill: showStudyListsOnly ? AppColors.cyan.opacity(0.2) : AppColors.primaryPurple,
-                        strokeColor: showStudyListsOnly ? AppColors.cyan : .clear,
-                        strokeWidth: showStudyListsOnly ? 2 : 0,
-                        foreground: showStudyListsOnly ? AppColors.cyan : .white,
+                        fill: store.categoriesShowStudyListsOnly ? AppColors.cyan.opacity(0.2) : AppColors.primaryPurple,
+                        strokeColor: store.categoriesShowStudyListsOnly ? AppColors.cyan : .clear,
+                        strokeWidth: store.categoriesShowStudyListsOnly ? 2 : 0,
+                        foreground: store.categoriesShowStudyListsOnly ? AppColors.cyan : .white,
                         applyTextFont: false
                     )
                 )
-                .accessibilityLabel(showStudyListsOnly ? "Showing study lists only" : "Showing game lists only")
+                .accessibilityLabel(store.categoriesShowStudyListsOnly ? "Showing study lists only" : "Showing game lists only")
 
                 Button {
-                    sortMode.advance()
+                    store.categorySortMode = store.categorySortMode.advanced()
                 } label: {
                     ZStack {
                         HStack(spacing: 4) {
@@ -173,7 +145,7 @@ struct CategoriesView: View {
                             .minimumScaleFactor(0.88)
                             .opacity(0)
                             .accessibilityHidden(true)
-                        Text(sortMode.label)
+                        Text(store.categorySortMode.label)
                             .font(toolbarFont)
                             .lineLimit(1)
                             .minimumScaleFactor(0.88)
@@ -186,7 +158,7 @@ struct CategoriesView: View {
                     .clipShape(Capsule())
                 }
                 .buttonStyle(CategoriesToolbarSortButtonStyle())
-                .accessibilityLabel("Sort lists, \(sortMode.label)")
+                .accessibilityLabel("Sort lists, \(store.categorySortMode.label)")
             }
             // Match listRowLeadingInset / listRowTrailingInset so toolbar aligns with category rows.
             .padding(.leading, listRowLeadingInset)
@@ -228,8 +200,7 @@ struct CategoriesView: View {
                                 isFavorite: favorited,
                                 onToggle: { store.toggleListSelection(id: list.id) },
                                 onToggleFavorite: { store.toggleFavorite(id: list.id) },
-                                onEdit: { editingList = list },
-                                onDelete: { deleteList(list) }
+                                onEdit: { editingList = list }
                             )
                             .id(list.id)
                             .listRowInsets(rowInsets)
@@ -301,10 +272,10 @@ struct CategoriesView: View {
         .onAppear {
             pruneSelectionsToMatchVisibleLists()
         }
-        .onChange(of: showStudyListsOnly) { _ in
+        .onChange(of: store.categoriesShowStudyListsOnly) { _ in
             pruneSelectionsToMatchVisibleLists()
         }
-        .onChange(of: sortMode) { _ in
+        .onChange(of: store.categorySortMode) { _ in
             pruneSelectionsToMatchVisibleLists()
         }
         .onChange(of: store.favoriteListIds) { _ in
@@ -339,8 +310,7 @@ struct CategoryRow: View {
     let onToggle: () -> Void
     let onToggleFavorite: () -> Void
     let onEdit: () -> Void
-    let onDelete: () -> Void
-    
+
     var body: some View {
         HStack(spacing: 0) {
             HStack(spacing: 12) {
@@ -388,12 +358,6 @@ struct CategoryRow: View {
                 Button(action: onEdit) {
                     Image(systemName: "pencil")
                         .foregroundStyle(AppColors.yellow)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.plain)
-                Button(action: onDelete) {
-                    Image(systemName: "trash")
-                        .foregroundStyle(.red)
                         .frame(width: 44, height: 44)
                 }
                 .buttonStyle(.plain)
