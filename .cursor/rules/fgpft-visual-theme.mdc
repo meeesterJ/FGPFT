@@ -1,0 +1,30 @@
+---
+description: FGPFT visual theme — fonts, colors, layout (see THEME.md)
+globs: ios/App/**/*.swift
+alwaysApply: false
+---
+
+# FGPFT visual theme
+
+**Canonical reference:** `THEME.md` at the repo root (full hex tables, spacing, and file pointers).
+
+When adding or changing **UI** in this app:
+
+## Typography
+
+- **Display / big titles / game word:** `AppFonts.display` → **Titan One** (bundled).
+- **Body, buttons, settings, lists:** `AppFonts.body` → **Outfit** (bundled).
+- **SF Symbols only:** `AppFonts.sfSymbol(size:)` — system font for glyphs, not custom fonts.
+
+## Colors
+
+- Use **`AppColors`** and **`TeamThemeColor`** from `AppTheme.swift` / `TeamScore.swift`; avoid ad-hoc colors unless matching values already documented in `THEME.md`.
+- On dark app backgrounds, use **`AppColors.textPrimary` / `textSecondary` / `textTertiary`** — not SwiftUI `.primary` / `.secondary`.
+- **Screen background:** `BackgroundView` (deep `#140A24` gradient); bars/inputs use `AppColors.barBackground` / `inputBackground` where appropriate.
+
+## Layout
+
+- Prefer **`LayoutAdaptation.value(compact:pad:)`** and **`contentMargin`** for phone vs iPad instead of hard-coding one size.
+- Match existing **corner radii** (often **12**), **stroke** widths (**1–2**), and **capsule** toolbar patterns (`CategoriesToolbarCapsuleStyle`, `AppCapsuleButtonStyle`) when adding similar controls.
+
+If `THEME.md` and code disagree, follow the **code** unless the user asks to align docs.
