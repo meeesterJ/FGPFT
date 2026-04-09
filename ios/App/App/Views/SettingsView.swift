@@ -123,7 +123,6 @@ struct SettingsView: View {
                     set: { store.setRoundDuration(sliderToStudyTimer(Int($0))) }
                 ), in: 0...4, step: 1)
                 .tint(AppColors.primaryPurple)
-                studyRoundTimerTickLabels
             } else {
                 Slider(value: Binding(
                     get: { Double(gameTimerToSlider(store.roundDuration)) },
@@ -132,28 +131,6 @@ struct SettingsView: View {
                 .tint(AppColors.primaryPurple)
             }
         }
-    }
-
-    /// Aligns with Study round-timer slider indices 0…4; infinity is larger for legibility.
-    private var studyRoundTimerTickLabels: some View {
-        HStack(spacing: 0) {
-            ForEach(0..<studyTimerLabels.count, id: \.self) { i in
-                Group {
-                    if i == studyTimerLabels.count - 1 {
-                        Text("∞")
-                            .font(AppFonts.body(size: LayoutAdaptation.value(compact: 24, pad: 28)))
-                            .fontWeight(.medium)
-                    } else {
-                        Text(studyTimerLabels[i])
-                            .font(AppFonts.body(size: LayoutAdaptation.value(compact: 11, pad: 13)))
-                    }
-                }
-                .foregroundStyle(AppColors.pink.opacity(0.9))
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
-            }
-        }
-        .padding(.top, 4)
     }
     
     private var totalRoundsSection: some View {
