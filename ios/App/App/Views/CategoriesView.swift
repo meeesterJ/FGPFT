@@ -482,7 +482,7 @@ struct AddCategorySheet: View {
     }
     
     private func create() {
-        let words = wordsText.split(separator: "\n").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+        let words = wordsText.split(separator: "\n").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
         guard !name.trimmingCharacters(in: .whitespaces).isEmpty else {
             errorMessage = "Enter a name."
             return
@@ -502,7 +502,7 @@ struct EditCategorySheet: View {
     let list: WordList
     let onDismiss: () -> Void
     @State private var name: String
-    @State private var words: [String]
+    @State private var wordsText: String
     @State private var isStudy: Bool
     @State private var errorMessage: String?
     
@@ -511,15 +511,8 @@ struct EditCategorySheet: View {
         self.list = list
         self.onDismiss = onDismiss
         _name = State(initialValue: list.name)
-        _words = State(initialValue: list.words)
+        _wordsText = State(initialValue: list.words.joined(separator: "\n"))
         _isStudy = State(initialValue: list.isStudy ?? false)
-    }
-    
-    private var wordsText: Binding<String> {
-        Binding(
-            get: { words.joined(separator: "\n") },
-            set: { words = $0.split(separator: "\n").map { String($0).trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty } }
-        )
     }
     
     private var editYellow: Color { Color(hex: "ca8a04") }
@@ -559,7 +552,7 @@ struct EditCategorySheet: View {
                             .foregroundStyle(.red)
                     }
                     WordListEditorSection(
-                        text: wordsText,
+                        text: $wordsText,
                         expandingEditor: true,
                         labelForeground: categorySheetChromeForeground
                     )
@@ -599,7 +592,7 @@ struct EditCategorySheet: View {
     
     private func save() {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
-        let filtered = words.filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+        let filtered = wordsText.split(separator: "\n").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
         guard !trimmedName.isEmpty else {
             errorMessage = "Enter a name."
             return
