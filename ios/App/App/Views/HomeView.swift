@@ -27,10 +27,11 @@ struct SplashView: View {
         GeometryReader { geo in
             let titleHeight = geo.size.height * 0.72 * 0.9  // 90% of previous size
             let horizontalInset = LayoutAdaptation.contentMargin(compact: 28, pad: 0)
+            let contentWidth = max(0, geo.size.width - horizontalInset * 2)
             let topInset: CGFloat = LayoutAdaptation.value(compact: max(0, geo.safeAreaInsets.top) + 8, pad: 0)
             VStack(spacing: 24) {
                 Spacer()
-                TitleStackView(animated: true, availableHeight: titleHeight)
+                TitleStackView(animated: true, availableHeight: titleHeight, availableWidth: contentWidth)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 Text("Tap anywhere to start")
                     .font(AppFonts.body(size: 20))
@@ -91,7 +92,6 @@ struct MainMenuView: View {
         GeometryReader { geo in
             let isLandscape = geo.size.width > geo.size.height
             let edgePadding: CGFloat = LayoutAdaptation.contentMargin(compact: 32, pad: 24)
-            let safeW = max(0, geo.size.width - edgePadding * 2)
             let safeH = max(0, geo.size.height - edgePadding * 2)
             
             if isLandscape {
@@ -101,9 +101,10 @@ struct MainMenuView: View {
                 let contentWidth = geo.size.width - leadingSafeArea - trailingSafeArea - (edgePadding * 2)
                 
                 let titleAreaHeight = safeH
+                let titleColumnWidth = contentWidth * 0.5
                 let inner = HStack(alignment: .center, spacing: edgePadding * 2) {
-                    TitleStackView(animated: false, availableHeight: titleAreaHeight * 0.85)
-                        .frame(maxWidth: contentWidth * 0.5, maxHeight: .infinity, alignment: .center)
+                    TitleStackView(animated: false, availableHeight: titleAreaHeight * 0.85, availableWidth: titleColumnWidth)
+                        .frame(maxWidth: titleColumnWidth, maxHeight: .infinity, alignment: .center)
                     menuButtons
                         .frame(width: min(260, contentWidth * 0.4), alignment: .center)
                 }
@@ -128,9 +129,10 @@ struct MainMenuView: View {
             } else {
                 // Portrait: existing vertical layout
                 let titleHeight = geo.size.height * 0.44
+                let titleContentWidth = geo.size.width
                 VStack(spacing: 0) {
                     Spacer(minLength: 36)
-                    TitleStackView(animated: false, availableHeight: titleHeight)
+                    TitleStackView(animated: false, availableHeight: titleHeight, availableWidth: titleContentWidth)
                         .frame(maxWidth: .infinity)
                         .frame(height: titleHeight)
                     Spacer(minLength: 20)
@@ -159,13 +161,18 @@ struct TitleStackView: View {
     let animated: Bool
     /// When set, font and spacing scale so the title uses most of this height.
     var availableHeight: CGFloat? = nil
+    /// Padded content width for the title (used with Titan One measurement so the longest word fits).
+    var availableWidth: CGFloat? = nil
     
     @State private var dropInTrigger = false
     
     private var fontSize: CGFloat {
         guard let h = availableHeight, h > 0 else { return 64 }
         // Scale so 5 lines + spacing roughly fill the red box (availableHeight)
-        return min(120, max(40, h / 5.4))
+        let heightBased = min(120, max(40, h / 5.4))
+        let words = titleWordColors.map(\.0)
+        guard let w = availableWidth, w > 0 else { return heightBased }
+        return AppFonts.displayFontSizeCappedByWidth(words: words, heightCap: heightBased, maxWidth: w)
     }
     private var lineSpacing: CGFloat {
         guard let h = availableHeight, h > 0 else { return 12 }
@@ -178,6 +185,8 @@ struct TitleStackView: View {
                 Text(w.0)
                     .foregroundStyle(w.1)
                     .font(AppFonts.display(size: fontSize))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)

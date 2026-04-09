@@ -35,6 +35,37 @@ enum AppFonts {
         UIFont(name: outfitPostScriptName, size: size) ?? .systemFont(ofSize: size, weight: .regular)
     }
 
+    /// Titan One for UIKit measurement (matches `display(size:)`).
+    static func uiDisplay(size: CGFloat) -> UIFont {
+        UIFont(name: titanPostScriptName, size: size) ?? .systemFont(ofSize: size, weight: .bold)
+    }
+
+    /// Widest bounding width among `words` at Titan One `fontSize`.
+    static func maxDisplayWordWidth(words: [String], fontSize: CGFloat) -> CGFloat {
+        let font = uiDisplay(size: fontSize)
+        var widest: CGFloat = 0
+        for word in words {
+            let w = (word as NSString).size(withAttributes: [.font: font]).width
+            widest = max(widest, w)
+        }
+        return widest
+    }
+
+    /// Largest font size (between 40 and `heightCap`) so every word fits in `maxWidth`, for title-stack sizing.
+    static func displayFontSizeCappedByWidth(words: [String], heightCap: CGFloat, maxWidth: CGFloat, epsilon: CGFloat = 3) -> CGFloat {
+        let minS: CGFloat = 40
+        let cap = min(120, max(minS, heightCap))
+        let limit = max(0, maxWidth - epsilon)
+        var s = floor(cap)
+        while s >= minS {
+            if maxDisplayWordWidth(words: words, fontSize: s) <= limit {
+                return s
+            }
+            s -= 1
+        }
+        return minS
+    }
+
     /// Toolbar row on Categories (compact for ~390pt+ width without horizontal scroll).
     static let categoriesToolbarFontSize: CGFloat = 14
 }
