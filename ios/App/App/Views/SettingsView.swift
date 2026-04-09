@@ -112,6 +112,9 @@ struct SettingsView: View {
             value: store.studyMode
                 ? (store.roundDuration == 0 ? "∞" : studyTimerLabels[studyTimerSteps.firstIndex(of: store.roundDuration) ?? 0])
                 : "\(store.roundDuration) s",
+            valueFontSize: store.studyMode && store.roundDuration == 0
+                ? LayoutAdaptation.value(compact: 26, pad: 30)
+                : nil,
             color: AppColors.pink
         ) {
             if store.studyMode {
@@ -120,6 +123,7 @@ struct SettingsView: View {
                     set: { store.setRoundDuration(sliderToStudyTimer(Int($0))) }
                 ), in: 0...4, step: 1)
                 .tint(AppColors.primaryPurple)
+                studyRoundTimerTickLabels
             } else {
                 Slider(value: Binding(
                     get: { Double(gameTimerToSlider(store.roundDuration)) },
@@ -128,6 +132,28 @@ struct SettingsView: View {
                 .tint(AppColors.primaryPurple)
             }
         }
+    }
+
+    /// Aligns with Study round-timer slider indices 0…4; infinity is larger for legibility.
+    private var studyRoundTimerTickLabels: some View {
+        HStack(spacing: 0) {
+            ForEach(0..<studyTimerLabels.count, id: \.self) { i in
+                Group {
+                    if i == studyTimerLabels.count - 1 {
+                        Text("∞")
+                            .font(AppFonts.body(size: LayoutAdaptation.value(compact: 24, pad: 28)))
+                            .fontWeight(.medium)
+                    } else {
+                        Text(studyTimerLabels[i])
+                            .font(AppFonts.body(size: LayoutAdaptation.value(compact: 11, pad: 13)))
+                    }
+                }
+                .foregroundStyle(AppColors.pink.opacity(0.9))
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(.top, 4)
     }
     
     private var totalRoundsSection: some View {
@@ -291,12 +317,15 @@ private func sliderToGameTimer(_ index: Int) -> Int {
 struct SettingsSection<Content: View>: View {
     let title: String
     var value: String? = nil
+    /// When set, overrides the default 18pt value label (e.g. larger ∞ for Study infinite timer).
+    var valueFontSize: CGFloat? = nil
     let color: Color
     @ViewBuilder let content: Content
     
-    init(title: String, value: String? = nil, color: Color, @ViewBuilder content: () -> Content) {
+    init(title: String, value: String? = nil, valueFontSize: CGFloat? = nil, color: Color, @ViewBuilder content: () -> Content) {
         self.title = title
         self.value = value
+        self.valueFontSize = valueFontSize
         self.color = color
         self.content = content()
     }
@@ -310,7 +339,7 @@ struct SettingsSection<Content: View>: View {
                 Spacer()
                 if let value = value {
                     Text(value)
-                        .font(AppFonts.body(size: 18).monospacedDigit())
+                        .font(AppFonts.body(size: valueFontSize ?? 18).monospacedDigit())
                         .foregroundStyle(color.opacity(0.9))
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)

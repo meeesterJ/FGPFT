@@ -1,5 +1,7 @@
 import SwiftUI
 
+private let studyTimerSplitThresholdSeconds = 120
+
 struct GameView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var store: GameStore
@@ -17,8 +19,36 @@ struct GameView: View {
     
     private var volume: Float { Float(store.soundVolume) / 100 }
 
-    private var timerFontSize: CGFloat {
+    /// Single-line total seconds (Game mode or Study short / final two minutes): shrink when showing 3 digits.
+    private var timerSingleLineFontSize: CGFloat {
         LayoutAdaptation.value(compact: timeLeft >= 100 ? 40 : 48, pad: timeLeft >= 100 ? 52 : 60)
+    }
+
+    /// Study split rows and infinity: no three-digit squeeze on the seconds row.
+    private var studyTimerDigitFontSize: CGFloat {
+        LayoutAdaptation.value(compact: 48, pad: 60)
+    }
+
+    private var studyTimerSuffixFontSize: CGFloat {
+        LayoutAdaptation.value(compact: 26, pad: 34)
+    }
+
+    private var showsStudySplitTimer: Bool {
+        store.studyMode
+            && store.roundDuration > studyTimerSplitThresholdSeconds
+            && timeLeft > studyTimerSplitThresholdSeconds
+            && store.isPlaying
+    }
+
+    private var showsStudyInfinityTimer: Bool {
+        store.studyMode && store.roundDuration == 0 && store.isPlaying
+    }
+
+    private var timerDisplayBlockHeight: CGFloat {
+        if showsStudySplitTimer || showsStudyInfinityTimer {
+            return LayoutAdaptation.value(compact: 92, pad: 112)
+        }
+        return LayoutAdaptation.value(compact: 52, pad: 64)
     }
     
     /// The ready-screen "Start" button is redundant on round 1 because the screen is tappable to advance.
@@ -207,19 +237,47 @@ struct GameView: View {
     /// Timer, score, and last-answer icon (shared by iPhone and iPad playing layouts).
     private var timerScoreColumn: some View {
         let iconBox: CGFloat = LayoutAdaptation.value(compact: 36, pad: 44)
+        let urgent = timeLeft <= 5
+        let timerColor = urgent ? AppColors.pink : AppColors.green
         return VStack(spacing: 4) {
             Group {
-                if store.roundDuration > 0 && store.isPlaying {
+                if showsStudyInfinityTimer {
+                    Text("∞")
+                        .font(AppFonts.body(size: studyTimerDigitFontSize))
+                        .foregroundStyle(AppColors.green)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.82)
+                } else if showsStudySplitTimer {
+                    let minutes = timeLeft / 60
+                    let seconds = timeLeft % 60
+                    VStack(spacing: 2) {
+                        HStack(alignment: .lastTextBaseline, spacing: 0) {
+                            Text("\(minutes)")
+                                .font(AppFonts.body(size: studyTimerDigitFontSize).monospacedDigit())
+                            Text("m")
+                                .font(AppFonts.body(size: studyTimerSuffixFontSize))
+                        }
+                        HStack(alignment: .lastTextBaseline, spacing: 0) {
+                            Text("\(seconds)")
+                                .font(AppFonts.body(size: studyTimerDigitFontSize).monospacedDigit())
+                            Text("s")
+                                .font(AppFonts.body(size: studyTimerSuffixFontSize))
+                        }
+                    }
+                    .foregroundStyle(timerColor)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+                } else if store.roundDuration > 0 && store.isPlaying {
                     Text("\(timeLeft)s")
-                        .font(AppFonts.body(size: timerFontSize).monospacedDigit())
-                        .foregroundStyle(timeLeft <= 5 ? AppColors.pink : AppColors.green)
+                        .font(AppFonts.body(size: timerSingleLineFontSize).monospacedDigit())
+                        .foregroundStyle(timerColor)
                         .lineLimit(1)
                         .minimumScaleFactor(0.82)
                 } else {
                     Color.clear
                 }
             }
-            .frame(height: LayoutAdaptation.value(compact: 52, pad: 64))
+            .frame(height: timerDisplayBlockHeight)
             
             Text("\(store.currentScore)")
                 .font(AppFonts.body(size: LayoutAdaptation.value(compact: 40, pad: 52)))
