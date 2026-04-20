@@ -338,12 +338,23 @@ struct RoundSummaryView: View {
     }
     
     private var rightColumn: some View {
-        VStack(alignment: .leading, spacing: LayoutAdaptation.value(compact: 12, pad: 16)) {
-            Text("Word History")
-                .font(AppFonts.body(size: LayoutAdaptation.value(compact: 18, pad: 24)))
-                .fontWeight(.bold)
-                .foregroundStyle(.white)
-                .padding(.top, LayoutAdaptation.value(compact: 12, pad: 16))
+        let historyHeaderFont = AppFonts.body(size: LayoutAdaptation.value(compact: 18, pad: 24))
+        let historyHeaderTopPadding = LayoutAdaptation.value(compact: CGFloat(12), pad: CGFloat(16))
+        return VStack(alignment: .leading, spacing: LayoutAdaptation.value(compact: 12, pad: 16)) {
+            Group {
+                if store.studyMode {
+                    HStack(alignment: .firstTextBaseline, spacing: LayoutAdaptation.value(compact: 12, pad: 16)) {
+                        Text("Word History")
+                        Text("\(wordResults.count) words")
+                    }
+                } else {
+                    Text("Word History")
+                }
+            }
+            .font(historyHeaderFont)
+            .fontWeight(.bold)
+            .foregroundStyle(.white)
+            .padding(.top, historyHeaderTopPadding)
             
             ScrollView {
                 VStack(spacing: LayoutAdaptation.value(compact: 8, pad: 12)) {
