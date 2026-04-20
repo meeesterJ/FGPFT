@@ -35,6 +35,7 @@ struct HowToPlayView: View {
                     bullet("Swipe right to favorite or unfavorite a list")
                     bullet("Swipe left to delete (restore from Deleted Categories if needed)")
                     bullet("Gold Sort cycles order; book toggles game vs Study lists")
+                    bullet("Give me a list of [#] words that would be fun for the family to guess in the category of [category]. Output must be a line separated list.")
                 }
                 section(title: "Study Mode", color: AppColors.purple) {
                     bullet("Great for language learning, flashcards, and vocabulary practice")
@@ -45,6 +46,7 @@ struct HowToPlayView: View {
                     bullet("Tilt is off by default — use the on-screen buttons instead")
                     bullet("Set the timer to infinite for untimed study sessions")
                     bullet("Mark a category as Study Mode when creating or editing a list")
+                    bullet("Give me a list of [#] words and answers that would be fun for the family to guess in the category of [category]. Output must be a line separated list in the following format: word[answer]")
                 }
             }
             .padding(.vertical, 20)
