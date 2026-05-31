@@ -1,0 +1,112 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "FGPFT design tokens — source: THEME.md + AppTheme.swift. Import into Figma via Tokens Studio or use for CSS/Swift.",
+  "color": {
+    "primitive": {
+      "white": { "$value": "#ffffff", "$type": "color" },
+      "violet-950": { "$value": "#140A24", "$type": "color" },
+      "pink-400": { "$value": "#f472b6", "$type": "color" },
+      "pink-500": { "$value": "#ec4899", "$type": "color" },
+      "pink-900": { "$value": "#831843", "$type": "color" },
+      "cyan-400": { "$value": "#22d3ee", "$type": "color" },
+      "cyan-700": { "$value": "#0891b2", "$type": "color" },
+      "cyan-900": { "$value": "#164e63", "$type": "color" },
+      "purple-400": { "$value": "#a78bfa", "$type": "color" },
+      "purple-600": { "$value": "#9333ea", "$type": "color" },
+      "purple-900": { "$value": "#581c87", "$type": "color" },
+      "green-400": { "$value": "#4ade80", "$type": "color" },
+      "green-900": { "$value": "#14532d", "$type": "color" },
+      "yellow-400": { "$value": "#facc15", "$type": "color" },
+      "yellow-900": { "$value": "#713f12", "$type": "color" },
+      "gold-600": { "$value": "#ca8a04", "$type": "color" },
+      "destructive-500": { "$value": "#e84a6f", "$type": "color" }
+    },
+    "bg": {
+      "app": { "$value": "{color.primitive.violet-950}", "$type": "color" },
+      "bar": { "$value": "#140A24EB", "$type": "color" },
+      "input": { "$value": "{color.primitive.violet-950}", "$type": "color" },
+      "glass": { "$value": "#ffffff0F", "$type": "color" }
+    },
+    "text": {
+      "primary": { "$value": "{color.primitive.white}", "$type": "color" },
+      "secondary": { "$value": "#ffffffB3", "$type": "color" },
+      "tertiary": { "$value": "#ffffff80", "$type": "color" }
+    },
+    "accent": {
+      "pink": { "$value": "{color.primitive.pink-400}", "$type": "color" },
+      "cyan": { "$value": "{color.primitive.cyan-400}", "$type": "color" },
+      "purple": { "$value": "{color.primitive.purple-400}", "$type": "color" },
+      "green": { "$value": "{color.primitive.green-400}", "$type": "color" },
+      "yellow": { "$value": "{color.primitive.yellow-400}", "$type": "color" }
+    },
+    "semantic": {
+      "destructive": { "$value": "{color.primitive.destructive-500}", "$type": "color" },
+      "primary-purple": { "$value": "{color.primitive.purple-600}", "$type": "color" },
+      "gold": { "$value": "{color.primitive.gold-600}", "$type": "color" }
+    },
+    "menu": {
+      "play-fill": { "$value": "{color.primitive.pink-500}", "$type": "color" },
+      "play-border": { "$value": "{color.primitive.pink-400}", "$type": "color" },
+      "categories-fill": { "$value": "{color.primitive.cyan-700}", "$type": "color" },
+      "categories-border": { "$value": "{color.primitive.cyan-400}", "$type": "color" },
+      "settings-fill": { "$value": "{color.primitive.purple-600}", "$type": "color" },
+      "settings-border": { "$value": "{color.primitive.purple-400}", "$type": "color" },
+      "howto-fill": { "$value": "{color.primitive.gold-600}", "$type": "color" },
+      "howto-border": { "$value": "{color.primitive.yellow-400}", "$type": "color" }
+    },
+    "title": {
+      "family": { "$value": "{color.primitive.pink-400}", "$type": "color" },
+      "guess": { "$value": "{color.primitive.cyan-400}", "$type": "color" },
+      "party": { "$value": "{color.primitive.yellow-400}", "$type": "color" },
+      "fun": { "$value": "{color.primitive.green-400}", "$type": "color" },
+      "time": { "$value": "{color.primitive.purple-400}", "$type": "color" }
+    },
+    "team": {
+      "pink-text": { "$value": "{color.primitive.pink-400}", "$type": "color" },
+      "pink-bg": { "$value": "{color.primitive.pink-900}", "$type": "color" },
+      "cyan-text": { "$value": "{color.primitive.cyan-400}", "$type": "color" },
+      "cyan-bg": { "$value": "{color.primitive.cyan-900}", "$type": "color" },
+      "purple-text": { "$value": "{color.primitive.purple-400}", "$type": "color" },
+      "purple-bg": { "$value": "{color.primitive.purple-900}", "$type": "color" },
+      "green-text": { "$value": "{color.primitive.green-400}", "$type": "color" },
+      "green-bg": { "$value": "{color.primitive.green-900}", "$type": "color" },
+      "yellow-text": { "$value": "{color.primitive.yellow-400}", "$type": "color" },
+      "yellow-bg": { "$value": "{color.primitive.yellow-900}", "$type": "color" }
+    }
+  },
+  "spacing": {
+    "xs": { "$value": "8", "$type": "dimension" },
+    "sm": { "$value": "12", "$type": "dimension" },
+    "md": { "$value": "16", "$type": "dimension" },
+    "lg": { "$value": "24", "$type": "dimension" },
+    "xl": { "$value": "32", "$type": "dimension" },
+    "2xl": { "$value": "44", "$type": "dimension" },
+    "content-margin-phone": { "$value": "32", "$type": "dimension" },
+    "content-margin-pad": { "$value": "24", "$type": "dimension" }
+  },
+  "radius": {
+    "sm": { "$value": "8", "$type": "dimension" },
+    "md": { "$value": "12", "$type": "dimension" },
+    "lg": { "$value": "14", "$type": "dimension" },
+    "full": { "$value": "9999", "$type": "dimension" }
+  },
+  "typography": {
+    "font-family": {
+      "display": { "$value": "Titan One", "$type": "fontFamily" },
+      "body": { "$value": "Outfit", "$type": "fontFamily" }
+    },
+    "font-size": {
+      "display-title-phone": { "$value": "44", "$type": "dimension" },
+      "display-title-pad": { "$value": "58", "$type": "dimension" },
+      "menu-button": { "$value": "18", "$type": "dimension" },
+      "body-md": { "$value": "15", "$type": "dimension" },
+      "toolbar": { "$value": "14", "$type": "dimension" },
+      "game-word-phone": { "$value": "180", "$type": "dimension" },
+      "game-word-pad": { "$value": "230", "$type": "dimension" }
+    }
+  },
+  "stroke": {
+    "default": { "$value": "1", "$type": "dimension" },
+    "emphasis": { "$value": "2", "$type": "dimension" }
+  }
+}
